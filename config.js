@@ -9,11 +9,11 @@ const categorytitle = "&6NwjnAddons &7- by &5nwjn"
             "Hud",
             "QoL",
             "Bestiary",
-            "Kuudra"];
-        "Dungeons",
+            "Kuudra",
+            "Dungeons",
             "Events",
             "World",
-            "Misc",
+            "Misc"];
         return categories.indexOf(a.name) - categories.indexOf(b.name);
     },
 })
