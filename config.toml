@@ -1,0 +1,10 @@
+
+[general]
+
+	[general."§eoverall"]
+		overall = true
+
+	[general."§escanning_method"]
+		change_scanning_speed = 1
+		"location_&_stage_scan_everywhere_in_end" = true
+

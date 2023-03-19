@@ -1,4 +1,4 @@
-import { @Vigilant, @SwitchProperty, @SliderProperty, @PercentSliderProperty, @ButtonProperty, @SelectorProperty, @ColorProperty, Color } from "../Vigilance/index.js";
+import { @Vigilant, @SwitchProperty, @SliderProperty, @PercentSliderProperty, @ButtonProperty, @SelectorProperty, @ColorProperty, Color } from 'Vigilance'
 
 const categorytitle = "&6NwjnAddons &7- by &5nwjn"
 
@@ -129,4 +129,4 @@ class Settings {
     scanningrate = 1;
 }
 
-export default new Settings;
+export default new Settings()
