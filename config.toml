@@ -1,5 +1,9 @@
 
 [general]
+	legion_display = true
+	auto_2x_guild_message = true
+	auto_game_update_guild_message = true
+	cooldown_display = true
 
 	[general."§eoverall"]
 		overall = true
@@ -7,4 +11,38 @@
 	[general."§escanning_method"]
 		change_scanning_speed = 1
 		"location_&_stage_scan_everywhere_in_end" = true
+
+[kuudra]
+	supply_placement_waypoint = true
+	number_of_runs_in_nametag = true
+	stun = true
+
+[hud]
+	legion_display = true
+	cooldown_display = true
+	skyblock_xp_display = true
+
+[bestiary]
+	bestiary_tracker = true
+
+	[bestiary.end]
+		dragon_highlighter = true
+
+	[bestiary."spider's_den"]
+		broodmother = true
+		rain_slimes = true
+		"arachne's_keeper" = true
+
+[levels]
+	skyblock_xp_display = true
+	skyblock_xp_decimal_in_nametag = true
+
+[events]
+	event_notifier = true
+	auto_game_update_guild_message = true
+	jacob_notifier = true
+	auto_2x_powder_guild_message = true
+
+[undefined]
+	cheapest_skyblock_xp = true
 

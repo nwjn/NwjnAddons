@@ -1,132 +1,151 @@
-import { @Vigilant, @SwitchProperty, @SliderProperty, @PercentSliderProperty, @ButtonProperty, @SelectorProperty, @ColorProperty, Color } from 'Vigilance'
+import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchProperty, @SliderProperty, @SelectorProperty, Color } from 'Vigilance';
 
-const categorytitle = "&6NwjnAddons &7- by &5nwjn"
-
-@Vigilant("NwjnAddons", "§6§lNwjnAddons", {
-    getCategoryComparator: () => (a, b) => {
-        const categories = [
-            "General",
-            "Hud",
-            "QoL",
-            "Bestiary",
-            "Kuudra",
-            "Dungeons",
-            "Events",
-            "World",
-            "Misc"];
-        return categories.indexOf(a.name) - categories.indexOf(b.name);
-    },
+@Vigilant("Nwjn", "NwjnAddons", {
+  getCategoryComparator: () => (a, b) => {
+    const categories = ["General", "Levels", "Bestiary", "Kuudra", "Events"]
+    return categories.indexOf(a.name) - categories.indexOf(b.name);
+  }
 })
 
 class Settings {
+  @SwitchProperty({
+    name: "Legion Display",
+    description: "Shows number of players nearby",
+    category: "General"
+  })
+  legion = true;
 
-    constructor() {
-        this.initialize(this);
-        this.setCategoryDescription("General", `&6&lNwjnAddons\n
-            &7by &5nwjn\n
-            &e&o/nwjn help &eto see all commands.`
-        );
-        this.setCategoryDescription("Hud", categorytitle);
-        this.setCategoryDescription("QoL", categorytitle);
-        this.setCategoryDescription("Bestiary", categorytitle);
-        this.setCategoryDescription("Kuudra", categorytitle);
-        this.setCategoryDescription("Dungeons", categorytitle);
-        this.setCategoryDescription("Events", categorytitle);
-        this.setCategoryDescription("World", categorytitle);
-        this.setCategoryDescription("Misc", categorytitle);
+  @SwitchProperty({
+    name: "Cooldown Display",
+    description: "Shows the cooldown on your abilities",
+    category: "General"
+  })
+  cooldown = true;
 
+  @SwitchProperty({
+    name: "Skyblock XP Display",
+    description: "Shows your skyblock xp",
+    category: "Levels"
+  })
+  skyblockxp = true;
 
-        this.addDependency("Color for all Texts", "Give all texts the same Color");
+  @SwitchProperty({
+    name: "Skyblock XP Decimal in NameTag",
+    description: "Adds the decimal to the Sblvl in nametag",
+    category: "Levels"
+  })
+  sbxpdecimal = true;
 
-        this.addDependency("Golem Location Alignment", "Golem Location");
-        this.addDependency("Text size for Location", "Golem Location");
-        this.addDependency("Color for Location Text", "Golem Location");
-        this.addDependency("Move Location Text", "Golem Location");
+  @SwitchProperty({
+    name: "Cheapest Skyblock XP",
+    description: "Shows your chosen number or next level of next cheapest skyblock xp upgrades",
+    category: "Levels"
+  })
+  cheapestxp = true;
 
-        this.addDependency("Golem Stage Alignment", "Golem Stage");
-        this.addDependency("Text size for Stage", "Golem Stage");
-        this.addDependency("Color for Stage Text", "Golem Stage");
-        this.addDependency("Move Stage Text", "Golem Stage");
+  @SwitchProperty({
+    name: "Bestiary Tracker",
+    description: "Shows the bestiary mobs of the island you're in",
+    category: "Bestiary"
+  })
+  inskyblock = true;
+    
+  @SwitchProperty({
+    name: "Rain Slimes",
+    description: "Shows time until rain and sends notification",
+    // option for intrusive noti, chat noti, or notis off
+    category: "Bestiary",
+    subcategory: "Spiders Den"
+  })
+  raining = true;
 
-        this.addDependency("Golem Countdown delay message", "Golem Countdown");
-        this.addDependency("Golem Countdown Alignment", "Golem Countdown");
-        this.addDependency("Text size for Golem Countdown", "Golem Countdown");
-        this.addDependency("Color for Golem Countdown Text", "Golem Countdown");
-        this.addDependency("Move Golem Countdown Text", "Golem Countdown");
+  @SwitchProperty({
+    name: "Arachnes Keeper",
+    description: "Shows where the keeper can spawn or waypoint to where it is and draws a box",
+    category: "Bestiary",
+    subcategory: "Spiders Den"
+  })
+  keeper = true;
 
-        this.addDependency("Send Since Stage 4 Time in chat", "Since Stage 4 timer");
-        this.addDependency("Since Stage 4 Alignment", "Since Stage 4 timer");
-        this.addDependency("Text size for Since Stage 4", "Since Stage 4 timer");
-        this.addDependency("Color for Since Stage 4 Text", "Since Stage 4 timer");
-        this.addDependency("Move Since Stage 4 Text", "Since Stage 4 timer");
+  @SwitchProperty({
+    name: "Broodmother",
+    description: "Shows where the Broodmother is and draws a box",
+    category: "Bestiary",
+    subcategory: "Spiders Den"
+  })
+  broodmother = true; 
 
-        this.addDependency("Only show when Stage 4 or 5", "Show text next to the Golem");
-        this.addDependency("Text size for statue text", "Show text next to the Golem");
-        this.addDependency("Scale the text on distance", "Show text next to the Golem");
-        this.addDependency("Color for statue text", "Show text next to the Golem");
-        this.addDependency("Take color from On Screen category for Statue text", "Show text next to the Golem");
-        this.addDependency("Grey background", "Show text next to the Golem");
-        this.addDependency("X Offset for statue text", "Show text next to the Golem");
-        this.addDependency("Y Offset for statue text", "Show text next to the Golem");
-        this.addDependency("Z Offset for statue text", "Show text next to the Golem");
+  @SwitchProperty({
+    name: "Dragon Highlighter",
+    description: "Highlights the dragon",
+    category: "Bestiary",
+    subcategory: "End"
+  })
+  dragon = true;
 
-        this.addDependency("Show spawning progress", "Show Golem Bossbar");
-        this.addDependency("Show health Number", "Show Golem Bossbar");
-        this.addDependency('Say "Golem" above the Bossbar', "Show Golem Bossbar");
+  @SwitchProperty({
+    name: "Supply Placement Waypoint",
+    description: "Places a waypoint at all available supply placements",
+    category: "Kuudra"
+  })
+  inP1 = true;
 
-        this.addDependency("Stage 4 Sound volume", "Stage 4 Sound");
-        this.addDependency("Stage 4 Sound Test", "Stage 4 Sound");
+  @SwitchProperty({
+    name: "Stun",
+    description: "Starts a stopwatch when a player mounts the cannon",
+    category: "Kuudra"
+  })
+  inP3 = true;    
 
-        this.addDependency("Stage 5 Sound volume", "Stage 5 Sound");
-        this.addDependency("Stage 5 Sound Test", "Stage 5 Sound");
+  @SwitchProperty({
+    name: "Number of Runs in NameTag",
+    description: "Adds the number of Infernal Kuudra Completions to end of NameTag",
+    category: "Kuudra"
+  })
+  inT5 = true;
 
-        this.addDependency("Reboot Volume", "Reboot Sound");
-        this.addDependency("Reboot Sound Test", "Reboot Sound");
+  @SwitchProperty({
+    name: "Auto 2x Powder Guild Message",
+    description: "Sends a guild message when a 2x event is announced in Dwarven Mines or Crystal Hollows.",
+    // 15min timeout
+    category: "Events"
+  })
+  doublepowder = true;
 
-        this.addDependency("Update Volume", "Update Sound");
-        this.addDependency("Update Sound Test", "Update Sound");
+  @SwitchProperty({
+    name: "Auto Game Update Guild Message",
+    description: "Sends a guild message when a game update is announced in your lobby.",
+    // 30min timeout
+    category: "Events"
+  })
+  gameupdate = true;
 
-        this.addDependency("Dragon Countdown delay message", "Dragon Countdown");
-        this.addDependency("Dragon Countdown Alignment", "Dragon Countdown");
-        this.addDependency("Text size for Dragon Countdown", "Dragon Countdown");
-        this.addDependency("Color for Dragon Countdown Text", "Dragon Countdown");
-        this.addDependency("Take color from On Screen category for Dragon Countdown", "Dragon Countdown");
-        this.addDependency("Move Dragon Countdown Text", "Dragon Countdown");
-    }
+  @SwitchProperty({
+    name: "Event Notifier",
+    description: "Notfies you before Fishing Festivals, Mining Festivals, and Spooky Festivals",
+    category: "Events"
+  })
+  EventInCalender = true; 
 
+  @SwitchProperty({
+    name: "Jacob Notifier",
+    description: "Timer and notification for Jacob Events, Shows medals and next crops",
+    category: "Events"
+  })
+  Event = true;
+  
+  constructor() {
+    this.initialize(this);
+    this.setCategoryDescription("General", "&cHYPIXEL &cMODIFICATIONS &cARE &cUSE &cAT &cYOUR &cOWN &cRISK")
+    this.setCategoryDescription("Levels", "Yummy Skyblock XP ")
+    this.setCategoryDescription("Bestiary", "Bestiary Helper!")
 
-    @SwitchProperty({
-        name: "Overall",
-        category: "General",
-        subcategory: "§eOverall",
-        description: "Toggle the whole Module",
-    })
-    overall = true;
-
-    @SwitchProperty({
-        name: "Location & Stage scan everywhere in End",
-        description: "Faster but uses a bit more performance (recommended)",
-        category: "General",
-        subcategory: "§eScanning method",
-    })
-    scaninend = true;
-
-    @SwitchProperty({
-        name: "Increase scanning rate",
-        description: "Faster but uses a bit more performance (recommended)",
-        category: "General",
-        subcategory: "§eScanning method",
-    })
-    scanningrate = true;
-
-    @SelectorProperty({
-        name: "Change scanning speed",
-        description: "Choose rate per minute\n&lAuto reloads CT Modules after closing\n&lthis settings menu &r(when changing something)",
-        category: "General",
-        subcategory: "§eScanning method",
-        options: ["1 (pre 2.2.0 default)", "3 (new default)", "5 (recommended)", "10 (fast)", "15 (fastest)"]
-    })
-    scanningrate = 1;
+    this.setSubcategoryDescription("Bestiary", "Spiders Den")
+    this.setSubcategoryDescription("Bestiary", "End")
+    
+    this.setCategoryDescription("Kuudra", "100m/h Trust")
+    this.setCategoryDescription("Events", "Fun")
+  }
 }
 
-export default new Settings()
+export default new Settings();
