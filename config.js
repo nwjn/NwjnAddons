@@ -2,11 +2,10 @@ import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchPrope
 
 @Vigilant("Nwjn", "NwjnAddons", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["General", "Levels", "Bestiary", "Kuudra", "Events"]
+    const categories = ["General", "Levels", "Bestiary", "Kuudra", "Events", "Private Lobby"]
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   }
 })
-
 class Settings {
   @SwitchProperty({
     name: "Legion Display",
@@ -132,16 +131,18 @@ class Settings {
     description: "Timer and notification for Jacob Events, Shows medals and next crops",
     category: "Events"
   })
-  Event = true;
+  Jacob = true;
   
+
   constructor() {
     this.initialize(this);
-    this.setCategoryDescription("General", "&cHYPIXEL &cMODIFICATIONS &cARE &cUSE &cAT &cYOUR &cOWN &cRISK")
+    this.setCategoryDescription("General", "&dNwjnAddons &8by: &bnwjn\n&ause &f/nwjn help &afor full list of commands\n&cHYPIXEL MODIFICATIONS ARE USE AT YOUR OWN RISK")
     this.setCategoryDescription("Levels", "Yummy Skyblock XP ")
     this.setCategoryDescription("Bestiary", "Bestiary Helper!")
 
-    this.setSubcategoryDescription("Bestiary", "Spiders Den")
-    this.setSubcategoryDescription("Bestiary", "End")
+    // add Bestiary Level from island in 3rd part
+    // this.setSubcategoryDescription("Bestiary", "Spiders Den", "")
+    // this.setSubcategoryDescription("Bestiary", "End", "")
     
     this.setCategoryDescription("Kuudra", "100m/h Trust")
     this.setCategoryDescription("Events", "Fun")

@@ -28,10 +28,10 @@
 	[bestiary.end]
 		dragon_highlighter = true
 
-	[bestiary."spider's_den"]
+	[bestiary.spiders_den]
 		broodmother = true
 		rain_slimes = true
-		"arachne's_keeper" = true
+		arachnes_keeper = true
 
 [levels]
 	skyblock_xp_display = true
