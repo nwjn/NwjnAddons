@@ -2,7 +2,7 @@
   "name": "NwjnAddons",
   "creator": "nwjn",
   "description": "/nwjn for settings - NwjnAddons",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "entry": "index.js",
-  "requires":["axios", "Vigilance"]
+  "requires":["axios", "Vigilance", "PogData"]
 }

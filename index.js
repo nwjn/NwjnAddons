@@ -1,3 +1,6 @@
+/// <reference types="../CTAutocomplete" />
+/// <reference lib="es2015" />
+
 import Settings from "./config";
 import "./features/general";
 import "./features/levels";
@@ -19,24 +22,28 @@ register("command", (arg) => {
   })
   if (arg == "help") {
     ChatLib.chat(helpMessage)
-    console.log("[Log] Executed '/nwjn help'")
+    console.log("Executed '/nwjn help'")
   }
 
 
   else if (!arg) {
     Settings.openGUI()
-    console.log("[Log] Opened GUI")
+    console.log("Opened GUI")
   }
 
+  else if (arg == "clearchat") {
+    ChatLib.clearChat()
+    console.log("Cleared Chat!")
+  }
+    
+  else if (arg == "getline6") {
+    ChatLib.chat(Scoreboard.getLineByIndex(5))
+  }
   else {
     ChatLib.chat(NwjnAddonsMessage(`${arg} has not been implemented yet. Type '/nwjn help' for help.`))
   }
-}).setCommandName("nwjn", true).setAliases("n", "NWJN", "NwjnAddons", "nwjnaddons");
+}).setTabCompletions("nwjn").setCommandName("nwjn", true).setAliases("n", "NWJN", "NwjnAddons", "nwjnaddons");
 
-register("command", () => {
-  ChatLib.clearChat()
-  console.log("[Log] Cleared Chat!")
-}).setCommandName("clearchat", true)
 // register("chat", (player, message, event) => {
 //   ChatLib.chat(player + ": " + message);
 // }).setCriteria("<${player}> ${message}");

@@ -1,5 +1,7 @@
+/// <reference types="../CTAutocomplete" />
+/// <reference lib="es2015" />
+
 import PogObject from "PogData"
-import settings from "../config"
 
 let data = new PogObject("NwjnAddons", {
   "api_key": "",
@@ -7,6 +9,6 @@ let data = new PogObject("NwjnAddons", {
 
 export default constants = {
   PREFIX: "&l&d[NwjnAddons]",
+  WIP: "&cThis feature is still in development!",
   data,
-  settings,
-}
+};
