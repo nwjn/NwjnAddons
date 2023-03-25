@@ -4,5 +4,5 @@
   "description": "/nwjn for settings - NwjnAddons",
   "version": "0.0.1",
   "entry": "index.js",
-  "requires":["axios", "Vigilance", "PogData"]
+  "requires":["Elementa", "Vigilance", "requestV2", "PromiseV2", "PogData", "CTAutocomplete"]
 }

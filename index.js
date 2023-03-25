@@ -8,19 +8,18 @@ import "./features/bestiary";
 import "./features/kuudra";
 import "./features/events";
 import "./utils/api";
-
 import { helpHelper, NwjnAddonsMessage } from "./utils/functions";
+import { data, PREFIX, bestiaryDisplay, statsDisplay } from "./utils/constants";
+
 
 register("command", (arg) => {
-  helpMessage = helpHelper({
-    '': '__title__',
-    'General': 'Miscellaneous functions',
-    'Levels': 'Helps with Skyblock Leveling',
-    'Bestiary': 'Helps with bestiary',
-    'Kuudra': 'Helps with kuudra',
-    'Events': 'Helps with events'
-  })
   if (arg == "help") {
+    helpMessage = helpHelper({
+      '': '__title__',
+      '/bestiarytracker': 'makes bestiary tracker moveable',
+      '/statstracker': `makes stats tracker moveable`,
+      '/clearchat': 'clears the chat',
+    })
     ChatLib.chat(helpMessage)
     console.log("Executed '/nwjn help'")
   }
@@ -30,64 +29,49 @@ register("command", (arg) => {
     Settings.openGUI()
     console.log("Opened GUI")
   }
-
-  else if (arg == "clearchat") {
-    ChatLib.clearChat()
-    console.log("Cleared Chat!")
-  }
     
-  else if (arg == "getline6") {
-    ChatLib.chat(Scoreboard.getLineByIndex(5))
-  }
   else {
     ChatLib.chat(NwjnAddonsMessage(`${arg} has not been implemented yet. Type '/nwjn help' for help.`))
   }
 }).setTabCompletions("nwjn").setCommandName("nwjn", true).setAliases("n", "NWJN", "NwjnAddons", "nwjnaddons");
 
-// register("chat", (player, message, event) => {
-//   ChatLib.chat(player + ": " + message);
-// }).setCriteria("<${player}> ${message}");
 
-// register("chat", (player, message, event) => {
-//   cancel(event);
-//   ChatLib.chat(player + ": " + message);
-// }).setCriteria("<${player}> ${message}");
+register("command", () => {
+    ChatLib.clearChat()
+    console.log("Cleared Chat!")
+}).setCommandName("clearchat");
 
-// register("chat", (player, event) => {
-//   ChatLib.chat("howdy " + player);
-// }).setCriteria("hi ${player}!").setContains();
-// ChatLib.chat("NwjnAddons works.")
+register("command", () => {
+  bestiaryDisplay.open();
+}).setCommandName("bestiarytracker");
 
-// registerCommand((arg) => {
-//   if (arg != 1) {
-//     ChatLib.chat("Command takes 1 argument.");
-//   } else {
-//     ChatLib.chat(`NwjnAddons - ${ arg } has not yet been implemented. Type '/nwjn help' for help.`);
-//   }
-// })
-//   .setTabCompletions((args) => {
-//     return ["help", "foo"];
-//   })
-//   .setCommandName("nwjn");
+register("command", () => {
+  statsDisplay.open();
+}).setCommandName("statstracker")
 
-// // a basic worldload trigger
-// register("worldload", () => {
-//   ChatLib.chat("World loaded.")
-// });
+register("chat", () => {
+  ChatLib.say("/pc rer dorp? enchintad bonk {23% majik fin]")
+}).setChatCriteria("&r&6&lRARE DROP! &r&fEnchanted Book&r")
 
-// // a basic chat trigger
-// register("chat", (player, message, event) => {
-//   cancel(event);
-//   ChatLib.chat(`${player}: ${message}`);
-// }).setCriteria(`<${ player }> ${ message }`);
+register("guiClosed", () => {
+  Settings.save();
+});
 
-// // an automated response
-// register("messageSent", (message, event) => {
-//   if (message.toLowerCase().includes("ping")) {
-//     ChatLib.chat("Pong!");
-//   }
-// });
+// register("command", () => {
+//   data.DwarvenGoblin += 2;
+//   data.save()
+// }).setCommandName("goblin")
 
-// register("chat", () => {
-//   ChatLib.say('/p holy shit it finally worked')
-// }).setChatCriteria("&r&9Party &8> &b[MVP&d+&b] Jumbo_Cube&f: &rtest&r")
+register("step", () => {
+  if (data.first_time) {
+    data.first_time = false; 
+    data.save();
+    ChatLib.chat("");
+    new TextComponent(ChatLib.getCenteredText(`${ PREFIX }`)).chat();
+    new TextComponent(ChatLib.getCenteredText(`&aDo '/nwjn' For settings!`)).chat();
+    new TextComponent(ChatLib.getCenteredText(`&aDo '/nwjn help' For commands!`)).chat();
+    new TextComponent(ChatLib.getCenteredText(`&aJoin Our Discord!  &b&nDiscord&r &7(Click)`)).setClickAction("open_url").setClickValue("https://discord.gg/wer8VU5E9P").chat();
+    ChatLib.chat("");
+  };
+}).setFps(1)
+

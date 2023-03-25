@@ -2,30 +2,30 @@
 /// <reference lib="es2015" />
 
 // Item
-const EntityArmorStand = Java.type("net.minecraft.entity.item.EntityArmorStand");
+export const EntityArmorStand = Java.type("net.minecraft.entity.item.EntityArmorStand");
 
 // Player
-const EntityPlayer = Java.type("net.minecraft.entity.player.EntityPlayer");
+export const EntityPlayer = Java.type("net.minecraft.entity.player.EntityPlayer");
 
 // Passive
-const EntityWolf = Java.type("net.minecraft.entity.passive.EntityWolf");
+export const EntityWolf = Java.type("net.minecraft.entity.passive.EntityWolf");
 
 // Monster
-const EntityZombie = Java.type("net.minecraft.entity.monster.EntityZombie");
-const EntityZombieVillager = Java.type("net.minecraft.entity.monster.EntityZombieVillager");
-const EntitySkeleton = Java.type("net.minecraft.entity.monster.EntitySkeleton");
-const EntitySpider = Java.type("net.minecraft.entity.monster.EntitySpider");
-const EntityCaveSpider = Java.type("net.minecraft.entity.monster.EntityCaveSpider");
-const EntitySlime = Java.type("net.minecraft.entity.monster.EntitySlime");
-const EntityWitch = Java.type("net.minecraft.entity.monster.EntityWitch");
-const EntityEnderman = Java.type("net.minecraft.entity.monster.EntityEnderman");
-const EntityEndermite = Java.type("net.minecraft.entity.monster.EntityEndermite");
-const EntityWitherSkeleton = Java.type("net.minecraft.entity.monster.EntityWitherSkeleton");
-const EntityGolem = Java.type("net.minecraft.entity.monster.EntityGolem");
-const EntityBlaze = Java.type("net.minecraft.entity.monster.EntityBlaze");
-const EntityMagmaCube = Java.type("net.minecraft.entity.monster.EntityMagmaCube");
-const EntityCreeper = Java.type("net.minecraft.entity.monster.EntityCreeper");
+export const EntityZombie = Java.type("net.minecraft.entity.monster.EntityZombie");
+export const EntityZombieVillager = Java.type("net.minecraft.entity.monster.EntityZombieVillager");
+export const EntitySkeleton = Java.type("net.minecraft.entity.monster.EntitySkeleton");
+export const EntitySpider = Java.type("net.minecraft.entity.monster.EntitySpider");
+export const EntityCaveSpider = Java.type("net.minecraft.entity.monster.EntityCaveSpider");
+export const EntitySlime = Java.type("net.minecraft.entity.monster.EntitySlime");
+export const EntityWitch = Java.type("net.minecraft.entity.monster.EntityWitch");
+export const EntityEnderman = Java.type("net.minecraft.entity.monster.EntityEnderman");
+export const EntityEndermite = Java.type("net.minecraft.entity.monster.EntityEndermite");
+export const EntityWitherSkeleton = Java.type("net.minecraft.entity.monster.EntityWitherSkeleton");
+export const EntityGolem = Java.type("net.minecraft.entity.monster.EntityGolem");
+export const EntityBlaze = Java.type("net.minecraft.entity.monster.EntityBlaze");
+export const EntityMagmaCube = Java.type("net.minecraft.entity.monster.EntityMagmaCube");
+export const EntityCreeper = Java.type("net.minecraft.entity.monster.EntityCreeper");
 
 // Boss
-const EntityDragon = Java.type("net.minecraft.entity.boss.EntityDragon");
-const EntityWither = Java.type("net.minecraft.entity.boss.EntityWither");
+export const EntityDragon = Java.type("net.minecraft.entity.boss.EntityDragon");
+export const EntityWither = Java.type("net.minecraft.entity.boss.EntityWither");

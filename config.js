@@ -1,12 +1,11 @@
 /// <reference types="../CTAutocomplete" />
 /// <reference lib="es2015" />
 
-import { @Vigilant, @TextProperty, @ColorProperty, @ButtonProperty, @SwitchProperty, @SliderProperty, @SelectorProperty, Color } from 'Vigilance';
+import { @Vigilant, @ColorProperty, @ButtonProperty, @SwitchProperty, @SliderProperty, @SelectorProperty, Color } from 'Vigilance';
 
-import constants from "./utils/constants";
-const WIP = constants.WIP;
+import { WIP } from "./utils/constants";
 
-@Vigilant("Nwjn", "NwjnAddons", {
+@Vigilant("NwjnAddons", {
   getCategoryComparator: () => (a, b) => {
     const categories = ["General", "Levels", "Bestiary", "Kuudra", "Events", "Private Lobby"]
     return categories.indexOf(a.name) - categories.indexOf(b.name);
@@ -14,12 +13,13 @@ const WIP = constants.WIP;
 })
 class Settings {
   @SwitchProperty({
-    name: "Remove Hypixel Lobby Join Messages",
-    description: `Removes the messages of when someone joins the lobby`,
+    name: "Remove Hypixel Lobby Join and Mystery Box Messages",
+    description: `Removes the messages of hypixel lobby join and mystery box`,
     category: "General"
   })
   inLobby = true;
-  
+
+
   @SwitchProperty({
     name: "Legion Display",
     description: `Shows number of players nearby\n${WIP}`,
@@ -33,6 +33,23 @@ class Settings {
     category: "General"
   })
   cooldown = true;
+
+  @SwitchProperty({
+    name: "Combat Stats Display",
+    description: `Shows combat stats on hud`,
+    category: "General"
+  })
+  stats = true;
+
+  @ButtonProperty({
+    name: "Move Stats Tracker GUI",
+    description: "Moves the stats tracker around",
+    category: "General",
+    placeholder: "Click!"
+  })
+  action() {
+    ChatLib.command("statstracker", true);
+  }
 
   @SwitchProperty({
     name: "Skyblock XP Display",
@@ -57,10 +74,20 @@ class Settings {
 
   @SwitchProperty({
     name: "Bestiary Tracker",
-    description: `Shows the bestiary mobs of the island you're in\n${WIP}\n&cMust have no objectives in Scoreboard`,
+    description: `Shows the bestiary mobs of the island you're in on hud`,
     category: "Bestiary"
   })
   bestiary = true;
+
+  @ButtonProperty({
+    name: 'Move Bestiary Tracker GUI',
+    description: 'Moves the bestiary tracker GUI around',
+    category: 'Bestiary',
+    placeholder: 'Click!',
+  })
+  actionz() {
+    ChatLib.command("bestiarytracker", true);
+  }
     
   @SwitchProperty({
     name: "Rain Slimes",
@@ -88,12 +115,19 @@ class Settings {
   broodmother = true; 
 
   @SwitchProperty({
-    name: "Dragon Highlighter",
-    description: `Highlights the dragon\n${WIP}`,
+    name: "Dragon Box",
+    description: `Draws a box around the dragon\n${WIP}`,
     category: "Bestiary",
     subcategory: "End"
   })
   dragon = true;
+  
+  @SwitchProperty({
+    name: "Kuudra Alerts",
+    description: `Sends alerts in kuudra`,
+    category: "Kuudra"
+  })
+  alerts = true;    
 
   @SwitchProperty({
     name: "Supply Placement Waypoint",
@@ -101,13 +135,6 @@ class Settings {
     category: "Kuudra"
   })
   inP1 = true;
-
-  @SwitchProperty({
-    name: "Stun",
-    description: `Starts a stopwatch when a player mounts the cannon\n${WIP}`,
-    category: "Kuudra"
-  })
-  inP3 = true;    
 
   @SwitchProperty({
     name: "Number of Runs in NameTag",

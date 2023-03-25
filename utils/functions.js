@@ -1,8 +1,7 @@
 /// <reference types="../CTAutocomplete" />
 /// <reference lib="es2015" />
 
-import constants from "./constants";
-const PREFIX = constants.PREFIX;
+import { PREFIX } from "./constants"
 
 export function helpHelper(commandInfo) {
   lastItem = (function () {
@@ -13,13 +12,7 @@ export function helpHelper(commandInfo) {
   helpMessage = String()
   for (i in commandInfo) {
     if (commandInfo[i] == "__title__") {
-      helpMessage += `${PREFIX}`
-    }
-    else if (commandInfo[i] == "__subtitle__") {
-      helpMessage += `&l&d[&5${i}&d]`
-    }
-    else if (commandInfo[i] == "__custom__") {
-      helpMessage += `${i}`
+      helpMessage += new TextComponent(ChatLib.getCenteredText(`${ PREFIX }`)).chat();
     }
     else {
       helpMessage += `&b${i}:&f ${commandInfo[i]}`
@@ -37,4 +30,7 @@ export function NwjnAddonsMessage(message) {
   return (`${PREFIX}&f ${message}`)
 }
 
-// export function AlreadySent
+export function alert(title, player) {
+  World.playSound("note.pling", 100, 1);
+  Client.showTitle(title, "", 10, 100, 10);
+}
