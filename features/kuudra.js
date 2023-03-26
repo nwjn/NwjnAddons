@@ -5,6 +5,7 @@ import Settings from "../config";
 import { alert } from "../utils/functions";
 let inKuudra = false;
 
+// Credit: OdinClient for Kuudra Alerts inspiration
 register("chat", () => {
   if (Settings.alerts) {
     inKuudra = true;
@@ -25,7 +26,7 @@ register("chat", (player) => {
 register("chat", () => {
   if (Settings.alerts) {
     inKuudra = true;
-    alert("&c&lPURCHASE CLASS!", "");
+    alert("&c&lPURCHASE CLASS PATH!", "");
   }
 }).setCriteria("[NPC] Elle: Okay adventurers, I will go and fish up Kuudra!");
   

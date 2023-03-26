@@ -6,7 +6,6 @@ import Settings from "../config";
 let powder = false;
 let sbupdate = false;
 
-// Automatically sends a guild message when a 2x event is announced in Dwarven Mines or Crystal Hollows.
 register("chat", () => {
   if (Settings.doublepowder) {
     powder = true
@@ -22,7 +21,6 @@ register("chat", () => {
   }
 }).setChatCriteria(" &b⚑ &eThe &b2x Powder &eevent starts in &a20 &eseconds!").setContains();
 
-// Automatically sends a guild message when a game update is announced in your lobby
 register("chat", () => {
   if (Settings.gameupdate) {
     sbupdate = true;
@@ -37,5 +35,3 @@ register("chat", () => {
     }
   }
 }).setChatCriteria("&r&c[Important] &r&eThis server will restart soon: &r&bGame Update&r").setContains();
-
-// Clears the "You cannot say the same message twice!" message from the chat

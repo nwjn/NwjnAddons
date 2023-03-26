@@ -1,8 +1,15 @@
 {
     "api_key": "",
-    "first_time": false,
-    "bestiaryX": 185,
-    "bestiaryY": 263.06585693359375,
+    "first_time": true,
+    "statsX": 583,
+    "statsY": 165,
+    "Speed": 0,
+    "Strength": 0,
+    "CritChance": 0,
+    "CritDamage": 0,
+    "AttackSpeed": 0,
+    "bestiaryX": 301,
+    "bestiaryY": 143,
     "bestiaryTier": 0,
     "IslandCaveSpider": 0,
     "IslandEnderman": 0,
@@ -100,12 +107,5 @@
     "DungeonZombieCommander": 0,
     "DungeonZombieGrunt": 0,
     "DungeonZombieKnight": 0,
-    "DungeonZombieSoldier": 0,
-    "statsX": 463,
-    "statsY": 123.52157592773438,
-    "Speed": 0,
-    "Strength": 0,
-    "CritChance": 0,
-    "CritDamage": 0,
-    "AttackSpeed": 0
+    "DungeonZombieSoldier": 0
 }

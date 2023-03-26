@@ -3,11 +3,11 @@
 
 import { @Vigilant, @ColorProperty, @ButtonProperty, @SwitchProperty, @SliderProperty, @SelectorProperty, Color } from 'Vigilance';
 
-import { WIP } from "./utils/constants";
+import { consts } from "./utils/constants";
 
 @Vigilant("NwjnAddons", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["General", "Levels", "Bestiary", "Kuudra", "Events", "Private Lobby"]
+    const categories = ["General", "Levels", "Bestiary", "Kuudra", "Events"]
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   }
 })
@@ -22,21 +22,21 @@ class Settings {
 
   @SwitchProperty({
     name: "Legion Display",
-    description: `Shows number of players nearby\n${WIP}`,
+    description: `Shows number of players nearby\n${consts.WIP}`,
     category: "General"
   })
   legion = true;
 
   @SwitchProperty({
     name: "Cooldown Display",
-    description: `Shows the cooldown on your abilities\n${WIP}`,
+    description: `Shows the cooldown on your abilities\n${consts.WIP}`,
     category: "General"
   })
   cooldown = true;
 
   @SwitchProperty({
-    name: "Combat Stats Display",
-    description: `Shows combat stats on hud`,
+    name: "Stats Display",
+    description: `Shows stats from tab on hud`,
     category: "General"
   })
   stats = true;
@@ -48,50 +48,50 @@ class Settings {
     placeholder: "Click!"
   })
   action() {
-    ChatLib.command("statstracker", true);
+    ChatLib.command(`nwjn stats`, true);
   }
 
   @SwitchProperty({
     name: "Skyblock XP Display",
-    description: `Shows your skyblock xp\n${WIP}`,
+    description: `Shows your skyblock xp\n${consts.WIP}`,
     category: "Levels"
   })
   skyblockxp = true;
 
   @SwitchProperty({
     name: "Skyblock XP Decimal in NameTag",
-    description: `Adds the decimal to the Sblvl in nametag\n${WIP}`,
+    description: `Adds the decimal to the Sblvl in nametag\n${consts.WIP}`,
     category: "Levels"
   })
   sbxpdecimal = true;
 
   @SwitchProperty({
     name: "Cheapest Skyblock XP",
-    description: `Shows your chosen number or next level of next cheapest skyblock xp upgrades\n${WIP}`,
+    description: `Shows your chosen number or next level of next cheapest skyblock xp upgrades\n${consts.WIP}`,
     category: "Levels"
   })
   cheapestxp = true;
 
   @SwitchProperty({
     name: "Bestiary Tracker",
-    description: `Shows the bestiary mobs of the island you're in on hud`,
+    description: `Shows the bestiary mobs of the island you're in on hud\n${consts.WIP}`,
     category: "Bestiary"
   })
   bestiary = true;
 
   @ButtonProperty({
     name: 'Move Bestiary Tracker GUI',
-    description: 'Moves the bestiary tracker GUI around',
+    description: `Moves the bestiary tracker GUI around`,
     category: 'Bestiary',
     placeholder: 'Click!',
   })
   actionz() {
-    ChatLib.command("bestiarytracker", true);
+    ChatLib.command(`nwjn best`, true);
   }
     
   @SwitchProperty({
     name: "Rain Slimes",
-    description: `Shows time until rain and sends notification\n${WIP}`,
+    description: `Shows time until rain and sends notification\n${consts.WIP}`,
     // option for intrusive noti, chat noti, or notis off
     category: "Bestiary",
     subcategory: "Spiders Den"
@@ -100,7 +100,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Arachnes Keeper",
-    description: `Shows where the keeper can spawn or waypoint to where it is and draws a box\n${WIP}`,
+    description: `Shows where the keeper can spawn or waypoint to where it is and draws a box\n${consts.WIP}`,
     category: "Bestiary",
     subcategory: "Spiders Den"
   })
@@ -108,7 +108,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Broodmother",
-    description: `Shows where the Broodmother is and draws a box\n${WIP}`,
+    description: `Shows where the Broodmother is and draws a box\n${consts.WIP}`,
     category: "Bestiary",
     subcategory: "Spiders Den"
   })
@@ -116,7 +116,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Dragon Box",
-    description: `Draws a box around the dragon\n${WIP}`,
+    description: `Draws a box around the dragon\n${consts.WIP}`,
     category: "Bestiary",
     subcategory: "End"
   })
@@ -131,14 +131,14 @@ class Settings {
 
   @SwitchProperty({
     name: "Supply Placement Waypoint",
-    description: `Places a waypoint at all available supply placements\n${WIP}`,
+    description: `Places a waypoint at all available supply placements\n${consts.WIP}`,
     category: "Kuudra"
   })
   inP1 = true;
 
   @SwitchProperty({
     name: "Number of Runs in NameTag",
-    description: `Adds the number of Infernal Kuudra Completions to end of NameTag\n${WIP}`,
+    description: `Adds the number of Infernal Kuudra Completions to end of NameTag\n${consts.WIP}`,
     category: "Kuudra"
   })
   inT5 = true;
@@ -161,14 +161,14 @@ class Settings {
 
   @SwitchProperty({
     name: "Event Notifier",
-    description: `Notfies you before Fishing Festivals, Mining Festivals, and Spooky Festivals\n${WIP}`,
+    description: `Notfies you before Fishing Festivals, Mining Festivals, and Spooky Festivals\n${consts.WIP}`,
     category: "Events"
   })
   EventInCalender = true; 
 
   @SwitchProperty({
     name: "Jacob Notifier",
-    description: `Timer and notification for Jacob Events, Shows medals and next crops\n${WIP}`,
+    description: `Timer and notification for Jacob Events, Shows medals and next crops\n${consts.WIP}`,
     category: "Events"
   })
   Jacob = true;

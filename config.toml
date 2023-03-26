@@ -15,6 +15,7 @@
 
 	[bestiary.end]
 		dragon_highlighter = true
+		dragon_box = true
 
 	[bestiary.spiders_den]
 		broodmother = true
