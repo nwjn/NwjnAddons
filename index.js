@@ -1,6 +1,3 @@
-/// <reference types="../CTAutocomplete" />
-/// <reference lib="es2015" />
-
 import Settings from "./config";
 import "./features/general";
 import "./features/levels";
@@ -78,4 +75,7 @@ register("step", () => {
     ChatLib.chat("");
   };
 }).setFps(1)
+
+// Credit: Miniboss Timer for changing screen color in gui
+
 

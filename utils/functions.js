@@ -1,7 +1,4 @@
-/// <reference types="../CTAutocomplete" />
-/// <reference lib="es2015" />
-
-import { consts } from "./constants"
+import { bestiaryDisplay, consts, statsDisplay } from "./constants"
 
 
 // Credit: HJES for helpMessage and helpHelper
@@ -36,4 +33,17 @@ export function NwjnAddonsMessage(message) {
 export function alert(title, player) {
   World.playSound("note.pling", 100, 1);
   Client.showTitle(title, "", 10, 100, 10);
+}
+
+// Miniboss Timer for this function
+export function guiShader() {
+  if (statsDisplay.isOpen() || bestiaryDisplay.isOpen()) {
+    Renderer.drawRect(
+      Renderer.color(0, 0, 0, 100),
+      0,
+      0,
+      Renderer.screen.getWidth(),
+      Renderer.screen.getHeight()
+    );
+  }
 }

@@ -1,12 +1,11 @@
-/// <reference types="../CTAutocomplete" />
-/// <reference lib="es2015" />
-
 import Settings from "../config";
+import { guiShader } from "../utils/functions";
 
 let powder = false;
 let sbupdate = false;
 
 register("chat", () => {
+  guiShader()
   if (Settings.doublepowder) {
     powder = true
     ChatLib.say('/gc [NwjnAddons] 2x Powder Alert!')

@@ -1,11 +1,8 @@
-/// <reference types="../CTAutocomplete" />
-/// <reference lib="es2015" />
+import { @Vigilant, @ColorProperty, @ButtonProperty, @SwitchProperty, @SliderProperty, @SelectorProperty, @CheckboxProperty, Color } from 'Vigilance';
 
-import { @Vigilant, @ColorProperty, @ButtonProperty, @SwitchProperty, @SliderProperty, @SelectorProperty, Color } from 'Vigilance';
+import { data, consts } from "./utils/constants";
 
-import { consts } from "./utils/constants";
-
-@Vigilant("NwjnAddons", {
+@Vigilant("NwjnAddons", "§d§lNwjnAddons", {
   getCategoryComparator: () => (a, b) => {
     const categories = ["General", "Levels", "Bestiary", "Kuudra", "Events"]
     return categories.indexOf(a.name) - categories.indexOf(b.name);
@@ -33,23 +30,74 @@ class Settings {
     category: "General"
   })
   cooldown = true;
-
+  
   @SwitchProperty({
     name: "Stats Display",
     description: `Shows stats from tab on hud`,
-    category: "General"
+    category: "General",
+    subcategory: "Stats"
   })
   stats = true;
-
+    
   @ButtonProperty({
     name: "Move Stats Tracker GUI",
     description: "Moves the stats tracker around",
     category: "General",
+    subcategory: "Stats",
     placeholder: "Click!"
   })
   action() {
     ChatLib.command(`nwjn stats`, true);
   }
+
+  @CheckboxProperty({
+    name: "Show Speed",
+    description: "Click the checkbox if you want the stat tracker to show your speed",
+    category: "General",
+    subcategory: "Stats",
+  })
+  speedToggle = true  
+
+  @CheckboxProperty({
+    name: "Show Strength",
+    description: "Click the checkbox if you want the stat tracker to show your strength",
+    category: "General",
+    subcategory: "Stats",
+  })
+  strengthToggle = true
+    
+  @CheckboxProperty({
+    name: "Show Crit Chance",
+    description: "Click the checkbox if you want the stat tracker to show your crit chance",
+    category: "General",
+    subcategory: "Stats",
+  })
+  critchanceToggle = true
+
+  @CheckboxProperty({
+    name: "Show Crit Damage",
+    description: "Click the checkbox if you want the stat tracker to show your crit damage",
+    category: "General",
+    subcategory: "Stats",
+  })
+  critdamageToggle = true
+
+  @CheckboxProperty({
+    name: "Show Attack Speed",
+    description: "Click the checkbox if you want the stat tracker to show your attack speed",
+    category: "General",
+    subcategory: "Stats",
+  })
+  attackspeedToggle = true
+
+  @CheckboxProperty({
+    name: "Show Farming Fortune",
+    description: "Click the checkbox if you want the stat tracker to show your farming fortune\n&cOnly shows when in the garden",
+    category: "General",
+    subcategory: "Stats",
+  })
+  farmingfortuneToggle = true
+
 
   @SwitchProperty({
     name: "Skyblock XP Display",
@@ -78,6 +126,7 @@ class Settings {
     category: "Bestiary"
   })
   bestiary = true;
+
 
   @ButtonProperty({
     name: 'Move Bestiary Tracker GUI',
@@ -176,16 +225,23 @@ class Settings {
 
   constructor() {
     this.initialize(this);
-    this.setCategoryDescription("General", "&dNwjnAddons &8by: &bnwjn\n&ause &f/nwjn help &afor full list of commands\n&cHYPIXEL MODIFICATIONS ARE USE AT YOUR OWN RISK")
-    this.setCategoryDescription("Levels", "Yummy Skyblock XP ")
-    this.setCategoryDescription("Bestiary", "Bestiary Helper!")
+    this.setCategoryDescription("General", "&dNwjnAddons &8by: &bnwjn\n&ause &f/nwjn help &afor full list of commands\n&cHYPIXEL MODIFICATIONS ARE USE AT YOUR OWN RISK");
+    this.setCategoryDescription("Levels", "Yummy Skyblock XP ");
+    this.setCategoryDescription("Bestiary", "Bestiary Helper!");
 
     // add Bestiary Level from island in 3rd part
     // this.setSubcategoryDescription("Bestiary", "Spiders Den", "")
     // this.setSubcategoryDescription("Bestiary", "End", "")
     
-    this.setCategoryDescription("Kuudra", "100m/h Trust")
-    this.setCategoryDescription("Events", "Fun")
+    this.setCategoryDescription("Kuudra", "100m/h Trust");
+    this.setCategoryDescription("Events", "Fun");
+
+    this.addDependency("Show Speed", "Stats Display")
+    this.addDependency("Show Strength", "Stats Display")
+    this.addDependency("Show Crit Chance", "Stats Display")
+    this.addDependency("Show Crit Damage", "Stats Display")
+    this.addDependency("Show Attack Speed", "Stats Display")
+    this.addDependency("Show Farming Fortune", "Stats Display")
   }
 }
 

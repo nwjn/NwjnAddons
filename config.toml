@@ -4,6 +4,17 @@
 	legion_display = true
 	combat_stats_display = true
 	cooldown_display = true
+	show_speed_in_stat_tracker = true
+	stats_display = true
+
+	[general.stats]
+		show_farming_fortune = true
+		show_crit_damage = true
+		show_attack_speed = true
+		show_crit_chance = true
+		show_speed = true
+		show_strength = true
+		stats_display = true
 
 [kuudra]
 	kuudra_alerts = true

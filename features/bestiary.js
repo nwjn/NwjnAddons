@@ -1,7 +1,5 @@
-/// <reference types="../CTAutocomplete" />
-/// <reference lib="es2015" />
-
 import Settings from "../config";
+import { guiShader } from "../utils/functions";
 import { data, bestiaryDisplay, consts, short_number } from "../utils/constants";
 
 let tracker = false;
@@ -17,7 +15,9 @@ let dungeons = false;
 
 // Credit: Ghosts for Rendering overlay inspiration
 // TODO: Add Bestiary Tiers of the island and divide by ten, put infront of the renderer drawing to show the amount of bestiary u get from that island
+// TODO: make hidden switchproperties and if you select and option then it will reveal them. can select which mobs you want on your gui. For dungeons do for floors not per mob.
 register("renderoverlay", () => {
+  guiShader()
   if (Settings.bestiary) {
     // Island
     try {
