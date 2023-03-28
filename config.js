@@ -1,14 +1,29 @@
-import { @Vigilant, @ColorProperty, @ButtonProperty, @SwitchProperty, @SliderProperty, @SelectorProperty, @CheckboxProperty, Color } from 'Vigilance';
+import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, Color } from "Vigilance";
 
 import { data, consts } from "./utils/constants";
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["General", "Levels", "Bestiary", "Kuudra", "Events"]
+    const categories = ["General", "Levels", "Bestiary", "Kuudra", "Events", "Garden"]
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   }
 })
 class Settings {
+  @TextProperty({
+    name: "Downtime",
+    description: `Type what you want your downtime alert to say`,
+    category: "General",
+    placeholder: "placeholder"
+  })
+  DTmessage = "test";
+
+  @SwitchProperty({
+    name: "Show Downtime",
+    description: "Shows how much you've downtime you've done",
+    category: "General"
+  })
+  showDT = true;
+
   @SwitchProperty({
     name: "Remove Hypixel Lobby Join and Mystery Box Messages",
     description: `Removes the messages of hypixel lobby join and mystery box`,
@@ -16,6 +31,12 @@ class Settings {
   })
   inLobby = true;
 
+  @SwitchProperty({
+    name: "Healer m7 Ult Reminder",
+    description: "Reminds you when to use wish in m7",
+    category: "General"
+  })
+  healer = false;
 
   @SwitchProperty({
     name: "Legion Display",
@@ -56,7 +77,7 @@ class Settings {
     category: "General",
     subcategory: "Stats",
   })
-  speedToggle = true  
+  speedToggle = true;  
 
   @CheckboxProperty({
     name: "Show Strength",
@@ -64,7 +85,7 @@ class Settings {
     category: "General",
     subcategory: "Stats",
   })
-  strengthToggle = true
+  strengthToggle = true;
     
   @CheckboxProperty({
     name: "Show Crit Chance",
@@ -72,7 +93,7 @@ class Settings {
     category: "General",
     subcategory: "Stats",
   })
-  critchanceToggle = true
+  critchanceToggle = true;
 
   @CheckboxProperty({
     name: "Show Crit Damage",
@@ -80,7 +101,7 @@ class Settings {
     category: "General",
     subcategory: "Stats",
   })
-  critdamageToggle = true
+  critdamageToggle = true;
 
   @CheckboxProperty({
     name: "Show Attack Speed",
@@ -88,7 +109,7 @@ class Settings {
     category: "General",
     subcategory: "Stats",
   })
-  attackspeedToggle = true
+  attackspeedToggle = true;
 
   @CheckboxProperty({
     name: "Show Farming Fortune",
@@ -96,7 +117,7 @@ class Settings {
     category: "General",
     subcategory: "Stats",
   })
-  farmingfortuneToggle = true
+  farmingfortuneToggle = true;
 
 
   @SwitchProperty({
@@ -171,6 +192,14 @@ class Settings {
   })
   dragon = true;
   
+  @SelectorProperty({
+    name: "Kuudra Class",
+    description: `Select which class you are playing\n${consts.WIP}`,
+    category: "Kuudra",
+    options: ["Spec", "Spec Stun", "Crowd Control", "Cannon"]
+  })
+  class = 0;
+
   @SwitchProperty({
     name: "Kuudra Alerts",
     description: `Sends alerts in kuudra`,
@@ -183,15 +212,33 @@ class Settings {
     description: `Places a waypoint at all available supply placements\n${consts.WIP}`,
     category: "Kuudra"
   })
-  inP1 = true;
+  supplies = true;
 
+  
   @SwitchProperty({
-    name: "Number of Runs in NameTag",
-    description: `Adds the number of Infernal Kuudra Completions to end of NameTag\n${consts.WIP}`,
+    name: "Percentages and Waypoints for Ballista Building",
+    description: `Shows percentages of each supply being built and waypoints when under average build\n${consts.WIP}`,
     category: "Kuudra"
   })
-  inT5 = true;
+  inBuild = true;
+  
+  @SwitchProperty({
+    name: "Stun Stopwatch",
+    description: `Stopwatch from the time someone gets on a cannon if not You\n${consts.WIP}`,
+    category: "Kuudra"
+  })
+  stun = true;
 
+  @ButtonProperty({
+    name: "Stun Display Location",
+    description: `Click button to change where stun gui is located`,
+    category: "Kuudra",
+    placeholder: "Click!"
+  })
+    actions() {
+    ChatLib.command(`nwjn stun`, true);
+  }
+    
   @SwitchProperty({
     name: "Auto 2x Powder Guild Message",
     description: `Automatically sends a guild message when a 2x event is announced in Dwarven Mines or Crystal Hollows.`,
@@ -227,21 +274,18 @@ class Settings {
     this.initialize(this);
     this.setCategoryDescription("General", "&dNwjnAddons &8by: &bnwjn\n&ause &f/nwjn help &afor full list of commands\n&cHYPIXEL MODIFICATIONS ARE USE AT YOUR OWN RISK");
     this.setCategoryDescription("Levels", "Yummy Skyblock XP ");
-    this.setCategoryDescription("Bestiary", "Bestiary Helper!");
-
-    // add Bestiary Level from island in 3rd part
-    // this.setSubcategoryDescription("Bestiary", "Spiders Den", "")
-    // this.setSubcategoryDescription("Bestiary", "End", "")
-    
+    this.setCategoryDescription("Bestiary", "Bestiary is life");
     this.setCategoryDescription("Kuudra", "100m/h Trust");
-    this.setCategoryDescription("Events", "Fun");
+    this.setCategoryDescription("Events", "zzz");
+    this.setCategoryDescription("Garden", "Listening to the dings with my eyes closed ");
 
-    this.addDependency("Show Speed", "Stats Display")
-    this.addDependency("Show Strength", "Stats Display")
-    this.addDependency("Show Crit Chance", "Stats Display")
-    this.addDependency("Show Crit Damage", "Stats Display")
-    this.addDependency("Show Attack Speed", "Stats Display")
-    this.addDependency("Show Farming Fortune", "Stats Display")
+    this.addDependency("Show Speed", "Stats Display");
+    this.addDependency("Show Strength", "Stats Display");
+    this.addDependency("Show Crit Chance", "Stats Display");
+    this.addDependency("Show Crit Damage", "Stats Display");
+    this.addDependency("Show Attack Speed", "Stats Display");
+    this.addDependency("Show Farming Fortune", "Stats Display");
+    this.addDependency("Stun Display Location", "Stun Stopwatch")
   }
 }
 

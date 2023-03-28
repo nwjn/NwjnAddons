@@ -6,7 +6,8 @@ import "./features/kuudra";
 import "./features/events";
 import "./utils/api";
 import { helpHelper, NwjnAddonsMessage } from "./utils/functions";
-import { data, bestiaryDisplay, statsDisplay, consts } from "./utils/constants";
+import { data, bestiaryDisplay, statsDisplay, consts, version, stunDisplay } from "./utils/constants";
+import axios from "./../axios"
 
 // Credit: HJES for help command inspiration
 register("command", (arg) => {
@@ -29,19 +30,26 @@ register("command", (arg) => {
   }
   else if (arg == 'best') {
     bestiaryDisplay.open();
-    console.log(`Opened stats GUI.`);
+    console.log(`Opened bestiary GUI.`);
     ChatLib.chat(ChatLib.getChatBreak("-"));
     ChatLib.chat("&0&l&kO&r &6&lClick anywhere to move and press ESC to save!&r &0&l&kO&r");
     ChatLib.chat(ChatLib.getChatBreak("-"));
   } 
+  else if (arg == 'stun') {
+    stunDisplay.open();
+    console.log(`Opened stun GUI.`);
+    ChatLib.chat(ChatLib.getChatBreak("-"));
+    ChatLib.chat("&0&l&kO&r &6&lClick anywhere to move and press ESC to save!&r &0&l&kO&r");
+    ChatLib.chat(ChatLib.getChatBreak("-"));
+  }
   else if (!arg) {
     Settings.openGUI()
     console.log("Opened GUI")
   }
   else {
-    ChatLib.chat(NwjnAddonsMessage(`${arg} has not been implemented yet. Type '${ consts.cmd }${ consts.baseCmd } help' for help.`))
+    ChatLib.chat(NwjnAddonsMessage(`${arg} has not been implemented yet. Type '/nwjn help' for help.`))
   }
-}).setCommandName(`nwjn`, true);
+}).setCommandName(`nwjn`, true).setTabCompletions("help", "best", "stats");
 
 
 register("command", () => {
@@ -76,6 +84,53 @@ register("step", () => {
   };
 }).setFps(1)
 
-// Credit: Miniboss Timer for changing screen color in gui
+register("step", () => {
+  username = Player.getName()
+  axios.get(`https://api.mojang.com/users/profiles/minecraft/+${username}`)
+    .then(res => {
+    if (res.data.id != data.uuid) {
+      data.uuid = res.data.id
+      data.save()
+    }
+  })
+}).setFps(1)
 
+register("worldLoad", () => {
+  axios.get(`https://chattriggers.com/api/modules/1528`)
+  .then(res => {
+    let ctVersionArray = (res.data.releases[0].releaseVersion).split('.'),
+    currentVersionArray = version.split('.'),
+    newVersion = false
+
+    for(let i = ctVersionArray.length; i >= 0; i--)
+    {
+      if (ctVersionArray[i] > currentVersionArray[i])
+        newVersion = true
+      else if (currentVersionArray[i] > ctVersionArray[i])
+        newVersion = false
+    }
+
+    if(newVersion)
+    {
+      ChatLib.chat(`${consts.PREFIX}&eYou are using an outdated version of NwjnAddons!`)
+      new TextComponent(`${consts.PREFIX}&eClick &3here&e to update!`)
+      .setClickAction("run_command")
+      .setClickValue(`/ct load`)
+      .chat()
+      ChatLib.chat("")
+    }
+  })
+    
+})
+
+register("step", () => {
+  username = Player.getName()
+  axios.get(`https://api.mojang.com/users/profiles/minecraft/+${username}`)
+    .then(res => {
+      if (res.data.id != data.uuid) {
+        data.uuid = res.data.id
+        data.save()
+      }
+    })
+}).setFps(1)
 

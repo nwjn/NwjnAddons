@@ -31,7 +31,7 @@ register("renderOverlay", () => {
           if (ChatLib.removeFormatting(name).trim().includes("Crit Chance: ☣")) {
             var CritChance_txt = name;
             if (Settings.critchanceToggle) {
-              if (Settings.strengthToggle & Settings.speedToggle) {
+              if (Settings.strengthToggle && Settings.speedToggle) {
                 Renderer.drawStringWithShadow(`\n\n${ CritChance_txt }`, data.statsX, data.statsY);
               }
               else if (Settings.speedToggle || Settings.strengthToggle) {
@@ -45,13 +45,13 @@ register("renderOverlay", () => {
           if (ChatLib.removeFormatting(name).trim().includes("Crit Damage: ☠")) {
             var CritDamage_txt = name;
             if (Settings.critdamageToggle) {
-              if (Settings.speedToggle & Settings.strengthToggle & Settings.critchanceToggle) {
+              if (Settings.speedToggle && Settings.strengthToggle && Settings.critchanceToggle) {
                 Renderer.drawStringWithShadow(`\n\n\n${ CritDamage_txt }`, data.statsX, data.statsY);
               }
-              else if ((Settings.speedToggle & Settings.strengthToggle) || (Settings.speedToggle & Settings.strengthToggle) || (Settings.speedToggle & Settings.critchanceToggle)) {
+              else if ((Settings.speedToggle && Settings.strengthToggle) || (Settings.speedToggle && Settings.strengthToggle) || (Settings.speedToggle && Settings.critchanceToggle) || (Settings.strengthToggle && Settings.critchanceToggle)) {
                 Renderer.drawStringWithShadow(`\n\n${ CritDamage_txt }`, data.statsX, data.statsY);
               }
-              else if (Settings.speedToggle || Settings.strengthToggle || Settings.critchanceToggle) {
+              else if (Settings.strengthToggle || Settings.critchanceToggle) {
                 Renderer.drawStringWithShadow(`\n${ CritDamage_txt }`, data.statsX, data.statsY);
               }
               else {
@@ -62,13 +62,13 @@ register("renderOverlay", () => {
           if (ChatLib.removeFormatting(name).trim().includes("Attack Speed: ⚔")) {
             var AttackSpeed_txt = name;
             if (Settings.attackspeedToggle) {
-              if (Settings.speedToggle & Settings.strengthToggle & Settings.critchanceToggle & Settings.critdamageToggle) {
+              if (Settings.speedToggle && Settings.strengthToggle && Settings.critchanceToggle && Settings.critdamageToggle) {
                 Renderer.drawStringWithShadow(`\n\n\n\n${ AttackSpeed_txt }`, data.statsX, data.statsY);
               }
-              else if ((Settings.speedToggle & Settings.strengthToggle & Settings.critchanceToggle) || (Settings.speedToggle & Settings.strengthToggle & Settings.critdamageToggle) || (Settings.speedToggle & Settings.critchanceToggle & Settings.critdamageToggle) || (Settings.strengthToggle & Settings.critchanceToggle & Settings.critdamageToggle)) {
+              else if ((Settings.speedToggle && Settings.strengthToggle && Settings.critchanceToggle) || (Settings.speedToggle && Settings.strengthToggle && Settings.critdamageToggle) || (Settings.speedToggle && Settings.critchanceToggle && Settings.critdamageToggle) || (Settings.strengthToggle && Settings.critchanceToggle && Settings.critdamageToggle)) {
                 Renderer.drawStringWithShadow(`\n\n\n${ AttackSpeed_txt }`, data.statsX, data.statsY);
               }
-              else if ((Settings.speedToggle & Settings.strengthToggle) || (Settings.speedToggle & Settings.critchanceToggle) || (Settings.speedToggle & Settings.critdamageToggle) || (Settings.strengthToggle & Settings.critchanceToggle) || (Settings.strengthToggle & Settings.critdamageToggle) || (Settings.critchanceToggle & Settings.critdamageToggle)) {
+              else if ((Settings.speedToggle && Settings.strengthToggle) || (Settings.speedToggle && Settings.critchanceToggle) || (Settings.speedToggle && Settings.critdamageToggle) || (Settings.strengthToggle && Settings.critchanceToggle) || (Settings.strengthToggle && Settings.critdamageToggle) || (Settings.critchanceToggle && Settings.critdamageToggle)) {
                 Renderer.drawStringWithShadow(`\n\n${ AttackSpeed_txt }`, data.statsX, data.statsY);
               }
               else if (Settings.speedToggle || Settings.strengthToggle || Settings.critchanceToggle || Settings.critdamageToggle) {
@@ -116,4 +116,31 @@ register("chat", function (e) {
     clearJoinMsg = true;
     cancel(e)
   }
-}).setChatCriteria(" Mystery Box!").setParameter("<c>")
+}).setChatCriteria(" Mystery Box!").setParameter("<c>");
+
+// Credit: BetterBestiary for the messages
+register("chat", (e) => {
+    var formattedMessage = ChatLib.getChatMessage(e, true);
+        if (formattedMessage.includes("Dragon&r&d&l has spawned!")) {
+            Client.showTitle("&c&lDragon!", "", 0, 50, 0);
+            {cancel(e)}}
+        if(formattedMessage.includes("&r&dused &r&eLightning Strike"))
+            {cancel(e)}
+        if(formattedMessage.includes("&r&dused &r&eFireball"))
+            {cancel(e)}
+        if(formattedMessage.includes("&r&dused &r&eDragon Breath"))
+            {cancel(e)}
+        if(formattedMessage.includes("&r&dThe Dragon Egg has spawned!"))
+            {cancel(e)}
+        if(formattedMessage.includes("&r&d&lThe Dragon's Gate ${*}"))
+            {cancel(e)}
+        if(formattedMessage.includes("&r&ddestroyed an &r&5Ender Crystal"))
+            {cancel(e)}
+        if(formattedMessage.includes("&r&5Your Sleeping Eyes ${*}"))
+            { cancel(e); }
+});
+
+register("chat", () => {
+  if (Settings.healer)
+    alert("&cUse ult!")
+}).setCriteria("[BOSS] Maxor: YOU TRICKED ME!" || "[BOSS] Maxor: THAT BEAM! IT HURTS! IT HURTS!!" || "[BOSS] Goldor: You have done it, you destroyed the factory…" || "[BOSS] Sadan: My giants! Unleashed!")

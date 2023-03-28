@@ -1,20 +1,58 @@
 import Settings from "../config";
-import { guiShader } from "../utils/functions";
+import { guiShader, alert } from "../utils/functions";
 import { data, bestiaryDisplay, consts, short_number } from "../utils/constants";
+import axios from "../../axios"
 
-let tracker = false;
-
-let privateIsland = false;
-let hub = false;
-let spidersDen = false;
-let end = false;
-let crimsonIsle = false;
-let deepCaverns = false;
-let park = false;
-let dungeons = false;
+let bestiaryData={
+mob:[10,15,75,150,250,500,1500,2500,5000,15000,25000,50000,...new Array(42-13).fill(100000)],
+boss:[2,3,5,10,10,10,10,25,25,50,50,100,...new Array(42-13).fill(100)],
+private:[10,15,75,150,250]};
+      
+if (Settings.bestiary) {
+  register("step", () => {
+    axios.get(`https://api.hypixel.net/skyblock/profiles?key=${ data.api_key }&uuid=${ data.uuid }`)
+      .then(res => {
+        if (res.data.profiles.selected == true) {
+          TabList.getNames().forEach(name => {
+            if (ChatLib.removeFormatting(name).trim().includes("Area: Private Island")) {
+              data.IslandZombie = res.data.profiles.bestiary.kills_family_zombie;
+              data.IslandSkeleton = res.data.profiles.bestiary.kills_family_skeleton;
+              data.IslandEnderman = res.data.profiles.bestiary.kills_family_enderman_private;
+              data.IslandSlime = res.data.profiles.bestiary.kills_family_slime;
+              data.IslandSpider = res.data.profiles.bestiary.kills_family_spider;
+              data.IslandCaveSpider = res.data.profiles.bestiary.kills_family_cave_spider;
+              data.IslandWitch = res.data.profiles.bestiary.kills_family_witch;
+              data.save();
+            }
+            if (ChatLib.removeFormatting(name).trim().includes("Area: Hub")) {
+              data.HubCryptGhoul = res.data.profiles.bestiary.kills_family_unburried_zombie;
+              data.HubOldWolf = res.data.profiles.bestiary.kills_family_old_wolf;
+              data.HubWolf = res.data.profiles.bestiary.kills_family_ruin_wolf;
+              data.HubZombieVillager = res.data.profiles.bestiary.kills_family_zombie_villager;
+              data.save();
+            }
+            if (ChatLib.removeFormatting(name).trim().includes("Area: Spider's Den")) {
+              data.DenBroodMother = res.data.profiles.bestiary.kills_family_brood_mother_spider;
+              data.DenArachne = res.data.profiles.bestiary.kills_family_arachne;
+              data.DenArachnesBrood = res.data.profiles.bestiary.kills_family_arachne_brood;
+              data.DenArachnesKeeper = res.data.profiles.bestiary.kills_family_arachne_keeper;
+              data.DenRainSlime = res.data.profiles.bestiary.kills_family_random_slime;
+              data.DenGravelSkeleton = res.data.profiles.bestiary.kills_family_respawning_skeleton;
+              data.DenDasherSpider = res.data.profiles.bestiary.kills_family_dasher_spider;
+              data.DenSpiderJockey = res.data.profiles.bestiary.kills_family_spider_jockey;
+              data.DenSplitterSpider = res.data.profiles.bestiary.kills_family_splitter_spider;
+              data.DenVoraciousSpider = res.data.profiles.bestiary.kills_family_voracious_spider;
+              data.DenWeaverSpider = res.data.profiles.bestiary.kills_family_weaver_spider;
+              data.save();
+            }
+          });
+        }
+      })
+  });
+}
 
 // Credit: Ghosts for Rendering overlay inspiration
-// TODO: Add Bestiary Tiers of the island and divide by ten, put infront of the renderer drawing to show the amount of bestiary u get from that island
+// TODO: Add Bestiary Tiers of the island and divide by ten, put infront of the renderer drawing to show the amount of sb xp/max sb xp from that island
 // TODO: make hidden switchproperties and if you select and option then it will reveal them. can select which mobs you want on your gui. For dungeons do for floors not per mob.
 register("renderoverlay", () => {
   guiShader()
@@ -32,12 +70,7 @@ register("renderoverlay", () => {
           let IslandWitch_txt = `${ consts.IslandWitch }${ short_number(data.IslandWitch) }`;
           Renderer.drawStringWithShadow(`${ IslandZombie_txt } \n${ IslandSkeleton_txt } \n${ IslandEnderman_txt } \n${ IslandSlime_txt } \n${ IslandSpider_txt } \n${ IslandCaveSpider_txt } \n${ IslandWitch_txt }`, data.bestiaryX, data.bestiaryY);
         }
-      })
-    } catch (e) { }
-  
     // Hub
-    try {
-      TabList.getNames().forEach(name => {
         if (ChatLib.removeFormatting(name).trim().includes("Area: Hub")) {
           let HubCryptGhoul_txt = `${ consts.HubCryptGhoul }${ short_number(data.HubCryptGhoul) }`;
           let HubOldWolf_txt = `${ consts.HubOldWolf }${ short_number(data.HubOldWolf) }`;
@@ -45,12 +78,7 @@ register("renderoverlay", () => {
           let HubZombieVillager_txt = `${ consts.HubZombieVillager }${ short_number(data.HubZombieVillager) }`;
           Renderer.drawStringWithShadow(`${ HubCryptGhoul_txt } \n${HubOldWolf_txt} \n${HubWolf_txt} \n${HubZombieVillager_txt}`, data.bestiaryX, data.bestiaryY)
         }
-      }) 
-    } catch (e) { }
-  
     // Spider's Den
-    try {
-      TabList.getNames().forEach(name => {
         if (ChatLib.removeFormatting(name).trim().includes("Area: Spider's Den")) {
           let DenBroodMother_txt = `${ consts.DenBroodMother }${ short_number(data.DenBroodMother) }`;
           let DenArachne_txt = `${ consts.DenArachne }${ short_number(data.DenArachne) }`;
@@ -65,12 +93,7 @@ register("renderoverlay", () => {
           let DenWeaverSpider_txt = `${ consts.DenWeaverSpider }${ short_number(data.DenWeaverSpider) }`;
           Renderer.drawStringWithShadow(`${ DenBroodMother_txt } \n${ DenArachne_txt } \n${ DenArachnesBrood_txt } \n${ DenArachnesKeeper_txt } \n${ DenRainSlime_txt } \n${ DenGravelSkeleton_txt } \n${ DenDasherSpider_txt } \n${ DenSpiderJockey_txt } \n${ DenSplitterSpider_txt } \n${ DenVoraciousSpider_txt } \n${ DenWeaverSpider_txt }`, data.bestiaryX, data.bestiaryY);
         }
-      })
-    } catch (e) { }
-  
     // End
-    try {
-      TabList.getNames().forEach(name => {
         if (ChatLib.removeFormatting(name).trim().includes("Area: The End")) {
           let EndDragon_txt = `${ EndDragon }${ short_number(data.EndDragon) }`;
           let EndEndstoneProtector_txt = `${ consts.EndEndstoneProtector }${ short_number(data.EndEndstoneProtector) }`;
@@ -82,13 +105,8 @@ register("renderoverlay", () => {
           let EndEnderman_txt = `${ consts.EndEnderman }${ short_number(data.EndEnderman) }`;
           let EndEndermite_txt = `${ consts.EndEndermite }${ short_number(data.EndEndermite) }`;
           Renderer.drawStringWithShadow(`${ EndDragon_txt } \n${ EndEndstoneProtector_txt } \n${ EndVoidlingExtremist_txt } \n${ EndVoidlingFanatic_txt } \n${ EndZealot_txt } \n${ EndWatcher_txt } \n${ EndObsidianDefender_txt } \n${ EndEnderman_txt } \n${ EndEndermite_txt }`, data.bestiaryX, data.bestiaryY);
-        }
-      });
-    } catch (e) { }
-  
+        }  
     // Crimson Isle
-    try {
-      TabList.getNames().forEach(name => {
         if (ChatLib.removeFormatting(name).trim().includes("Area: Crimson Isle")) {
           let IsleMagmaBoss_txt = `${ consts.IsleMagmaBoss } ${ short_number(data.IsleMagmaBoss) }`;
           let IsleMageOutlaw_txt = `${ consts.IsleMageOutlaw }${ short_number(data.IsleMageOutlaw) }`;
@@ -105,12 +123,7 @@ register("renderoverlay", () => {
           let IsleMatcho_txt = `${ consts.IsleMatcho }${ short_number(data.IsleMatcho) }`;
           Renderer.drawStringWithShadow(`${ IsleMagmaBoss_txt } \n${ IsleMageOutlaw_txt } \n${ IsleAshfang_txt } \n${ IsleBladesoul_txt } \n${ IsleBarbarianDuke_txt } \n${ IsleWitherSpectre_txt } \n${ IsleWitherSkeleton_txt } \n${ IsleFlamingSpider_txt } \n${ IslePigman_txt } \n${ IsleMushroomBull_txt } \n${ IsleMagmaCube_txt } \n${ IsleGhast_txt } \n${ IsleMatcho_txt }`, data.bestiaryX, data.bestiaryY);
         }
-      })
-    } catch (e) { }
-    
     // Deep Caverns
-    try {
-      TabList.getNames().forEach(name => {
         if (ChatLib.removeFormatting(name).trim().includes("Area: Deep Caverns")) {
           let DeepSneakyCreeper_txt = `${ consts.DeepSneakyCreeper }${ short_number(data.DeepSneakyCreeper) }`;
           let DeepLapisZombie_txt = `${ consts.DeepLapisZombie }${ short_number(data.DeepLapisZombie) }`;
@@ -120,12 +133,7 @@ register("renderoverlay", () => {
           let DeepMinerSkeleton_txt = `${ consts.DeepMinerSkeleton }${ short_number(data.DeepMinerSkeleton) }`;
           Renderer.drawStringWithShadow(`${ DeepSneakyCreeper_txt } \n${ DeepLapisZombie_txt } \n${ DeepRedstonePigman_txt } \n${ DeepEmeraldSlime_txt } \n${ DeepMinerZombie_txt } \n${ DeepMinerSkeleton_txt }`, data.bestiaryX, data.bestiaryY);
         }
-      })
-    } catch (e) { }
-  
     // Dwarven Mines
-    try {
-      TabList.getNames().forEach(name => {
         if (ChatLib.removeFormatting(name).trim().includes("Area: Dwarven Mines")) {
           let DwarvenGoblin_txt = `${ consts.DwarvenGoblin }${ short_number(data.DwarvenGoblin) }`;
           let DwarvenIceWalker_txt = `${ consts.DwarvenIceWalker }${ short_number(data.DwarvenIceWalker) }`;
@@ -133,12 +141,7 @@ register("renderoverlay", () => {
           let DwarvenGhost_txt = `${ consts.DwarvenGhost }${ short_number(data.DwarvenGhost) }`;
           Renderer.drawStringWithShadow(`${ DwarvenGoblin_txt } \n${ DwarvenIceWalker_txt } \n${ DwarvenTreasureHoarder_txt } \n${ DwarvenGhost_txt }`, data.bestiaryX, data.bestiaryY)
         }
-      })
-    } catch (e) { }
-  
     // Crystal Hollows
-    try {
-      TabList.getNames().forEach(name => {
         if (ChatLib.removeFormatting(name).trim().includes("Area: Crystal Hollows")) {
           let CHButterfly_txt = `${ consts.CHButterfly }${ short_number(data.CHButterfly) }`;
           let CHAutomaton_txt = `${ consts.CHAutomaton }${ short_number(data.CHAutomaton) }`;
@@ -149,24 +152,14 @@ register("renderoverlay", () => {
           let CHWorm_txt = `${ consts.CHWorm }${ short_number(data.CHWorm) }`;
           Renderer.drawStringWithShadow(`${ CHButterfly_txt } \n${ CHAutomaton_txt } \n${ CHThyst_txt } \n${ CHSludge_txt } \n${ CHGrunt_txt } \n${ CHYog_txt } \n${ CHWorm_txt }`, data.bestiaryX, data.bestiaryY);
         }
-      })
-    } catch (e) { }
-  
     // Park
-    try {
-      TabList.getNames().forEach(name => {
         if (ChatLib.removeFormatting(name).trim().includes("Area: The Park")) {
           let ParkSoulOfTheAlpha_txt = `${ consts.ParkSoulOfTheAlpha }${ short_number(data.ParkSoulOfTheAlpha) }`;
           let ParkHowlingSpirit_txt = `${ consts.ParkHowlingSpirit }${ short_number(data.ParkHowlingSpirit) }`;
           let ParkPackSpirit_txt = `${ consts.ParkPackSpirit }${ short_number(data.ParkPackSpirit) }`;
           Renderer.drawStringWithShadow(`${ ParkSoulOfTheAlpha_txt } \n${ ParkHowlingSpirit_txt } \n${ ParkPackSpirit_txt }`, data.bestiaryX, data.bestiaryY);
         }
-      })
-    } catch (e) { }
-  
     // Spooky
-    try {
-      TabList.getNames().forEach(name => {
         if (ChatLib.removeFormatting(name).trim().includes("Event: Spooky Festival") & ChatLib.removeFormatting(name).trim().includes("Area: Hub")) {
           let SpookyHeadlessHorseman_txt = `${ consts.SpookyHeadlessHorseman }${ short_number(data.SpookyHeadlessHorseman) }`;
           let SpookyScaryJerry_txt = `${ consts.SpookyScaryJerry }${ short_number(data.SpookyScaryJerry) }`;
@@ -177,12 +170,7 @@ register("renderoverlay", () => {
           let SpookyPhantomSpirit_txt = `${ consts.SpookyPhantomSpirit }${ short_number(data.SpookyPhantomSpirit) }`;
           Renderer.drawStringWithShadow(`${ SpookyHeadlessHorseman_txt } \n${ SpookyScaryJerry_txt } \n${ SpookyWitherGourd_txt } \n${ SpookyCrazyWitch_txt } \n${ SpookyWraith_txt } \n${ SpookyTrickOrTreater_txt } \n${ SpookyPhantomSpirit_txt }`, data.bestiaryX, data.bestiaryY);
         }
-      })
-    } catch (e) { }
-  
     // Dungeons
-    try {
-      TabList.getNames().forEach(name => {
         if (ChatLib.removeFormatting(name).trim().includes("Dungeon: Catacombs")) {
           let DungeonLostAdventurer_txt = `${ consts.DungeonLostAdventurer } ${ short_number(data.DungeonLostAdventurer) }`;
           let DungeonAngryArcheologist_txt = `${ consts.DungeonAngryArcheologist }${ short_number(data.DungeonAngryArcheologist) }`;

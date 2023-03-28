@@ -1,5 +1,7 @@
 import Settings from "../config";
 import { alert } from "../utils/functions";
+import { EntityArmorStand, EntityPlayer } from "../utils/entities";
+import { stunDisplay } from "../utils/constants";
 let inKuudra = false;
 
 // Credit: OdinClient for Kuudra Alerts inspiration
@@ -50,3 +52,26 @@ register("chat", (player) => {
     alert("&c&lKUUDRA STUNNED!", player);
   }
 }).setCriteria("{player} destroyed one of Kuudra's pods!");
+
+// OdinClient for get armorstand
+register('step', () => {
+  if (Settings.inBuild)
+    World.getAllEntities().forEach(stand => {
+      if (stand == EntityArmorStand) {
+        ChatLib.chat("test")
+      }
+  })
+})    
+
+register("renderOverlay", () => {
+  if (Settings.stun) {
+    register("chat", (player) => {
+      if (player == "You") {
+      }
+      else {
+        Renderer.drawStringWithShadow(`Stun: `, data.stunX, data.stunY);
+        // if stopwatch > 5 reset
+      }
+    }).setChatCriteria("${player} mounted a Cannon!")
+  }
+})

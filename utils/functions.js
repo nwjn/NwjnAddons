@@ -1,4 +1,6 @@
-import { bestiaryDisplay, consts, statsDisplay } from "./constants"
+import { bestiaryDisplay, consts, statsDisplay, data, stunDisplay } from "./constants"
+import { data } from "./constants";
+import axios from "../../axios";
 
 
 // Credit: HJES for helpMessage and helpHelper
@@ -37,7 +39,7 @@ export function alert(title, player) {
 
 // Miniboss Timer for this function
 export function guiShader() {
-  if (statsDisplay.isOpen() || bestiaryDisplay.isOpen()) {
+  if (statsDisplay.isOpen() || bestiaryDisplay.isOpen() || stunDisplay.isOpen()) {
     Renderer.drawRect(
       Renderer.color(0, 0, 0, 100),
       0,
@@ -47,3 +49,8 @@ export function guiShader() {
     );
   }
 }
+
+
+
+
+

@@ -1,12 +1,15 @@
 import PogObject from "PogData"
 
+// Credit: Ghosts for short_number
 export const short_number = (num) => {
   if(num == undefined) return;
   return num.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 
 export const bestiaryDisplay = new Gui()
-export const statsDisplay = new Gui()  
+export const statsDisplay = new Gui()
+export const stunDisplay = new Gui()
+export const version = (JSON.parse(FileLib.read("NwjnAddons", "metadata.json"))).version
 
 export const consts ={
   PREFIX: "&d&l[NwjnAddons]",
@@ -122,14 +125,17 @@ export const consts ={
   DungeonLonelySpider: '&aLonely Spider:&f '
 }
 
-
 // Credit: Ghosts for data inspiration
 export let data = new PogObject("NwjnAddons", {
   "api_key": "",
+  "uuid": "",
   "first_time": true,
 
   "statsX": 0, 
   "statsY": 0,
+
+  "stunX": 0,
+  "stunY": 0,
 
   "bestiaryX": 0,
   "bestiaryY": 0,
@@ -253,4 +259,4 @@ export let data = new PogObject("NwjnAddons", {
   "DungeonZombieGrunt": 0,
   "DungeonZombieKnight": 0,
   "DungeonZombieSoldier": 0,
-}, "data.json")
+}, "data.json");

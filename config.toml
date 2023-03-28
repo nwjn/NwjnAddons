@@ -2,9 +2,15 @@
 [general]
 	remove_hypixel_lobby_join_and_mystery_box_messages = true
 	legion_display = true
+	nodowntimealert = ""
 	combat_stats_display = true
+	no_downtime_alert = true
 	cooldown_display = true
+	show_downtime = true
+	nosdowntimesalert = "test"
+	healer_m7_ult_reminder = false
 	show_speed_in_stat_tracker = true
+	downtime = "test"
 	stats_display = true
 
 	[general.stats]
@@ -12,13 +18,16 @@
 		show_crit_damage = true
 		show_attack_speed = true
 		show_crit_chance = true
-		show_speed = true
+		show_speed = false
 		show_strength = true
 		stats_display = true
 
 [kuudra]
+	percentages_and_waypoints_for_ballista_building = true
+	stun_stopwatch = true
 	kuudra_alerts = true
 	supply_placement_waypoint = true
+	kuudra_class = 0
 	number_of_runs_in_nametag = true
 
 [bestiary]
