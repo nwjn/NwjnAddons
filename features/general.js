@@ -1,5 +1,6 @@
 import Settings from "../config";
-import { data, statsDisplay } from "../utils/constants";
+import { data, statsDisplay } from "../utils/exports";
+import { alert } from "../utils/functions";
 
 let clearJoinMsg = false;
 
@@ -141,6 +142,6 @@ register("chat", (e) => {
 });
 
 register("chat", () => {
-  if (Settings.healer)
+  if (Settings.healer)    
     alert("&cUse ult!")
 }).setCriteria("[BOSS] Maxor: YOU TRICKED ME!" || "[BOSS] Maxor: THAT BEAM! IT HURTS! IT HURTS!!" || "[BOSS] Goldor: You have done it, you destroyed the factory…" || "[BOSS] Sadan: My giants! Unleashed!")

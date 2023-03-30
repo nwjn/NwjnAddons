@@ -21,3 +21,4 @@ export const EntityCreeper = Java.type("net.minecraft.entity.monster.EntityCreep
 
 // Boss
 export const EntityDragon = Java.type("net.minecraft.entity.boss.EntityDragon");
+

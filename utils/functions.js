@@ -1,6 +1,5 @@
-import { bestiaryDisplay, consts, statsDisplay, data, stunDisplay } from "./constants"
-import { data } from "./constants";
-import axios from "../../axios";
+import { bestiaryDisplay, consts, statsDisplay, data } from "./exports"
+import { data } from "./exports";
 
 
 // Credit: HJES for helpMessage and helpHelper
@@ -32,14 +31,14 @@ export function NwjnAddonsMessage(message) {
 }
 
 // Credit: Odinclient for alert
-export function alert(title, player) {
+export function alert(title) {
   World.playSound("note.pling", 100, 1);
   Client.showTitle(title, "", 10, 100, 10);
 }
 
 // Miniboss Timer for this function
 export function guiShader() {
-  if (statsDisplay.isOpen() || bestiaryDisplay.isOpen() || stunDisplay.isOpen()) {
+  if (statsDisplay.isOpen() || bestiaryDisplay.isOpen()) {
     Renderer.drawRect(
       Renderer.color(0, 0, 0, 100),
       0,

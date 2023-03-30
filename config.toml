@@ -42,6 +42,19 @@
 		rain_slimes = true
 		arachnes_keeper = true
 
+[crimson_isle]
+	percentages_and_waypoints_for_ballista_building = true
+	kuudra_alerts = true
+	hype_broken = true
+	kuudra_class = 0
+	supply_placement_waypoint = true
+
+	[crimson_isle.kuudra]
+		percentages_and_waypoints_for_ballista_building = true
+		kuudra_alerts = true
+		kuudra_class = 0
+		supply_placement_waypoint = true
+
 [levels]
 	cheapest_skyblock_xp = true
 	skyblock_xp_display = true

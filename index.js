@@ -2,11 +2,11 @@ import Settings from "./config";
 import "./features/general";
 import "./features/levels";
 import "./features/bestiary";
-import "./features/kuudra";
+import "./features/crimson";
 import "./features/events";
 import "./utils/api";
 import { helpHelper, NwjnAddonsMessage } from "./utils/functions";
-import { data, bestiaryDisplay, statsDisplay, consts, version, stunDisplay } from "./utils/constants";
+import { data, bestiaryDisplay, statsDisplay, consts, version } from "./utils/exports";
 import axios from "./../axios"
 
 // Credit: HJES for help command inspiration
@@ -35,13 +35,6 @@ register("command", (arg) => {
     ChatLib.chat("&0&l&kO&r &6&lClick anywhere to move and press ESC to save!&r &0&l&kO&r");
     ChatLib.chat(ChatLib.getChatBreak("-"));
   } 
-  else if (arg == 'stun') {
-    stunDisplay.open();
-    console.log(`Opened stun GUI.`);
-    ChatLib.chat(ChatLib.getChatBreak("-"));
-    ChatLib.chat("&0&l&kO&r &6&lClick anywhere to move and press ESC to save!&r &0&l&kO&r");
-    ChatLib.chat(ChatLib.getChatBreak("-"));
-  }
   else if (!arg) {
     Settings.openGUI()
     console.log("Opened GUI")
@@ -66,8 +59,7 @@ register("guiClosed", () => {
 });
 
 register("command", () => {
-  data.HubCryptGhoul += 1
-  data.save()
+  ChatLib.chat(Scoreboard.getLineByIndex(5))
 }).setCommandName("testcmd")
 
 // Credit: BetterBestiary for first time msg inspiration
@@ -123,14 +115,4 @@ register("worldLoad", () => {
     
 })
 
-register("step", () => {
-  username = Player.getName()
-  axios.get(`https://api.mojang.com/users/profiles/minecraft/+${username}`)
-    .then(res => {
-      if (res.data.id != data.uuid) {
-        data.uuid = res.data.id
-        data.save()
-      }
-    })
-}).setFps(1)
 

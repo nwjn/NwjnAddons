@@ -8,7 +8,6 @@ export const short_number = (num) => {
 
 export const bestiaryDisplay = new Gui()
 export const statsDisplay = new Gui()
-export const stunDisplay = new Gui()
 export const version = (JSON.parse(FileLib.read("NwjnAddons", "metadata.json"))).version
 
 export const consts ={
@@ -133,9 +132,6 @@ export let data = new PogObject("NwjnAddons", {
 
   "statsX": 0, 
   "statsY": 0,
-
-  "stunX": 0,
-  "stunY": 0,
 
   "bestiaryX": 0,
   "bestiaryY": 0,

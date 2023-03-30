@@ -1,54 +1,79 @@
 import Settings from "../config";
 import { guiShader, alert } from "../utils/functions";
-import { data, bestiaryDisplay, consts, short_number } from "../utils/constants";
-import axios from "../../axios"
+import { data, bestiaryDisplay, consts, short_number } from "../utils/exports";
+import axios from "axios"
 
-let bestiaryData={
+let bestiaryData = {
 mob:[10,15,75,150,250,500,1500,2500,5000,15000,25000,50000,...new Array(42-13).fill(100000)],
 boss:[2,3,5,10,10,10,10,25,25,50,50,100,...new Array(42-13).fill(100)],
 private:[10,15,75,150,250]};
-      
+
 if (Settings.bestiary) {
   register("step", () => {
     axios.get(`https://api.hypixel.net/skyblock/profiles?key=${ data.api_key }&uuid=${ data.uuid }`)
       .then(res => {
-        if (res.data.profiles.selected == true) {
-          TabList.getNames().forEach(name => {
-            if (ChatLib.removeFormatting(name).trim().includes("Area: Private Island")) {
-              data.IslandZombie = res.data.profiles.bestiary.kills_family_zombie;
-              data.IslandSkeleton = res.data.profiles.bestiary.kills_family_skeleton;
-              data.IslandEnderman = res.data.profiles.bestiary.kills_family_enderman_private;
-              data.IslandSlime = res.data.profiles.bestiary.kills_family_slime;
-              data.IslandSpider = res.data.profiles.bestiary.kills_family_spider;
-              data.IslandCaveSpider = res.data.profiles.bestiary.kills_family_cave_spider;
-              data.IslandWitch = res.data.profiles.bestiary.kills_family_witch;
-              data.save();
-            }
-            if (ChatLib.removeFormatting(name).trim().includes("Area: Hub")) {
-              data.HubCryptGhoul = res.data.profiles.bestiary.kills_family_unburried_zombie;
-              data.HubOldWolf = res.data.profiles.bestiary.kills_family_old_wolf;
-              data.HubWolf = res.data.profiles.bestiary.kills_family_ruin_wolf;
-              data.HubZombieVillager = res.data.profiles.bestiary.kills_family_zombie_villager;
-              data.save();
-            }
-            if (ChatLib.removeFormatting(name).trim().includes("Area: Spider's Den")) {
-              data.DenBroodMother = res.data.profiles.bestiary.kills_family_brood_mother_spider;
-              data.DenArachne = res.data.profiles.bestiary.kills_family_arachne;
-              data.DenArachnesBrood = res.data.profiles.bestiary.kills_family_arachne_brood;
-              data.DenArachnesKeeper = res.data.profiles.bestiary.kills_family_arachne_keeper;
-              data.DenRainSlime = res.data.profiles.bestiary.kills_family_random_slime;
-              data.DenGravelSkeleton = res.data.profiles.bestiary.kills_family_respawning_skeleton;
-              data.DenDasherSpider = res.data.profiles.bestiary.kills_family_dasher_spider;
-              data.DenSpiderJockey = res.data.profiles.bestiary.kills_family_spider_jockey;
-              data.DenSplitterSpider = res.data.profiles.bestiary.kills_family_splitter_spider;
-              data.DenVoraciousSpider = res.data.profiles.bestiary.kills_family_voracious_spider;
-              data.DenWeaverSpider = res.data.profiles.bestiary.kills_family_weaver_spider;
-              data.save();
-            }
-          });
-        }
+        let profiles = res.data.profiles;
+        let [player_id] = Object.keys(profiles[0].members);
+        // console.log(player_id)
+
+        let profile = profiles.findIndex((profile) => {
+        //   console.log(profile.profile_id)
+          return profile.profile_id == player_id;
+        });
+
+        let bestiary = profiles[profile].members[player_id].bestiary;
+        // console.log(profile)
+
+        TabList.getNames().forEach(name => {
+          if (ChatLib.removeFormatting(name).trim().includes("Area: Private Island")) {
+            data.IslandZombie = bestiary.kills_family_zombie
+            data.IslandSkeleton = bestiary.kills_family_skeleton;
+            data.IslandEnderman = bestiary.kills_family_enderman_private;
+            data.IslandSlime = bestiary.kills_family_slime;
+            data.IslandSpider = bestiary.kills_family_spider;
+            data.IslandCaveSpider = bestiary.kills_family_cave_spider;
+            data.IslandWitch = bestiary.kills_family_witch;
+            data.save();
+          }
+          if (ChatLib.removeFormatting(name).trim().includes("Area: Hub")) {
+            data.HubCryptGhoul = bestiary.kills_family_unburried_zombie;
+            data.HubOldWolf = bestiary.kills_family_old_wolf;
+            data.HubWolf = bestiary.kills_family_ruin_wolf;
+            data.HubZombieVillager = bestiary.kills_family_zombie_villager;
+            data.save();
+          }
+          if (ChatLib.removeFormatting(name).trim().includes("Area: Spider's Den")) {
+            data.DenBroodMother = bestiary.kills_family_brood_mother_spider;
+            data.DenArachne = bestiary.kills_family_arachne;
+            data.DenArachnesBrood = bestiary.kills_family_arachne_brood;
+            data.DenArachnesKeeper = bestiary.kills_family_arachne_keeper;
+            data.DenRainSlime = bestiary.kills_family_random_slime;
+            data.DenGravelSkeleton = bestiary.kills_family_respawning_skeleton;
+            data.DenDasherSpider = bestiary.kills_family_dasher_spider;
+            data.DenSpiderJockey = bestiary.kills_family_spider_jockey;
+            data.DenSplitterSpider = bestiary.kills_family_splitter_spider;
+            data.DenVoraciousSpider = bestiary.kills_family_voracious_spider;
+            data.DenWeaverSpider = bestiary.kills_family_weaver_spider;
+            data.save();
+          }
+          if (ChatLib.removeFormatting(name).trim().includes("Area: The End")) {
+            data.EndDragon = bestiary.kills_family_dragon;
+            data.EndEndstoneProtector = bestiary.kills_family_corrupted_protector;
+            data.EndVoidlingExtremist = bestiary.kills_family_voidling_extremist;
+            data.EndVoidlingFanatic = bestiary.kills_family_voidling_fanatic;
+            data.EndZealot = bestiary.kills_family_zealot_enderman;
+            data.EndWatcher = bestiary.kills_family_watcher;
+            data.EndObsidianDefender = bestiary.kills_family_obsidian_wither;
+            data.EndEnderman = bestiary.kills_family_enderman;
+            data.EndEndermite = bestiary.kills_family_endermite;
+            data.save();
+          }
+        });
       })
-  });
+      .catch(err => {
+        ChatLib.chat(err)
+    }) 
+  }).setDelay(10);
 }
 
 // Credit: Ghosts for Rendering overlay inspiration
@@ -95,7 +120,7 @@ register("renderoverlay", () => {
         }
     // End
         if (ChatLib.removeFormatting(name).trim().includes("Area: The End")) {
-          let EndDragon_txt = `${ EndDragon }${ short_number(data.EndDragon) }`;
+          let EndDragon_txt = `${ consts.EndDragon }${ short_number(data.EndDragon) }`;
           let EndEndstoneProtector_txt = `${ consts.EndEndstoneProtector }${ short_number(data.EndEndstoneProtector) }`;
           let EndVoidlingExtremist_txt = `${ consts.EndVoidlingExtremist }${ short_number(data.EndVoidlingExtremist) }`;
           let EndVoidlingFanatic_txt = `${ consts.EndVoidlingFanatic }${ short_number(data.EndVoidlingFanatic) }`;

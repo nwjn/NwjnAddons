@@ -1,17 +1,17 @@
 import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, Color } from "Vigilance";
 
-import { data, consts } from "./utils/constants";
+import { data, consts } from "./utils/exports";
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["General", "Levels", "Bestiary", "Kuudra", "Events", "Garden"]
+    const categories = ["General", "Levels", "Bestiary", "Crimson Isle", "Events", "Garden"]
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   }
 })
 class Settings {
   @TextProperty({
     name: "Downtime",
-    description: `Type what you want your downtime alert to say`,
+    description: `Type what you want your downtime alert to say\n${consts.WIP}`,
     category: "General",
     placeholder: "placeholder"
   })
@@ -19,7 +19,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Show Downtime",
-    description: "Shows how much you've downtime you've done",
+    description: "Shows how much you've downtime you've done\n${consts.WIP}",
     category: "General"
   })
   showDT = true;
@@ -192,10 +192,18 @@ class Settings {
   })
   dragon = true;
   
+  @SwitchProperty({
+    name: "Hype Broken",
+    description: `Icky Book of Stats &l&nNOT&r needed`,
+    category: "Crimson Isle"
+  })
+  hyp = true
+
   @SelectorProperty({
     name: "Kuudra Class",
     description: `Select which class you are playing\n${consts.WIP}`,
-    category: "Kuudra",
+    category: "Crimson Isle",
+    subcategory: "Kuudra",
     options: ["Spec", "Spec Stun", "Crowd Control", "Cannon"]
   })
   class = 0;
@@ -203,14 +211,16 @@ class Settings {
   @SwitchProperty({
     name: "Kuudra Alerts",
     description: `Sends alerts in kuudra`,
-    category: "Kuudra"
+    category: "Crimson Isle",
+    subcategory: "Kuudra",
   })
   alerts = true;    
 
   @SwitchProperty({
     name: "Supply Placement Waypoint",
     description: `Places a waypoint at all available supply placements\n${consts.WIP}`,
-    category: "Kuudra"
+    category: "Crimson Isle",
+    subcategory: "Kuudra",
   })
   supplies = true;
 
@@ -218,26 +228,10 @@ class Settings {
   @SwitchProperty({
     name: "Percentages and Waypoints for Ballista Building",
     description: `Shows percentages of each supply being built and waypoints when under average build\n${consts.WIP}`,
-    category: "Kuudra"
+    category: "Crimson Isle",
+    subcategory: "Kuudra",
   })
   inBuild = true;
-  
-  @SwitchProperty({
-    name: "Stun Stopwatch",
-    description: `Stopwatch from the time someone gets on a cannon if not You\n${consts.WIP}`,
-    category: "Kuudra"
-  })
-  stun = true;
-
-  @ButtonProperty({
-    name: "Stun Display Location",
-    description: `Click button to change where stun gui is located`,
-    category: "Kuudra",
-    placeholder: "Click!"
-  })
-    actions() {
-    ChatLib.command(`nwjn stun`, true);
-  }
     
   @SwitchProperty({
     name: "Auto 2x Powder Guild Message",
@@ -273,10 +267,16 @@ class Settings {
   constructor() {
     this.initialize(this);
     this.setCategoryDescription("General", "&dNwjnAddons &8by: &bnwjn\n&ause &f/nwjn help &afor full list of commands\n&cHYPIXEL MODIFICATIONS ARE USE AT YOUR OWN RISK");
+
     this.setCategoryDescription("Levels", "Yummy Skyblock XP ");
+
     this.setCategoryDescription("Bestiary", "Bestiary is life");
-    this.setCategoryDescription("Kuudra", "100m/h Trust");
+
+    this.setCategoryDescription("Crimson Isle", "endgame island fr");
+    this.setSubcategoryDescription("Crimson Isle", "Kuudra", "100m/hr trust")
+
     this.setCategoryDescription("Events", "zzz");
+
     this.setCategoryDescription("Garden", "Listening to the dings with my eyes closed ");
 
     this.addDependency("Show Speed", "Stats Display");
@@ -285,7 +285,6 @@ class Settings {
     this.addDependency("Show Crit Damage", "Stats Display");
     this.addDependency("Show Attack Speed", "Stats Display");
     this.addDependency("Show Farming Fortune", "Stats Display");
-    this.addDependency("Stun Display Location", "Stun Stopwatch")
   }
 }
 
