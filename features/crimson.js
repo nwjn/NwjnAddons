@@ -52,19 +52,19 @@ register("chat", (player) => {
 }).setCriteria("{player} destroyed one of Kuudra's pods!");
 
 
-register('tick', () => {
-  TabList.getNames().forEach(name => {
-  if (ChatLib.removeFormatting(name).trim().includes("Area: Private Island")) {
-    if (Settings.inBuild)
-      World.getAllEntities().forEach(stand => {
-        if (stand.getName().trim().includes("PROGRESS: ")) {
-          // Renderer.drawStringWithShadow()
-          Tessellator.drawString(stand.getName(), stand.getX(), stand.getY(), stand.getZ())
-        }
-      })
-    }
-  })
-})    
+// register('tick', () => {
+//   TabList.getNames().forEach(name => {
+//   if (ChatLib.removeFormatting(name).trim().includes("Area: Private Island")) {
+//     if (Settings.inBuild)
+//       World.getAllEntities().forEach(stand => {
+//         if (stand.getName().trim().includes("PROGRESS: ")) {
+//           // Renderer.drawStringWithShadow()
+//           Tessellator.drawString(stand.getName(), stand.getX(), stand.getY(), stand.getZ())
+//         }
+//       })
+//     }
+//   })
+// })    
 
 let cexp = 0
 let nowCexp = 0

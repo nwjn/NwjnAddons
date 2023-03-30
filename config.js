@@ -15,11 +15,11 @@ class Settings {
     category: "General",
     placeholder: "placeholder"
   })
-  DTmessage = "test";
+  DTmessage = "STOP DOWNTIMING";
 
   @SwitchProperty({
     name: "Show Downtime",
-    description: "Shows how much you've downtime you've done\n${consts.WIP}",
+    description: `Shows how much you've downtime you've done\n${consts.WIP}`,
     category: "General"
   })
   showDT = true;

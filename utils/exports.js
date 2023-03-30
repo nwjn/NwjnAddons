@@ -56,6 +56,7 @@ export const consts ={
   IsleAshfang: '&8Ashfang:&f ',
   IsleBladesoul: '&8Bladesoul:&f ',
   IsleBarbarianDuke: '&8Barbarian Duke:&f ',
+  IsleBlaze: '&aBlaze:&f ',
   IsleWitherSpectre: '&aWither Spectre:&f ',
   IsleWitherSkeleton: '&aWither Skeleton:&f ',
   IsleFlamingSpider: '&aFlaming Spider:&f ',
