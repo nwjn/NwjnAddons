@@ -18,7 +18,7 @@
 		show_crit_damage = true
 		show_attack_speed = true
 		show_crit_chance = true
-		show_speed = true
+		show_speed = false
 		show_strength = true
 		stats_display = true
 

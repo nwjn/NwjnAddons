@@ -1,6 +1,6 @@
 import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, Color } from "Vigilance";
 
-import { data, consts } from "./utils/exports";
+import { data, consts } from "./utils/constants";
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
   getCategoryComparator: () => (a, b) => {
@@ -194,11 +194,21 @@ class Settings {
   
   @SwitchProperty({
     name: "Hype Broken",
-    description: `Icky Book of Stats &l&nNOT&r needed`,
+    description: `Icky Book of Stats &l&nNOT&r needed\n&cONLY FOR FLARE GRINDING`,
     category: "Crimson Isle"
   })
   hyp = true
 
+  @ButtonProperty({
+    name: "Hype Broken Overlay",
+    description: `Shows you your champion xp and other information`,
+    category: "Crimson Isle",
+    placeholder: "Click!"
+  })
+  actionzz() {
+    ChatLib.command("nwjn champ", true)
+  }
+    
   @SelectorProperty({
     name: "Kuudra Class",
     description: `Select which class you are playing\n${consts.WIP}`,

@@ -1,5 +1,5 @@
 import Settings from "../config";
-import { data, statsDisplay } from "../utils/exports";
+import { data, statsDisplay } from "../utils/constants";
 import { alert } from "../utils/functions";
 
 let clearJoinMsg = false;

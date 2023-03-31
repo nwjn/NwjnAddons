@@ -5,8 +5,8 @@ import "./features/bestiary";
 import "./features/crimson";
 import "./features/events";
 import "./utils/api";
-import { helpHelper, NwjnAddonsMessage } from "./utils/functions";
-import { data, bestiaryDisplay, statsDisplay, consts, version } from "./utils/exports";
+import { helpHelper, NwjnAddonsMessage, openGuiMessage } from "./utils/functions";
+import { data, bestiaryDisplay, statsDisplay, consts, version, champDisplay } from "./utils/constants";
 import axios from "./../axios"
 
 // Credit: HJES for help command inspiration
@@ -19,30 +19,26 @@ register("command", (arg) => {
       '/clearchat': 'clears the chat',
     });
     ChatLib.chat(helpMessage);
-    console.debug(`Executed '/nwjn help'`);
   }
   else if (arg == `stats`) {
     statsDisplay.open();
-    console.log(`Opened stats GUI.`);
-    ChatLib.chat(ChatLib.getChatBreak("-"));
-    ChatLib.chat("&0&l&kO&r &6&lClick anywhere to move and press ESC to save!&r &0&l&kO&r");
-    ChatLib.chat(ChatLib.getChatBreak("-"));
+    openGuiMessage()
   }
   else if (arg == 'best') {
     bestiaryDisplay.open();
-    console.log(`Opened bestiary GUI.`);
-    ChatLib.chat(ChatLib.getChatBreak("-"));
-    ChatLib.chat("&0&l&kO&r &6&lClick anywhere to move and press ESC to save!&r &0&l&kO&r");
-    ChatLib.chat(ChatLib.getChatBreak("-"));
+    openGuiMessage()
   } 
+  else if (arg == 'champ') {
+    champDisplay.open();
+    openGuiMessage()
+  }
   else if (!arg) {
     Settings.openGUI()
-    console.log("Opened GUI")
   }
   else {
     ChatLib.chat(NwjnAddonsMessage(`${arg} has not been implemented yet. Type '/nwjn help' for help.`))
   }
-}).setCommandName(`nwjn`, true).setTabCompletions("help", "best", "stats");
+}).setCommandName(`nwjn`, true).setTabCompletions("help", "best", "stats", "champ");
 
 
 register("command", () => {

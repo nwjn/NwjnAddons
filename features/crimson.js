@@ -1,5 +1,6 @@
 import Settings from "../config";
-import { alert } from "../utils/functions";
+import { alert, guiShader } from "../utils/functions";
+import { data, short_number, champDisplay } from "../utils/constants";
 let inKuudra = false;
 
 // Credit: OdinClient for Kuudra Alerts inspiration
@@ -52,22 +53,23 @@ register("chat", (player) => {
 }).setCriteria("{player} destroyed one of Kuudra's pods!");
 
 
-// register('tick', () => {
-//   TabList.getNames().forEach(name => {
-//   if (ChatLib.removeFormatting(name).trim().includes("Area: Private Island")) {
-//     if (Settings.inBuild)
-//       World.getAllEntities().forEach(stand => {
-//         if (stand.getName().trim().includes("PROGRESS: ")) {
-//           // Renderer.drawStringWithShadow()
-//           Tessellator.drawString(stand.getName(), stand.getX(), stand.getY(), stand.getZ())
-//         }
-//       })
-//     }
-//   })
-// })    
+register("renderWorld", () => {
+  if (Settings.inBuild) {
+  TabList.getNames().forEach(name => {
+    if (ChatLib.removeFormatting(name).trim().includes("Area: Private Island")) {
+        World.getAllEntities().forEach(stand => {
+          if (stand.getName().trim().includes("PROGRESS: ")) {
+            Tessellator.drawString(stand.getName(), stand.getX(), stand.getY() + 2.5, stand.getZ(), 0xffffff, true, 0.05, false);
+          }
+        });
+      }
+    })
+  }
+})   
 
 let cexp = 0
 let nowCexp = 0
+let nowCexp2 = 0
 let kills = 0
 let lastCexp = false
 const short_number = (num) => {
@@ -77,32 +79,44 @@ const short_number = (num) => {
 
 register("entitydeath", (entity) => {
   if (Settings.hyp) {
-    breakme: {
-      const heldItem = Player.getHeldItem().getNBT().getCompoundTag("tag").getCompoundTag("ExtraAttributes").getString("id");
-      const witherBlades = ["HYPERION", "ASTRAEA", "SCYLLA", "VALKYRIE", "NECRON_BLADE_UNREFINED"];
-
-      if ((entity.getClassName() == "EntityBlaze") && (Player.asPlayerMP().distanceTo(entity) < 6) && (witherBlades.includes(heldItem))) {
-        kills += 1;
-        lastCexp = false;
-        nowCexp = Player?.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getDouble("champion_combat_xp");
-        nowCexp = Math.floor(nowCexp);
-        if (entity.getClassName() != "EntityBlaze") {
-        }
-        else if ((entity.getClassName() == "EntityBlaze") && (Player.asPlayerMP().distanceTo(entity) < 6) && (nowCexp != cexp)) {
-          ChatLib.chat(`${ short_number(nowCexp) }`);
-          if (nowCexp != cexp) {
-            cexp = nowCexp;
-            kills = 0;
-            lastCexp = true;
-            break breakme;
+    const heldItem = Player.getHeldItem().getNBT().getCompoundTag("tag").getCompoundTag("ExtraAttributes").getString("id");
+    const weapon = ["HYPERION", "ASTRAEA", "SCYLLA", "VALKYRIE", "NECRON_BLADE_UNREFINED", "INK_WAND", "FIRE_VEIL_WAND"];
+    const tp = ["ASPECT_OF_THE_VOID", "ASPECT_OF_THE_END"];
+    if ((entity.getClassName() == "EntityBlaze") && (Player.asPlayerMP().distanceTo(entity) < 6) && (tp.includes(heldItem))) {
+      kills = -2;
+    }
+    if ((entity.getClassName() == "EntityBlaze") && (Player.asPlayerMP().distanceTo(entity) < 6) && (weapon.includes(heldItem))) {
+      kills += 1;
+      lastCexp = false;
+      nowCexp = Player?.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getDouble("champion_combat_xp");
+      nowCexp = Math.floor(nowCexp);
+      if ((entity.getClassName() == "EntityBlaze") && (Player.asPlayerMP().distanceTo(entity) < 6) && (nowCexp != cexp)) {
+        gainedCexp = 0
+        if (nowCexp != cexp) {
+          if (weapon.includes(heldItem)) {
+            nowCexp2 = Player?.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getDouble("champion_combat_xp");
+            nowCexp2 = Math.floor(nowCexp2);
+            gainedCexp = nowCexp2 - cexp;
           }
-        }
-        else if ((entity.getClassName() == "EntityBlaze") && (Player.asPlayerMP().distanceTo(entity) < 6) && (lastCexp == false) && (nowCexp == cexp) && (kills >= 3)) {
-          ChatLib.chat(kills);
-          alert("&cHYPE BROKEN");
+          cexp = nowCexp;
           kills = -2;
+          lastCexp = true;
         }
+        register("renderoverlay", () => {
+          guiShader();
+          Renderer.drawStringWithShadow(`&6Champion XP: &e${ short_number(nowCexp) } (+${ short_number(gainedCexp) })`, data.champX, data.champY);
+        })
+      }
+      else if ((entity.getClassName() == "EntityBlaze") && (Player.asPlayerMP().distanceTo(entity) < 6) && (lastCexp == false) && (nowCexp == cexp) && (kills >= 3)) {
+        alert("&cHYPE BROKEN");
+        kills = 0;
       }
     }
   }
-});
+})
+
+champDisplay.registerClicked((x, y, button_num) => {
+  data.champX = x
+  data.champY = y
+  data.save();
+})

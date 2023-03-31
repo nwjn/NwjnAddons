@@ -1,4 +1,4 @@
-import { consts, data } from "./exports"
+import { consts, data } from "./constants"
 import axios from "axios"
 
 
@@ -13,14 +13,14 @@ register("chat", (key) => {
       data.api_key = key;
       data.uuid = res.data.record.owner
       data.save();
-      ChatLib.chat(`${ consts.PREFIX }&aSuccsessfully set api key!`);
+      ChatLib.chat(`${ consts.PREFIX } &aSuccsessfully set api key!`);
     }
     else {
-      ChatLib.chat(`${ consts.PREFIX }&eKey is not valid!`);
+      ChatLib.chat(`${ consts.PREFIX } &eKey is not valid!`);
     }
   })
   .catch(err => {
-    ChatLib.chat(`${consts.PREFIX}&eKey is not valid!`)
+    ChatLib.chat(`${consts.PREFIX} &eKey is not valid!`)
   })
-  ChatLib.chat(`${consts.PREFIX}&aApi Key Successfully Set!`)
+  ChatLib.chat(`${consts.PREFIX} &aApi Key Successfully Set!`)
 }).setCriteria(/Your new API key is (.+)/)

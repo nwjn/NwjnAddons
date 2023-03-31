@@ -1,5 +1,4 @@
-import { bestiaryDisplay, consts, statsDisplay, data } from "./exports"
-import { data } from "./exports";
+import { bestiaryDisplay, consts, statsDisplay, data, champDisplay, short_number } from "./constants"
 
 
 // Credit: HJES for helpMessage and helpHelper
@@ -33,12 +32,18 @@ export function NwjnAddonsMessage(message) {
 // Credit: Odinclient for alert
 export function alert(title) {
   World.playSound("note.pling", 100, 1);
-  Client.showTitle(title, "", 10, 100, 10);
+  Client.showTitle(title, "", 10, 100, 3);
+}
+
+export function openGuiMessage() {
+  ChatLib.chat(ChatLib.getChatBreak("-"));
+  ChatLib.chat("&0&l&kO&r &6&lClick anywhere to move and press ESC to save!&r &0&l&kO&r");
+  ChatLib.chat(ChatLib.getChatBreak("-"));
 }
 
 // Miniboss Timer for this function
 export function guiShader() {
-  if (statsDisplay.isOpen() || bestiaryDisplay.isOpen()) {
+  if (statsDisplay.isOpen() || bestiaryDisplay.isOpen() || champDisplay.isOpen()) {
     Renderer.drawRect(
       Renderer.color(0, 0, 0, 100),
       0,

@@ -1,6 +1,6 @@
 import Settings from "../config";
 import { guiShader, alert } from "../utils/functions";
-import { data, bestiaryDisplay, consts, short_number } from "../utils/exports";
+import { data, bestiaryDisplay, consts, short_number } from "../utils/constants";
 import axios from "axios"
 
 let bestiaryData = {
