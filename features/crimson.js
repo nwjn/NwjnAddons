@@ -56,10 +56,10 @@ register("chat", (player) => {
 register("renderWorld", () => {
   if (Settings.inBuild) {
   TabList.getNames().forEach(name => {
-    if (ChatLib.removeFormatting(name).trim().includes("Area: Private Island")) {
+    if (ChatLib.removeFormatting(name).trim().includes("Area: Instanced")) {
         World.getAllEntities().forEach(stand => {
           if (stand.getName().trim().includes("PROGRESS: ")) {
-            Tessellator.drawString(stand.getName(), stand.getX(), stand.getY() + 2.5, stand.getZ(), 0xffffff, true, 0.05, false);
+            Tessellator.drawString(stand.getName(), stand.getX(), stand.getY() + 2.475, stand.getZ(), 0xffffff, true, 0.02665, false);
           }
         });
       }
