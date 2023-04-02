@@ -18,7 +18,7 @@
 		show_crit_damage = true
 		show_attack_speed = true
 		show_crit_chance = true
-		show_speed = false
+		show_speed = true
 		show_strength = true
 		stats_display = true
 
@@ -43,6 +43,7 @@
 		arachnes_keeper = true
 
 [crimson_isle]
+	announce_vanquishers = true
 	percentages_and_waypoints_for_ballista_building = true
 	kuudra_alerts = true
 	hype_broken = true

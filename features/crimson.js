@@ -1,6 +1,6 @@
 import Settings from "../config";
 import { alert, guiShader } from "../utils/functions";
-import { data, short_number, champDisplay } from "../utils/constants";
+import { data, short_number, champDisplay, consts } from "../utils/constants";
 let inKuudra = false;
 
 // Credit: OdinClient for Kuudra Alerts inspiration
@@ -59,7 +59,7 @@ register("renderWorld", () => {
     if (ChatLib.removeFormatting(name).trim().includes("Area: Instanced")) {
         World.getAllEntities().forEach(stand => {
           if (stand.getName().trim().includes("PROGRESS: ")) {
-            Tessellator.drawString(stand.getName(), stand.getX(), stand.getY() + 2.475, stand.getZ(), 0xffffff, true, 0.02665, false);
+            Tessellator.drawString(stand.getName(), stand.getX(), stand.getY() + 2.475, stand.getZ(), 0xffffff, false, 0.02665, false);
           }
         });
       }
@@ -67,10 +67,21 @@ register("renderWorld", () => {
   }
 })   
 
+
+if (Settings.announceVanqs) {
+  register("chat", () => {
+    let playerX = Player.getX();
+    let playerY = Player.getY();
+    let playerZ = Player.getZ();
+    ChatLib.say(`/pc [NwjnAddons] x: ${playerX}, y: ${playerY}, z: ${playerZ} vanquisher!!!`)
+  }).setChatCriteria("&r&aA &r&cVanquisher &r&ais spawning nearby!&r")
+}
+    
 let cexp = 0
 let nowCexp = 0
 let nowCexp2 = 0
 let kills = 0
+let gainedCexp = 0
 let lastCexp = false
 const short_number = (num) => {
   if (num == undefined) return;
@@ -102,17 +113,18 @@ register("entitydeath", (entity) => {
           kills = -2;
           lastCexp = true;
         }
-        register("renderoverlay", () => {
-          guiShader();
-          Renderer.drawStringWithShadow(`&6Champion XP: &e${ short_number(nowCexp) } (+${ short_number(gainedCexp) })`, data.champX, data.champY);
-        })
       }
       else if ((entity.getClassName() == "EntityBlaze") && (Player.asPlayerMP().distanceTo(entity) < 6) && (lastCexp == false) && (nowCexp == cexp) && (kills >= 3)) {
         alert("&cHYPE BROKEN");
+        gainedCexp = 0
         kills = 0;
       }
     }
   }
+})
+register("renderoverlay", () => {
+  guiShader();
+  Renderer.drawStringWithShadow(`&6Champion XP: &e${ short_number(nowCexp) } (+${ short_number(gainedCexp) })`, data.champX, data.champY);
 })
 
 champDisplay.registerClicked((x, y, button_num) => {

@@ -143,7 +143,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Bestiary Tracker",
-    description: `Shows the bestiary mobs of the island you're in on hud\n${consts.WIP}`,
+    description: `Shows the bestiary mobs of the island you're in on hud`,
     category: "Bestiary"
   })
   bestiary = true;
@@ -199,8 +199,15 @@ class Settings {
   })
   hyp = true
 
+  @SwitchProperty({
+    name: "Announce Vanquishers",
+    description: `Announces Vanquishers to party. Soopy is needed to render waypoints.`,
+    category: "Crimson Isle"
+  })
+  announceVanqs = true
+
   @ButtonProperty({
-    name: "Hype Broken Overlay",
+    name: "Champion Overlay",
     description: `Shows you your champion xp and other information`,
     category: "Crimson Isle",
     placeholder: "Click!"
@@ -237,7 +244,7 @@ class Settings {
   
   @SwitchProperty({
     name: "Percentages and Waypoints for Ballista Building",
-    description: `Shows percentages of each supply being built and waypoints when under average build\n${consts.WIP}`,
+    description: `Changes the build progress text to be seen through ballista`,
     category: "Crimson Isle",
     subcategory: "Kuudra",
   })
@@ -295,6 +302,7 @@ class Settings {
     this.addDependency("Show Crit Damage", "Stats Display");
     this.addDependency("Show Attack Speed", "Stats Display");
     this.addDependency("Show Farming Fortune", "Stats Display");
+    this.addDependency("Announce Vanquishers", "Hype Broken")
   }
 }
 

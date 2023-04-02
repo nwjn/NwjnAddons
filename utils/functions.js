@@ -45,7 +45,7 @@ export function openGuiMessage() {
 export function guiShader() {
   if (statsDisplay.isOpen() || bestiaryDisplay.isOpen() || champDisplay.isOpen()) {
     Renderer.drawRect(
-      Renderer.color(0, 0, 0, 100),
+      Renderer.color(0, 0, 0, 50),
       0,
       0,
       Renderer.screen.getWidth(),

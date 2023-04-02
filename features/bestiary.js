@@ -24,81 +24,85 @@ if (Settings.bestiary) {
         let bestiary = profiles[profile].members[player_id].bestiary;
         // console.log(profile)
 
-        TabList.getNames().forEach(name => {
-          if (ChatLib.removeFormatting(name).trim().includes("Area: Private Island")) {
-            data.IslandZombie = bestiary.kills_family_zombie
-            data.IslandSkeleton = bestiary.kills_family_skeleton;
-            data.IslandEnderman = bestiary.kills_family_enderman_private;
-            data.IslandSlime = bestiary.kills_family_slime;
-            data.IslandSpider = bestiary.kills_family_spider;
-            data.IslandCaveSpider = bestiary.kills_family_cave_spider;
-            data.IslandWitch = bestiary.kills_family_witch;
-            data.save();
-          }
-          if (ChatLib.removeFormatting(name).trim().includes("Area: Hub")) {
-            data.HubCryptGhoul = bestiary.kills_family_unburried_zombie;
-            data.HubOldWolf = bestiary.kills_family_old_wolf;
-            data.HubWolf = bestiary.kills_family_ruin_wolf;
-            data.HubZombieVillager = bestiary.kills_family_zombie_villager;
-            let lines = Scoreboard.getLines()
-            if (ChatLib.removeFormatting(lines).includes("Spooky Festival")) {
-              data.SpookyHeadlessHorseman = bestiary.kills_family_headless_horseman
-              data.SpookyScaryJerry = bestiary.kills_family_scary_jerry
-              data.SpookyWitherGourd = bestiary.kills_family_wither_gourd
-              data.SpookyCrazyWitch = bestiary.kills_family_batty_witch
-              data.SpookyWraith = bestiary.kills_family_wraith
-              data.SpookyTrickOrTreater = bestiary.kills_family_trick_or_treater
-              data.SpookyPhantomSpirit = bestiary.kills_family_phantom_spirit
-            }
-            data.save();
-          }
-          if (ChatLib.removeFormatting(name).trim().includes("Area: Spider's Den")) {
-            data.DenBroodMother = bestiary.kills_family_brood_mother_spider;
-            data.DenArachne = bestiary.kills_family_arachne;
-            data.DenArachnesBrood = bestiary.kills_family_arachne_brood;
-            data.DenArachnesKeeper = bestiary.kills_family_arachne_keeper;
-            data.DenRainSlime = bestiary.kills_family_random_slime;
-            data.DenGravelSkeleton = bestiary.kills_family_respawning_skeleton;
-            data.DenDasherSpider = bestiary.kills_family_dasher_spider;
-            data.DenSpiderJockey = bestiary.kills_family_spider_jockey;
-            data.DenSplitterSpider = bestiary.kills_family_splitter_spider;
-            data.DenVoraciousSpider = bestiary.kills_family_voracious_spider;
-            data.DenWeaverSpider = bestiary.kills_family_weaver_spider;
-            data.save();
-          }
-          if (ChatLib.removeFormatting(name).trim().includes("Area: The End")) {
-            data.EndDragon = bestiary.kills_family_dragon;
-            data.EndEndstoneProtector = bestiary.kills_family_corrupted_protector;
-            data.EndVoidlingExtremist = bestiary.kills_family_voidling_extremist;
-            data.EndVoidlingFanatic = bestiary.kills_family_voidling_fanatic;
-            data.EndZealot = bestiary.kills_family_zealot_enderman;
-            data.EndWatcher = bestiary.kills_family_watcher;
-            data.EndObsidianDefender = bestiary.kills_family_obsidian_wither;
-            data.EndEnderman = bestiary.kills_family_enderman;
-            data.EndEndermite = bestiary.kills_family_endermite;
-            data.save();
-          }
-          if (ChatLib.removeFormatting(name).trim().includes("Area: Crimson Isle")) {
-            data.IsleMagmaBoss = bestiary.kills_family_magma_boss
-            data.IsleMageOutlaw = bestiary.kills_family_mage_outlaw
-            data.IsleAshfang = bestiary.kills_family_ashfang
-            data.IsleBladesoul = bestiary.kills_family_bladesoul
-            data.IsleBarbarianDuke = bestiary.kills_family_barbarian_duke_x
-            data.IsleBlaze = bestiary.kills_family_blaze
-            data.IsleWitherSpectre = bestiary.kills_family_wither_spectre
-            data.IsleWitherSkeleton = bestiary.kills_family_wither_skeleton
-            data.IsleFlamingSpider = bestiary.kills_family_flaming_spider
-            data.IslePigman = bestiary.kills_family_pigman
-            data.IsleMushroomBull = bestiary.kills_family_charging_mushroom_cow
-            data.IsleMagmaCube = bestiary.kills_family_magma_cube
-            data.IsleGhast = bestiary.kills_family_ghast
-            data.IsleMatcho = bestiary.kills_family_matcho
-            data.save()
-          }
-        });
+        data.IslandZombie = bestiary.kills_family_zombie
+        data.IslandSkeleton = bestiary.kills_family_skeleton;
+        data.IslandEnderman = bestiary.kills_family_enderman_private;
+        data.IslandSlime = bestiary.kills_family_slime;
+        data.IslandSpider = bestiary.kills_family_spider;
+        data.IslandCaveSpider = bestiary.kills_family_cave_spider;
+        data.IslandWitch = bestiary.kills_family_witch;
+        data.HubCryptGhoul = bestiary.kills_family_unburried_zombie;
+        data.HubOldWolf = bestiary.kills_family_old_wolf;
+        data.HubWolf = bestiary.kills_family_ruin_wolf;
+        data.HubZombieVillager = bestiary.kills_family_zombie_villager;
+        data.SpookyHeadlessHorseman = bestiary.kills_family_headless_horseman
+        data.SpookyScaryJerry = bestiary.kills_family_scary_jerry
+        data.SpookyWitherGourd = bestiary.kills_family_wither_gourd
+        data.SpookyCrazyWitch = bestiary.kills_family_batty_witch
+        data.SpookyWraith = bestiary.kills_family_wraith
+        data.SpookyTrickOrTreater = bestiary.kills_family_trick_or_treater
+        data.SpookyPhantomSpirit = bestiary.kills_family_phantom_spirit
+        data.DenBroodMother = bestiary.kills_family_brood_mother_spider;
+        data.DenArachne = bestiary.kills_family_arachne;
+        data.DenArachnesBrood = bestiary.kills_family_arachne_brood;
+        data.DenArachnesKeeper = bestiary.kills_family_arachne_keeper;
+        data.DenRainSlime = bestiary.kills_family_random_slime;
+        data.DenGravelSkeleton = bestiary.kills_family_respawning_skeleton;
+        data.DenDasherSpider = bestiary.kills_family_dasher_spider;
+        data.DenSpiderJockey = bestiary.kills_family_spider_jockey;
+        data.DenSplitterSpider = bestiary.kills_family_splitter_spider;
+        data.DenVoraciousSpider = bestiary.kills_family_voracious_spider;
+        data.DenWeaverSpider = bestiary.kills_family_weaver_spider;
+        data.EndDragon = bestiary.kills_family_dragon;
+        data.EndEndstoneProtector = bestiary.kills_family_corrupted_protector;
+        data.EndVoidlingExtremist = bestiary.kills_family_voidling_extremist;
+        data.EndVoidlingFanatic = bestiary.kills_family_voidling_fanatic;
+        data.EndZealot = bestiary.kills_family_zealot_enderman;
+        data.EndWatcher = bestiary.kills_family_watcher;
+        data.EndObsidianDefender = bestiary.kills_family_obsidian_wither;
+        data.EndEnderman = bestiary.kills_family_enderman;
+        data.EndEndermite = bestiary.kills_family_endermite;
+        data.IsleMagmaBoss = bestiary.kills_family_magma_boss
+        data.IsleMageOutlaw = bestiary.kills_family_mage_outlaw
+        data.IsleAshfang = bestiary.kills_family_ashfang
+        data.IsleBladesoul = bestiary.kills_family_bladesoul
+        data.IsleBarbarianDuke = bestiary.kills_family_barbarian_duke_x
+        data.IsleBlaze = bestiary.kills_family_blaze
+        data.IsleWitherSpectre = bestiary.kills_family_wither_spectre
+        data.IsleWitherSkeleton = bestiary.kills_family_wither_skeleton
+        data.IsleFlamingSpider = bestiary.kills_family_flaming_spider
+        data.IslePigman = bestiary.kills_family_pigman
+        data.IsleMushroomBull = bestiary.kills_family_charging_mushroom_cow
+        data.IsleMagmaCube = bestiary.kills_family_magma_cube
+        data.IsleGhast = bestiary.kills_family_ghast
+        data.IsleMatcho = bestiary.kills_family_matcho
+        data.DeepSneakyCreeper = bestiary.kills_family_invisible_creeper
+        data.DeepLapisZombie = bestiary.kills_family_lapis_zombie
+        data.DeepRedstonePigman = bestiary.kills_family_redstone_pigman
+        data.DeepEmeralSlime = bestiary.kills_family_emerald_slime
+        data.DeepMinerZombie = bestiary.kills_family_diamond_zombie
+        data.DeepMinerSkeleton = bestiary.kills_family_diamond_skeleton
+        data.DwarvenGoblin = bestiary.kills_family_goblin
+        data.DwarvenIceWalker = bestiary.kills_family_ice_walker
+        data.DwarvenTreasureHoarder = bestiary.kills_family_treasure_hoarder
+        data.DwarvenGhost = bestiary.kills_family_caverns_ghost
+        data.CHButterfly = bestiary.kills_family_butterfly
+        data.CHAutomaton = bestiary.kills_family_automaton
+        data.CHThyst = bestiary.kills_family_thyst
+        data.CHSludge = bestiary.kills_family_sludge
+        data.CHGrunt = bestiary.kills_family_team_treasurite
+        data.CHYog = bestiary.kills_family_yog
+        data.CHWorm = bestiary.kills_family_worms
+        data.ParkSoulOfTheAlpha = bestiary.kills_family_soul_of_the_alpha
+        data.ParkHowlingSpirit = bestiary.kills_family_howling_spirit
+        data.ParkPackSpirit = bestiary.kills_family_pack_spirit
+        data.save()
       })
       .catch(err => {
-        ChatLib.chat(err)
+        if (res.data.success == false) {
+          new TextComponent(ChatLib.getCenteredText(`${ consts.PREFIX } &aSomething went wrong while fetching your api! Please try '/api new' or reporting to the &b&ndiscord.`)).setClickAction("open_url").setClickValue("https://discord.gg/CQhapSqgJ7").chat();
+          console.log(err)
+        }
     }) 
   }).setDelay(10);
 }
@@ -263,3 +267,7 @@ bestiaryDisplay.registerClicked((x, y, button_num) => {
   data.bestiaryY = y
   data.save();
 })
+
+if (Settings.keeper == true) {
+  
+}

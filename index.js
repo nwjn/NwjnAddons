@@ -10,7 +10,10 @@ import { data, bestiaryDisplay, statsDisplay, consts, version, champDisplay } fr
 import axios from "./../axios"
 
 // Credit: HJES for help command inspiration
-register("command", (arg) => {
+register("command", (arg) => {  
+  if (data.api_key == "") {
+    ChatLib.chat(`${consts.PREFIX} &6Please run '/api new'`)
+  }
   if (arg == "help") {
     helpMessage = helpHelper({
       '': '__title__',
@@ -67,7 +70,7 @@ register("step", () => {
     new TextComponent(ChatLib.getCenteredText(`${ consts.PREFIX }`)).chat();
     new TextComponent(ChatLib.getCenteredText(`&aUse '/nwjn' For settings!`)).chat();
     new TextComponent(ChatLib.getCenteredText(`&aUse '/nwjn help' For commands!`)).chat();
-    new TextComponent(ChatLib.getCenteredText(`&aJoin Our &b&nDiscord&r&a!`)).setClickAction("open_url").setClickValue("https://discord.gg/wer8VU5E9P").chat();
+    new TextComponent(ChatLib.getCenteredText(`&aJoin Our &b&nDiscord&r&a!`)).setClickAction("open_url").setClickValue("https://discord.gg/CQhapSqgJ7").chat();
     ChatLib.chat("");
   };
 }).setFps(1)
