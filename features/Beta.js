@@ -10,11 +10,6 @@ import RenderLib from "../../RenderLib";
 // }).setCriteria("random.orb")
 
 // TODO
-// !timer
-// !countdown
-//https://api.hypixel.net/skyblock/news?key=0f0143ff-46ed-4b0f-bea6-fe20cf9bd7cb latest news
-//https://api.hypixel.net/skyblock/profile?key=0f0143ff-46ed-4b0f-bea6-fe20cf9bd7cb&profile=5b3a9f44-e242-4ab4-a467-73ee68872e46 profile by uuid
-// https://api.hypixel.net/resources/skyblock/collections versoin
 // precise waypoint 0.0625 x 0.0625 or pixel x pixel, beacon to it until distance <
 // Add precision waypoints
 // Add st like enterable waypoints

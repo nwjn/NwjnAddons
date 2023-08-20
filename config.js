@@ -70,7 +70,7 @@ class Settings {
   reaper = false 
     
   @SwitchProperty({
-    name: "Show Attack Speed Over Mort in Dungeons",
+    name: "Show Pet Over Mort in Dungeons",
     description: "Helps you to remember pet ig",
     category: "General"
   })

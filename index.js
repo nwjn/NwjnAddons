@@ -44,9 +44,10 @@ if (data.first_time) {
   ChatLib.chat("");
 };
 
-let noti = 0
+let ctNoti = 0
+let githubNoti = 0
 register("worldLoad", () => {
-  if (noti != 0) return
+  if (ctNoti != 0) return
   axios.get(`https://chattriggers.com/api/modules/1528`)
   .then(res => {
     let ctVersionArray = (res.data.releases[0].releaseVersion).split('.'),
@@ -73,7 +74,25 @@ register("worldLoad", () => {
       .setClickValue(`/ct load`)
       .chat()
       ChatLib.chat("")
-      noti += 1
+      ctNoti += 1
+    }
+  })
+  if (githubNoti != 0) return
+  axios.get(`https://api.github.com/repos/nwjn/NwjnAddons/releases/latest`)
+  .then(res => {
+    if (res.data.name != data.version) {
+      ChatLib.chat("");
+      ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------`)
+      ChatLib.chat(`&eNwjnAddons has an available github pre-release!`)
+      ChatLib.chat("");
+      ChatLib.chat(`&eChangelog:&r \n${ res.data.body }`)
+      ChatLib.chat("");
+      new TextComponent(`&eClick &3here&e for github link!`)
+      .setClickAction("run_command")
+      .setClickValue(`/ct copy ${res.data.html_url}`)
+      .chat()
+      ChatLib.chat("")
+      githubNoti += 1
     }
   })
 });
@@ -107,6 +126,7 @@ register("guiClosed", (event) => {
 });
 
 data.name = Player.getName().toLowerCase()
+data.version = version
 data.save();
 
 const pc = new KeyBind("Chat Fill /pc .", Keyboard.KEY_PERIOD, "Addons of Nwjn")
