@@ -58,4 +58,13 @@ Remove armor/food bar
 Damage Tracker
 Gyro, Jingle bells, totem ranges
 
-// Commans
+// Commands
+
+/nwjn
+/nwjn <version, party, changes, help>
+/clearchat
+/countdown 5 & /countdown 3
+/leavePT
+/rocket
+/entityinfo
+/iteminfo
