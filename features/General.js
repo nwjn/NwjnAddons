@@ -124,9 +124,6 @@ registerWhen(register("chat", (player, command, event) => {
     else if (command.toLowerCase() == `time ${ data.name }` || command == `time` || command == `time all`) {
       ChatLib.say(`/party chat ${ new Date().getHours() }:${ new Date().getMinutes() }:${ new Date().getSeconds() }`);
     }
-    else if (command.toLowerCase() == `loc ${ data.name }` || command == "loc" || command == `loc all`) {
-      ChatLib.say(`/party chat ${ getWorld() }: ${ findZone() }`);
-    }
     else if (command.toLowerCase() == `coords ${ data.name }` || command == "coords" || command == `coords all`) {
       ChatLib.say(`/party chat x: ${ Math.round(Player.getX())}, y: ${Math.round(Player.getY())}, z: ${Math.round(Player.getZ())}`)
     }
@@ -207,18 +204,20 @@ registerWhen(register("soundPlay", () => {
 }).setCriteria("mob.zombie.remedy"), () => settings.reaper);
 
 registerWhen(register("renderWorld", () => {
-  World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand").class).forEach(mort => {
-    if (!mort.getName().includes("Mort")) return
-    Tessellator.drawString(`${data.pet}`, mort.getX(), mort.getY() + 3, mort.getZ(), 0xffaa00, false, 0.05, false)
-  })
-}), () => findZone().includes("⏣ The Catac") && settings.mort);
+  try {
+    World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand").class).forEach(mort => {
+      if (!mort.getName().includes("Mort")) return
+      Tessellator.drawString(`${data.pet}`, mort.getX(), mort.getY() + 3, mort.getZ(), 0xffaa00, false, 0.05, false)
+    })
+  } catch (error) {}
+}), () => findZone().includes("TheCata") && settings.mort);
 
 registerWhen(register("renderWorld", () => {
   World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand").class).forEach(stand => {
     let name = ChatLib.removeFormatting(stand.getName())
     if (name.includes("҉") && name.includes("Bloodfiend")) RenderLib.drawEspBox(stand.getX(), stand.getY() - 2, stand.getZ(), 1, 2, 1, 0.2, 0.46667, 1, true)
   })
-}), () => findZone() == " ф Stillgore🐍 Château" && settings.steakAble);
+}), () => findZone() == "StillgoreChteau" && settings.steakAble);
 
 registerWhen(register("chat", (killed) => {
   let excuses = ["It was runic, I swear!", "mb was afk", "server?", `Skytils » ${ (3.1415926535 * (Math.random() * 3000)).toFixed(2) } ms`, "I LAGGEDF", "ITS INVIS", "MY MOUSE BROKE"]
