@@ -1,0 +1,127 @@
+
+[general]
+	waypoint_color = "255,255,0,240"
+	detect_reaper_armor = true
+	emoticons = true
+	diana_death_justification = false
+	treecap_timer = false
+	chat_type_waypoint_rendering = 1
+	stops_entity_death_animation = true
+	draw_chat_waypoints = 63
+	waypoint_beacon_height = 96
+	party_commands = true
+	steak-able_vamp_hitbox = false
+	show_attack_speed_over_mort_in_dungeons = true
+
+[kuudra]
+	pearl_box_size = 1.0
+	fresh_hitbox_height = 2.0
+	stop_rendering_mob_nametags_in_kuudra = true
+	teammate_color = "255,255,0,255"
+	"auto_fresh_&_hitbox" = true
+	supply_drop_waypoints = true
+	fresh_hitbox_width = 1.0
+	supply_pearl_lineup = true
+	"supply_pearl_boxed_width_&_height" = nan
+	show_ballista_percentage = true
+	accurate_supply_waypoints = true
+	highlight_teammates_in_kuudra = true
+
+[hud]
+
+	[hud.rain]
+		rain_display = false
+
+	[hud.poison]
+		poison_display = false
+
+	[hud.clock]
+		clock_display = 2
+
+	[hud.align]
+		align_display = true
+		highlight_players_in_align_radius = true
+
+	[hud.legion]
+		legion_display = true
+
+	[hud.stats]
+		toggle_crit_chance = true
+		toggle_attack_speed = true
+		toggle_speed = true
+		toggle_strength = true
+		stats_display = true
+		toggle_crit_damage = true
+
+	[hud.blaze]
+		blaze_display = false
+
+	[hud.fatal_tempo]
+		fatal_tempo_display = true
+
+	[hud.bobbin]
+		bobbin_display = false
+
+	[hud.visitor]
+		visitor_display = 1
+
+	[hud.miniboss]
+		miniboss_display = true
+
+	[hud.champion]
+		champion_display = false
+
+	[hud.gyro]
+		gyro_display = true
+		mage_gyro = true
+
+[bestiary]
+	armor_stand_esp_color = "255,0,255,247"
+	player_esp_color = "255,91,0,255"
+	passive_entity_esp = ""
+	broodmother = false
+	broodmother_alert = false
+	"matcho!" = false
+	arachnes_keeper = false
+	player_names_esp = ""
+	arachnes_keeper_alert = false
+	monster_esp_color = "255,234,255,0"
+	passive_entity_esp_color = "255,0,255,136"
+	armor_stand_names_esp = ""
+	esp_distance = 64
+	matcho_alert = false
+	monster_esp = "Skeleton"
+
+[crimson_isle]
+	announce_vanquishers = true
+	announce_plhlegblasts = false
+	"announce_jawbus'" = false
+	announce_thunder = false
+	replace_magma_boss_damage_messages = true
+
+["beta_(wip)"]
+	gyro_range = true
+	agro_range = true
+	tracks_damage_armor_stands = false
+	totem_color_opacity = 0.23589806
+	frozen_blaze_color_opacity = 0.3692317
+	tracks_damage_on_island_dummy_magma_cube = true
+	agro_range_color = "255,0,255,122"
+	frozen_blaze_range_color = "255,151,0,255"
+	totem_range = true
+	gyro_color_opacity = 0.32307693
+	agro_color_opacity = 0.3538471
+	removed_boss_dialouge = true
+	totem_range_options = 2
+	gyro_range_color = "255,150,0,255"
+	frozen_blaze_range = true
+	totem_range_color = "255,0,211,255"
+
+[qol]
+	toggle_block_highlight = true
+	render_armor_bar = true
+	memory_usage_alert = 48
+	remove_discord_warnings = true
+	render_food_bar = true
+	highlight_color = "255,255,0,247"
+
