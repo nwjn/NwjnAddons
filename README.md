@@ -70,3 +70,6 @@ Important Features:
 - /rocket
 - /entityinfo
 - /iteminfo
+
+For those only intrested in kuudra pearl waypoints and have skytils you can use the following st waypoints but it is very useful to have the whole module and all of the features
+<Skytils-Waypoint-Data>(V1):H4sIAAAAAAAC/51UwW6DMAz9FZQzk5w4cZLdep407bbD1AMraOrEYAKqrq3494WOULUNdOXmFuU9v+dnH9gqabKPslpnNXuM3g6sSL4yV7Hn7WexSNOyqKOnzSatkuglS6o8ek123+W6aGoWs+1Qnz2N3KcfVzxIjNnOFVxAzPbdP1zamGVF8p5nqfvdVJssZqsyL6vjV9Kck+ExS9I0SxdN95asUNoqpZXBNg6wWN2zKO1ZuLhmOYeUhktAAhOE1PAHqa1HRHkL0TWJkhDDTXIOvkvlMYFmeiGMMSpMA+rKDIBpGk2WQjSEShk+QkM9DZ3U8FtqLFKYRoyZ1rl+nMMgBs0USwBeWnSTHpkJXsCTmW2VRhkkIX0pQYgJEnLDDcpAlCMMph+5NgOD+U9YtRxDtD5Endj9kKv7mwZQGE6Q8AHqin5p+bx1IK7Hc+ovEA0XCOy9CVLOqHBAyVvvRRg9ewkkirAGCRfztTDTKFRgRkjw6uJ1y3GXT8rNEsNnSfpAofrfIk8cPwN6ZBo4sJw2Qc60CtD12i5jtq7zpOgeM9Yu2198Qd2qMAcAAA==
