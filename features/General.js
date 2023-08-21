@@ -209,7 +209,7 @@ registerWhen(register("renderWorld", () => {
       if (!mort.getName().includes("Mort")) return
       Tessellator.drawString(`${data.pet}`, mort.getX(), mort.getY() + 3, mort.getZ(), 0xffaa00, false, 0.05, false)
     })
-  } catch (error) {}
+  } catch (error) {console.log(error)}
 }), () => findZone().includes("TheCata") && settings.mort);
 
 registerWhen(register("renderWorld", () => {

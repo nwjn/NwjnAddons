@@ -8,7 +8,7 @@ let noFind = 0;
 export function findZone() {
   let zoneLine = Scoreboard.getLines().find((line) => line.getName().includes("⏣"));
   if (zoneLine == undefined) zoneLine = Scoreboard.getLines().find((line) => line.getName().includes("ф"));
-  return zoneLine == undefined ? "None" : zoneLine.getName().replaceAll(/\W/g, "")
+  return zoneLine == undefined ? "None" : zoneLine.getName().removeFormatting().replaceAll(/\W/g, "")
 }
 function findWorld() {
   if (noFind == 20) return;

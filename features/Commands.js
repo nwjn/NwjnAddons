@@ -1,4 +1,5 @@
 import { comma } from "../utils/constants";
+import { findZone, getWorld } from "../utils/world";
   
 register("command", (arg) => {
   if (arg == 3) {
@@ -90,4 +91,8 @@ register("command", (arg) => {
     Thread.sleep(500)
     ChatLib.say(`/party leave`)
   }).start()
-}).setName("leavePT")
+}).setName("leavePT");
+
+register("command", () => {
+  ChatLib.chat(`${getWorld()} | ${findZone()}`)
+}).setName("loc")
