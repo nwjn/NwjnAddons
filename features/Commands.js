@@ -1,5 +1,4 @@
 import { comma } from "../utils/constants";
-import { findZone, getWorld } from "../utils/world";
   
 register("command", (arg) => {
   if (arg == 3) {

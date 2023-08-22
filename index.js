@@ -32,7 +32,6 @@ register("command", (args) => {
   }
 }).setCommandName(`nwjn`, true).setAliases("nwjnaddons").setTabCompletions("version", "changes", "party", "help")
 
-// Credit: BetterBestiary for first time msg inspiration
 if (data.first_time) {
   data.first_time = false; 
   data.save();
@@ -67,7 +66,7 @@ register("worldLoad", () => {
       ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------`)
       ChatLib.chat(`&eNwjnAddons has an available update!`)
       ChatLib.chat("");
-      ChatLib.chat(`&eChangelog:&r ${ changes }`)
+      ChatLib.chat(`&eChangelog:&r \n${ changes }`)
       ChatLib.chat("");
       new TextComponent(`&eClick &3here&e to update!`)
       .setClickAction("run_command")

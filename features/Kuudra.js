@@ -4,7 +4,6 @@ import RenderLib from "RenderLib"
 import { registerWhen } from "../utils/functions";
 import { getWorld } from "../utils/world";
   
-
 registerWhen(register("renderEntity", (entity, position, ticks, event) => {
   if (!entity.toString().removeFormatting().includes(["[Lv"])) return
   cancel(event)

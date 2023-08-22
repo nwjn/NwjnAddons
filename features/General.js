@@ -181,7 +181,7 @@ registerWhen(register("chat", (player, command, event) => {
       })
       ChatLib.chat(`/pc Slayer Progress:${kills}`)
     }
-  }, 200);
+  }, 300);
 }).setCriteria("Party > ${player}: .${command}"), () => settings.party)
 
 let reaperUsed = 0
@@ -265,13 +265,19 @@ registerWhen(register("renderOverlay", () => {
 let PlayerFirstX = undefined
 let PlayerFirstZ = undefined
 let PlayerFirstYaw = undefined
-registerWhen(register("chat", () => {
+let ready = false
+registerWhen(register("worldLoad", () => {
   PlayerFirstX = Player.getX()
   PlayerFirstZ = Player.getZ()
   PlayerFirstYaw = Player.getYaw()
-}).setCriteria("Your active Potion Effects have been paused and stored. They will be restored when you leave Dungeons! You are not allowed to use existing Potion Effects while in Dungeons."), () => settings.mort)
+}), () => settings.mort)
+
+registerWhen(register("chat", () => {
+  ready = true
+}).setCriteria(`${Player.getName()} is now ready!`), () => settings.mort && getWorld() != "Kuudra")
 
 registerWhen(register("renderWorld", () => {
+  if (Player.asPlayerMP().distanceTo(PlayerFirstX + (15 * Math.cos((PlayerFirstYaw + 90) * (Math.PI / 180))), 72, PlayerFirstZ + (15 * Math.sin((PlayerFirstYaw + 90) * (Math.PI / 180)))) > 18 || ready == false) return
   try {
     Tessellator.drawString(`${data.pet}`, PlayerFirstX + (15 * Math.cos((PlayerFirstYaw + 90) * (Math.PI / 180))), 72, PlayerFirstZ + (15 * Math.sin((PlayerFirstYaw + 90) * (Math.PI / 180))), 0xffaa00, false, 0.05, false)
   } catch (error) {}

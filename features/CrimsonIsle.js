@@ -43,4 +43,4 @@ registerWhen(register('chat', (damage, event) => {
 
 register('worldUnload', () => {
   totalDamage = 0
-})
+});
