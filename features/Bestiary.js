@@ -68,7 +68,7 @@ registerWhen(register("renderWorld", () => {
             hp2 = hp2.replace(/m|M/g, "000000")
             hp2 = hp2.replace(/\.[1-9](k|K)/g, `${hp2.charAt(2)}00`)
             hp2 = hp2.replace(/k|K/g, "000")
-            maxMonsterHPs.push(parseInt(hp2 + ".0"))
+            maxPassiveHPs.push(parseInt(hp2 + ".0"))
           })  
         }
         else if (!hp.includes("|")) {
@@ -78,7 +78,7 @@ registerWhen(register("renderWorld", () => {
           hp = hp.replace(/m|M/g, "000000")
           hp = hp.replace(/\.[1-9](k|K)/g, `${hp.charAt(2)}00`)
           hp = hp.replace(/k|K/g, "000")
-          maxMonsterHPs.push(parseInt(hp + ".0"))
+          maxPassiveHPs.push(parseInt(hp + ".0"))
         }
       }
       try {
