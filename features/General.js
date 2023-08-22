@@ -1,6 +1,6 @@
 import settings from "../config"
 import { registerWhen } from "../utils/functions"
-import { findZone, getWorld } from "../utils/world";
+import { getWorld } from "../utils/world";
 import { data } from "../utils/data";
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
@@ -184,16 +184,6 @@ registerWhen(register("chat", (player, command, event) => {
   }, 200);
 }).setCriteria("Party > ${player}: .${command}"), () => settings.party)
 
-// !intrests shows what player set as their intrests
-// !slayer shows their kills left for their current slayer if any
-// !warp
-// !transfer
-// !allinv
-// !timer
-// !countdown
-// Add Fresh and waypoint or hitbox of who freshed in kuudra
-// /nwjn party commands
-
 let reaperUsed = 0
 registerWhen(register("soundPlay", () => {
   setTimeout(() => {
@@ -204,19 +194,13 @@ registerWhen(register("soundPlay", () => {
 }).setCriteria("mob.zombie.remedy"), () => settings.reaper);
 
 registerWhen(register("renderWorld", () => {
-  World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand").class).forEach(mort => {
-    if (mort.getName().removeFormatting().includes("Mort")) {
-      Tessellator.drawString(`${data.pet}`, mort.getX(), mort.getY() + 3, mort.getZ(), 0xffaa00, false, 0.05, false)
-    }
-  })
-}), () => findZone().includes("TheCata") && settings.mort);
-
-registerWhen(register("renderWorld", () => {
   World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand").class).forEach(stand => {
     let name = ChatLib.removeFormatting(stand.getName())
-    if (name.includes("҉") && name.includes("Bloodfiend")) RenderLib.drawEspBox(stand.getX(), stand.getY() - 2, stand.getZ(), 1, 2, 1, 0.2, 0.46667, 1, true)
+    if (Player.asPlayerMP().canSeeEntity(stand)) {
+      if (name.includes("҉") && name.includes("Bloodfiend")) RenderLib.drawEspBox(stand.getX(), stand.getY() - 2, stand.getZ(), 1, 2, 1, 0.2, 0.46667, 1, true)
+    }
   })
-}), () => findZone() == "StillgoreChteau" && settings.steakAble);
+}), () => getWorld() == "The Rift" && settings.steakAble);
 
 registerWhen(register("chat", (killed) => {
   let excuses = ["It was runic, I swear!", "mb was afk", "server?", `Skytils » ${ (3.1415926535 * (Math.random() * 3000)).toFixed(2) } ms`, "I LAGGEDF", "ITS INVIS", "MY MOUSE BROKE"]
@@ -277,3 +261,24 @@ registerWhen(register("renderOverlay", () => {
     if (time >= 0) Renderer.drawString(`${ time.toFixed(3) }`, Renderer.screen.getWidth() / 2 - 13, Renderer.screen.getHeight() / 2 - 15)
   }
 }), () => (settings.treecap && (getWorld() == "Hub" || getWorld() == "The Park")) || (settings.reaper));
+
+let PlayerFirstX = undefined
+let PlayerFirstZ = undefined
+let PlayerFirstYaw = undefined
+registerWhen(register("chat", () => {
+  PlayerFirstX = Player.getX()
+  PlayerFirstZ = Player.getZ()
+  PlayerFirstYaw = Player.getYaw()
+}).setCriteria("Your active Potion Effects have been paused and stored. They will be restored when you leave Dungeons! You are not allowed to use existing Potion Effects while in Dungeons."), () => settings.mort)
+
+registerWhen(register("renderWorld", () => {
+  try {
+    Tessellator.drawString(`${data.pet}`, PlayerFirstX + (15 * Math.cos((PlayerFirstYaw + 90) * (Math.PI / 180))), 72, PlayerFirstZ + (15 * Math.sin((PlayerFirstYaw + 90) * (Math.PI / 180))), 0xffaa00, false, 0.05, false)
+  } catch (error) {}
+}), () => settings.mort);
+
+registerWhen(register("worldUnload", () => {
+  PlayerFirstX = undefined
+  PlayerFirstZ = undefined
+  PlayerFirstYaw = undefined
+}), () => settings.mort)

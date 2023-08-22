@@ -92,7 +92,3 @@ register("command", (arg) => {
     ChatLib.say(`/party leave`)
   }).start()
 }).setName("leavePT");
-
-register("command", () => {
-  ChatLib.chat(`${getWorld()} | ${findZone()}`)
-}).setName("loc")

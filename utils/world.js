@@ -2,13 +2,13 @@ import { setRegisters } from "./functions";
 
 // Credit: volcaddons on ct for findworld and findzone
 let world = undefined;
-export function getWorld() { return world };
+export function getWorld() { return world; };
 let noFind = 0;
 
 export function findZone() {
   let zoneLine = Scoreboard.getLines().find((line) => line.getName().includes("⏣"));
   if (zoneLine == undefined) zoneLine = Scoreboard.getLines().find((line) => line.getName().includes("ф"));
-  return zoneLine == undefined ? "None" : zoneLine.getName().removeFormatting().replaceAll(/\W/g, "")
+  return zoneLine == undefined ? "None" : zoneLine.getName().removeFormatting()
 }
 function findWorld() {
   if (noFind == 20) return;
@@ -30,7 +30,3 @@ register("worldLoad", () => {
   noFind = 0;
   findWorld()
 });
-
-register("step", () => {
-  if (world != undefined) findZone()
-}).setFps(3)
