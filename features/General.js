@@ -287,4 +287,11 @@ registerWhen(register("worldUnload", () => {
   PlayerFirstX = undefined
   PlayerFirstZ = undefined
   PlayerFirstYaw = undefined
-}), () => settings.mort)
+}), () => settings.mort);
+
+registerWhen(register("actionBar", (event) => {
+  let chat = ChatLib.getChatMessage(event, false)
+  chat = chat.substring(chat.indexOf("     "), chat.lastIndexOf("     "))
+  ChatLib.chat(chat)
+  ChatLib.actionBar("&6nom nom xp")
+}).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp)

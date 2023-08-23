@@ -30,3 +30,7 @@ register("worldLoad", () => {
   noFind = 0;
   findWorld()
 });
+
+register("worldUnload", () => {
+  world = undefined
+})

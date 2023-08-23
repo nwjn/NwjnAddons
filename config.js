@@ -104,6 +104,13 @@ class Settings {
   })
   treecap = false  
     
+  @SwitchProperty({
+    name: "Send Client Side Chat Message on SB XP Gain",
+    description: "Takes action bar skyblock xp gained message and pastes them in chat",
+    category: "General"
+  })
+  sbxp = false  
+    
   @TextProperty({
     name: "Armor Stand Names ESP",
     description: "Draws hitboxes around armor stands that include the inputted name",
@@ -210,6 +217,16 @@ class Settings {
     category: "Bestiary"
   })
   broodmotherAlert = false;
+
+  @ButtonProperty({
+    name: "Move GUI Elements",
+    description: "Click to edit gui locations",
+    category: "HUD",
+    placeholder: "Click!"
+  })
+  gui() {
+    ChatLib.command("nwjn gui", true)
+  }  
 
   @SwitchProperty({
     name: "Legion Display",
