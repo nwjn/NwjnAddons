@@ -12,7 +12,7 @@ registerWhen(register("renderEntity", (entity, position, ticks, event) => {
 let freshies = []
 registerWhen(register("chat", () => {
   ChatLib.say(`/pc FRESH! (${build})`)
-}).setCriteria("Your Fresh Tools Perk bonus doubles your building speed for the next 5 seconds!"), () => settings.fresh && getWorld() == "Kuudra")
+}).setCriteria("Your Fresh Tools Perk bonus doubles your building speed for the next 10 seconds!"), () => settings.fresh && getWorld() == "Kuudra")
 
 registerWhen(register("chat", () => {
   freshies = []
@@ -206,7 +206,7 @@ registerWhen(register("chat", (player) => {
   freshies.push(player)
   setTimeout(() => {
     freshies.splice(freshies.indexOf(player), 1)
-  }, 5000);
+  }, 10000);
 }).setCriteria("Party > ${player}: FRESH!").setContains(), () => settings.fresh && getWorld() == "Kuudra")
 
 register("worldUnload", () => {

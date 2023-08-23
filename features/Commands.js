@@ -41,22 +41,7 @@ register("command", () => {
     if (line.toString().includes("COMMON") || line.toString().includes("RARE") || line.toString().includes("EPIC") || line.toString().includes("LEGENDARY") || line.toString().includes("MYTHIC") || line.toString().includes("DIVINE") || line.toString().includes("SPECIAL")) type = line
   })
   let id = holding?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
-  ChatLib.chat(`\nName: ${ holding?.getName() }\nRegistry Name: ${ holding?.getRegistryName() }\nSkyblock ID: ${ id }\nEnchanted: ${ holding?.isEnchanted() }\nType: ${ type }`)
-  
-  id = id.toLowerCase().replace(/(^\w|_\w)/g, c => c.toUpperCase());
-  if (id.startsWith("Abiphone")) id = "Abiphone"
-  new Message().addTextComponent(new TextComponent(`Official Wiki: https://wiki.hypixel.net/${ id }`).setClick('open_url', `https://wiki.hypixel.net/${ id }`)).chat()
-  if (id == "Abiphone") id = "Abiphones"
-  let lowers = ['A', 'An', 'The', 'And', 'But', 'Or', 'For', 'Nor', 'As', 'At', 
-    'By', 'For', 'From', 'In', 'Into', 'Near', 'Of', 'On', 'Onto', 'To', 'With']
-  id = id.split("_")
-  id.forEach(str => {
-    if (lowers.includes(str)) {
-      id[id.indexOf(str)] = str.toLowerCase()
-    }
-  })
-  id = id.join('_')
-  new Message().addTextComponent(new TextComponent(`Fandom Wiki: https://hypixel-skyblock.fandom.com/wiki/${id}?so=search\n`).setClick('open_url', `https://hypixel-skyblock.fandom.com/wiki/${id}?so=search`)).chat()
+  ChatLib.chat(`\nName: ${ holding?.getName() }\nRegistry Name: ${ holding?.getRegistryName() }\nSkyblock ID: ${ id }\nEnchanted: ${ holding?.isEnchanted() }\nType: ${ type }\n`)
 }).setName("itemInfo");
 
 register("command", () => {
