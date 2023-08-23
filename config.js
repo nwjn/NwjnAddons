@@ -2,7 +2,7 @@ import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonPr
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["General", "Bestiary", "HUD", "Crimson Isle", "Kuudra", "QOL", "Beta (WIP)"]
+    const categories = ["General", "Bestiary", "Crimson Isle", "HUD", "Kuudra", "QOL", "Beta (WIP)"]
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   }
 })
@@ -219,17 +219,6 @@ class Settings {
   })
   legion = false
 
-  @ButtonProperty({
-    name: "Legion Mover",
-    description: `Moves legion counter -> Runs /moveLegion`,
-    category: "HUD",
-    subcategory: "Legion",
-    placeholder: "Click!"
-  })
-  moveLegion() {
-    ChatLib.command("moveLegion", true)
-  }
-
   @SwitchProperty({
     name: "Highlight Players in Align Radius",
     description: "Title when align is held and off cd",
@@ -245,17 +234,6 @@ class Settings {
     subcategory: "Align"
   })
   align = false
-
-  @ButtonProperty({
-    name: "Align Mover",
-    description: `Moves align timer -> Runs /moveAlign`,
-    category: "HUD",
-    subcategory: "Align",
-    placeholder: "Click!"
-  })
-  moveAlign() {
-    ChatLib.command("moveAlign", true)
-  }
 
   @SwitchProperty({
     name: "Mage Gyro",
@@ -273,17 +251,6 @@ class Settings {
   })
   gravityStorm = false
 
-  @ButtonProperty({
-    name: "Gyro Mover",
-    description: `Moves gyro timer -> Runs /moveGyro`,
-    category: "HUD",
-    subcategory: "Gyro",
-    placeholder: "Click!"
-  })
-  moveGyro() {
-    ChatLib.command("moveGyro", true)
-  }
-
   @SwitchProperty({
     name: "Bobbin Display",
     description: "Shows the number of bobbers in your bobbin radius",
@@ -292,17 +259,6 @@ class Settings {
   })
   bobbin = false
 
-  @ButtonProperty({
-    name: "Bobbin Mover",
-    description: `Moves bobbin counter -> Runs /moveBobbin`,
-    category: "HUD",
-    subcategory: "Bobbin",
-    placeholder: "Click!"
-  })
-  moveBobbin() {
-    ChatLib.command("moveBobbin", true)
-  }
-
   @SwitchProperty({
     name: "Fatal Tempo Display",
     description: `Approximate ft percent\n&cNote: Currently trying to add a fix for precursor eye adding ft hits`,
@@ -310,17 +266,6 @@ class Settings {
     subcategory: "Fatal Tempo"
   })
   ft = false
-    
-  @ButtonProperty({
-    name: "Fatal Tempo Mover",
-    description: `Moves ft counter -> Runs /moveFt`,
-    category: "HUD",
-    subcategory: "Fatal Tempo",
-    placeholder: "Click!"
-  })
-  moveFt() {
-    ChatLib.command("moveFt", true)
-  }
 
   @SwitchProperty({
     name: "Poison Display",
@@ -330,17 +275,6 @@ class Settings {
   })
   poison = false
 
-  @ButtonProperty({
-    name: "Poison Mover",
-    description: `Moves the poison display -> Runs /movePoison`,
-    category: "HUD",
-    subcategory: "Poison",
-    placeholder: "Click!"
-  })
-  movePoison() {
-    ChatLib.command("movePoison", true)
-  }
-
   @SwitchProperty({
     name: "Stats Display",
     description: `Shows stats from tab `,
@@ -348,17 +282,6 @@ class Settings {
     subcategory: "Stats"
   })
   stats = false;
-    
-  @ButtonProperty({
-    name: "Stats Mover",
-    description: "Moves stat tracker -> Runs /moveStats",
-    category: "HUD",
-    subcategory: "Stats",
-    placeholder: "Click!"
-  })
-  moveStats() {
-    ChatLib.command(`moveStats`, true);
-  } 
 
   @CheckboxProperty({
     name: "Toggle Speed",
@@ -408,17 +331,6 @@ class Settings {
   })
   rain = false
 
-  @ButtonProperty({
-    name: "Rain Mover",
-    description: `Move rain -> Runs /moveRain`,
-    category: "HUD",
-    subcategory: "Rain",
-    placeholder: "Click!"
-  })
-  moveRain() {
-    ChatLib.command("moveRain", true);
-  }
-
   @SwitchProperty({
     name: "Champion Display",
     description: `Champion gained on killing a flare`,
@@ -426,17 +338,6 @@ class Settings {
     subcategory: "Champion"
   })
   champ = false
-
-  @ButtonProperty({
-    name: "Champion Mover",
-    description: `Shows your champion xp -> Runs /moveChamp`,
-    category: "HUD",
-    subcategory: "Champion",
-    placeholder: "Click!"
-  })
-  moveChamp() {
-    ChatLib.command("moveChamp", true)
-  }   
 
   @SwitchProperty({
     name: "Blaze Display",
@@ -446,17 +347,6 @@ class Settings {
   })
   blaze = false 
 
-  @ButtonProperty({
-    name: "Blaze Mover",
-    description: `Shows your blaze effect -> Runs /moveBlaze`,
-    category: "HUD",
-    subcategory: "Blaze",
-    placeholder: "Click!"
-  })
-  moveBlaze() {
-    ChatLib.command("moveBlaze", true)
-  }   
-
   @SelectorProperty({
     name: "Clock Display",
     description: "Shows your current time",
@@ -465,17 +355,6 @@ class Settings {
     options: ["Off", "12-Hour Time", "24-Hour Time"]
   })
   clock = 0;
-  
-  @ButtonProperty({
-    name: "Clock Mover",
-    description: "Moves the clock -> Runs /moveClock",
-    category: "HUD",
-    subcategory: "Clock",
-    placeholder: "Click!"
-  })
-  moveClock() {
-    ChatLib.command("moveClock", true)
-  }
 
   @SelectorProperty({
     name: "Visitor Display",
@@ -485,17 +364,6 @@ class Settings {
     options: ["Off", "12 Minutes", "15 Minutes"]
   })
   visitor = 0;
-  
-  @ButtonProperty({
-    name: "Visitor Mover",
-    description: "Moves the visitor -> Runs /moveVisitor",
-    category: "HUD",
-    subcategory: "Visitor",
-    placeholder: "Click!"
-  })
-  moveVisitor() {
-    ChatLib.command("moveVisitor", true)
-  }
 
   @SwitchProperty({
     name: "Miniboss Display",
@@ -504,17 +372,6 @@ class Settings {
     subcategory: "Miniboss"
   })
   mini = false 
-
-  @ButtonProperty({
-    name: "Miniboss Mover",
-    description: `Shows your recent CI miniboss kills -> Runs /moveMini`,
-    category: "HUD",
-    subcategory: "Miniboss",
-    placeholder: "Click!"
-  })
-  moveMini() {
-    ChatLib.command("moveMini", true)
-  }   
 
   @SwitchProperty({
     name: "Announce Vanquishers",
@@ -787,19 +644,10 @@ class Settings {
   constructor() {
     this.initialize(this);
     this.setCategoryDescription("Bestiary", "bestiary")
-    this.setCategoryDescription("HUD", "Displays on your screen")
     this.setCategoryDescription("Crimson Isle", "endgame island fr");
     this.setCategoryDescription("Kuudra", "1b/h")
     this.setCategoryDescription("QOL", "Quality of Life")
     this.setCategoryDescription("Beta (WIP)", "Features that are currently incomplete but are planned and have some functionality")
-
-    this.addDependency("Fatal Tempo Mover", "Fatal Tempo Display")
-    this.addDependency("Stats Mover", "Stats Display")
-    this.addDependency("Champion Mover", "Champion Display")
-    this.addDependency("Blaze Mover", "Blaze Display")
-    this.addDependency("Poison Mover", "Poison Display")
-    this.addDependency("Rain Mover", "Rain Display")
-    this.addDependency("Miniboss Mover", "Miniboss Display")
 
     this.addDependency("Matcho Alert", "Matcho!")
     this.addDependency("Arachnes Keeper Alert", "Arachnes Keeper")

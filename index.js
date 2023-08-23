@@ -11,12 +11,16 @@ import "./features/QOL"
 import { version, consts } from "./utils/constants";
 import { data } from "./utils/data";
 import { setRegisters } from "./utils/functions"
+import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
 data.autosave()
 
 register("command", (args) => {  
   if (!args) {
     settings.openGUI()
+  }
+  else if (args == "gui") {
+    openGUI()
   }
   else if (args == "version") {
     ChatLib.chat(`${consts.PREFIX} &bYou are currently on version &e${version}`)
@@ -30,7 +34,7 @@ register("command", (args) => {
   else {
     ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------\n/moveChamp -> moves the champion display\n/moveFt -> move the ft display\n/movePoison -> moves poison display\n/moveBlaze -> moves blaze display\n/moveStats -> moves stats display\n/moveClock -> moves clock display\n/moveRain -> moves rain display\n/rocket -> sends a rocket in party chat\n/clearchat -> clears the chat\n/321 -> counts down from 3\n/54321 -> counts down from 5\n/itemInfo => shows held item's info\n/entityInfo => shows info of entity you are looking at\n/leavePT => transfers to whatever argument you put after the command and then leaves`)
   }
-}).setCommandName(`nwjn`, true).setAliases("nwjnaddons").setTabCompletions("version", "changes", "party", "help")
+}).setCommandName(`nwjn`, true).setAliases("nwjnaddons").setTabCompletions("version", "changes", "party", "help", "gui")
 
 if (data.first_time) {
   data.first_time = false; 
@@ -139,7 +143,4 @@ nwjn.registerKeyPress(() => {
 })
 
 // Stole some volc code cuz he stole mine! rahhh
-// Abusing the magma boss' g spot to kill him slightly faster
-// visitor display fix
-// changed /54321 && /321 to /countdown 5 && /countdown 3
-// Better performance
+// Added /nwjn gui

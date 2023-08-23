@@ -8,7 +8,7 @@ import { data } from "../utils/data";
 import RenderLib from "../../RenderLib";
 
 const blazeExample = `&aGummy: &cN/A\n&7Wisp: &cN/A`
-const blazeOverlay = new Overlay("blaze", ["Crimson Isle"], data.blazeL, "moveBlaze", blazeExample)
+const blazeOverlay = new Overlay("blaze", ["Crimson Isle"], () => true, data.blazeL, "moveBlaze", blazeExample)
 
 function timeFormat(milliseconds) {
   time = [];
@@ -48,7 +48,7 @@ registerWhen(register("chat", () => {
 
 
 const champExample = `&6Champion XP: &e0 (+0)`
-const champOverlay = new Overlay("champ", ["Crimson Isle"], data.champL, "moveChamp", champExample)
+const champOverlay = new Overlay("champ", ["Crimson Isle"], () => true, data.champL, "moveChamp", champExample)
 
 let champion2 = 0
 registerWhen(register("entitydeath", (entity) => {
@@ -64,7 +64,7 @@ registerWhen(register("entitydeath", (entity) => {
 
 
 const clockExample = `0:00:00`;
-const clockOverlay = new Overlay("clock", ["all"], data.clockL, "moveClock", clockExample);
+const clockOverlay = new Overlay("clock", ["all"], () => true, data.clockL, "moveClock", clockExample);
 
 function fixLength(x) {
   if (x.toString().length === 2) return x;
@@ -73,7 +73,7 @@ function fixLength(x) {
 
 
 const ftExample = `Fatal Tempo: 0%`;
-const ftOverlay = new Overlay("ft", ["all"], data.ftL, "moveFt", ftExample);
+const ftOverlay = new Overlay("ft", ["all"], () => true, data.ftL, "moveFt", ftExample);
 
 let ftHits = [];
 let time = 0
@@ -125,7 +125,7 @@ registerWhen(register("step", () => {
 
 
 const miniExample = `&6Last Minibosses:\n`
-const miniOverlay = new Overlay("mini", ["Crimson Isle"], data.miniL, "moveMini", miniExample)
+const miniOverlay = new Overlay("mini", ["Crimson Isle"], () => true, data.miniL, "moveMini", miniExample)
 
 registerWhen(register("chat", (msg) => {
   let chat = ChatLib.getChatMessage(msg, false)
@@ -145,7 +145,7 @@ const poisonExample =
 `&c0&8x &5Twilight Arrow Poison
 &c0&8x &rFlint Arrows
 &c0&8x &aToxic Arrow Poison`;
-const poisonOverlay = new Overlay("poison", ["all"], data.poisonL, "movePoison", poisonExample);
+const poisonOverlay = new Overlay("poison", ["all"], () => true, data.poisonL, "movePoison", poisonExample);
 
 let twilight = 0
 let toxic = 0
@@ -192,7 +192,7 @@ function invCheck() {
 const rainExample =
 `&9Rain: &3No
 &9Next: &300:00`;
-const rainOverlay = new Overlay("rain", ["all"], data.rainL, "moveRain", rainExample);
+const rainOverlay = new Overlay("rain", ["all"], () => true, data.rainL, "moveRain", rainExample);
 
 // Credit: https://github.com/mat9369/skyblock-rain-timer
 let timeLeft = 0;
@@ -236,11 +236,11 @@ Strength: &c❁0
 Crit Chance: &9☣0
 Crit Damage: &9☠0
 Attack Speed: &e⚔0`;
-const statsOverlay = new Overlay("stats", ["all"], data.statsL, "moveStats", statsExample);
+const statsOverlay = new Overlay("stats", ["all"], () => true, data.statsL, "moveStats", statsExample);
 
 
 const visitorExample = `Next Visitor: &cClaim Visitor!`
-const visitorOverlay = new Overlay("visitor", ["all"], data.visitorL, "moveVisitor", visitorExample);
+const visitorOverlay = new Overlay("visitor", ["all"], () => true, data.visitorL, "moveVisitor", visitorExample);
 
 let getTime = 0
 registerWhen(register("chat", () => {
@@ -260,10 +260,10 @@ registerWhen(register("chat", () => {
 // })
 
 const legionExample = `&eLegion: &cAlone :(`
-const legionOverlay = new Overlay("legion", ["all"], data.legionL, "moveLegion", legionExample);
+const legionOverlay = new Overlay("legion", ["all"], () => true, data.legionL, "moveLegion", legionExample);
 
 const bobbinExample = `&eBobbin: &cNone :(`
-const bobbinOverlay = new Overlay("bobbin", ["all"], data.bobbinL, "moveBobbin", bobbinExample);
+const bobbinOverlay = new Overlay("bobbin", ["all"], () => true, data.bobbinL, "moveBobbin", bobbinExample);
 
 registerWhen(register("renderWorld", () => {
   if (settings.legion) {
@@ -303,7 +303,7 @@ registerWhen(register("renderWorld", () => {
 }), () => settings.bobbin || settings.legion);
 
 const gyroExample = `&6Gravity Storm: &a0s`
-const gyroOverlay = new Overlay("gravityStorm", ["all"], data.gyroL, "moveGyro", gyroExample);
+const gyroOverlay = new Overlay("gravityStorm", ["all"], () => true, data.gyroL, "moveGyro", gyroExample);
 
 let gyroCD = 30;
 let gyroUsed = 0
@@ -319,7 +319,7 @@ registerWhen(register("clicked", (x, y, button, down) => {
 }), () => settings.gravityStorm)
 
 const alignExample = `&6Alignment: &a0s`
-const alignOverlay = new Overlay("align", ["all"], data.alignL, "moveAlign", alignExample);
+const alignOverlay = new Overlay("align", ["all"], () => true, data.alignL, "moveAlign", alignExample);
 
 let aligned = 0
 let alignLeft = 0
