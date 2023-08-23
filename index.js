@@ -141,6 +141,3 @@ const nwjn = new KeyBind("Chat Fill /nwjn", Keyboard.KEY_N, "Addons of Nwjn")
 nwjn.registerKeyPress(() => {
   Client.setCurrentChatMessage("/nwjn")
 })
-
-// Stole some volc code cuz he stole mine! rahhh
-// Added /nwjn gui

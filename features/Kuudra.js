@@ -101,6 +101,7 @@ registerWhen(register("renderWorld", () => {
           line = ChatLib.removeFormatting(line.getName());
           if (line.includes("/6)")) {
             World.getAllEntitiesOfType(Java.type("net.minecraft.entity.monster.EntityGiantZombie").class).forEach(giant => {
+              if (giant?.getEntity()?.func_70694_bm()?.toString() != "1xitem.skull@3") return
               let yaw = giant.getYaw();
               renderBeaconBeam(giant.getX() + (3.7 * Math.cos((yaw + 130) * (Math.PI / 180))), giant.getEyeHeight() - 3, giant.getZ() + (3.7 * Math.sin((yaw + 130) * (Math.PI / 180))), 0, 1, 1, 1, true, 100);
             });
