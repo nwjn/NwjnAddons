@@ -18,6 +18,19 @@ registerWhen(register("chat", () => {
   freshies = []
 }).setCriteria("[NPC] Elle: Phew! The Ballista is finally ready! It should be strong enough to tank Kuudra's blows now!"), () => settings.fresh && getWorld() == "Kuudra")
 
+registerWhen(register("chat", (supply, event) => {
+  let name = ChatLib.getChatMessage(event, true)
+  name = name.toString().substring(0, name.indexOf("&r&a&lrecovered") - 1)
+  cancel(event);
+  let time = undefined
+  Scoreboard.getLines().forEach(line => {
+    if (line.toString().includes("Time Elapsed"))
+      time = line.toString()
+  })
+  time = time?.substring(time?.indexOf(":") + 2)
+  ChatLib.chat(`${name} &a&lrecovered a supply at ${time}! &r&8(${supply}/6)`)
+}).setCriteria("${player} recovered one of Elle's supplies! (${supply}/6)"), () => settings.customSupply && getWorld() == "Kuudra")
+
 let supply1 = false
 let supply2 = false
 let supply3 = false
@@ -47,9 +60,7 @@ registerWhen(register("renderWorld", () => {
     World.getAllEntitiesOfType(Java.type("net.minecraft.client.entity.EntityOtherPlayerMP").class).forEach(player => {
       let ping = World.getPlayerByName(player.getName())?.getPing();
       if (ping != 1) return;
-      if (Player.asPlayerMP().canSeeEntity(player)) {
-        RenderLib.drawEspBox(player.getX(), player.getY(), player.getZ(), 1, 2, settings.teammateColor.getRed() / 255, settings.teammateColor.getGreen() / 255, settings.teammateColor.getBlue() / 255, 1, true);
-      }
+      RenderLib.drawEspBox(player.getX(), player.getY(), player.getZ(), 1, 2, settings.teammateColor.getRed() / 255, settings.teammateColor.getGreen() / 255, settings.teammateColor.getBlue() / 255, 1, false);
     })
   }
   if (settings.pearl) {
@@ -97,16 +108,12 @@ registerWhen(register("renderWorld", () => {
     line = ChatLib.removeFormatting(line.getName())
     if (line.includes("/6)")) {
       if (settings.supplyWaypoints) {
-        Scoreboard.getLines().forEach(line => {
-          line = ChatLib.removeFormatting(line.getName());
-          if (line.includes("/6)")) {
-            World.getAllEntitiesOfType(Java.type("net.minecraft.entity.monster.EntityGiantZombie").class).forEach(giant => {
-              if (giant?.getEntity()?.func_70694_bm()?.toString() != "1xitem.skull@3") return
-              let yaw = giant.getYaw();
-              renderBeaconBeam(giant.getX() + (3.7 * Math.cos((yaw + 130) * (Math.PI / 180))), giant.getEyeHeight() - 3, giant.getZ() + (3.7 * Math.sin((yaw + 130) * (Math.PI / 180))), 0, 1, 1, 1, true, 100);
-            });
-          }
-        })
+        World.getAllEntitiesOfType(Java.type("net.minecraft.entity.monster.EntityGiantZombie").class).forEach(giant => {
+          if (giant?.getEntity()?.func_70694_bm()?.toString() != "1xitem.skull@3") return
+          // giant.getEntity().func_82142_c(false)
+          let yaw = giant.getYaw();
+          renderBeaconBeam(giant.getX() + (3.7 * Math.cos((yaw + 130) * (Math.PI / 180))), giant.getEyeHeight() - 3, giant.getZ() + (3.7 * Math.sin((yaw + 130) * (Math.PI / 180))), 0, 1, 1, 1, true, 200);
+        });
       }
       if (settings.supply) {
         if (supply1 == true) {
@@ -187,7 +194,7 @@ registerWhen(register("renderWorld", () => {
     freshies.forEach(fresher => {
       let fresh = World.getPlayerByName(fresher)
       if (fresher == Player.getName()) return
-      RenderLib.drawInnerEspBox(fresh.getX(), fresh.getY(), fresh.getZ(), settings.freshWidth, settings.freshHeight, 0, 1, 0, 0.5, true)
+      RenderLib.drawInnerEspBox(fresh.getX(), fresh.getY(), fresh.getZ(), settings.freshWidth, settings.freshHeight, 0, 1, 0, 0.5, false)
     })
   }
 }), () => getWorld() == "Kuudra")

@@ -179,7 +179,10 @@ registerWhen(register("chat", (player, command, event) => {
           kills = line
         }
       })
-      ChatLib.chat(`/pc Slayer Progress:${kills}`)
+      ChatLib.say(`/pc Slayer Progress:${kills}`)
+    }
+    else if (command.toLowerCase() == `pet ${ data.name }` || command == "pet" || command == "pet all") {
+      ChatLib.say(`/party chat ${data.pet}`)
     }
   }, 300);
 }).setCriteria("Party > ${player}: .${command}"), () => settings.party)
@@ -188,8 +191,11 @@ let reaperUsed = 0
 registerWhen(register("soundPlay", () => {
   setTimeout(() => {
     let armor = Player.getInventory().getStackInSlot(38)
-    let armorLore = armor.getLore()
-    if (armorLore[0].toString().includes("Reaper") && armorLore[1].toString().includes("#FF0000")) reaperUsed = new Date().getTime()
+    armor?.getLore()?.forEach(line => {
+      if (line.toString().includes("#FF0000") && armor.getName().includes("Reaper")) {
+        reaperUsed = new Date().getTime()
+      }
+    })
   }, 100);
 }).setCriteria("mob.zombie.remedy"), () => settings.reaper);
 
@@ -287,6 +293,7 @@ registerWhen(register("worldUnload", () => {
   PlayerFirstX = undefined
   PlayerFirstZ = undefined
   PlayerFirstYaw = undefined
+  ready = false
 }), () => settings.mort);
 
 registerWhen(register("actionBar", (event) => {
@@ -294,4 +301,22 @@ registerWhen(register("actionBar", (event) => {
   chat = chat.substring(chat.indexOf("     "), chat.lastIndexOf("     "))
   ChatLib.chat(chat)
   ChatLib.actionBar("&6nom nom xp")
-}).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp)
+}).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp);
+
+registerWhen(register("chat", () => {
+  if (settings.pWarp == "" || settings.pPlayer == "") return
+  setTimeout(() => {
+    ChatLib.say(`/party ${settings.pPlayer}`)
+  }, 500)
+}).setCriteria(`${ settings.pWarp }`).setContains(), () => settings.pWarp != "");
+
+register("chat", (event) => {
+  let chat = ChatLib.getChatMessage(event)
+  if (!chat.includes(`${settings.pPlayer} `)) return
+  setTimeout(() => {
+    ChatLib.say(`/p warp`)
+    setTimeout(() => {
+      ChatLib.say(`/party leave`)
+    }, 500);
+  }, 500);
+}).setCriteria(` joined the party.`).setContains()

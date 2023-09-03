@@ -50,7 +50,7 @@ class Settings {
     
   @SwitchProperty({
     name: "Party Commands",
-    description: "Enables party commands (full list at /nwjn party)",
+    description: "Enables party commands (full list at /nwjn party)]n&c this counts as a chat marco",
     category: "General"
   })
   party = false  
@@ -64,7 +64,7 @@ class Settings {
     
   @SwitchProperty({
     name: "Detect Reaper Armor",
-    description: "Shows time left for reaper armor under crosshair\n&cUsing another mod to recolor your reaper armor messes this up you bozo",
+    description: "Shows time left for reaper armor under crosshair\n&cItem Name must include Reaper, item lore must have hex code in it and be #FF0000 when ability is used",
     category: "General"
   })
   reaper = false 
@@ -85,7 +85,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Diana Death Justification",
-    description: "Sends a chat message when someone dies to a diana mob zzz",
+    description: "Sends a chat message when someone dies to a diana mob zzz\n&c this is a chat marco",
     category: "General"
   })
   diana = false 
@@ -105,12 +105,27 @@ class Settings {
   treecap = false  
     
   @SwitchProperty({
-    name: "Send Client Side Chat Message on SB XP Gain",
+    name: "Skyblock XP Gain Message",
     description: "Takes action bar skyblock xp gained message and pastes them in chat",
     category: "General"
   })
   sbxp = false  
     
+
+  @TextProperty({
+    name: "Party and Warp on Chat Message",
+    description: "Parties and warps the player inputted in the below text entry whenever the chat message that includes what is in this text entry is in the chat.\n&c This is a chat marco",
+    category: "General"
+  })
+  pWarp = ""  
+    
+  @TextProperty({
+    name: "Invited Player Name",
+    description: "The player name to invite when the thing above happens",
+    category: "General"
+  })
+  pPlayer = ""  
+
   @TextProperty({
     name: "Armor Stand Names ESP",
     description: "Draws hitboxes around armor stands that include the inputted name",
@@ -228,6 +243,14 @@ class Settings {
     ChatLib.command("nwjn gui", true)
   }  
 
+  @SwitchProperty({
+    name: "Key Guardian Display",
+    description: "Shows Key Guardian spawn time",
+    category: "HUD",
+    subcategory: "Crystal Hollows"
+  })
+  keyGuard = false
+    
   @SwitchProperty({
     name: "Legion Display",
     description: "Shows the number of players in your legion radius",
@@ -392,28 +415,28 @@ class Settings {
 
   @SwitchProperty({
     name: "Announce Vanquishers",
-    description: `Announces Vanquisher coords to party.`,
+    description: `Announces Vanquisher coords to party.\n&c this is a chat marco`,
     category: "Crimson Isle"
   })
   announceVanqs = false
 
   @SwitchProperty({
     name: "Announce Jawbus'",
-    description: "Announces Jawbus coords to party",
+    description: "Announces Jawbus coords to party\n&c this is a chat marco",
     category: "Crimson Isle"
   })
   jawbus = false  
 
   @SwitchProperty({
     name: "Announce Thunder",
-    description: "Announces Thunder coords to party",
+    description: "Announces Thunder coords to party\n&c this is a chat marco",
     category: "Crimson Isle"
   })
   thunder = false
 
   @SwitchProperty({
     name: "Announce Plhlegblasts",
-    description: "Announces Plhlegblast coords to party",
+    description: "Announces Plhlegblast coords to party\n&c this is a chat marco",
     category: "Crimson Isle"
   })
   plhlegblast = false
@@ -425,6 +448,13 @@ class Settings {
   })
   magma = false
   
+  @SwitchProperty({
+    name: "Custom Supply Drop Message",
+    description: "Shows a message including time when a supply is dropped:\n&r&6[MVP&r&9++&r&6] nwjn&r&f &a&lrecovered a supply at 18s! &r&8(1/6)&r",
+    category: "Kuudra"
+  })
+  customSupply = false  
+    
   @SwitchProperty({
     name: "Accurate Supply Waypoints",
     description: "Draws accurate waypoints where supplies are",
@@ -478,7 +508,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Auto Fresh & Hitbox",
-    description: "Auto say `FRESH!` in party chat when you get fresh tools and draw hitboxes around party members who have freshed",
+    description: "Auto say `FRESH!` in party chat when you get fresh tools and draw hitboxes around party members who have freshed\n&c this is a chat marco",
     category: "Kuudra"
   })
   fresh = false
@@ -507,7 +537,7 @@ class Settings {
     category: "Kuudra"
   })
   kuudraTags = false
-
+  
   @SliderProperty({
     name: "Memory Usage Alert",
     description: "Sends an alert when memory reaches a certain percentage (set to 0 for off)",

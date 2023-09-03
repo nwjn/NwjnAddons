@@ -35,9 +35,7 @@ registerWhen(register("step", () => {
 registerWhen(register('chat', (damage, event) => {
   totalDamage = totalDamage + parseInt(damage)
   cancel(event)
-  if (totalDamage > 100) {
-    totalDamage = 100
-  }
+  if (totalDamage > 100) totalDamage = 100
   ChatLib.chat(`${consts.PREFIX} &c+${damage}% &7(${totalDamage}%)`)
 }).setCriteria("The Magma Boss angers! (+${damage}% Damage)"), () => settings.magma && getWorld() == "Crimson Isle")
 

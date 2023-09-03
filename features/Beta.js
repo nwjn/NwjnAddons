@@ -40,11 +40,9 @@ registerWhen(register("renderWorld", (partialTick) => {
       dmg = []
     }
     World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand").class).forEach(stand => {
-      if (stand.getName().includes("Playing") || stand.getName().includes("Lv") || stand.toString().includes("name=Armor Stand")) return
-      if (stand.getName().includes(",")) {
-        if (!dmg.includes(stand.getName())) ChatLib.chat(stand.getName())
-        dmg.push(stand.getName())
-      }
+      if (stand.getName().includes("Playing") || stand.getName().includes("Lv") || stand.toString().includes("name=Armor Stand") || !stand.getName().includes(",")) return
+      if (!dmg.includes(stand.getName())) ChatLib.chat(stand.getName())
+      dmg.push(stand.getName())
     })
   }
   if (settings.gyro) {

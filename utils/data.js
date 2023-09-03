@@ -23,7 +23,8 @@ export let data = new PogObject("NwjnAddons", {
   "legionL": [15, 250, 1],
   "bobbinL": [15, 250, 1],
   "gyroL": [15, 250, 1],
-  "alignL": [15, 250, 1]
+  "alignL": [15, 250, 1],
+  "keyGuardL": [15, 250, 1]
 }, "data.json");
 
 register("gameUnload", () => {

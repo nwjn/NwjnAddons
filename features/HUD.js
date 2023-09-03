@@ -335,15 +335,6 @@ register("chat", () => {
   aligned = new Date().getTime()
 }).setCriteria("${*} casted Cells Alignment on you!");
 
-register("worldUnload", () => {
-  gyroCD = 30
-  gyroUsed = 0
-  aligned = 0
-  alignedLeft = 0
-  cdLeft = 0
-  cd = 0
-})
-
 let alignMessage = ""
 let cdMessage = ""
 registerWhen(register("renderWorld", () => {
@@ -358,6 +349,18 @@ registerWhen(register("renderWorld", () => {
     }
   })
 }), () => settings.alignHighlight);
+
+const keyGuardExample = `&cNothing Dead Yet`
+const keyGuardOverlay = new Overlay("keyGuard", ["Crystal Hollows"], () => true, data.keyGuardL, "movekeyGuard", keyGuardExample);
+
+let keyGuards = []
+registerWhen(register("entityDeath", (entity) => {
+  if (entity.getClassName() != "EntityZombie") return
+  let maxHP = entity.getEntity().func_110148_a(Java.type('net.minecraft.entity.SharedMonsterAttributes').field_111267_a).func_111125_b()
+  if (maxHP == "250000.0") {
+    keyGuards.push(new Date().getTime())
+  }
+}), () => settings.keyGuard);
 
 // all hud steps
 register("step", () => {
@@ -456,4 +459,25 @@ register("step", () => {
 
     alignOverlay.message = `&6Alignment: ${alignMessage} &e| ${cdMessage}`
   }
-}).setFps(10)
+  if (settings.keyGuard) {
+    keyGuardOverlay.message = ""
+    keyGuards.forEach(keyGuard => {
+      keyGuard = 60 - (newTime - keyGuard) / 1000
+      let keyGuard2 = keyGuard + 60
+      if (keyGuard2 <= 0) {
+        keyGuards.shift()
+      }
+      keyGuardOverlay.message = keyGuardOverlay.message + `&3Key Guard:&r ${ keyGuard.toFixed(1) }s to ${ keyGuard2.toFixed(1) }s\n`
+    })
+  }
+}).setFps(10);
+
+register("worldUnload", () => {
+  gyroCD = 30
+  gyroUsed = 0
+  aligned = 0
+  alignedLeft = 0
+  cdLeft = 0
+  cd = 0
+  keyGuards = []
+})
