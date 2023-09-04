@@ -395,7 +395,7 @@ registerWhen(register("renderWorld", () => {
 }), () => settings.endstone);
 
 registerWhen(register("chat", (mana) => {
-  ChatLib.command(`ct simulate Party > [MVP++] nwan: Used ${mana} mana!`, true)
+  ChatLib.say(`/pc Used ${mana} mana!`)
 }).setCriteria("Used Extreme Focus! (${mana} Mana)"), () => settings.endstoneNoti)
 
 // all hud steps
