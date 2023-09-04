@@ -107,7 +107,8 @@ registerWhen(register("renderOverlay", () => {
 }), () => settings.ft);
 
 let ftLevel = 0;
-registerWhen(register("soundPlay", () => {
+registerWhen(register("soundPlay", (pos, name) => {
+  if ((getWorld() == "Kuudra" && name.toString() != "random.bow") || (getWorld() != "Kuudra" && name.toString() != "random.successful_hit")) return
   let holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")
   if (holding?.getString("id") != "TERMINATOR") return
   let ftLvl = holding.getCompoundTag("enchantments").getTag("ultimate_fatal_tempo");
@@ -116,7 +117,7 @@ registerWhen(register("soundPlay", () => {
     ftLevel = ftLvl;
     ftAddHit(time);
   }
-}).setCriteria("random.successful_hit"), () => settings.ft);
+}), () => settings.ft);
 
 registerWhen(register("step", () => {
   if(ftHitsNum() > 0 && new Date().getTime() - ftHits[ftHits.length - 1] >= 3000)ftHits = [];
@@ -362,6 +363,41 @@ registerWhen(register("entityDeath", (entity) => {
   }
 }), () => settings.keyGuard);
 
+const manaExample = `&cFero: &a0%\n&cStrong: &a0%`
+const manaOverlay = new Overlay("manaEnchant", ["all"], () => true, data.manaL, "moveMana", manaExample);
+
+let totalMana = 0
+registerWhen(register("chat", (player, mana) => {
+  if (player.includes("]")) {
+    player = player.substring(player.indexOf(" ") + 1)
+  }
+  if (player.includes(" ")) {
+    player = player.substring(0, player.indexOf(" "))
+  }
+  if (Player.getName() == player) return
+  totalMana = totalMana + parseInt(mana) 
+  setTimeout(() => {
+    totalMana = totalMana - parseInt(mana)
+  }, 10000);
+}).setCriteria("Party > ${name}: Used ${mana} mana!"), () => settings.manaEnchant)
+
+registerWhen(register("renderWorld", () => {
+  let holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")
+  if (holding?.getString("id") != "END_STONE_SWORD") return
+  World.getAllEntitiesOfType(Java.type("net.minecraft.client.entity.EntityOtherPlayerMP").class).forEach(player => {
+    if (Player.asPlayerMP().distanceTo(player) > 5) return
+      let ping = World.getPlayerByName(player.getName())?.getPing()
+    if (ping != 1) return
+    if (Player.asPlayerMP().canSeeEntity(player)) {
+      RenderLib.drawInnerEspBox(player.getX(), player.getY(), player.getZ(), 1, 2, 1, 0.667, 0, 0.25, true)
+    }
+  }) 
+}), () => settings.endstone);
+
+registerWhen(register("chat", (mana) => {
+  ChatLib.command(`ct simulate Party > [MVP++] nwan: Used ${mana} mana!`, true)
+}).setCriteria("Used Extreme Focus! (${mana} Mana)"), () => settings.endstoneNoti)
+
 // all hud steps
 register("step", () => {
   if (settings.blaze) {
@@ -469,6 +505,19 @@ register("step", () => {
       }
       keyGuardOverlay.message = keyGuardOverlay.message + `&3Key Guard:&r ${ keyGuard.toFixed(1) }s to ${ keyGuard2.toFixed(1) }s\n`
     })
+  }
+  if (settings.manaEnchant) {
+    let fero = (totalMana / (10000 / (settings.feroMana * 0.05))) * 100
+    let strong = (totalMana / (10000 / (settings.strongMana * 0.1))) * 100
+    if (settings.feroMana == 0 && settings.strongMana != 0) {
+      manaOverlay.message = `&cStrong: &a${strong.toFixed(2)}%`
+    }
+    else if (settings.strongMana == 0 && settings.feroMana != 0) {
+      manaOverlay.message = `&cFero: &a${fero.toFixed(2)}%`
+    }
+    else if (settings.strongMana == 0 && settings.feroMana == 0) {
+      manaOverlay.message = `&cFero: &a${fero.toFixed(2)}%\n&cStrong: &a${strong.toFixed(2)}%`
+    }
   }
 }).setFps(10);
 

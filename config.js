@@ -244,6 +244,50 @@ class Settings {
   }  
 
   @SwitchProperty({
+    name: "Endstone Sword Mana Drain Range",
+    description: "Does the same thing as align highlight but with endstone and mana drain range",
+    category: "HUD",
+    subcategory: "Mana"
+  })
+  endstone = false  
+
+  @SwitchProperty({
+    name: "Endstone Sword Party Notify",
+    description: "Tells the party how much you extreme focused",
+    category: "HUD",
+    subcategory: "Mana"
+  })
+  endstoneNoti = false  
+
+  @SwitchProperty({
+    name: "Mana Enchant Calc",
+    description: "Approximate buff of your mana enchants",
+    category: "HUD",
+    subcategory: "Mana"
+  })
+  manaEnchant = false
+
+  @SliderProperty({
+    name: "Cumulative Fero Mana",
+    description: "Set the amount of fero mana levels you have",
+    min: 0,
+    max: 40,
+    category: "HUD",
+    subcategory: "Mana"
+  })
+  feroMana = 0;
+
+  @SliderProperty({
+    name: "Cumulative Strong Mana",
+    description: "Set the amount of strong mana levels you have",
+    min: 0,
+    max: 40,
+    category: "HUD",
+    subcategory: "Mana"
+  })
+  strongMana = 0;
+  
+  @SwitchProperty({
     name: "Key Guardian Display",
     description: "Shows Key Guardian spawn time",
     category: "HUD",
@@ -285,7 +329,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Gyro Display",
-    description: "Shows how long you are under alignment for",
+    description: "Shows how long your gyro cd is",
     category: "HUD",
     subcategory: "Gyro"
   })
@@ -581,7 +625,7 @@ class Settings {
     category: "QOL"
   })
   food = false
-
+    
   @SwitchProperty({
     name: "Tracks Damage Armor Stands",
     description: "Spams ur chat with damage tags",

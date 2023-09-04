@@ -129,3 +129,5 @@ register("guiClosed", (event) => {
 data.name = Player.getName().toLowerCase()
 data.version = version
 data.save();
+
+// fixed ft counter not working on kuudra but has to be changed to on shot instead of on hit. outside of kuudra it will still work the same as before
