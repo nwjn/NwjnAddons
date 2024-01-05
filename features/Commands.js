@@ -8,7 +8,7 @@ register("command", (arg) => {
       ChatLib.say(`/pc ${arg - i} (${Math.random().toString(36).substring(2, 8)})`)
       Thread.sleep(1000)
     }
-    ChatLib.chat('/pc Go!')
+    ChatLib.say('/pc Go!')
   }).start()
 }).setName('countdown', true);
 
