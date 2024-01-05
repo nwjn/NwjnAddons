@@ -1,32 +1,15 @@
 import { comma } from "../utils/constants";
   
 register("command", (arg) => {
-  if (arg == 3) {
-    new Thread(() => {
-      ChatLib.say(`/pc 3`)
+  if (!arg) return;
+
+  new Thread(() => {
+    for (i=0; i < arg; i++) {
+      ChatLib.say(`/pc ${arg - i} (${Math.random().toString(36).substring(2, 8)})`)
       Thread.sleep(1000)
-      ChatLib.say(`/pc 2`)
-      Thread.sleep(1000)
-      ChatLib.say(`/pc 1`)
-      Thread.sleep(1000)
-      ChatLib.say(`/pc Go!`)
-    }).start()
-  }
-  else if (arg == 5) {
-    new Thread(() => {
-      ChatLib.say(`/pc 5`)
-      Thread.sleep(1000)
-      ChatLib.say(`/pc 4`)
-      Thread.sleep(1000)
-      ChatLib.say(`/pc 3`)
-      Thread.sleep(1000)
-      ChatLib.say(`/pc 2`)
-      Thread.sleep(1000)
-      ChatLib.say(`/pc 1`)
-      Thread.sleep(1000)
-      ChatLib.say(`/pc Go!`)
-    }).start()
-  }
+    }
+    ChatLib.say('/pc Go!')
+  }).start()
 }).setName('countdown', true);
 
 register("command", () => {
