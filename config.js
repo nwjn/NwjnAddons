@@ -56,15 +56,8 @@ class Settings {
   party = false  
     
   @SwitchProperty({
-    name: "Emoticons",
-    description: "Enables replacing emoticons with names of the emoticons after sending a message\nExample: *zzz or *dog",
-    category: "General"
-  })
-  emoticons = false  
-    
-  @SwitchProperty({
     name: "Detect Reaper Armor",
-    description: "Shows time left for reaper armor under crosshair\n&cItem Name must include Reaper, item lore must have hex code in it and be #FF0000 when ability is used",
+    description: "Shows time left for reaper armor under crosshair",
     category: "General"
   })
   reaper = false 
@@ -190,6 +183,13 @@ class Settings {
     category: "Bestiary"
   })
   distance = 64;
+
+  @SwitchProperty({
+    name: "Magma Boss Hitbox and Sweet Spot",
+    description: "title",
+    category: "General"
+  })
+  magma = false 
 
   @SwitchProperty({
     name: "Matcho!",

@@ -374,7 +374,7 @@ registerWhen(register("chat", (player, mana) => {
   if (player.includes(" ")) {
     player = player.substring(0, player.indexOf(" "))
   }
-  if (Player.getName() == player) return
+  if (Player.getName() == player || Player.asPlayerMP().distanceTo(World.getPlayerByName(player).getEntity()) > 5) return
   totalMana = totalMana + parseInt(mana) 
   setTimeout(() => {
     totalMana = totalMana - parseInt(mana)

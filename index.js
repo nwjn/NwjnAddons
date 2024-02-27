@@ -48,7 +48,6 @@ if (data.first_time) {
 };
 
 let ctNoti = 0
-let githubNoti = 0
 register("worldLoad", () => {
   if (ctNoti != 0) return
   axios.get(`https://chattriggers.com/api/modules/1528`)
@@ -78,24 +77,6 @@ register("worldLoad", () => {
       .chat()
       ChatLib.chat("")
       ctNoti += 1
-    }
-  })
-  if (githubNoti != 0) return
-  axios.get(`https://api.github.com/repos/nwjn/NwjnAddons/releases/latest`)
-  .then(res => {
-    if (res.data.name != data.version) {
-      ChatLib.chat("");
-      ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------`)
-      ChatLib.chat(`&eNwjnAddons has an available github pre-release!`)
-      ChatLib.chat("");
-      ChatLib.chat(`&eChangelog:&r \n${ res.data.body }`)
-      ChatLib.chat("");
-      new TextComponent(`&eClick &3here&e for github link!`)
-      .setClickAction("run_command")
-      .setClickValue(`/ct copy ${res.data.html_url}`)
-      .chat()
-      ChatLib.chat("")
-      githubNoti += 1
     }
   })
 });
@@ -129,5 +110,3 @@ register("guiClosed", (event) => {
 data.name = Player.getName().toLowerCase()
 data.version = version
 data.save();
-
-// fixed ft counter not working on kuudra but has to be changed to on shot instead of on hit. outside of kuudra it will still work the same as before

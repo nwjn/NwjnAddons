@@ -19,8 +19,8 @@ registerWhen(register("chat", () => {
 }).setCriteria("[NPC] Elle: Phew! The Ballista is finally ready! It should be strong enough to tank Kuudra's blows now!"), () => settings.fresh && getWorld() == "Kuudra")
 
 registerWhen(register("chat", (supply, event) => {
-  let name = ChatLib.getChatMessage(event, true)
-  name = name.toString().substring(0, name.indexOf("&r&a&lrecovered") - 1)
+  let name = new Message(event).getFormattedText()
+  name = name.toString().substring(0, name.indexOf("recovered") - 7)
   cancel(event);
   let time = undefined
   Scoreboard.getLines().forEach(line => {
@@ -29,7 +29,7 @@ registerWhen(register("chat", (supply, event) => {
   })
   time = time?.substring(time?.indexOf(":") + 2)
   ChatLib.chat(`${name} &a&lrecovered a supply at ${time}! &r&8(${supply}/6)`)
-}).setCriteria("${player} recovered one of Elle's supplies! (${supply}/6)"), () => settings.customSupply && getWorld() == "Kuudra")
+}).setCriteria("${*} recovered one of Elle's supplies! (${supply}/6)"), () => settings.customSupply && getWorld() == "Kuudra")
 
 let supply1 = false
 let supply2 = false

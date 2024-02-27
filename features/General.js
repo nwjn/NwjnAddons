@@ -189,14 +189,9 @@ registerWhen(register("chat", (player, command, event) => {
 
 let reaperUsed = 0
 registerWhen(register("soundPlay", () => {
-  setTimeout(() => {
-    let armor = Player.getInventory().getStackInSlot(38)
-    armor?.getLore()?.forEach(line => {
-      if (line.toString().includes("#FF0000") && armor.getName().includes("Reaper")) {
-        reaperUsed = new Date().getTime()
-      }
-    })
-  }, 100);
+  let armor = Player.getInventory().getStackInSlot(38)
+  armor = armor?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
+  if (armor == "REAPER_CHESTPLATE") reaperUsed = new Date().getTime()
 }).setCriteria("mob.zombie.remedy"), () => settings.reaper);
 
 registerWhen(register("renderWorld", () => {
@@ -213,24 +208,6 @@ registerWhen(register("chat", (killed) => {
   if (killed == "were") ChatLib.say(`/pc ${excuses[Math.trunc(Math.random() * 4)]}`)
   else if (killed == "was") ChatLib.say(`/pc "${excuses[Math.trunc(Math.random() * 4)]}"`)
 }).setChatCriteria(" ☠ ${*} ${killed} ${*} by Exalted ${*}"), () => getWorld() == "Hub" && settings.diana);
-
-// http://kaomoji.ru/en/
-let names = ["happy", "kiss", "wink", "cute", "love", "shy", "wtf", "evil", "sad", "sob", "dead", "afraid", "shrug", "huh", "yes", "...", "smirk", "wow", "hi", "hug", "typing", "run", "zzz", "cat", "bear", "dog", "rabbit", "pig", "fish", "spider", "sniper", "kill", "drink", "sing", "music", "drown"]
-
-let emoticons = ["٩(◕‿◕｡)۶", "(ﾉ´ з `)ノ", "♡(>ᴗ•)", "(´• ω •`) ♡", "( ˘⌣˘)♡(˘⌣˘ )", "(⁄ ⁄•⁄ω⁄•⁄ ⁄)", "(ᗒᗣᗕ)՞", "ψ( ` ∇ ´ )ψ", "(╥_╥)", "。゜゜(´Ｏ`) ゜゜。", "(×_×)", "\(º □ º l|l)/", "┐(シ)┌", "(•ิ_•ิ)?", "(・・)ゞ", "(¬_¬ )", "(¬‿¬ )", "w(°ｏ°)w", "(*・ω・)ﾉ", "(づ￣ ³￣)づ", "__〆(￣ー￣ )", "ε=ε=ε=ε=┌(;￣▽￣)┘", "[(－_－)]..zzZ", "(=^･ｪ･^=)", "	ʕ ᵔᴥᵔ ʔ", "U・ᴥ・U", "૮₍ ˶• ༝ •˶ ₎ა", "( ´(oo)ˋ ) oink", "<・ )))><<", "/╲/\╭(ఠఠ益ఠఠ)╮/\\/\\", "( ´-ω･)︻┻┳══━一", "✴==≡눈٩(`皿´҂)ง", "( ˘▽˘)っ♨", "ヾ(´〇`)ﾉ♪♪♪", "ヾ(⌐■_■)ノ♪", "‿︵‿︵‿︵‿ヽ(°□° )ノ︵‿︵‿︵‿︵"]
-
-registerWhen(register("messageSent", (message, event) => {
-  if (message.includes("*")) {
-    names.forEach(name => {
-      if (message.includes(`*${ name }`)) {
-        cancel(event)
-        let index = names.indexOf(name)
-        message = message.replace(`*${name}`, emoticons[index])
-        ChatLib.say(message)
-      }
-    })
-  }
-}), () => settings.emoticons);
 
 registerWhen(register("renderEntity", (entity, position, ticks, event) => {
   if (entity.toString().removeFormatting().includes(["[Lv"]) || entity.toString().includes("Armor Stand")) return
@@ -303,20 +280,27 @@ registerWhen(register("actionBar", (event) => {
   ChatLib.actionBar("&6nom nom xp")
 }).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp);
 
+let warp = false
 registerWhen(register("chat", () => {
   if (settings.pWarp == "" || settings.pPlayer == "") return
   setTimeout(() => {
-    ChatLib.say(`/party ${settings.pPlayer}`)
+    ChatLib.say(`/party ${ settings.pPlayer }`)
+    warp = true
+    setTimeout(() => {
+      warp = false
+    }, 60000);
   }, 500)
 }).setCriteria(`${ settings.pWarp }`).setContains(), () => settings.pWarp != "");
 
 register("chat", (event) => {
   let chat = ChatLib.getChatMessage(event)
-  if (!chat.includes(`${settings.pPlayer} `)) return
-  setTimeout(() => {
-    ChatLib.say(`/p warp`)
+  if (!chat.includes(`${ settings.pPlayer } `)) return
+  if (warp == true) {
     setTimeout(() => {
-      ChatLib.say(`/party leave`)
+      ChatLib.say(`/p warp`)
+      setTimeout(() => {
+        ChatLib.say(`/party leave`)
+      }, 500);
     }, 500);
-  }, 500);
+  }
 }).setCriteria(` joined the party.`).setContains()

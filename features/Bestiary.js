@@ -217,3 +217,17 @@ register("worldUnload", () => {
   broodEntities = 0
   keeperEntities = 0
 });
+
+registerWhen(register("renderworld", () => {
+  World.getAllEntitiesOfType(Java.type(`net.minecraft.entity.monster.EntityMagmaCube`)).forEach(entity => {
+    let maxHP = entity.getEntity().func_110148_a(Java.type('net.minecraft.entity.SharedMonsterAttributes').field_111267_a).func_111125_b()
+    let currentHP = entity.getEntity().func_110143_aJ()
+    if (currentHP < 0 || !Player.asPlayerMP().canSeeEntity(entity)) return
+    if ((maxHP.toString() == "200000000" || maxHP.toString() == "10000000")) {
+      RenderLib.drawEspBox(entity.getX(), entity.getY(), entity.getZ(), entity.getWidth(), entity.getHeight(), 0.914, 1, 0, 1, true)
+      if (maxHP.toString() == "200000000") {
+        RenderLib.drawEspBox(entity.getX(), entity.getY() + (entity.getHeight() / 2), entity.getZ(), 2, 1, 0.914, 1, 0, 1, true)
+      }
+    }
+  })
+}), () => settings.magma);
