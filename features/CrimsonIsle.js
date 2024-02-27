@@ -1,7 +1,6 @@
 import settings from "../config";
 import { registerWhen } from "../utils/functions";
 import { getWorld } from "../utils/world";
-import { consts } from "../utils/constants";
 
 registerWhen(register("chat", () => {
   ChatLib.say(`/pc x: ${ Math.round(Player.getX())}, y: ${Math.round(Player.getY())}, z: ${Math.round(Player.getZ())} [NwjnAddons] Lord Jawbus!!!`)
@@ -30,15 +29,160 @@ registerWhen(register("step", () => {
       totalDamage = parseInt(line)
     }
   })
-}).setDelay(1), () => settings.magma)
+}).setDelay(5), () => settings.magma)
 
 registerWhen(register('chat', (damage, event) => {
   totalDamage = totalDamage + parseInt(damage)
   cancel(event)
   if (totalDamage > 100) totalDamage = 100
-  ChatLib.chat(`${consts.PREFIX} &c+${damage}% &7(${totalDamage}%)`)
+  ChatLib.chat(`&4&lMagma Boss&r &8> &c+${damage}% &7(${totalDamage}%)`)
 }).setCriteria("The Magma Boss angers! (+${damage}% Damage)"), () => settings.magma && getWorld() == "Crimson Isle")
 
-register('worldUnload', () => {
+registerWhen(register('worldUnload', () => {
   totalDamage = 0
-});
+}), () => settings.magma)
+
+let fishes = {
+  SulphurSkitter: {
+    name: "Sulphur Skitter",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  SteamingHotFlounder: {
+    name: "Steaming-Hot Flounder",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  Gusher: {
+    name: "Gusher",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  Blobfish: {
+    name: "Blobfish",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  Slugfish: {
+    name: "Slugfish",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  Flyfish: {
+    name: "Flyfish",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  Lavahorse: {
+    name: "Lavahorse",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  ManaRay: {
+    name: "Mana Ray",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  VolcanicStonefish: {
+    name: "Volcanic Stonefish",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  Vanille: {
+    name: "Vanille",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  SkeletonFish: {
+    name: "Skeleton Fish",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  Moldfin: {
+    name: "Moldfin",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  SoulFish: {
+    name: "Soul Fish",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  KarateFish: {
+    name: "Karate Fish",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  GoldenFish: {
+    name: "Golden Fish",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  Obfuscated1: {
+    name: "Obfuscated 1",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  Obfuscated2: {
+    name: "Obfuscated 2",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+  Obfuscated3: {
+    name: "Obfuscated 3",
+    bronze: 0,
+    silver: 0,
+    gold: 0,
+    diamond: 0,
+  },
+}
+
+registerWhen(register("chat", (fish, rarity, event) => {
+  fish = fish.substring(fish.indexOf(" ") + 1)
+  fish = fish.replaceAll(/\W/g, "")
+  if (!(fish in fishes)) return
+  let ghoti = fishes[fish]
+  switch (rarity) {
+    case "BRONZE": ghoti.bronze++; break;
+    case "SILVER": ghoti.silver++; break;
+    case "GOLD": ghoti.gold++; break;
+    case "DIAMOND": ghoti.diamond++; break;
+  }
+  let chat = ChatLib.getChatMessage(event, true)
+  cancel(event)
+  ChatLib.chat(`${chat} &8${ghoti.bronze}&r-&7${ghoti.silver}&r-&6${ghoti.gold}&r-&b${ghoti.diamond} &d(${ghoti.bronze + ghoti.silver + ghoti.gold + ghoti.diamond})`)
+}).setCriteria("TROPHY FISH! You caught ${fish} ${rarity}."), () => getWorld() == "Crimson Isle" && settings.fish);

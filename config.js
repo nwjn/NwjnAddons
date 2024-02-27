@@ -56,6 +56,13 @@ class Settings {
   party = false  
     
   @SwitchProperty({
+    name: "Rend Arrows",
+    description: "Shows the number of rend arrows that are pulled",
+    category: "General"
+  })
+  rendArrows = false  
+    
+  @SwitchProperty({
     name: "Detect Reaper Armor",
     description: "Shows time left for reaper armor under crosshair",
     category: "General"
@@ -63,12 +70,12 @@ class Settings {
   reaper = false 
     
   @SwitchProperty({
-    name: "Show Pet Over Mort in Dungeons",
-    description: "Helps you to remember pet ig",
+    name: "Stops Entity Death Animation",
+    description: "Stops entity death animation and removes armor stands that show 0 hp",
     category: "General"
   })
-  mort = false  
-    
+  dead = false  
+
   @SwitchProperty({
     name: "Steak-Able Vamp Hitbox",
     description: "Shows a hitbox when a Vamp Slayer is steak-able",
@@ -77,18 +84,11 @@ class Settings {
   steakAble = false 
 
   @SwitchProperty({
-    name: "Diana Death Justification",
-    description: "Sends a chat message when someone dies to a diana mob zzz\n&c this is a chat marco",
+    name: "Skyblock XP Gain Message",
+    description: "Takes action bar skyblock xp gained message and pastes them in chat",
     category: "General"
   })
-  diana = false 
-
-  @SwitchProperty({
-    name: "Stops Entity Death Animation",
-    description: "title",
-    category: "General"
-  })
-  dead = false  
+  sbxp = false  
     
   @SwitchProperty({
     name: "Treecap Timer",
@@ -97,14 +97,6 @@ class Settings {
   })
   treecap = false  
     
-  @SwitchProperty({
-    name: "Skyblock XP Gain Message",
-    description: "Takes action bar skyblock xp gained message and pastes them in chat",
-    category: "General"
-  })
-  sbxp = false  
-    
-
   @TextProperty({
     name: "Party and Warp on Chat Message",
     description: "Parties and warps the player inputted in the below text entry whenever the chat message that includes what is in this text entry is in the chat.\n&c This is a chat marco",
@@ -118,7 +110,28 @@ class Settings {
     category: "General"
   })
   pPlayer = ""  
-
+    
+  @TextProperty({
+    name: "Mob ESP",
+    description: "Draws hitboxes around inputted mob entity\n&cA mob from net.minecraft.entity.monster or net.minecraft.entity.passive\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
+    category: "Bestiary"
+  })
+  rawMobList = "" 
+    
+  @ColorProperty({
+    name: 'Monster ESP Color',
+    description: `Sets the color for monster hitboxes`,
+    category: 'Bestiary'
+  })
+  monsterHitboxColor = Color.YELLOW
+    
+  @ColorProperty({
+    name: 'Passive entity ESP Color',
+    description: `Sets the color for passive entity hitboxes`,
+    category: 'Bestiary'
+  })
+  passiveHitboxColor = Color.GREEN
+  
   @TextProperty({
     name: "Armor Stand Names ESP",
     description: "Draws hitboxes around armor stands that include the inputted name",
@@ -147,34 +160,6 @@ class Settings {
   })
   playerColor = Color.GREEN
 
-  @TextProperty({
-    name: "Monster ESP",
-    description: "Draws hitboxes around inputted monster entity\n&cBlaze, CaveSpider, Creeper, Enderman, Endermite, Ghast, GiantZombie, Golem, Guardian, IronGolem, MagmaCube, Mob, PigZombie, Silverfish, Skeleton, Slime, Snowman, Spider, Witch, &cZombie\n&bExamples: Zombie or Zombie(100|120|2k|45k) or Zombie,Skeleton or Zombie(100), Skeleton",
-    category: "Bestiary"
-  })
-  monster = "" 
-    
-  @ColorProperty({
-    name: 'Monster ESP Color',
-    description: `Sets the color for monster hitboxes`,
-    category: 'Bestiary'
-  })
-  monsterColor = Color.GREEN
-
-  @TextProperty({
-    name: "Passive Entity ESP",
-    description: "Draws hitboxes around inputted passive entity\n&cAmbientCreature, Animal, Bat, Chicken, Cow, Horse, Mooshroom, Ocelot, Pig, Rabbit, Sheep, Squid, Tameable, Villager, WaterMob, Wolf\n&bExamples: Wolf or Wolf, Pig or Wolf(250|15k)",
-    category: "Bestiary"
-  })
-  passive = "" 
-    
-  @ColorProperty({
-    name: 'Passive entity ESP Color',
-    description: `Sets the color for passive entity hitboxes`,
-    category: 'Bestiary'
-  })
-  passiveColor = Color.GREEN
-
   @SliderProperty({
     name: "ESP Distance",
     description: "Change distance hitboxes will render",
@@ -183,13 +168,6 @@ class Settings {
     category: "Bestiary"
   })
   distance = 64;
-
-  @SwitchProperty({
-    name: "Magma Boss Hitbox and Sweet Spot",
-    description: "title",
-    category: "General"
-  })
-  magma = false 
 
   @SwitchProperty({
     name: "Matcho!",
@@ -244,8 +222,40 @@ class Settings {
   }  
 
   @SwitchProperty({
+    name: "Pet Display",
+    description: "Simple display of active pet",
+    category: "HUD",
+    subcategory: "Pet"
+  })
+  pet = false  
+    
+  @SwitchProperty({
+    name: "Garden Display",
+    description: "Shows garden timers",
+    category: "HUD",
+    subcategory: "Garden"
+  })
+  garden = false
+
+  @SwitchProperty({
+    name: "On Screen Pest Alert",
+    description: "shows pests in the middle of screen",
+    category: "HUD",
+    subcategory: "Garden"
+  })
+  pests = false
+
+  @SwitchProperty({
+    name: "Mob Highlight Counter",
+    description: "Shows the number of each mob highlighted by mob esp",
+    category: "HUD",
+    subcategory: "Bestiary"
+  })
+  mobEspCount = false
+    
+  @SwitchProperty({
     name: "Endstone Sword Mana Drain Range",
-    description: "Does the same thing as align highlight but with endstone and mana drain range",
+    description: "Highlights players in mana drain range",
     category: "HUD",
     subcategory: "Mana"
   })
@@ -305,7 +315,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Highlight Players in Align Radius",
-    description: "Title when align is held and off cd",
+    description: "Highlights players when they are in align radius",
     category: "HUD",
     subcategory: "Align"
   })
@@ -336,20 +346,31 @@ class Settings {
   gravityStorm = false
 
   @SwitchProperty({
-    name: "Bobbin Display",
-    description: "Shows the number of bobbers in your bobbin radius",
-    category: "HUD",
-    subcategory: "Bobbin"
-  })
-  bobbin = false
-
-  @SwitchProperty({
     name: "Fatal Tempo Display",
     description: `Approximate ft percent\n&cNote: Currently trying to add a fix for precursor eye adding ft hits`,
     category: "HUD",
     subcategory: "Fatal Tempo"
   })
   ft = false
+
+  @DecimalSliderProperty({
+    name: "Fatal Tempo Timer Scale",
+    description: "Change the scale of the timer for ft above crosshair",
+    minF: 1,
+    maxF: 2.5,
+    category: "HUD",
+    subcategory: "Fatal Tempo"
+  })
+  ftTimer = 1;
+
+  @SelectorProperty({
+    name: "Fatal Tempo Settings",
+    description: "Select Fatal Tempo Display settings",
+    category: "HUD",
+    subcategory: "Fatal Tempo",
+    options: ["Show Always", "Show Only Over 0", "Show Only At 200"]
+  })
+  ftOptions = 0;
 
   @SwitchProperty({
     name: "Poison Display",
@@ -406,14 +427,6 @@ class Settings {
     subcategory: "Stats"
   })
   atkSpd = false  
-    
-  @SwitchProperty({
-    name: "Rain Display",
-    description: `Shows active or next Spider's Den rain`,
-    category: "HUD",
-    subcategory: "Rain"
-  })
-  rain = false
 
   @SwitchProperty({
     name: "Champion Display",
@@ -432,22 +445,22 @@ class Settings {
   blaze = false 
 
   @SelectorProperty({
-    name: "Clock Display",
+    name: "Time Display",
     description: "Shows your current time",
     category: "HUD",
     subcategory: "Clock",
     options: ["Off", "12-Hour Time", "24-Hour Time"]
   })
-  clock = 0;
+  time = 0;
 
   @SelectorProperty({
-    name: "Visitor Display",
+    name: "Next Visitor Display",
     description: "Shows time until next visitor",
     category: "HUD",
     subcategory: "Visitor",
     options: ["Off", "12 Minutes", "15 Minutes"]
   })
-  visitor = 0;
+  nextVisitor = 0;
 
   @SwitchProperty({
     name: "Miniboss Display",
@@ -456,7 +469,14 @@ class Settings {
     subcategory: "Miniboss"
   })
   mini = false 
-
+  
+  @SwitchProperty({
+    name: "Trophy Fish Session Counter",
+    description: "Changes trophy fish catch messages to show count in that session",
+    category: "Crimson Isle"
+  })
+  fish = false
+    
   @SwitchProperty({
     name: "Announce Vanquishers",
     description: `Announces Vanquisher coords to party.\n&c this is a chat marco`,
@@ -487,11 +507,53 @@ class Settings {
 
   @SwitchProperty({
     name: "Replace Magma Boss Damage Messages",
-    description: "[NwjnAddons] +35% (100%)",
+    description: "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35% &7(100%)",
     category: "Crimson Isle"
   })
   magma = false
   
+  @SwitchProperty({
+    name: "Highlight Teammates in kuudra",
+    description: "title",
+    category: "Kuudra"
+  })
+  teammates = false
+  
+  @ColorProperty({
+    name: 'Teammate Color',
+    description: `Sets the color for teammates`,
+    category: 'Kuudra'
+  })
+  teammateColor = Color.MAGENTA;
+
+  @SwitchProperty({
+    name: "Stop Rendering Mob Nametags in Kuudra",
+    description: "title",
+    category: "Kuudra"
+  })
+  kuudraTags = false
+
+  @SwitchProperty({
+    name: "Stop Rendering Useless Perks",
+    description: "Stops the useless perks rendering in the gui and stops you from clicking them",
+    category: "Kuudra"
+  })
+  renderPerk = false
+
+  @SwitchProperty({
+    name: "Not stunning?",
+    description: "Enabled = do not render mining frenzy or cannonball",
+    category: "Kuudra"
+  })
+  renderStun = false
+
+  @SwitchProperty({
+    name: "No Pre! No Second!",
+    description: "Tells party if you dont have a pre or second\n&csometimes breaks on certain spots on x\n&c this is a chat marco",
+    category: "Kuudra"
+  })
+  noPre = false  
+    
   @SwitchProperty({
     name: "Custom Supply Drop Message",
     description: "Shows a message including time when a supply is dropped:\n&r&6[MVP&r&9++&r&6] nwjn&r&f &a&lrecovered a supply at 18s! &r&8(1/6)&r",
@@ -519,77 +581,41 @@ class Settings {
     category: "Kuudra"
   })
   pearl = false
-
-  @DecimalSliderProperty({
-    name: "Pearl Box Size",
-    description: "Slide to change the width and height of each pearl box",
-    minF: 0.5,
-    maxF: 1.5,
-    category: "Kuudra"
-  })
-  pearlBox = 1;
     
   @SwitchProperty({
-    name: "Highlight Teammates in kuudra",
-    description: "title",
-    category: "Kuudra"
-  })
-  teammates = false
-  
-  @ColorProperty({
-    name: 'Teammate Color',
-    description: `Sets the color for teammates`,
-    category: 'Kuudra'
-  })
-  teammateColor = Color.MAGENTA;
-
-  @SwitchProperty({
-    name: "Show Ballista Percentage",
-    description: `Changes ballista text to be seen through ballista and shows total percent over ballista`,
+    name: "Build Helper",
+    description: `Progress text on each pile shows through walls, beacons to unfinished piles, big percentage over ballista for amount complete, fresh timer over ballista if u fresh`,
     category: "Kuudra"
   })
   inBuild = false;
 
   @SwitchProperty({
-    name: "Auto Fresh & Hitbox",
-    description: "Auto say `FRESH!` in party chat when you get fresh tools and draw hitboxes around party members who have freshed\n&c this is a chat marco",
+    name: "Breaking Piles",
+    description: `Highlights mobs that are not moving (helps figure out which mobs are breaking piles although is a little spotty)`,
+    category: "Kuudra"
+  })
+  breakingPiles = false;
+
+  @SwitchProperty({
+    name: "Notify Party On Fresh",
+    description: "Auto say `FRESH!` in party chat when you get fresh tools\n&c this is a chat marco",
     category: "Kuudra"
   })
   fresh = false
 
-  @DecimalSliderProperty({
-    name: "Fresh Hitbox Width",
-    description: "Slide to change the width of fresh hitboxes",
-    minF: 0.5,
-    maxF: 2,
-    category: "Kuudra"
-  })
-  freshWidth = 1;
-
-  @DecimalSliderProperty({
-    name: "Fresh Hitbox Height",
-    description: "Slide to change the height of fresh hitboxes",
-    minF: 1,
-    maxF: 4,
-    category: "Kuudra"
-  })
-  freshHeight = 2;
-
   @SwitchProperty({
-    name: "Stop Rendering Mob Nametags in Kuudra",
-    description: "title",
+    name: "Draw Hitboxes Around Freshers",
+    description: "Draw hitboxes around party members who have freshed\n&cIf you get a crash called Already Building! turn this feature off",
     category: "Kuudra"
   })
-  kuudraTags = false
+  freshHitbox = false
   
-  @SliderProperty({
-    name: "Memory Usage Alert",
-    description: "Sends an alert when memory reaches a certain percentage (set to 0 for off)",
-    min: 0,
-    max: 100,
-    category: "QOL"
+  @SwitchProperty({
+    name: "Shows Kuudra",
+    description: "Draw a hitbox around kuudra to help various parts of the run\n&cHEAVY USE AT YOUR OWN RISK",
+    category: "Kuudra"
   })
-  memory = 0;
+  kuudraHitbox = false
     
   @SwitchProperty({
     name: "Remove Discord Warnings",
@@ -625,6 +651,13 @@ class Settings {
     category: "QOL"
   })
   food = false
+    
+  @SwitchProperty({
+    name: "Disable Falling Blocks",
+    description: "Removes falling blocks",
+    category: "QOL"
+  })
+  falling = false  
     
   @SwitchProperty({
     name: "Tracks Damage Armor Stands",
@@ -743,6 +776,7 @@ class Settings {
     this.addDependency("Matcho Alert", "Matcho!")
     this.addDependency("Arachnes Keeper Alert", "Arachnes Keeper")
     this.addDependency("Broodmother Alert", "Broodmother")
+    this.addDependency("Not stunning?", "Stop Rendering Useless Perks")
   }
 }
 export default new Settings();

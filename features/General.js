@@ -1,13 +1,19 @@
 import settings from "../config"
-import { registerWhen } from "../utils/functions"
+import { delay, registerWhen, fixLength } from "../utils/functions"
 import { getWorld } from "../utils/world";
 import { data } from "../utils/data";
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
+import { ARMOR_STANDS, version } from "../utils/constants";
 
 // Credit: Volcaddons on ct for waypoints
 let chatWaypoints = [];
 let formatted = [];
+
+register("worldUnload", () => {
+  chatWaypoints = []
+  formatted = []
+})
 
 register("renderWorld", () => {
   renderWaypoint(formatted);
@@ -81,76 +87,78 @@ registerWhen(register("chat", (player, spacing, x, y, z) => {
 
   chatWaypoints.push([player, x, y, z]);
 
-  setTimeout(() => {
+  delay(() => {
     if (chatWaypoints[0][0].equals(player)) chatWaypoints.shift()
   }, settings.waypoint * time);
 }).setCriteria("${player}&f${spacing}x: ${x}, y: ${y}, z: ${z}&r"), () => settings.waypoint != 0);
 
-// register("renderWorld", () => {
-//   RenderLib.drawEspBox(-218.5, 89, 33.5, 0.0625 / 2, 0.0625 / 2, 1, 1, 1, 1, true);
-// })
 
-// a regular minecraft block is 16 pixels, 1 pixel would be 0.0625 of a block
-
-// Precision waypoints "x: ${x}, y: ${y}, z: ${z}, w: ${w}, h: ${h}"
-
-
-registerWhen(register("chat", (power) => {
+register("chat", (power) => {
   data.power = power
   data.save()
-}).setCriteria("You selected the ${power} power for your Accessory Bag!"), () => settings.party)
+}).setCriteria("You selected the ${power} power for your Accessory Bag!")
 
-registerWhen(register("chat", (player, event) => {
-  player = player.removeFormatting()
-  let message = new Message(event)
-  message.getMessageParts().forEach(part => {
-    follow.push(part.getClickValue())
-    follow.push(player)
+register("chat", (num, enrich) => {
+  data.enrich = `${ num } on ${ enrich }`
+  data.save()
+}).setCriteria("Swapped ${num} enrichments to ${enrich}!")
+
+register("renderSlot", (slot) => {
+  if (!slot?.toString().includes("ContainerLocalMenu: Stats Tuning") || !slot?.toString().includes("Slot 4 of")) return
+  slot = slot.getItem()?.getLore()
+  let tune = ""
+  let mp = ""
+  slot?.forEach(line => {
+    if (line.toString()?.includes("+")) {
+      line = ChatLib.removeFormatting(line)
+      tune += line.substring(line.indexOf("+") + 1, line.indexOf(" "))
+    }
+    else if (line.toString()?.includes("Magical Power:")) {
+      line = ChatLib.removeFormatting(line)
+      mp = line.substring(line.indexOf(":") + 2)
+    }
   })
-}).setCriteria(" » ${player} is traveling to ${*} FOLLOW"), () => settings.party)
+  data.tuning = tune
+  data.mp = mp
+  data.save()
+})
 
-let follow = []
 registerWhen(register("chat", (player, command, event) => {
   player = player.removeFormatting().substring(player.indexOf(" ") + 1);
-  let chat = new Message(event);
-  chat = ChatLib.removeFormatting(chat);
-  if (player == data.name && !command.includes("all")) return
-  setTimeout(() => {
-    if (command == `follow ${ data.name }` || command == "follow") {
-      let index = follow.indexOf(player);
-      ChatLib.say(follow[index - 1]);
-      follow = [];
+  delay(() => {
+    if (command.includes("time")) {
+      let hours = new Date().getHours();
+      let minutes = new Date().getMinutes();
+      let seconds = new Date().getSeconds();
+      ChatLib.say(`/party chat ${ fixLength(hours) }:${ fixLength(minutes) }:${ fixLength(seconds) }`);
     }
-    else if (command.toLowerCase() == `time ${ data.name }` || command == `time` || command == `time all`) {
-      ChatLib.say(`/party chat ${ new Date().getHours() }:${ new Date().getMinutes() }:${ new Date().getSeconds() }`);
-    }
-    else if (command.toLowerCase() == `coords ${ data.name }` || command == "coords" || command == `coords all`) {
+    else if (command.includes("coords")) {
       ChatLib.say(`/party chat x: ${ Math.round(Player.getX())}, y: ${Math.round(Player.getY())}, z: ${Math.round(Player.getZ())}`)
     }
-    else if (command.toLowerCase() == `stats ${ data.name }` || command == "stats" || command == `stats all`) {
-      let stat = ''
+    else if (command.includes("stats")) {
+      if (getWorld() == "The Rift" || getWorld() == "Garden") return
+      let stats = "Unknown"
       TabList.getNames().forEach(name => {
-        let unformatted = ChatLib.removeFormatting(name)
-        if (getWorld() != "The Rift" && getWorld() != "Garden") {
-          if (unformatted.includes("Speed: ✦")) stat = name
-          if (unformatted.includes("Strength: ❁")) stat = stat + " | " + name
-          if (unformatted.includes("Crit Chance: ☣")) stat = stat + " | " + name
-          if (unformatted.includes("Crit Damage: ☠")) stat = stat + " | " + name
-          if (unformatted.includes("Attack Speed: ⚔")) stat = stat + " | " + name
-        }
-      })  
-      ChatLib.say(`/party chat ${stat.removeFormatting()}`)
+        name = ChatLib.removeFormatting(name)
+        if (name.includes("Speed: ✦")) stats = name.substring(name.lastIndexOf(" ") + 1)
+        if (name.includes("Strength: ❁")) stats = stats + " | " + name.substring(name.lastIndexOf(" ") + 1)
+        if (name.includes("Crit Chance: ☣")) stats = stats + " | " + name.substring(name.lastIndexOf(" ") + 1)
+        if (name.includes("Crit Damage: ☠")) stats = stats + " | " + name.substring(name.lastIndexOf(" ") + 1)
+        if (name.includes("Attack Speed: ⚔")) stats = stats + " | " + name.substring(name.lastIndexOf(" ") + 1)
+      })
+      if (stats.length == "Unknown") return
+      ChatLib.say(`/party chat ${stats}`)
     }
-    else if (command.toLowerCase() == `profile ${ data.name }` || command == "profile" || command == `profile all`) {
-      let profile = ""
+    else if (command.includes("profile")) {
+      let profile = "Unknown"
       TabList.getNames().forEach(tab => {
         if (tab.includes("Profile: ")) profile = tab
       })
       ChatLib.say(`/party chat ${profile.removeFormatting()}`)
     }
-    else if (command.toLowerCase() == `wealth ${ data.name }` || command == "wealth" || command == `wealth all`) {
-      let bank = undefined
-      let purse = undefined
+    else if (command.includes("wealth")) {
+      let bank = "Unknown"
+      let purse = "Unknown"
       TabList.getNames().forEach(tab => {
         if (tab.includes("Bank: ")) bank = tab.removeFormatting()
       })
@@ -159,75 +167,60 @@ registerWhen(register("chat", (player, command, event) => {
       })
       ChatLib.say(`/party chat ${bank} | ${purse}`)
     }
-    else if (command.toLowerCase() == `power ${ data.name }` || command == "power" || command == `power all`) {
-      ChatLib.say(`/party chat ${data.power}`)
+    else if (command.includes("power")) {
+      ChatLib.say(`/party chat Stone: ${data.power} | Tuning: ${data.tuning} | Enrich: ${data.enrich} | MP: ${data.mp}`)
     }
-    else if (command.toLowerCase() == `warp ${ data.name }` || command == "warp") {
+    else if (command.includes("warp")) {
       ChatLib.say(`/p warp`)
     }
-    else if (command.toLowerCase() == `transfer ${ data.name }` || command == "transfer") {
+    else if (command.includes("transfer")) {
       ChatLib.say(`/party transfer ${player}`)
     }
-    else if (command.toLowerCase() == `allinv ${ data.name }` || command == "allinv") {
+    else if (command.includes("allinv")) {
       ChatLib.say(`/p settings allinvite`)
     }
-    else if (command.toLowerCase() == `slayer ${ data.name }` || command == "slayer" || command == `slayer all`) {
-      let kills = undefined
-      Scoreboard.getLines().forEach(line => {
-        line = ChatLib.removeFormatting(line)
-        if (line.includes(" Ki🎁lls")) {
-          kills = line
-        }
-      })
-      ChatLib.say(`/pc Slayer Progress:${kills}`)
-    }
-    else if (command.toLowerCase() == `pet ${ data.name }` || command == "pet" || command == "pet all") {
+    else if (command.includes("pet")) {
       ChatLib.say(`/party chat ${data.pet}`)
     }
-  }, 300);
+    else if (command.includes("version")) {
+      ChatLib.say(`/party chat Version: ${version}`)
+    }
+    else if (command.includes("raider")) {
+      ChatLib.command(`joininstance kuudra_infernal`)
+    }
+    else if (command.includes("dropper")) {
+      ChatLib.command(`play arcade_dropper`)
+    }
+  }, 200);
 }).setCriteria("Party > ${player}: .${command}"), () => settings.party)
 
 let reaperUsed = 0
 registerWhen(register("soundPlay", () => {
-  let armor = Player.getInventory().getStackInSlot(38)
-  armor = armor?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
+  let armor = Player.getInventory()?.getStackInSlot(38)?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
   if (armor == "REAPER_CHESTPLATE") reaperUsed = new Date().getTime()
 }).setCriteria("mob.zombie.remedy"), () => settings.reaper);
 
 registerWhen(register("renderWorld", () => {
-  World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand").class).forEach(stand => {
+  World.getAllEntitiesOfType(ARMOR_STANDS).forEach(stand => {
     let name = ChatLib.removeFormatting(stand.getName())
-    if (Player.asPlayerMP().canSeeEntity(stand)) {
-      if (name.includes("҉") && name.includes("Bloodfiend")) RenderLib.drawEspBox(stand.getX(), stand.getY() - 2, stand.getZ(), 1, 2, 1, 0.2, 0.46667, 1, true)
-    }
+    if (Player.asPlayerMP().canSeeEntity(stand) && name.includes("҉") && name.includes("Bloodfiend")) RenderLib.drawEspBox(stand.getX(), stand.getY() - 2, stand.getZ(), 1, 2, 1, 0.2, 0.46667, 1, true)
   })
 }), () => getWorld() == "The Rift" && settings.steakAble);
 
-registerWhen(register("chat", (killed) => {
-  let excuses = ["It was runic, I swear!", "mb was afk", "server?", `Skytils » ${ (3.1415926535 * (Math.random() * 3000)).toFixed(2) } ms`, "I LAGGEDF", "ITS INVIS", "MY MOUSE BROKE"]
-  if (killed == "were") ChatLib.say(`/pc ${excuses[Math.trunc(Math.random() * 4)]}`)
-  else if (killed == "was") ChatLib.say(`/pc "${excuses[Math.trunc(Math.random() * 4)]}"`)
-}).setChatCriteria(" ☠ ${*} ${killed} ${*} by Exalted ${*}"), () => getWorld() == "Hub" && settings.diana);
-
 registerWhen(register("renderEntity", (entity, position, ticks, event) => {
-  if (entity.toString().removeFormatting().includes(["[Lv"]) || entity.toString().includes("Armor Stand")) return
-  try {
-    let currentHP = entity.getEntity().func_110143_aJ()
-    if (currentHP == 0) {
-      cancel(event)
-    }
-  } catch (error) {}
+  if (entity.getClassName() != "EntityArmorStand" || !entity?.getName()?.removeFormatting()?.includes(" 0/")) return
+  cancel(event)
 }), () => settings.dead);
+
+registerWhen(register("entityDeath", (entity) => {
+  entity.getEntity().func_70106_y()
+}), () => settings.dead)
 
 let blockBroken = 0
 let time = 0
 registerWhen(register("blockBreak", (block) => {
-  if (!block.toString().includes("type=minecraft:log")) return;
-  let holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes");
-  if (holding?.getString("id") != "TREECAPITATOR_AXE") return;
-  if (time <= 0) {
-    blockBroken = new Date().getTime()
-  }
+  if (!block.toString().includes("type=minecraft:log") || Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id") != "TREECAPITATOR_AXE") return;
+  if (time <= 0) blockBroken = new Date().getTime()
 }), () => settings.treecap && (getWorld() == "Hub" || getWorld() == "The Park"))
 
 registerWhen(register("renderOverlay", () => {
@@ -245,62 +238,51 @@ registerWhen(register("renderOverlay", () => {
   }
 }), () => (settings.treecap && (getWorld() == "Hub" || getWorld() == "The Park")) || (settings.reaper));
 
-let PlayerFirstX = undefined
-let PlayerFirstZ = undefined
-let PlayerFirstYaw = undefined
-let ready = false
-registerWhen(register("worldLoad", () => {
-  PlayerFirstX = Player.getX()
-  PlayerFirstZ = Player.getZ()
-  PlayerFirstYaw = Player.getYaw()
-}), () => settings.mort)
-
-registerWhen(register("chat", () => {
-  ready = true
-}).setCriteria(`${Player.getName()} is now ready!`), () => settings.mort && getWorld() != "Kuudra")
-
-registerWhen(register("renderWorld", () => {
-  if (Player.asPlayerMP().distanceTo(PlayerFirstX + (15 * Math.cos((PlayerFirstYaw + 90) * (Math.PI / 180))), 72, PlayerFirstZ + (15 * Math.sin((PlayerFirstYaw + 90) * (Math.PI / 180)))) > 18 || ready == false) return
-  try {
-    Tessellator.drawString(`${data.pet}`, PlayerFirstX + (15 * Math.cos((PlayerFirstYaw + 90) * (Math.PI / 180))), 72, PlayerFirstZ + (15 * Math.sin((PlayerFirstYaw + 90) * (Math.PI / 180))), 0xffaa00, false, 0.05, false)
-  } catch (error) {}
-}), () => settings.mort);
-
-registerWhen(register("worldUnload", () => {
-  PlayerFirstX = undefined
-  PlayerFirstZ = undefined
-  PlayerFirstYaw = undefined
-  ready = false
-}), () => settings.mort);
-
+let events = []
 registerWhen(register("actionBar", (event) => {
   let chat = ChatLib.getChatMessage(event, false)
   chat = chat.substring(chat.indexOf("     "), chat.lastIndexOf("     "))
+  if (events.includes(chat)) return
+  events.push(chat)
   ChatLib.chat(chat)
-  ChatLib.actionBar("&6nom nom xp")
 }).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp);
+
+register("worldUnload", () => {
+  events = []
+})
 
 let warp = false
 registerWhen(register("chat", () => {
   if (settings.pWarp == "" || settings.pPlayer == "") return
-  setTimeout(() => {
+  delay(() => {
     ChatLib.say(`/party ${ settings.pPlayer }`)
     warp = true
-    setTimeout(() => {
+    delay(() => {
       warp = false
     }, 60000);
   }, 500)
 }).setCriteria(`${ settings.pWarp }`).setContains(), () => settings.pWarp != "");
 
-register("chat", (event) => {
+registerWhen(register("chat", (event) => {
+  if (settings.pWarp == "" || settings.pPlayer == "") return
   let chat = ChatLib.getChatMessage(event)
   if (!chat.includes(`${ settings.pPlayer } `)) return
   if (warp == true) {
-    setTimeout(() => {
+    delay(() => {
       ChatLib.say(`/p warp`)
-      setTimeout(() => {
+      delay(() => {
         ChatLib.say(`/party leave`)
       }, 500);
     }, 500);
   }
-}).setCriteria(` joined the party.`).setContains()
+}).setCriteria(` joined the party.`).setContains(), () => settings.pWarp != "");
+
+let rendArrows = 0
+registerWhen(register("soundPlay", () => {
+  rendArrows++;
+  if (rendArrows > 1) return;
+  setTimeout(() => {
+    ChatLib.chat(`Rend Arrows: ${ rendArrows - 1 }`);
+    rendArrows = 0;
+  }, 300);
+}).setCriteria("game.neutral.hurt"), () => settings.rendArrows)

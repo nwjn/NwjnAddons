@@ -1,7 +1,8 @@
 import settings from "../config";
-import { GUI_INSTRUCT } from "./constants";
 import { registerWhen } from "./functions";
 import { getWorld } from "./world";
+
+const GUI_INSTRUCT = "Use +/- to change scale or press R to reset";
 
 // Credit: Volcaddons on ct
 function renderScale(scale, text, x, y) {

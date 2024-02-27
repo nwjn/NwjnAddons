@@ -1,20 +1,7 @@
 import settings from "../config";
 import { registerWhen } from "../utils/functions";
 import RenderLib from "../../RenderLib";
-
-// register("soundPlay", (ps, name, vol, pitch, cat, event) => {
-//   if (vol != 0.5) return
-//   register("entityDeath", (entity) => {
-//     ChatLib.chat(vol)
-//   })
-// }).setCriteria("random.orb")
-
-// TODO
-// precise waypoint 0.0625 x 0.0625 or pixel x pixel, beacon to it until distance <
-// Add precision waypoints
-// Add st like enterable waypoints
-// Add st like keybinds
-// Add notifications
+import { ARMOR_STANDS, comma } from "../utils/constants";
 
 registerWhen(register("chat", (event) => {
   cancel(event)
@@ -29,21 +16,32 @@ function getVec3iPos(vec) {
   return [parseInt(vec.func_177958_n()), parseInt(vec.func_177956_o()), parseInt(vec.func_177952_p())]
 }
 
-let tracked = 0;
 let dmg = []
-
+let dmgNumbers = []
 registerWhen(register("renderworld", () => {
-  if (!Scoreboard.getTitle().removeFormatting().includes("SKYBLOCK")) return
-  tracked++
-  if (tracked == 1500) {
-    tracked = 0
-    dmg = []
-  }
-  World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand").class).forEach(stand => {
-    if (stand.getName().includes("Playing") || stand.getName().includes("Lv") || stand.toString().includes("name=Armor Stand") || !stand.getName().includes(",")) return
-    if (!dmg.includes(stand.getName())) ChatLib.chat(stand.getName())
-    dmg.push(stand.getName())
+  World.getAllEntitiesOfType(ARMOR_STANDS).forEach(stand => {
+    if (stand.getName().includes("Lv") || stand.toString().includes("name=Armor Stand") || !stand.getName().includes(",")) return
+    if (!dmg.includes(stand.getUUID().toString())) {
+      dmg.push(stand.getUUID().toString())
+      ChatLib.chat(stand.getName())
+      dmgNumbers.push(ChatLib.removeFormatting(stand.getName()))
+    }
   })
+}), () => settings.damageTracker)
+
+register("command", () => {
+  let totalDmg = 0
+  dmgNumbers.forEach(hit => {
+    hit = ChatLib.removeFormatting(hit)
+    hit = hit.replaceAll(/\D/g, "")
+    totalDmg += parseInt(hit)
+  })
+  ChatLib.chat(`${ comma(totalDmg.toString()) }`)
+  dmgNumbers = []
+}).setName("dmg", true)
+
+registerWhen(register("worldUnload", () => {
+  dmg = []
 }), () => settings.damageTracker)
 
 registerWhen(register("renderWorld", (partialTick) => {
@@ -81,7 +79,7 @@ registerWhen(register("renderWorld", () => {
 
 registerWhen(register("renderWorld", () => {
   let holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
-  World.getAllEntitiesOfType(Java.type("net.minecraft.entity.item.EntityArmorStand").class).forEach(stand => {
+  World.getAllEntitiesOfType(ARMOR_STANDS).forEach(stand => {
     if (stand.getName().includes("Totem of Corruption") && settings.totemOptions != 0) {
       RenderLib.drawCyl(stand.getX(), stand.getY() - 0.25, stand.getZ(), 18, 1, 0.25, 30, 1, 0, 90, 90, settings.totemColor.getRed() / 255, settings.totemColor.getGreen() / 255, settings.totemColor.getBlue() / 255, settings.totemOpacity, false, false);
     }

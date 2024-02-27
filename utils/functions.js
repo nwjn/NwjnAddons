@@ -1,4 +1,18 @@
-// Creidt: volcaddons on ct for registerwhen and setregisters
+export function fixLength(x) {
+  if (x.toString().length === 2) return x;
+  else return `0${x}`;
+}
+
+// Creidt: volcaddons on ct
+const Threading = Java.type("gg.essential.api.utils.Multithreading");
+export function delay(func, time) {
+  if (time) {
+    Threading.schedule(() => { func() }, time, java.util.concurrent.TimeUnit.MILLISECONDS);
+  } else {
+    Threading.runAsync(() => { func() });
+  }
+}
+
 let registers = [];
 export function registerWhen(trigger, dependency) {
   registers.push([trigger.unregister(), dependency, false]);
@@ -15,6 +29,6 @@ export function setRegisters() {
     }
   });
 }
-setTimeout(() => {
+delay(() => {
   setRegisters()
 }, 1000);

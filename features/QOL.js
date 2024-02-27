@@ -2,16 +2,6 @@ import settings from "../config";
 import { registerWhen } from "../utils/functions";
 import RenderLib from "../../RenderLib";
 
-let alerted = 0
-registerWhen(register("step", () => {
-  let memory = Client.getMemoryUsage()
-  if (settings.memory != 0 && settings.memory > Client.getMemoryUsage()) return
-  if (settings.memory >= Client.getMemoryUsage() && alerted == 0) {
-    alerted += 1
-    Client.showTitle(`&4${memory}% MEMORY`, "", 15, 60, 60)
-  }
-}).setDelay(3), () => settings.memory != 0);
-
 registerWhen(register("chat", (msg) => {
   let chat = ChatLib.getChatMessage(msg, true)
   cancel(msg)
@@ -87,3 +77,8 @@ registerWhen(register("renderArmor", (event) => {
 registerWhen(register("renderFood", (event) => {
   cancel(event)
 }), () => settings.food);
+
+registerWhen(register("renderEntity", (entity, pos, pticks, event) => {
+  if (entity.getClassName() != "EntityFallingBlock") return
+  cancel(event)
+}), () => settings.falling)

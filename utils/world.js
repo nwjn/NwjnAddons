@@ -1,4 +1,4 @@
-import { setRegisters } from "./functions";
+import { delay, setRegisters } from "./functions";
 
 // Credit: volcaddons on ct for findworld and findzone
 let world = undefined;
@@ -15,7 +15,7 @@ function findWorld() {
   noFind++;
   world = TabList.getNames().find(tab => tab.includes("Area"));
   if (world == undefined)
-    setTimeout(() => {
+    delay(() => {
       findWorld()
     }, 1000);
   else {
@@ -28,9 +28,18 @@ function findWorld() {
 
 register("worldLoad", () => {
   noFind = 0;
+  world = undefined
   findWorld()
 });
 
 register("worldUnload", () => {
   world = undefined
-})
+});
+
+register("chat", () => {
+  delay(() => {
+    world = undefined
+    findWorld()
+    setRegisters()
+  }, 5000)
+}).setCriteria(/Sending( you|) to( server|) (mini|mega)[0-9A-Z]+(\.\.\.|!)/g);
