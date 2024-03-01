@@ -16,7 +16,7 @@ registerWhen(register("chat", () => {
 }).setChatCriteria("You ate a Re-heated Gummy Polar Bear!"), () => settings.blaze)
 
 registerWhen(register("chat", () => {
-  data.wisp = data.pet == "Parrot" ? 2_520 : 1_800;
+  data.wisp = data.pet.includes("Parrot") ? 2_520 : 1_800;
   data.save()
 }).setChatCriteria("BUFF! You ${*} with Wisp's Ice-Flavored Water I! Press TAB or type /effects to view your active effects!"), () => settings.blaze);
 

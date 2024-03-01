@@ -1,7 +1,7 @@
 import settings from "../config";
 import { registerWhen } from "../utils/functions";
 import RenderLib from "../../RenderLib";
-import { ARMOR_STANDS, comma } from "../utils/constants";
+import { EntityArmorStand, comma } from "../utils/constants";
 
 registerWhen(register("chat", (event) => {
   cancel(event)
@@ -16,32 +16,27 @@ function getVec3iPos(vec) {
   return [parseInt(vec.func_177958_n()), parseInt(vec.func_177956_o()), parseInt(vec.func_177952_p())]
 }
 
-let dmg = []
-let dmgNumbers = []
-registerWhen(register("renderworld", () => {
-  World.getAllEntitiesOfType(ARMOR_STANDS).forEach(stand => {
-    if (stand.getName().includes("Lv") || stand.toString().includes("name=Armor Stand") || !stand.getName().includes(",")) return
-    if (!dmg.includes(stand.getUUID().toString())) {
-      dmg.push(stand.getUUID().toString())
-      ChatLib.chat(stand.getName())
-      dmgNumbers.push(ChatLib.removeFormatting(stand.getName()))
-    }
+let dmgIds = []
+let totalDmg = 0
+registerWhen(register("tick", () => {
+  const DMGS = World.getAllEntitiesOfType(EntityArmorStand.class).filter(stand => stand.getName().includes(",") && dmgIds.indexOf(stand.getUUID()) == -1 && !stand.getName().includes("Lv") && !stand.getName().includes("❤") && !stand.getName().removeFormatting().match(/[A-Za-z]/g))
+    
+  DMGS.forEach(dmg => {
+    if (dmgIds.indexOf(dmg.getUUID()) == -1) ChatLib.chat(dmg.getName())
+    dmgIds.push(dmg.getUUID())
+    totalDmg += parseInt(dmg.getName().removeFormatting().replaceAll(/[^0-9]/g, ""))
   })
 }), () => settings.damageTracker)
 
 register("command", () => {
-  let totalDmg = 0
-  dmgNumbers.forEach(hit => {
-    hit = ChatLib.removeFormatting(hit)
-    hit = hit.replaceAll(/\D/g, "")
-    totalDmg += parseInt(hit)
-  })
-  ChatLib.chat(`${ comma(totalDmg.toString()) }`)
-  dmgNumbers = []
+  ChatLib.chat(comma(totalDmg))
+  totalDmg = 0
+  dmgIds = []
 }).setName("dmg", true)
 
 registerWhen(register("worldUnload", () => {
   dmg = []
+  dmgIds = []
 }), () => settings.damageTracker)
 
 registerWhen(register("renderWorld", (partialTick) => {
@@ -72,25 +67,30 @@ registerWhen(register("renderWorld", (partialTick) => {
 }), () => settings.gyro);
 
 registerWhen(register("renderWorld", () => {
-  let holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
-  if (holding != "JINGLE_BELLS" && holding != "ENRAGER") return;
+  const holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id");
+  if ((!holding.includes("JINGLE_BELLS") || holding.includes("ENRAGER"))) return
   RenderLib.drawCyl(Player.getX(), Player.getY(), Player.getZ(), 10, 1, 0.25, 30, 1, 0, 90, 90, settings.agroColor.getRed() / 255, settings.agroColor.getGreen() / 255, settings.agroColor.getBlue() / 255, settings.agroOpacity, false, false);
 }), () => settings.agro);
 
+// TODO: find method to get skyblock item's base name
 registerWhen(register("renderWorld", () => {
-  let holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
-  World.getAllEntitiesOfType(ARMOR_STANDS).forEach(stand => {
-    if (stand.getName().includes("Totem of Corruption") && settings.totemOptions != 0) {
-      RenderLib.drawCyl(stand.getX(), stand.getY() - 0.25, stand.getZ(), 18, 1, 0.25, 30, 1, 0, 90, 90, settings.totemColor.getRed() / 255, settings.totemColor.getGreen() / 255, settings.totemColor.getBlue() / 255, settings.totemOpacity, false, false);
-    }
+  const holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
+  const TOTEMS = World.getAllEntitiesOfType(EntityArmorStand.class).filter(totem => totem.getName().includes("Totem of Corruption") || settings.totemOptions != 0)
+  TOTEMS.forEach(totem => {
+    RenderLib.drawCyl(totem.getX(), totem.getY() - 0.25, totem.getZ(), 18, 1, 0.25, 30, 1, 0, 90, 90, settings.totemColor.getRed() / 255, settings.totemColor.getGreen() / 255, settings.totemColor.getBlue() / 255, settings.totemOpacity, false, false);
   })
-  let block = Player.lookingAt()
+
+  const block = Player.lookingAt()
   if (block.toString().includes('minecraft:air') || settings.totemOptions == 1 || holding != "TOTEM_OF_CORRUPTION") return
   RenderLib.drawCyl(block.getX() + 0.5, block.getY() + 1, block.getZ() + 0.5, 18, 1, 0.25, 30, 1, 0, 90, 90, settings.totemColor.getRed() / 255, settings.totemColor.getGreen() / 255, settings.totemColor.getBlue() / 255, settings.totemOpacity, false, false);
 }), () => settings.totem);
 
-registerWhen(register("renderWorld", () => {
-  let inv = Player.getInventory()
-  if (!inv?.getStackInSlot(39)?.getName()?.includes("Frozen Blaze") || !inv?.getStackInSlot(38)?.getName()?.includes("Frozen Blaze") || !inv?.getStackInSlot(37)?.getName()?.includes("Frozen Blaze") || !inv?.getStackInSlot(36)?.getName()?.includes("Frozen Blaze")) return
-  RenderLib.drawCyl(Player.getX(), Player.getY(), Player.getZ(), 5, 1, 0.25, 30, 1, 0, 90, 90, settings.fbColor.getRed() / 255, settings.fbColor.getGreen() / 255, settings.fbColor.getBlue() / 255, settings.fbOpacity, false, false);
-}), () => settings.fb);
+// registerWhen(register("renderWorld", () => {
+//   // TODO: HIGHLIGHT MOBS IN RANGE OF LOOTSHARE
+//   // const MOBS = World.getAllEntities().filter(mob => PLAYERMP.distanceTo(mob) > 30 || !PLAYERMP.canSeeEntity(mob) || !PLAYERMP.canSeeEntity(mob) || mob.getClassName() == "EntityArmorStand")
+//   const MOBS = World.getAllEntities().filter(mob => PLAYERMP.distanceTo(mob) < 30 && mob.getClassName() != "EntityArmorStand" && mob.getClassName() != "EntityXPOrb" && !mob.getClassName().includes("EntityPlayer"))
+//   MOBS.forEach(mob => {
+//     ChatLib.chat(PLAYERMP.getClassName())
+//     RenderLib.drawEspBox(mob.getX(), mob.getY(), mob.getZ(), mob.getWidth(), mob.getHeight(), 1, 0.667, 0, 1, false)
+//   })
+// }), () => settings.lootshare);

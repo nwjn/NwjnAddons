@@ -2,6 +2,7 @@ import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
 import { registerWhen } from "../../utils/functions";
+import { fixLength } from "../../utils/functions";
 
 const clockExample = `0:00:00`;
 const clockOverlay = new Overlay("time", ["all"], () => true, data.clockL, "moveClock", clockExample);

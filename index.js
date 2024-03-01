@@ -4,10 +4,16 @@ import "./features/Beta"
 import "./features/Commands"
 import "./features/CrimsonIsle"
 import "./features/General"
-import "./features/General"
-import "./features/HUD"
+import "./features/Display"
 import "./features/Kuudra"
 import "./features/QOL"
+import "./features/HUD/Poison"
+import "./features/HUD/Blaze"
+import "./features/HUD/Champion"
+import "./features/HUD/Clock"
+import "./features/HUD/FatalTempo"
+import "./features/HUD/Minibosses"
+import "./features/HUD/Pet"
 import { version, consts } from "./utils/constants";
 import { data } from "./utils/data";
 import { setRegisters } from "./utils/functions"
@@ -16,26 +22,26 @@ import axios from "./../axios"
 import { setMobHighlight } from "./features/Bestiary";
 data.autosave()
 
-register("command", (args) => {  
-  if (!args) {
+register("command", (arg) => {  
+  if (!arg) {
     settings.openGUI()
   }
-  else if (args == "gui") {
+  else if (arg == "gui") {
     openGUI()
   }
-  else if (args == "version") {
+  else if (arg == "version") {
     ChatLib.chat(`${consts.PREFIX} &bYou are currently on version &e${version}`)
   }
-  else if (args == "changes") {
+  else if (arg == "changes") {
     ChatLib.chat(`${consts.PREFIX} &eChangelog:\n&r${ changes }`)
   }
-  else if (args == "party") {
+  else if (arg == "party") {
     ChatLib.chat(`${consts.PREFIX} &eParty Command List:\n&cNote: run the command by adding the . symbol in front of a party message\n.time => shows the players current time\n.coords => sends the coords of the player\n.stats => sends the stats of the player\n.profile => sends the profile fruit name of the profile\n.wealth => sends the player's current financial status\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.raider => puts party into infernal kuudra\n.dropper => puts party into dropper game`)
   }
-  else if (args == "commands") {
+  else if (arg == "commands") {
     ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/fakepb <p1> <p2> <p3> <p4> <tokens> => makes a fake kuudra complete msg\n/calc <equation> => must use spaces but simple calculator with systems of equations\n/deal => trades player in front of you without needing to type name\n/avg <...args> => gets the avg of the numbers after the command`)
   }
-  else if (args == "reload") {
+  else if (arg == "reload") {
     setRegisters()
     ChatLib.chat(`${consts.PREFIX} &aReloaded all registers!`)
   }
@@ -55,9 +61,9 @@ if (data.first_time) {
   ChatLib.chat("");
 };
 
-let ctNoti = 0
+let ctNoti = false
 register("worldLoad", () => {
-  if (ctNoti != 0) return
+  if (ctNoti) return
   axios.get(`https://chattriggers.com/api/modules/1528`)
   .then(res => {
     let ctVersionArray = (res.data.releases[0].releaseVersion).split('.'),
@@ -84,27 +90,10 @@ register("worldLoad", () => {
       .setClickValue(`/ct load`)
       .chat()
       ChatLib.chat("")
-      ctNoti += 1
+      ctNoti = true;
     }
   })
 });
-
-register("chat", (pet) => {
-  pet = pet.replace(" ✦", "")
-  data.pet = pet
-  data.save()
-}).setCriteria("Autopet equipped your [${*}] ${pet}! VIEW RULE");
-
-register("chat", (pet) => {
-  pet = pet.replace(" ✦", "")
-  data.pet = pet
-  data.save()
-}).setCriteria("You summoned your ${pet}!");
-
-register("chat", () => {
-  data.pet = ""
-  data.save()
-}).setCriteria("You despawned your ${*}!");
 
 register("guiClosed", (event) => {
   if (event?.toString()?.includes("vigilance")) {
@@ -135,3 +124,4 @@ register("guiClosed", (event) => {
 // TODO: attribute to attribute levels, (4 -> 10; 64 t4 shards needed)
 // TODO: additional info about items in lore
 // TODO: find fix for double death animation
+// TODO: color code pets

@@ -2,6 +2,7 @@ import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
 
 const petExample = `&6Pet: &rGolden Dragon`
+// TODO: all skyblock worlds except rift
 const petOverlay = new Overlay("pet", ["all"], () => true, data.petL, "movePet", petExample);
     
 register("chat", (msg) => {

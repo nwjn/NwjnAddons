@@ -3,7 +3,7 @@ import renderBeaconBeam from "BeaconBeam"
 import RenderLib from "RenderLib"
 import { registerWhen } from "../utils/functions";
 import { getWorld } from "../utils/world";
-import { ARMOR_STANDS, PLAYERS, MAGMA_CUBES, GIANT_ZOMBIES } from "../utils/constants";
+import { EntityArmorStand, EntityPlayer, EntityMagmaCube, EntityGiant } from "../utils/constants";
 
 let phase = 0
 let supply1 = true
@@ -102,7 +102,7 @@ registerWhen(register("chat", () => {
   let pre = false
   let second = false
   let msg = ""
-  World.getAllEntitiesOfType(GIANT_ZOMBIES).forEach(giant => {
+  World.getAllEntitiesOfType(EntityGiant.class).forEach(giant => {
     if (giant?.getEntity()?.func_70694_bm()?.toString() != "1xitem.skull@3") return
     let yaw = giant.getYaw();
     let x = giant.getX() + (3.7 * Math.cos((yaw + 130) * (Math.PI / 180)))
@@ -154,7 +154,7 @@ registerWhen(register("chat", (supply, event) => {
 
 registerWhen(register("renderWorld", () => {
   if (settings.teammates) {
-    World.getAllEntitiesOfType(PLAYERS).forEach(player => {
+    World.getAllEntitiesOfType(EntityPlayer.class).forEach(player => {
     let ping = World.getPlayerByName(player.getName())?.getPing();
     if (ping != 1 || player.isInvisible()) return;
     RenderLib.drawEspBox(player.getX(), player.getY(), player.getZ(), 1, 2, settings.teammateColor.getRed() / 255, settings.teammateColor.getGreen() / 255, settings.teammateColor.getBlue() / 255, 1, true);
@@ -187,7 +187,7 @@ registerWhen(register("renderWorld", () => {
     RenderLib.drawEspBox(-112.5, 76.5, -68.5, 1, 1, 0, 0, 1, 1, false);
   }
   if (settings.supplyWaypoints && phase == 1) {
-    World.getAllEntitiesOfType(GIANT_ZOMBIES).forEach(giant => {
+    World.getAllEntitiesOfType(EntityGiant.class).forEach(giant => {
       if (giant?.getEntity()?.func_70694_bm()?.toString() != "1xitem.skull@3") return
       let yaw = giant.getYaw();
       renderBeaconBeam(giant.getX() + (3.7 * Math.cos((yaw + 130) * (Math.PI / 180))), 72, giant.getZ() + (3.7 * Math.sin((yaw + 130) * (Math.PI / 180))), 0, 1, 1, 0.8, true, 100);
@@ -221,7 +221,7 @@ registerWhen(register("renderWorld", () => {
     }
   }
   if (phase == 2) {
-    World.getAllEntitiesOfType(ARMOR_STANDS).forEach(stand => {
+    World.getAllEntitiesOfType(EntityArmorStand.class).forEach(stand => {
       if (stand.getName().includes("Lv") || stand.toString().includes("name=Armor Stand")) return;
       let name = ChatLib.removeFormatting(stand.getName());
       let rawName = stand.getName();
@@ -256,7 +256,7 @@ registerWhen(register("renderWorld", () => {
 }), () => getWorld() == "Kuudra")
 
 registerWhen(register("renderWorld", () => {
-  World.getAllEntitiesOfType(MAGMA_CUBES).forEach(entity => {
+  World.getAllEntitiesOfType(EntityMagmaCube.class).forEach(entity => {
     let maxHP = entity.getEntity().func_110148_a(Java.type('net.minecraft.entity.SharedMonsterAttributes').field_111267_a).func_111125_b()
     if (maxHP == 100_000) {
       RenderLib.drawEspBox(entity.getX(), entity.getY(), entity.getZ(), entity.getWidth(), entity.getHeight(), 0.914, 1, 0, 1, true)

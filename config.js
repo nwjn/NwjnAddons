@@ -111,6 +111,7 @@ class Settings {
   })
   pPlayer = ""  
     
+  // TODO: Remove unnecessary symbols using negated set like [^'"!?:;\/]
   @TextProperty({
     name: "Mob ESP",
     description: "Draws hitboxes around inputted mob entity\n&cA mob from net.minecraft.entity.monster or net.minecraft.entity.passive\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
@@ -158,16 +159,7 @@ class Settings {
     description: `Sets the color for player hitboxes`,
     category: 'Bestiary'
   })
-  playerColor = Color.GREEN
-
-  @SliderProperty({
-    name: "ESP Distance",
-    description: "Change distance hitboxes will render",
-    min: 0,
-    max: 64,
-    category: "Bestiary"
-  })
-  distance = 64;
+  playerColor = Color.MAGENTA
 
   @SwitchProperty({
     name: "Matcho!",
@@ -177,13 +169,6 @@ class Settings {
   matcho = false
 
   @SwitchProperty({
-    name: "Matcho Alert",
-    description: `Matcho alert`,
-    category: "Bestiary"
-  })
-  matchoAlert = false
-
-  @SwitchProperty({
     name: "Arachnes Keeper",
     description: `Keeper box and text`,
     category: "Bestiary"
@@ -191,25 +176,11 @@ class Settings {
   keeper = false;
 
   @SwitchProperty({
-    name: "Arachnes Keeper Alert",
-    description: `Keeper alert`,
-    category: "Bestiary"
-  })
-  keeperAlert = false;
-
-  @SwitchProperty({
     name: "Broodmother",
     description: `Broodmother box and text`,
     category: "Bestiary"
   })
   broodmother = false; 
-
-  @SwitchProperty({
-    name: "Broodmother Alert",
-    description: `Broodmother alert`,
-    category: "Bestiary"
-  })
-  broodmotherAlert = false;
 
   @ButtonProperty({
     name: "Move GUI Elements",
@@ -347,7 +318,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Fatal Tempo Display",
-    description: `Approximate ft percent\n&cNote: Currently trying to add a fix for precursor eye adding ft hits`,
+    description: `Approximate ft percent\n&cNote: SOUND MUST BE ON`,
     category: "HUD",
     subcategory: "Fatal Tempo"
   })
@@ -727,14 +698,14 @@ class Settings {
     description: `Sets the color for totem range`,
     category: 'Beta (WIP)'
   })
-  totemColor = Color.ORANGE;
+  totemColor = Color.CYAN;
 
   @PercentSliderProperty({
     name: 'Totem Color Opacity',
     description: 'Change the opacity of the totem color',
     category: 'Beta (WIP)'
   })
-  totemOpacity = 0.5;
+  totemOpacity = 0.25;
 
   @SelectorProperty({
     name: "Totem Range Options",
@@ -744,26 +715,12 @@ class Settings {
   })
   totemOptions = 0;
 
-  @SwitchProperty({
-    name: "Frozen Blaze Range",
-    description: "Shows the area that the FB will take effect",
-    category: "Beta (WIP)"
-  })
-  fb = false  
-    
-  @ColorProperty({
-    name: 'Frozen Blaze Range Color',
-    description: `Sets the color for fb range`,
-    category: 'Beta (WIP)'
-  })
-  fbColor = Color.CYAN;
-
-  @PercentSliderProperty({
-    name: 'Frozen Blaze Color Opacity',
-    description: 'Change the opacity of the fb color',
-    category: 'Beta (WIP)'
-  })
-  fbOpacity = 0.5;
+  // @SwitchProperty({
+  //   name: "Loot Share Highlight",
+  //   description: "Highlights mobs inside lootshare range",
+  //   category: "Beta (WIP)"
+  // })
+  // lootshare = false
 
   constructor() {
     this.initialize(this);
@@ -773,9 +730,6 @@ class Settings {
     this.setCategoryDescription("QOL", "Quality of Life")
     this.setCategoryDescription("Beta (WIP)", "Features that are currently incomplete but are planned and have some functionality")
 
-    this.addDependency("Matcho Alert", "Matcho!")
-    this.addDependency("Arachnes Keeper Alert", "Arachnes Keeper")
-    this.addDependency("Broodmother Alert", "Broodmother")
     this.addDependency("Not stunning?", "Stop Rendering Useless Perks")
   }
 }

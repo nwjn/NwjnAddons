@@ -1,18 +1,17 @@
 import { delay, setRegisters } from "./functions";
 
-// Credit: volcaddons on ct for findworld and findzone
+let game = undefined;
+export function getGame() { return game; };
+// Credit: volcaddons for findworld
 let world = undefined;
 export function getWorld() { return world; };
 let noFind = 0;
 
-export function findZone() {
-  let zoneLine = Scoreboard.getLines().find((line) => line.getName().includes("⏣"));
-  if (zoneLine == undefined) zoneLine = Scoreboard.getLines().find((line) => line.getName().includes("ф"));
-  return zoneLine == undefined ? "None" : zoneLine.getName().removeFormatting()
-}
+
 function findWorld() {
-  if (noFind == 20) return;
+  if (noFind == 10) return;
   noFind++;
+  // TODO: match(/(Area|Dungeon)/g)
   world = TabList.getNames().find(tab => tab.includes("Area"));
   if (world == undefined)
     delay(() => {

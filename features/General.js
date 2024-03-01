@@ -4,7 +4,7 @@ import { getWorld } from "../utils/world";
 import { data } from "../utils/data";
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
-import { ARMOR_STANDS, version } from "../utils/constants";
+import { EntityArmorStand, version } from "../utils/constants";
 
 // Credit: Volcaddons on ct for waypoints
 let chatWaypoints = [];
@@ -201,7 +201,7 @@ registerWhen(register("soundPlay", () => {
 }).setCriteria("mob.zombie.remedy"), () => settings.reaper);
 
 registerWhen(register("renderWorld", () => {
-  World.getAllEntitiesOfType(ARMOR_STANDS).forEach(stand => {
+  World.getAllEntitiesOfType(EntityArmorStand.class).forEach(stand => {
     let name = ChatLib.removeFormatting(stand.getName())
     if (Player.asPlayerMP().canSeeEntity(stand) && name.includes("҉") && name.includes("Bloodfiend")) RenderLib.drawEspBox(stand.getX(), stand.getY() - 2, stand.getZ(), 1, 2, 1, 0.2, 0.46667, 1, true)
   })
@@ -231,7 +231,7 @@ registerWhen(register("renderOverlay", () => {
   }
   if (settings.treecap) {
     let cd = 2
-    if (data.pet == "Monkey") cd = 1
+    if (data.pet.includes("Monkey")) cd = 1
     time = new Date().getTime()
     time = cd - (time - blockBroken) / 1000
     if (time >= 0) Renderer.drawString(`${ time.toFixed(3) }`, Renderer.screen.getWidth() / 2 - 13, Renderer.screen.getHeight() / 2 - 15)

@@ -10,7 +10,9 @@ export const consts = {
   WIP: "&cThis feature is still in development!",
 };
 
-export const ARMOR_STANDS = Java.type("net.minecraft.entity.item.EntityArmorStand").class
-export const PLAYERS = Java.type("net.minecraft.client.entity.EntityOtherPlayerMP").class
-export const MAGMA_CUBES = Java.type(`net.minecraft.entity.monster.EntityMagmaCube`).class
-export const GIANT_ZOMBIES = Java.type("net.minecraft.entity.monster.EntityGiantZombie").class
+export const EntityArmorStand = Java.type("net.minecraft.entity.item.EntityArmorStand")
+export const EntityPlayer = Java.type("net.minecraft.client.entity.EntityOtherPlayerMP")
+export const EntityMagmaCube = Java.type(`net.minecraft.entity.monster.EntityMagmaCube`)
+export const EntityGiant = Java.type("net.minecraft.entity.monster.EntityGiantZombie");
+export const SMA = Java.type('net.minecraft.entity.SharedMonsterAttributes');
+export const PLAYERMP = Player.asPlayerMP()
