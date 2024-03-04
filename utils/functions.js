@@ -32,5 +32,3 @@ export function setRegisters() {
 delay(() => {
   setRegisters()
 }, 1000);
-
-// TODO: MAKE A FUNCTION TO FORMAT RENDERING HITBOXES AND MAKE A FILE THAT ARRAYS ARE PUSHED TO

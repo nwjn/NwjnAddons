@@ -3,18 +3,8 @@ import { data } from "../utils/data";
 import { EntityPlayer, consts } from "../utils/constants";
 import { delay, registerWhen } from "../utils/functions";
 import { Overlay } from "../utils/overlay";
-import { getWorld } from "../utils/world";
 import { data } from "../utils/data";
 import RenderLib from "../../RenderLib";
-
-const statsExample =
-`Speed: ✦0
-Strength: &c❁0
-Crit Chance: &9☣0
-Crit Damage: &9☠0
-Attack Speed: &e⚔0`;
-const statsOverlay = new Overlay("stats", ["all"], () => true, data.statsL, "moveStats", statsExample);
-
 
 const visitorExample = `Next Visitor: &cClaim Visitor!`
 const visitorOverlay = new Overlay("nextVisitor", ["all"], () => true, data.visitorL, "moveVisitor", visitorExample);
@@ -139,40 +129,6 @@ registerWhen(register("chat", (fortune) => {
 }).setCriteria("[NPC] Phillip: In exchange for ${*} Pests, I've given you +${fortune}☘ Farming Fortune for 30m!"), () => settings.garden)
 
 // all hud steps
-register("step", () => {
-  if (settings.stats) {
-    statsOverlay.message = "";
-    try {
-      TabList?.getNames()?.forEach(name => {
-        let unformatted = ChatLib.removeFormatting(name);
-        if (getWorld() != "The Rift" && getWorld() != "Garden") {
-          if (unformatted.includes("Speed: ✦") && settings.speed) statsOverlay.message = name;
-          if (unformatted.includes("Strength: ❁") && settings.strength) statsOverlay.message = statsOverlay.message + "\n" + name;
-          if (unformatted.includes("Crit Chance: ☣") && settings.critChance) statsOverlay.message = statsOverlay.message + "\n" + name;
-          if (unformatted.includes("Crit Damage: ☠") && settings.critDamage) statsOverlay.message = statsOverlay.message + "\n" + name;
-          if (unformatted.includes("Attack Speed: ⚔") && settings.atkSpd) statsOverlay.message = statsOverlay.message + "\n" + name;
-        }
-        else if (getWorld() == "The Rift") {
-          if (unformatted.includes("Rift Damage: ❁")) statsOverlay.message = name;
-          if (unformatted.includes("Speed: ✦")) statsOverlay.message = statsOverlay.message + "\n" + name;
-          if (unformatted.includes("Intelligence: ✎")) statsOverlay.message = statsOverlay.message + "\n" + name;
-          if (unformatted.includes("Mana Regen: ⚡")) statsOverlay.message = statsOverlay.message + "\n" + name;
-        }
-        else if (getWorld() == "Garden") {
-          if (unformatted.includes("Speed: ✦")) statsOverlay.message = ` Yaw/Pitch: ${Player.getYaw().toFixed(1)}/${Player.getPitch().toFixed(1)}\n` + name;
-          if (unformatted.includes("Fortune:")) statsOverlay.message = statsOverlay.message + "\n" + name;
-          if (unformatted.includes("Milestone:")) statsOverlay.message = statsOverlay.message + "\n" + name;
-          if (unformatted.includes("Jacob's Contest:")) {
-            name = TabList.getNames().indexOf(name) + 1
-            statsOverlay.message = statsOverlay.message + `\n Contest:${TabList.getNames()[name]}`;
-          }
-          if (unformatted.includes(" ◆ TOP ")) statsOverlay.message += `\n${ name }`
-          // ○, ◆, ☻
-        }
-      });
-    } catch (error) {}
-  }
-}).setFps(10)
 register("step", () => {
   if (settings.nextVisitor) {
     getTime = getTime - 0.1

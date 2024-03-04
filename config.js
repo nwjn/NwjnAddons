@@ -19,7 +19,7 @@ class Settings {
     name: "Draw Chat Waypoints",
     description: "Creates waypoints taken from chat messages in patcher sendcoords format and how long they should stay (in seconds)",
     min: 0,
-    max: 300,
+    max: 160,
     category: "General"
   })
   waypoint = 0;
@@ -29,7 +29,7 @@ class Settings {
     description: `Sets the color for waypoints`,
     category: 'General'
   })
-  waypointColor = Color.CYAN
+  waypointColor = Color.MAGENTA
 
   @SelectorProperty({
     name: "Chat Type Waypoint Rendering",
@@ -46,11 +46,11 @@ class Settings {
     max: 300,
     category: "General"
   })
-  waypointHeight = 300;
+  waypointHeight = 150;
     
   @SwitchProperty({
     name: "Party Commands",
-    description: "Enables party commands (full list at /nwjn party)]n&c this counts as a chat marco",
+    description: "Enables party commands (full list at /nwjn party)",
     category: "General"
   })
   party = false  
@@ -120,18 +120,11 @@ class Settings {
   rawMobList = "" 
     
   @ColorProperty({
-    name: 'Monster ESP Color',
+    name: 'Mob ESP Color',
     description: `Sets the color for monster hitboxes`,
     category: 'Bestiary'
   })
-  monsterHitboxColor = Color.YELLOW
-    
-  @ColorProperty({
-    name: 'Passive entity ESP Color',
-    description: `Sets the color for passive entity hitboxes`,
-    category: 'Bestiary'
-  })
-  passiveHitboxColor = Color.GREEN
+  espColor = Color.YELLOW
   
   @TextProperty({
     name: "Armor Stand Names ESP",
@@ -174,13 +167,6 @@ class Settings {
     category: "Bestiary"
   })
   keeper = false;
-
-  @SwitchProperty({
-    name: "Broodmother",
-    description: `Broodmother box and text`,
-    category: "Bestiary"
-  })
-  broodmother = false; 
 
   @ButtonProperty({
     name: "Move GUI Elements",

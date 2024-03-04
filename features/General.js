@@ -279,6 +279,8 @@ registerWhen(register("chat", (event) => {
 
 let rendArrows = 0
 registerWhen(register("soundPlay", () => {
+  const holding = Player.getHeldItem().getRegistryName()
+  if (holding != "minecraft:bow" && holding != "minecraft:bone") return
   rendArrows++;
   if (rendArrows > 1) return;
   setTimeout(() => {

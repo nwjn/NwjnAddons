@@ -110,6 +110,7 @@ export function setMobHighlight() {
 let mobsHighlighted = {}
 register("guiClosed", (event) => {
   if (!event?.toString().includes("vigilance")) return
+  mobCountOverlay.message = ""
   delay(() => {
     mobsHighlighted = {}
     Object.keys(data.mobsHighlight).forEach((mob) => {
@@ -136,20 +137,21 @@ registerWhen(register("renderWorld", () => {
       // TODO: FILTER AND REMOVE FROM RENDERWORLD TRIGGER
       World.getAllEntitiesOfType(MOB).forEach(entity => {
         const ENTITY_GE = entity.getEntity();
-        if (entity.isInvisible()) return;
+        // if (entity.isInvisible()) return;
         let maxHP = ENTITY_GE.func_110148_a(SMA.field_111267_a).func_111125_b();
         let currentHP = ENTITY_GE.func_110143_aJ();
         if (currentHP <= 0) return;
         if (mobHighlightVal.hps.length === 0 || mobHighlightVal.hps.includes(maxHP)) {
+          const color = settings.espColor
           RenderLib.drawEspBox(
             entity.getX(),
             entity.getY(),
             entity.getZ(),
             entity.getWidth(),
             entity.getHeight(),
-            settings[`${ mobHighlightVal.mobType }HitboxColor`].getRed() / 255,
-            settings[`${ mobHighlightVal.mobType }HitboxColor`].getGreen() / 255,
-            settings[`${ mobHighlightVal.mobType }HitboxColor`].getBlue() / 255,
+            color.getRed() / 255,
+            color.getGreen() / 255,
+            color.getBlue() / 255,
             1,
             false
           );
@@ -158,11 +160,12 @@ registerWhen(register("renderWorld", () => {
       });
       mobsHighlighted[mobHighlightKey] = num;
     
-      if (settings.mobEspCount) {
-        mobCountOverlay.message = mobCountOverlay.message.replace(new RegExp(`(${ mobHighlightKey }: [0-9]+\n|&eZombie: 0)`), "");
-        Object.entries(mobsHighlighted).forEach(([mobsHighlightedKey, mobsHighlightedNum]) => {
-          mobCountOverlay.message += `${ mobsHighlightedKey }: ${ mobsHighlightedNum }\n`;
-        });
+      // mobCountOverlay.message = mobCountOverlay.message.includes(mobHighlightKey) ? mobCountOverlay.message.replace(new RegExp(`(${ mobHighlightKey }: [0-9]+\n|&eZombie: 0)`), `${ mobHighlightKey }: ${ num }\n`) : `${ mobHighlightKey }: ${ num }\n`;
+      if (mobCountOverlay.message.includes(mobHighlightKey)) {
+        mobCountOverlay.message = mobCountOverlay.message.replace(new RegExp(`(${ mobHighlightKey }: [0-9]+\n|&eZombie: 0)`), `${ mobHighlightKey }: ${ num }\n`)
+      }
+      else {
+        mobCountOverlay.message += `${ mobHighlightKey }: ${ num }\n`
       }
     } catch (error) {}
   });
@@ -206,32 +209,39 @@ let filteredMatchos = []
 registerWhen(register("step", () => {
   if (!settings.rawMobList) mobCountOverlay.message = ""
   const MATCHOS = World.getAllEntitiesOfType(EntityPlayer.class).filter(matcho => matcho.getName() == "matcho ")
-  mobCountOverlay.message = mobCountOverlay.message.indexOf("Matcho") == -1 ? mobCountOverlay.message + `\nMatcho: ${MATCHOS.length}\n` : mobCountOverlay.message.replace(/Matcho: [0-9]+\n/g, `Matcho: ${MATCHOS.length}\n`)
+
+  mobCountOverlay.message = mobCountOverlay.message.includes("Matcho") ? mobCountOverlay.message.replace(/Matcho: [0-9]+\n/g, `Matcho: ${MATCHOS.length}\n`) : mobCountOverlay.message += `Matcho: ${MATCHOS.length}\n`
   filteredMatchos = MATCHOS.filter(matcho => PLAYERMP.canSeeEntity(matcho))
 }).setFps(2), () => settings.matcho && getWorld() == "Crimson Isle")
 
 registerWhen(register("renderWorld", () => {
   // MOVED MATCHO ALERT TO THE MOB COUNT OVERLAY
   filteredMatchos.forEach(matcho => {
-    RenderLib.drawEspBox(matcho.getX(), matcho.getY(), matcho.getZ(), matcho.getWidth(), matcho.getHeight(), 0, 1, 0, 1, false);
-    Tessellator.drawString(`Matcho`, matcho.getX(), matcho.getY() + matcho.getHeight() + 0.5, matcho.getZ(), 0x00ff00, false);
+    const x = matcho.getX()
+    const y = matcho.getY()
+    const z = matcho.getZ()
+    const w = matcho.getWidth()
+    const h = matcho.getHeight()
+
+    RenderLib.drawEspBox(x, y, z, w, h, 0, 1, 0, 1, false);
+    Tessellator.drawString(`Matcho`, x, y + h + 0.5, z, 0x00ff00, false);
   })
 }), () => getWorld() == "Crimson Isle" && settings.matcho)
 
 let filteredKeepers = []
 const CAVE_SPIDER_CLASS = Java.type("net.minecraft.entity.monster.EntityCaveSpider").class
 registerWhen(register("step", () => {
-  // TODO: TEST
-  const KEEPERS = World.getAllEntitiesOfType(CAVE_SPIDER_CLASS).filter(keeper => keeper.getY() > 95 || Player.getY() > 134)
-  // TODO: filter by hp?
-  mobCountOverlay.message += `\nKeepers: ${KEEPERS.length()}`
-  filteredKeepers = KEEPERS.filter(keeper => !PLAYERMP.canSeeEntity(keeper))
+  if (!settings.rawMobList) mobCountOverlay.message = ""
+  // TODO: use getmaxhp method and spawn a tara slayer to get cave spider hp and log what it is or mod3000
+  const KEEPERS = World.getAllEntitiesOfType(CAVE_SPIDER_CLASS).filter(keeper => keeper.getEntity().func_110148_a(SMA.field_111267_a).func_111125_b() % 3000 == 0)
+  mobCountOverlay.message = mobCountOverlay.message.indexOf("Keeper") == -1 ? mobCountOverlay.message + `\nKeeper: ${ KEEPERS.length }\n` : mobCountOverlay.message.replace(/Keeper: [0-9]+\n/g, `Keeper: ${ KEEPERS.length }\n`)
+  
+  filteredKeepers = KEEPERS.filter(keeper => PLAYERMP.canSeeEntity(keeper))
 }).setFps(2), () => settings.keeper && getWorld() == "Spider's Den")
 
 registerWhen(register("renderWorld", () => {
-  // TODO: TEST
   filteredKeepers.forEach(keeper => {
     RenderLib.drawEspBox(keeper.getX(), keeper.getY() - 0.7, keeper.getZ(), 1, 1, 0, 1, 0, 1, false);
     Tessellator.drawString(`Keeper`, keeper.getX(), keeper.getY() + 1.5, keeper.getZ(), 0x00ff00, false);
   })
-}), () => getWorld() == "Spider's Den" && settings.keeper)
+}), () => getWorld() == "Spider's Den" && settings.keeper);

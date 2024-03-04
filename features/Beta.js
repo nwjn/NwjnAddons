@@ -24,7 +24,7 @@ registerWhen(register("tick", () => {
   DMGS.forEach(dmg => {
     if (dmgIds.indexOf(dmg.getUUID()) == -1) ChatLib.chat(dmg.getName())
     dmgIds.push(dmg.getUUID())
-    totalDmg += parseInt(dmg.getName().removeFormatting().replaceAll(/[^0-9]/g, ""))
+    totalDmg += parseInt(dmg.getName().removeFormatting().replace(/[^0-9]/g, ""))
   })
 }), () => settings.damageTracker)
 
@@ -84,13 +84,3 @@ registerWhen(register("renderWorld", () => {
   if (block.toString().includes('minecraft:air') || settings.totemOptions == 1 || holding != "TOTEM_OF_CORRUPTION") return
   RenderLib.drawCyl(block.getX() + 0.5, block.getY() + 1, block.getZ() + 0.5, 18, 1, 0.25, 30, 1, 0, 90, 90, settings.totemColor.getRed() / 255, settings.totemColor.getGreen() / 255, settings.totemColor.getBlue() / 255, settings.totemOpacity, false, false);
 }), () => settings.totem);
-
-// registerWhen(register("renderWorld", () => {
-//   // TODO: HIGHLIGHT MOBS IN RANGE OF LOOTSHARE
-//   // const MOBS = World.getAllEntities().filter(mob => PLAYERMP.distanceTo(mob) > 30 || !PLAYERMP.canSeeEntity(mob) || !PLAYERMP.canSeeEntity(mob) || mob.getClassName() == "EntityArmorStand")
-//   const MOBS = World.getAllEntities().filter(mob => PLAYERMP.distanceTo(mob) < 30 && mob.getClassName() != "EntityArmorStand" && mob.getClassName() != "EntityXPOrb" && !mob.getClassName().includes("EntityPlayer"))
-//   MOBS.forEach(mob => {
-//     ChatLib.chat(PLAYERMP.getClassName())
-//     RenderLib.drawEspBox(mob.getX(), mob.getY(), mob.getZ(), mob.getWidth(), mob.getHeight(), 1, 0.667, 0, 1, false)
-//   })
-// }), () => settings.lootshare);

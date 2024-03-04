@@ -14,41 +14,45 @@ import "./features/HUD/Clock"
 import "./features/HUD/FatalTempo"
 import "./features/HUD/Minibosses"
 import "./features/HUD/Pet"
+import "./features/HUD/Stats"
 import { version, consts } from "./utils/constants";
 import { data } from "./utils/data";
-import { setRegisters } from "./utils/functions"
+import { setRegisters, registerWhen } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
 import { setMobHighlight } from "./features/Bestiary";
-data.autosave()
 
 register("command", (arg) => {  
   if (!arg) {
-    settings.openGUI()
+    settings.openGUI();
+    return;
   }
-  else if (arg == "gui") {
-    openGUI()
+  arg = arg?.toLowerCase()
+  
+  switch (arg) {
+    case "gui":
+      openGUI();
+      break;
+    case "version":
+      ChatLib.chat(`${ consts.PREFIX } &bYou are currently on version &e${ version }`);
+      break;
+    case "changelog":
+      ChatLib.chat(`${ consts.PREFIX } &eChangelog:\n&r${ changes }`);
+      break;
+    case "party":
+      ChatLib.chat(`${ consts.PREFIX } &eParty Command List:\n&cNote: run the command by adding the . symbol in front of a party message\n.time => shows the players current time\n.coords => sends the coords of the player\n.stats => sends the stats of the player\n.profile => sends the profile fruit name of the profile\n.wealth => sends the player's current financial status\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.raider => puts party into infernal kuudra\n.dropper => puts party into dropper game`);
+      break;
+    case "commands":
+      ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/fakepb <p1> <p2> <p3> <p4> <tokens> => makes a fake kuudra complete msg\n/calc <equation> => must use spaces but simple calculator with systems of equations\n/deal => trades player in front of you without needing to type name\n/avg <...args> => gets the avg of the numbers after the command`);
+      break;
+    case "reload":
+      setRegisters();
+      ChatLib.chat(`${ consts.PREFIX } &aReloaded all registers!`);
+      break;
+    default:
+      ChatLib.chat(`${consts.PREFIX} &r\n/nwjn => opens settings\n/nwjn gui => opens gui mover\n/nwjn version => gets the current nwjnaddons version\n/nwjn changes => see the latest changes\n/nwjn party => see all party commands\n/nwjn commands => see all commands\n/nwjn reload => reloads all registers in case they aren't working`)
   }
-  else if (arg == "version") {
-    ChatLib.chat(`${consts.PREFIX} &bYou are currently on version &e${version}`)
-  }
-  else if (arg == "changes") {
-    ChatLib.chat(`${consts.PREFIX} &eChangelog:\n&r${ changes }`)
-  }
-  else if (arg == "party") {
-    ChatLib.chat(`${consts.PREFIX} &eParty Command List:\n&cNote: run the command by adding the . symbol in front of a party message\n.time => shows the players current time\n.coords => sends the coords of the player\n.stats => sends the stats of the player\n.profile => sends the profile fruit name of the profile\n.wealth => sends the player's current financial status\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.raider => puts party into infernal kuudra\n.dropper => puts party into dropper game`)
-  }
-  else if (arg == "commands") {
-    ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/fakepb <p1> <p2> <p3> <p4> <tokens> => makes a fake kuudra complete msg\n/calc <equation> => must use spaces but simple calculator with systems of equations\n/deal => trades player in front of you without needing to type name\n/avg <...args> => gets the avg of the numbers after the command`)
-  }
-  else if (arg == "reload") {
-    setRegisters()
-    ChatLib.chat(`${consts.PREFIX} &aReloaded all registers!`)
-  }
-  else {
-    ChatLib.chat(`${consts.PREFIX} &r\n/nwjn => opens settings\n/nwjn gui => opens gui mover\n/nwjn version => gets the current nwjnaddons version\n/nwjn changes => see the latest changes\n/nwjn party => see all party commands\n/nwjn commands => see all commands\n/nwjn reload => reloads all registers in case they aren't working`)
-  }
-}).setCommandName(`nwjn`, true).setAliases("nwjnaddons").setTabCompletions("version", "changes", "party", "help", "gui")
+}).setCommandName(`nwjn`, true).setAliases("nwjnaddons", "njwn").setTabCompletions("version", "changes", "party", "help", "gui")
 
 if (data.first_time) {
   data.first_time = false; 
@@ -93,7 +97,7 @@ register("worldLoad", () => {
       ctNoti = true;
     }
   })
-});
+})
 
 register("guiClosed", (event) => {
   if (event?.toString()?.includes("vigilance")) {
