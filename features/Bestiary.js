@@ -127,6 +127,7 @@ register("guiClosed", (event) => {
 
 const mobCountExample = `&eZombie: 0`
 const mobCountOverlay = new Overlay("mobEspCount", ["all"], () => true, data.mobCountL, "moveCount", mobCountExample);
+mobCountOverlay.message = ""
 
 registerWhen(register("renderWorld", () => {
   let mobsHighlight = data.mobsHighlight;

@@ -53,18 +53,6 @@ registerWhen(register("clicked", (x, y, button, down) => {
   gyroUsed = new Date().getTime()
 }), () => settings.gravityStorm)
 
-const keyGuardExample = `&cNothing Dead Yet`
-const keyGuardOverlay = new Overlay("keyGuard", ["Crystal Hollows"], () => true, data.keyGuardL, "movekeyGuard", keyGuardExample);
-
-let keyGuards = []
-registerWhen(register("entityDeath", (entity) => {
-  if (entity.getClassName() != "EntityZombie") return
-  let maxHP = entity.getEntity().func_110148_a(Java.type('net.minecraft.entity.SharedMonsterAttributes').field_111267_a).func_111125_b()
-  if (maxHP == 250_000) {
-    keyGuards.push(new Date().getTime())
-  }
-}), () => settings.keyGuard);
-
 const manaExample = `&cFero: &a0%\n&cStrong: &a0%`
 const manaOverlay = new Overlay("manaEnchant", ["all"], () => true, data.manaL, "moveMana", manaExample);
 
@@ -111,23 +99,6 @@ registerWhen(register("chat", (mana) => {
   ChatLib.say(`/pc Used ${mana} mana on ${players} players!`)
 }).setCriteria("Used Extreme Focus! (${mana} Mana)"), () => settings.endstoneNoti)
 
-const gardenExample = `&aPlot 8: &630m`
-const gardenOverlay = new Overlay("garden", ["Garden"], () => true, data.gardenL, "moveGarden", gardenExample);
-let sprays = []
-let plots = []
-let exchangedAt = 0
-let exchangedFortune = 0
-
-registerWhen(register("chat", (plot) => {
-  sprays.push(new Date().getTime())
-  plots.push(plot)
-}).setCriteria("SPRAYONATOR! You sprayed Plot - ${plot} with ${*}!"), () => settings.garden)
-
-registerWhen(register("chat", (fortune) => {
-  exchangedAt = new Date().getTime()
-  exchangedFortune = fortune
-}).setCriteria("[NPC] Phillip: In exchange for ${*} Pests, I've given you +${fortune}☘ Farming Fortune for 30m!"), () => settings.garden)
-
 // all hud steps
 register("step", () => {
   if (settings.nextVisitor) {
@@ -152,17 +123,6 @@ register("step", () => {
     if (gyroLeft >= 0) gyroOverlay.message = `&6Gravity Storm: &c${gyroLeft.toFixed(1)}s`
     else gyroOverlay.message = `&6Gravity Storm: &aOff CD`
   }
-  if (settings.keyGuard) {
-    keyGuardOverlay.message = ""
-    keyGuards.forEach(keyGuard => {
-      keyGuard = 60 - (newTime - keyGuard) / 1000
-      let keyGuard2 = keyGuard + 60
-      if (keyGuard2 <= 0) {
-        keyGuards.shift()
-      }
-      keyGuardOverlay.message = keyGuardOverlay.message + `&3Key Guard:&r ${ keyGuard.toFixed(1) }s to ${ keyGuard2.toFixed(1) }s\n`
-    })
-  }
   if (settings.manaEnchant) {
     manaOverlay.message = ""
     let fero = 0.00
@@ -186,26 +146,6 @@ register("step", () => {
       manaOverlay.message += `\n&cStrong: &a${strong.toFixed(2)}% | ${strengthGain}`
     }
   }
-  if (settings.garden) {
-    gardenOverlay.message = ""
-    sprays.forEach(spray => {
-      let index = sprays.indexOf(spray)
-      let sprayLeft = 1740 - (newTime - spray) / 1000
-      if (sprayLeft > 0) {
-        gardenOverlay.message += `\n&aPlot ${plots[index]}: &6${(sprayLeft / 60).toFixed(0)}m`
-      }
-    })
-    let exchangeLeft = 1740 - (newTime - exchangedAt) / 1000
-    if (exchangeLeft > 0) {
-      gardenOverlay.message += `\n&aExchange: &6☘${exchangedFortune} - ${(exchangeLeft / 60).toFixed(0)}m`
-    }
-    if (settings.pests) {
-      Scoreboard.getLines().forEach(line => {
-        line = ChatLib.removeFormatting(line)
-        if (line.includes(" ⏣ The Garde🍭n ൠ")) Client.showTitle(`&cPESTS!`, "", 0, 5, 0)
-      })
-    }
-  }
 }).setFps(10);
 
 register("worldUnload", () => {
@@ -213,5 +153,4 @@ register("worldUnload", () => {
   gyroUsed = 0
   cdLeft = 0
   cd = 0
-  keyGuards = []
 })

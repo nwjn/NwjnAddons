@@ -22,7 +22,7 @@ registerWhen(register("tick", () => {
   const DMGS = World.getAllEntitiesOfType(EntityArmorStand.class).filter(stand => stand.getName().includes(",") && dmgIds.indexOf(stand.getUUID()) == -1 && !stand.getName().includes("Lv") && !stand.getName().includes("❤") && !stand.getName().removeFormatting().match(/[A-Za-z]/g))
     
   DMGS.forEach(dmg => {
-    if (dmgIds.indexOf(dmg.getUUID()) == -1) ChatLib.chat(dmg.getName())
+    ChatLib.chat(dmg.getName())
     dmgIds.push(dmg.getUUID())
     totalDmg += parseInt(dmg.getName().removeFormatting().replace(/[^0-9]/g, ""))
   })

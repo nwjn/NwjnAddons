@@ -3,21 +3,22 @@ import "./features/Bestiary"
 import "./features/Beta"
 import "./features/Commands"
 import "./features/CrimsonIsle"
-import "./features/General"
 import "./features/Display"
+import "./features/General"
 import "./features/Kuudra"
 import "./features/QOL"
-import "./features/HUD/Poison"
+
 import "./features/HUD/Blaze"
 import "./features/HUD/Champion"
 import "./features/HUD/Clock"
 import "./features/HUD/FatalTempo"
 import "./features/HUD/Minibosses"
-import "./features/HUD/Pet"
-import "./features/HUD/Stats"
+import "./features/HUD/Poison"
+import "./features/HUD/Widgets"
+
 import { version, consts } from "./utils/constants";
 import { data } from "./utils/data";
-import { setRegisters, registerWhen } from "./utils/functions"
+import { setRegisters } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
 import { setMobHighlight } from "./features/Bestiary";
@@ -120,12 +121,6 @@ register("guiClosed", (event) => {
 - Note: trades player in front of u without having to type ign
 */
 
-// TODO: change on screen pest alert to ghast sound
 // TODO: party and dm message replying using msg id
-// TODO: ah shards show price per t1
-// TODO: calc 3d distance
-// TODO: paranthesis and exponents in calc
-// TODO: attribute to attribute levels, (4 -> 10; 64 t4 shards needed)
-// TODO: additional info about items in lore
-// TODO: find fix for double death animation
-// TODO: color code pets
+// TODO: find fix for double death animation?
+// TODO: on screen armor and equipment display

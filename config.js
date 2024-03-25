@@ -6,15 +6,7 @@ import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonPr
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   }
 })
-class Settings {
-  // @TextProperty({
-  //   name: "Api Key",
-  //   description: "Copy and paste your api key into the text box",
-  //   category: "General",
-  //   protected: true
-  // }) 
-  // apikey = ""  
-    
+class Settings {    
   @SliderProperty({
     name: "Draw Chat Waypoints",
     description: "Creates waypoints taken from chat messages in patcher sendcoords format and how long they should stay (in seconds)",
@@ -92,14 +84,14 @@ class Settings {
     
   @SwitchProperty({
     name: "Treecap Timer",
-    description: "Renders a timer above crosshair for when u can use treecap ability again\n&cIf monkey is equipped it assumes its lvl 100",
+    description: "Renders a timer above crosshair for when u can use treecap ability again",
     category: "General"
   })
   treecap = false  
     
   @TextProperty({
     name: "Party and Warp on Chat Message",
-    description: "Parties and warps the player inputted in the below text entry whenever the chat message that includes what is in this text entry is in the chat.\n&c This is a chat marco",
+    description: "Parties and warps the player inputted in the below text entry whenever the chat message that includes what is in this text entry is in the chat.",
     category: "General"
   })
   pWarp = ""  
@@ -142,7 +134,7 @@ class Settings {
 
   @TextProperty({
     name: "Player Names ESP",
-    description: "Draws hitboxes around players that include the inputted name\n&cdoes not work on npcs\n&cset to `Any` to draw hitboxes on all player entities\n&Set to `Player` to draw hitboxes on any real player",
+    description: "Draws hitboxes around players that include the inputted name\n'Any' draws all player entites\n'Player' draws all real players",
     category: "Bestiary"
   })
   player = "" 
@@ -179,28 +171,20 @@ class Settings {
   }  
 
   @SwitchProperty({
-    name: "Pet Display",
-    description: "Simple display of active pet",
+    name: "Highlight Players in Align Radius",
+    description: "Highlights players when they are in align radius",
     category: "HUD",
-    subcategory: "Pet"
+    subcategory: "Align"
   })
-  pet = false  
+  alignHighlight = false  
     
   @SwitchProperty({
-    name: "Garden Display",
-    description: "Shows garden timers",
+    name: "Align Display",
+    description: "Shows how long you are under alignment for",
     category: "HUD",
-    subcategory: "Garden"
+    subcategory: "Align"
   })
-  garden = false
-
-  @SwitchProperty({
-    name: "On Screen Pest Alert",
-    description: "shows pests in the middle of screen",
-    category: "HUD",
-    subcategory: "Garden"
-  })
-  pests = false
+  align = false
 
   @SwitchProperty({
     name: "Mob Highlight Counter",
@@ -209,6 +193,76 @@ class Settings {
     subcategory: "Bestiary"
   })
   mobEspCount = false
+
+  @SwitchProperty({
+    name: "Blaze Display",
+    description: "Shows how much time left on gummy and wisp pot",
+    category: "HUD",
+    subcategory: "Blaze"
+  })
+  blaze = false 
+  
+  // TODO: rename Flare Display
+  @SwitchProperty({
+    name: "Champion Display",
+    description: `Champion gained on killing a flare`,
+    category: "HUD",
+    subcategory: "Champion"
+  })
+  champ = false
+
+  @SelectorProperty({
+    name: "Time Display",
+    description: "Shows your current time",
+    category: "HUD",
+    subcategory: "Clock",
+    options: ["Off", "12-Hour Time", "24-Hour Time"]
+  })
+  time = 0;
+
+  // TODO: add option for on hit and on shoot
+  @SwitchProperty({
+    name: "Fatal Tempo Display",
+    description: `Approximate ft percent\n&cSOUND MUST BE ON`,
+    category: "HUD",
+    subcategory: "Fatal Tempo"
+  })
+  ft = false
+
+  @DecimalSliderProperty({
+    name: "Fatal Tempo Timer Scale",
+    description: "Change the scale of the timer for ft above crosshair",
+    minF: 1,
+    maxF: 2.5,
+    category: "HUD",
+    subcategory: "Fatal Tempo"
+  })
+  ftTimer = 1;
+
+  @SelectorProperty({
+    name: "Fatal Tempo Settings",
+    description: "Select Fatal Tempo Display settings",
+    category: "HUD",
+    subcategory: "Fatal Tempo",
+    options: ["Show Always", "Show Only Over 0", "Show Only At 200"]
+  })
+  ftOptions = 0;
+
+  @SwitchProperty({
+    name: "Mage Gyro",
+    description: "Looks for mage cooldown reduction chat message to change gyrocd",
+    category: "HUD",
+    subcategory: "Gyro"
+  })
+  mageCD = false
+
+  @SwitchProperty({
+    name: "Gyro Display",
+    description: "Shows how long your gyro cd is",
+    category: "HUD",
+    subcategory: "Gyro"
+  })
+  gravityStorm = false
     
   @SwitchProperty({
     name: "Endstone Sword Mana Drain Range",
@@ -255,14 +309,6 @@ class Settings {
   strongMana = 0;
   
   @SwitchProperty({
-    name: "Key Guardian Display",
-    description: "Shows Key Guardian spawn time",
-    category: "HUD",
-    subcategory: "Crystal Hollows"
-  })
-  keyGuard = false
-    
-  @SwitchProperty({
     name: "Legion Display",
     description: "Shows the number of players in your legion radius",
     category: "HUD",
@@ -271,144 +317,12 @@ class Settings {
   legion = false
 
   @SwitchProperty({
-    name: "Highlight Players in Align Radius",
-    description: "Highlights players when they are in align radius",
-    category: "HUD",
-    subcategory: "Align"
-  })
-  alignHighlight = false  
-    
-  @SwitchProperty({
-    name: "Align Display",
-    description: "Shows how long you are under alignment for",
-    category: "HUD",
-    subcategory: "Align"
-  })
-  align = false
-
-  @SwitchProperty({
-    name: "Mage Gyro",
-    description: "Looks for mage cooldown reduction chat message to change gyrocd",
-    category: "HUD",
-    subcategory: "Gyro"
-  })
-  mageCD = false
-
-  @SwitchProperty({
-    name: "Gyro Display",
-    description: "Shows how long your gyro cd is",
-    category: "HUD",
-    subcategory: "Gyro"
-  })
-  gravityStorm = false
-
-  @SwitchProperty({
-    name: "Fatal Tempo Display",
-    description: `Approximate ft percent\n&cNote: SOUND MUST BE ON`,
-    category: "HUD",
-    subcategory: "Fatal Tempo"
-  })
-  ft = false
-
-  @DecimalSliderProperty({
-    name: "Fatal Tempo Timer Scale",
-    description: "Change the scale of the timer for ft above crosshair",
-    minF: 1,
-    maxF: 2.5,
-    category: "HUD",
-    subcategory: "Fatal Tempo"
-  })
-  ftTimer = 1;
-
-  @SelectorProperty({
-    name: "Fatal Tempo Settings",
-    description: "Select Fatal Tempo Display settings",
-    category: "HUD",
-    subcategory: "Fatal Tempo",
-    options: ["Show Always", "Show Only Over 0", "Show Only At 200"]
-  })
-  ftOptions = 0;
-
-  @SwitchProperty({
     name: "Poison Display",
     description: `Displays the amount of poisons in your inventory`,
     category: "HUD",
     subcategory: "Poison"
   })
   poison = false
-
-  @SwitchProperty({
-    name: "Stats Display",
-    description: `Shows stats from tab `,
-    category: "HUD",
-    subcategory: "Stats"
-  })
-  stats = false;
-
-  @CheckboxProperty({
-    name: "Toggle Speed",
-    description: "",
-    category: "HUD",
-    subcategory: "Stats"
-  })
-  speed = false  
-
-  @CheckboxProperty({
-    name: "Toggle Strength",
-    description: "",
-    category: "HUD",
-    subcategory: "Stats"
-  })
-  strength = false  
-
-  @CheckboxProperty({
-    name: "Toggle Crit Chance",
-    description: "",
-    category: "HUD",
-    subcategory: "Stats"
-  })
-  critChance = false  
-
-  @CheckboxProperty({
-    name: "Toggle Crit Damage",
-    description: "",
-    category: "HUD",
-    subcategory: "Stats"
-  })
-  critDamage = false  
-
-  @CheckboxProperty({
-    name: "Toggle Attack Speed",
-    description: "",
-    category: "HUD",
-    subcategory: "Stats"
-  })
-  atkSpd = false  
-
-  @SwitchProperty({
-    name: "Champion Display",
-    description: `Champion gained on killing a flare`,
-    category: "HUD",
-    subcategory: "Champion"
-  })
-  champ = false
-
-  @SwitchProperty({
-    name: "Blaze Display",
-    description: "Shows how much time left on gummy and wisp pot",
-    category: "HUD",
-    subcategory: "Blaze"
-  })
-  blaze = false 
-
-  @SelectorProperty({
-    name: "Time Display",
-    description: "Shows your current time",
-    category: "HUD",
-    subcategory: "Clock",
-    options: ["Off", "12-Hour Time", "24-Hour Time"]
-  })
-  time = 0;
 
   @SelectorProperty({
     name: "Next Visitor Display",
@@ -428,42 +342,107 @@ class Settings {
   mini = false 
   
   @SwitchProperty({
+    name: "Widget Display",
+    description: "Renders tab widgets on screen",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  widget = false  
+
+  @CheckboxProperty({
+    name: "Stats Widget",
+    description: "Show stats widget on HUD",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  stats = false
+
+  @CheckboxProperty({
+    name: "Pet Widget",
+    description: "Show pet widget on HUD",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  pet = false
+    
+  @CheckboxProperty({
+    name: "Bestiary Widget",
+    description: "Show bestidary widget on HUD",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  bestiary = false  
+  
+  @CheckboxProperty({
+    name: "Crop Milestone Widget",
+    description: "Show crop milestone widget on HUD",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  crop = false  
+    
+  @CheckboxProperty({
+    name: "Pest Widget",
+    description: "Show pest widget on HUD",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  pest = false  
+    
+  @CheckboxProperty({
+    name: "Visitor Widget",
+    description: "Show visitor widget on HUD",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  visitor = false  
+    
+  @CheckboxProperty({
+    name: "Jacob Widget",
+    description: "Show jacob contest widget on HUD",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  contest = false  
+    
+  @SwitchProperty({
     name: "Trophy Fish Session Counter",
     description: "Changes trophy fish catch messages to show count in that session",
     category: "Crimson Isle"
   })
   fish = false
     
+  // TODO: allow for public chat
   @SwitchProperty({
     name: "Announce Vanquishers",
-    description: `Announces Vanquisher coords to party.\n&c this is a chat marco`,
+    description: `Announces Vanquisher coords to party`,
     category: "Crimson Isle"
   })
   announceVanqs = false
 
   @SwitchProperty({
-    name: "Announce Jawbus'",
-    description: "Announces Jawbus coords to party\n&c this is a chat marco",
+    name: "Announce Jawbus",
+    description: "Announces Jawbus coords to party",
     category: "Crimson Isle"
   })
   jawbus = false  
 
   @SwitchProperty({
     name: "Announce Thunder",
-    description: "Announces Thunder coords to party\n&c this is a chat marco",
+    description: "Announces Thunder coords to party",
     category: "Crimson Isle"
   })
   thunder = false
 
   @SwitchProperty({
     name: "Announce Plhlegblasts",
-    description: "Announces Plhlegblast coords to party\n&c this is a chat marco",
+    description: "Announces Plhlegblast coords to party",
     category: "Crimson Isle"
   })
   plhlegblast = false
 
   @SwitchProperty({
-    name: "Replace Magma Boss Damage Messages",
+    name: "Better Magma Boss Message",
     description: "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35% &7(100%)",
     category: "Crimson Isle"
   })
@@ -506,7 +485,7 @@ class Settings {
 
   @SwitchProperty({
     name: "No Pre! No Second!",
-    description: "Tells party if you dont have a pre or second\n&csometimes breaks on certain spots on x\n&c this is a chat marco",
+    description: "Tells party if you dont have a pre or second\n&csometimes breaks on certain spots on x",
     category: "Kuudra"
   })
   noPre = false  
@@ -555,21 +534,21 @@ class Settings {
 
   @SwitchProperty({
     name: "Notify Party On Fresh",
-    description: "Auto say `FRESH!` in party chat when you get fresh tools\n&c this is a chat marco",
+    description: "Auto say `FRESH!` in party chat when you get fresh tools",
     category: "Kuudra"
   })
   fresh = false
 
   @SwitchProperty({
     name: "Draw Hitboxes Around Freshers",
-    description: "Draw hitboxes around party members who have freshed\n&cIf you get a crash called Already Building! turn this feature off",
+    description: "Draw hitboxes around party members who have freshed",
     category: "Kuudra"
   })
   freshHitbox = false
   
   @SwitchProperty({
     name: "Shows Kuudra",
-    description: "Draw a hitbox around kuudra to help various parts of the run\n&cHEAVY USE AT YOUR OWN RISK",
+    description: "Draw a hitbox around kuudra to help various parts of the run",
     category: "Kuudra"
   })
   kuudraHitbox = false
@@ -701,13 +680,6 @@ class Settings {
   })
   totemOptions = 0;
 
-  // @SwitchProperty({
-  //   name: "Loot Share Highlight",
-  //   description: "Highlights mobs inside lootshare range",
-  //   category: "Beta (WIP)"
-  // })
-  // lootshare = false
-
   constructor() {
     this.initialize(this);
     this.setCategoryDescription("Bestiary", "bestiary")
@@ -717,6 +689,14 @@ class Settings {
     this.setCategoryDescription("Beta (WIP)", "Features that are currently incomplete but are planned and have some functionality")
 
     this.addDependency("Not stunning?", "Stop Rendering Useless Perks")
+
+    this.addDependency("Stats Widget", "Widget Display")
+    this.addDependency("Pet Widget", "Widget Display")
+    this.addDependency("Bestiary Widget", "Widget Display")
+    this.addDependency("Crop Milestone Widget", "Widget Display")
+    this.addDependency("Pest Widget", "Widget Display")
+    this.addDependency("Visitor Widget", "Widget Display")
+    this.addDependency("Jacob Widget", "Widget Display")
   }
 }
 export default new Settings();

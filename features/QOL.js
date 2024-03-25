@@ -81,4 +81,12 @@ registerWhen(register("renderFood", (event) => {
 registerWhen(register("renderEntity", (entity, pos, pticks, event) => {
   if (entity.getClassName() != "EntityFallingBlock") return
   cancel(event)
-}), () => settings.falling)
+}), () => settings.falling);
+
+// TODO: armor display and equipment display
+// register("renderOverlay", () => {
+//   Player.getInventory().getStackInSlot(39).draw(50, 50, 1) // helm
+//   Player.getInventory().getStackInSlot(38).draw(50, 65, 1) // cp
+//   Player.getInventory().getStackInSlot(37).draw(50, 80, 1) // leg
+//   Player.getInventory().getStackInSlot(36).draw(50, 95, 1) // boot
+// })

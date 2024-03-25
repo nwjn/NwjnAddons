@@ -9,6 +9,7 @@ const poisonExample =
 &c0&8x &aToxic Arrow Poison`;
 const poisonOverlay = new Overlay("poison", ["all"], () => true, data.poisonL, "movePoison", poisonExample);
 
+// TODO: 9th slot arrows left
 registerWhen(register("step", () => {
   let items = {"Twilight Arrow Poison": 0, "Flint Arrow": 0, "Toxic Arrow Poison": 0}
   const inv = Player?.getInventory()?.getItems()?.filter(item => /(dyePowder|arrow)/g.test(item?.toString()))

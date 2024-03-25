@@ -6,17 +6,20 @@ export let data = new PogObject("NwjnAddons", {
   "tuning": "Unknown",
   "enrich": "Unknown",
   "mp": "Unknown",
-  "pet": "Unknown",
   "gummy": 0,
   "wisp": 0,
   "mobsHighlight": {},
   "standList": [],
   "playerList": [],
   "lastMini": [],
+  "flare": {
+    "kills": 0,
+    "xp": 0,
+    "vanqs": 0
+  },
   "ftL": [15, 250, 1],
   "champL": [15, 250, 1],
   "poisonL": [15, 250, 1],
-  "statsL": [15, 250, 1],
   "blazeL": [15, 250, 1],
   "clockL": [15, 250, 1],
   "visitorL": [15, 250, 1],
@@ -26,8 +29,14 @@ export let data = new PogObject("NwjnAddons", {
   "keyGuardL": [15, 250, 1],
   "manaL": [15, 250, 1],
   "mobCountL": [15, 250, 1],
-  "gardenL": [15, 250, 1],
-  "petL": [15, 250, 1]
+
+  "statsL": [15, 250, 1],
+  "petL": [15, 250, 1],
+  "bestiaryL": [15, 250, 1],
+  "cropL": [15, 250, 1],
+  "pestL": [15, 250, 1],
+  "visitorL": [15, 250, 1],
+  "contestL": [15, 250, 1]
 }, "data.json");
 
 register("gameUnload", () => {

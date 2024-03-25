@@ -4,10 +4,7 @@ import { getWorld } from "./world";
 
 const GUI_INSTRUCT = "Use +/- to change scale or press R to reset";
 
-// TODO: INITIALIZE OVERLAYS HERE AND IMPORT SPECIFIC OVERLAYS AS NEEDED
-// TODO: CLEAR OVERLAY EVERY TICK
-// TODO: MAKE OVERLAY MESSAGES AN ARRAY AND JOIN IT 
-// Credit: Volcaddons on ct
+// Credit: Volcaddons
 function renderScale(scale, text, x, y) {
     Renderer.scale(scale);
     Renderer.drawString(text, x, y);
