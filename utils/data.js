@@ -6,6 +6,7 @@ export let data = new PogObject("NwjnAddons", {
   "tuning": "Unknown",
   "enrich": "Unknown",
   "mp": "Unknown",
+  "pet": "Unknown",
   "gummy": 0,
   "wisp": 0,
   "mobsHighlight": {},
@@ -36,7 +37,12 @@ export let data = new PogObject("NwjnAddons", {
   "cropL": [15, 250, 1],
   "pestL": [15, 250, 1],
   "visitorL": [15, 250, 1],
-  "contestL": [15, 250, 1]
+  "contestL": [15, 250, 1],
+  "commL": [15, 250, 1],
+  "powderL": [15, 250, 1],
+  "trophyL": [15, 250, 1],
+
+  "customL": [15, 250, 1]
 }, "data.json");
 
 register("gameUnload", () => {

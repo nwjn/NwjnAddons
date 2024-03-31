@@ -17,6 +17,13 @@ const ftPercent = (ftLvl) => {
   const percent = ftHitsNum() * ftLvl * 10;
   return percent <= 200 ? percent : 200;
 }
+/*
+TODO:
+const ftPercent = (ftLvl) => {
+  const percent = ftHits.length * hits * ftLvl * 10;
+  return percent <= 200 ? percent : 200;
+}
+*/
 
 registerWhen(register("actionBar", (stacks) => {
   hits = getWorld() == "Kuudra" ? (stacks == 10 ? 5 : 3) : 1;
@@ -31,9 +38,11 @@ registerWhen(register("renderOverlay", () => {
   countdown = countdown < 0 ? countdown : 3 - (countdown - time) / 1000;
   const color = (countdown > 0 && countdown < 1) ? "&c" : "&f";
   if (percent == 200 && countdown < 3) {
-    let x = (Renderer.screen.getWidth() / 2 - 13 - (settings.ftTimer - 1) * 9) / settings.ftTimer
-    let y = (Renderer.screen.getHeight() / 2 - 15 - (settings.ftTimer - 1) * 5.5) / settings.ftTimer
-    Renderer.scale(settings.ftTimer)
+    // TODO: define renderer.screen as constant
+    const option = settings.ftTimer
+    const x = (Renderer.screen.getWidth() / 2 - 13 - (option - 1) * 9) / option
+    const y = (Renderer.screen.getHeight() / 2 - 15 - (option - 1) * 5.5) / option
+    Renderer.scale(option)
     Renderer.drawString(`${ color }${ countdown.toFixed(3) }`, x, y);
   }
 }), () => settings.ft);
@@ -53,8 +62,14 @@ registerWhen(register("soundPlay", (pos, name) => {
 registerWhen(register("step", () => {
   if(ftHitsNum() > 0 && new Date().getTime() - ftHits[ftHits.length - 1] >= 3000)ftHits = [];
   countdown = new Date().getTime()
+  /* 
+  TODO:
+  const time = new Date().getTime()
+  if (ftHits && time - ftHits[ftHits.length - 1] >= 3000) ftHits = [];
+  countdown = time;
+  */
 }).setFps(50), () => settings.ft);
 
 registerWhen(register("step", () => {
   ftOverlay.message = (settings.ftOptions == 0) || (settings.ftOptions == 1 && percent != 0) || (settings.ftOptions == 2 && percent == 200) ? `Fatal Tempo: ${ percent }%` : "";
-}).setFps(5), () => settings.ft)
+}).setFps(3), () => settings.ft)

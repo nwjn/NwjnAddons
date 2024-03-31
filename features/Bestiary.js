@@ -6,6 +6,7 @@ import { data } from "../utils/data";
 import { Overlay } from "../utils/overlay";
 import { EntityArmorStand, EntityPlayer, PLAYERMP, SMA } from "../utils/constants";
 
+// TODO: if ~ instead of - then % the entry hp and see if r = 0
 const monsters = [
   "Blaze",
   "CaveSpider",

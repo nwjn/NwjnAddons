@@ -12,7 +12,7 @@ function findWorld() {
   if (noFind == 10) return;
   noFind++;
   // TODO: match(/(Area|Dungeon)/g)
-  world = TabList.getNames().find(tab => tab.includes("Area"));
+  world = TabList.getNames().find(tab => tab.match(/(Area|Dungeon)/g));
   if (world == undefined)
     delay(() => {
       findWorld()

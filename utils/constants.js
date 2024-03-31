@@ -1,5 +1,8 @@
 export const comma = (num) => {
-  if(num == undefined) return;
+  if (num.toString()?.includes(".")) {
+    const [intVal, floatVal] = num.toString()?.split(".")
+    return intVal.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + "." + floatVal
+  }
   return num.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 

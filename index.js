@@ -22,6 +22,7 @@ import { setRegisters } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
 import { setMobHighlight } from "./features/Bestiary";
+data.autosave()
 
 register("command", (arg) => {  
   if (!arg) {
@@ -124,3 +125,20 @@ register("guiClosed", (event) => {
 // TODO: party and dm message replying using msg id
 // TODO: find fix for double death animation?
 // TODO: on screen armor and equipment display
+
+register("chat", (pet) => {
+  data.pet = pet
+  data.save()
+}).setCriteria("Autopet equipped your [${*}] ${pet}! VIEW RULE");
+
+register("chat", (pet) => {
+  data.pet = pet
+  data.save()
+}).setCriteria("You summoned your ${pet}!");
+
+register("chat", () => {
+  data.pet = "None"
+  data.save()
+}).setCriteria("You despawned your ${*}!");
+
+// TODO: timers to use ticks instead of steps

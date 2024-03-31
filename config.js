@@ -211,14 +211,13 @@ class Settings {
   })
   champ = false
 
-  @SelectorProperty({
-    name: "Time Display",
+  @SwitchProperty({
+    name: "Clock Display",
     description: "Shows your current time",
     category: "HUD",
     subcategory: "Clock",
-    options: ["Off", "12-Hour Time", "24-Hour Time"]
   })
-  time = 0;
+  clock = false;
 
   // TODO: add option for on hit and on shoot
   @SwitchProperty({
@@ -404,6 +403,46 @@ class Settings {
     subcategory: "Widget"
   })
   contest = false  
+
+  @CheckboxProperty({
+    name: "Commission Widget",
+    description: "Show commission widget on HUD",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  comm = false
+
+  @CheckboxProperty({
+    name: "Powder Widget",
+    description: "Show powder widget on HUD",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  powder = false
+
+  @CheckboxProperty({
+    name: "Trophy Fish Widget",
+    description: "Show trophy fish widget on HUD",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  trophy = false
+
+  @CheckboxProperty({
+    name: "Custom Widget",
+    description: "Enter widget title from tablist (i.e. 'Fire Sales:' or 'Timers:'",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  custom = false
+
+  @TextProperty({
+    name: "Custom Widget Text",
+    description: "Enter widget text from tablist (i.e. 'Fire Sales:' or 'Timers:')",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  widgetText = ""
     
   @SwitchProperty({
     name: "Trophy Fish Session Counter",
@@ -697,6 +736,12 @@ class Settings {
     this.addDependency("Pest Widget", "Widget Display")
     this.addDependency("Visitor Widget", "Widget Display")
     this.addDependency("Jacob Widget", "Widget Display")
+    this.addDependency("Commission Widget", "Widget Display")
+    this.addDependency("Powder Widget", "Widget Display")
+    this.addDependency("Trophy Fish Widget", "Widget Display")
+
+    this.addDependency("Custom Widget", "Widget Display")
+    this.addDependency("Custom Widget Text", "Custom Widget")
   }
 }
 export default new Settings();

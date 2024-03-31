@@ -13,7 +13,10 @@ const poisonOverlay = new Overlay("poison", ["all"], () => true, data.poisonL, "
 registerWhen(register("step", () => {
   let items = {"Twilight Arrow Poison": 0, "Flint Arrow": 0, "Toxic Arrow Poison": 0}
   const inv = Player?.getInventory()?.getItems()?.filter(item => /(dyePowder|arrow)/g.test(item?.toString()))
-  inv?.forEach(item => items[item.getName().removeFormatting()] += item.getStackSize())
+  const invLength = inv.length
+  for (let i = 0; i < invLength; i++) {
+    items[inv[i].getName().removeFormatting()] += inv[i].getStackSize()
+  }
 
   poisonOverlay.message = `${(items["Twilight Arrow Poison"] == 0 ? "&c" : "&d") + items["Twilight Arrow Poison"] }&8x &5Twilight Arrow Poison\n${(items["Flint Arrow"] == 0 ? "&c" : "&d") + items["Flint Arrow"] }&8x &rFlint Arrows\n${(items["Toxic Arrow Poison"] == 0 ? "&c" : "&d") + items["Toxic Arrow Poison"]}&8x &aToxic Arrow Poison`
 }).setDelay(1), () => settings.poison)

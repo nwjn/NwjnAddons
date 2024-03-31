@@ -140,13 +140,12 @@ registerWhen(register("chat", (player, command, event) => {
       let stats = "Unknown"
       TabList.getNames().forEach(name => {
         name = ChatLib.removeFormatting(name)
-        if (name.includes("Speed: ✦")) stats = name.substring(name.lastIndexOf(" ") + 1)
-        if (name.includes("Strength: ❁")) stats = stats + " | " + name.substring(name.lastIndexOf(" ") + 1)
-        if (name.includes("Crit Chance: ☣")) stats = stats + " | " + name.substring(name.lastIndexOf(" ") + 1)
-        if (name.includes("Crit Damage: ☠")) stats = stats + " | " + name.substring(name.lastIndexOf(" ") + 1)
-        if (name.includes("Attack Speed: ⚔")) stats = stats + " | " + name.substring(name.lastIndexOf(" ") + 1)
+        if (name.includes("Speed: ✦")) stats = `${name.substring(name.lastIndexOf(" ") + 1)}`
+        if (name.includes("Strength: ❁")) stats = stats + " | " + `${name.substring(name.lastIndexOf(" ") + 1)}`
+        if (name.includes("Crit Chance: ☣")) stats = stats + " | " + `${name.substring(name.lastIndexOf(" ") + 1)}`
+        if (name.includes("Crit Damage: ☠")) stats = stats + " | " + `${name.substring(name.lastIndexOf(" ") + 1)}`
+        if (name.includes("Attack Speed: ⚔")) stats = stats + " | " + `${name.substring(name.lastIndexOf(" ") + 1)}`
       })
-      if (stats.length == "Unknown") return
       ChatLib.say(`/party chat ${stats}`)
     }
     else if (command.includes("profile")) {

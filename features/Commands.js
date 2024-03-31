@@ -1,4 +1,4 @@
-import { comma } from "../utils/constants";
+import { comma, consts } from "../utils/constants";
 import { fixLength } from "../utils/functions";
 
 register("command", () => {
@@ -65,94 +65,17 @@ register("command", (p1, p2, p3, p4, tokens) => {
 }).setName("fakePB", true);
 
 register("command", (...args) => {
-  ChatLib.chat(ChatLib.getCenteredText(`&r&b&m--------------&rCalc&r&b&m--------------`));
-  ChatLib.chat(ChatLib.getCenteredText(`&b${ args.join(" ") }`))
-  let loop = 0
-  args.forEach(arg => {
-    if (arg.match(/(\*|\/|\+|\-)/g)) loop++
-  })
-  args = args.concat("")
-  let equation = args.join(" ")
-  equation = equation.replaceAll(/[^0-9+\-*/\s.]/g, "")
-  while (equation.includes(" * ") || equation.includes(" / ")) {
-    if (loop < 0) {
-      ChatLib.chat(ChatLib.getCenteredText(`&b&cERROR`));
-      ChatLib.chat(ChatLib.getCenteredText(`&b&m--------------------------------&r`))
-      return
-    }
-    loop--
-    if (equation.includes(" * ")) {
-      let before = equation.substring(0, equation.indexOf("*") - 1);
-      before = before.substring(before.lastIndexOf(" "));
-      before = before.replaceAll(" ", "")
-      let after = equation.substring(equation.indexOf("*") + 2);
-      after = after.substring(0, after.indexOf(" "));
-      after = after.replaceAll(" ", "")
-      let result = parseFloat(before) * parseFloat(after);
-      equation = equation.replace(`${ before } * ${ after }`, `${ result }`);
-    }
-    else if (equation.includes(" / ")) {
-      let before = equation.substring(0, equation.indexOf("/") - 1);
-      before = before.substring(before.lastIndexOf(" "));
-      before = before.replaceAll(" ", "")
-      let after = equation.substring(equation.indexOf("/") + 2);
-      after = after.substring(0, after.indexOf(" "));
-      after = after.replaceAll(" ", "")
-      let result = parseFloat(before) / parseFloat(after);
-      equation = equation.replace(`${ before } / ${ after }`, `${ result }`);
-    }
-    // console.log(equation)
-  }
-  while (equation.includes(" + ") || equation.includes(" - ")) {
-    if (loop < 0) {
-      ChatLib.chat(ChatLib.getCenteredText(`&b&cERROR`));
-      ChatLib.chat(ChatLib.getCenteredText(`&b&m--------------------------------&r`))
-      return
-    }
-    loop--
-    if (equation.includes(" + ")) {
-      let before = equation.substring(0, equation.indexOf("+") - 1);
-      before = before.substring(before.lastIndexOf(" "));
-      before = before.replaceAll(" ", "")
-      let after = equation.substring(equation.indexOf("+") + 2);
-      after = after.substring(0, after.indexOf(" "));
-      after = after.replaceAll(" ", "")
-      let result = parseFloat(before) + parseFloat(after);
-      equation = equation.replace(`${ before } + ${ after }`, `${ result }`);
-    }
-    else if (equation.includes(" - ")) {
-      let before = equation.substring(0, equation.indexOf("-") - 1);
-      before = before.substring(before.lastIndexOf(" "));
-      before = before.replaceAll(" ", "")
-      let after = equation.substring(equation.indexOf("-") + 2);
-      after = after.substring(0, after.indexOf(" "));
-      after = after.replaceAll(" ", "")
-      let result = parseFloat(before) - parseFloat(after);
-      equation = equation.replace(`${ before } - ${ after }`, `${ result }`);
-    }
-    // console.log(equation)
-  }
-  ChatLib.chat(ChatLib.getCenteredText(`&b${ equation.slice(0, -1) }`));
-  ChatLib.chat(ChatLib.getCenteredText(`&b&m--------------------------------&r`))
+  try {
+    const equat = args.join("").replace(/,/g, "")
+    ChatLib.chat(`${consts.PREFIX}&r: ${comma(equat)} = ${comma(eval(equat))}`)
+  } catch (err) {ChatLib.chat(`${consts.PREFIX}&r: ${err}`)}
 }).setName("calc", true)
-
-register("command", (num) => {
-  ChatLib.chat(ChatLib.getCenteredText(`&r&b&m--------------&rStacks&r&b&m--------------`));
-  ChatLib.chat(ChatLib.getCenteredText(`&b${ num }`))
-  ChatLib.chat(ChatLib.getCenteredText(`&b${Math.trunc(parseInt(num) / 64)} stacks and ${parseInt(num) % 64}`));
-  ChatLib.chat(ChatLib.getCenteredText(`&b&m----------------------------------&r`))
-}).setName("stacks", true);
-
-register("command", (...args) => {
-  ChatLib.chat(ChatLib.getCenteredText(`&r&b&m--------------&rAvg&r&b&m--------------`));
-  ChatLib.chat(ChatLib.getCenteredText(`&b${ args.join(", ") }`))
-  let result = 0
-  args.forEach(arg => result += parseFloat(arg))
-  ChatLib.chat(ChatLib.getCenteredText(`&b${ result / args.length }`));
-  ChatLib.chat(ChatLib.getCenteredText(`&b&m-----------------------------&r`))
-}).setName("avg", true);
 
 register("command", () => {
   const looking = Player.lookingAt()
   if (looking?.getClassName() == "EntityOtherPlayerMP") ChatLib.command(`trade ${looking?.getName()}`)
 }).setName("deal", true);
+
+register("command", (index) => {
+  ChatLib.chat(TabList.getNames()[index])
+}).setName("/tab", true);

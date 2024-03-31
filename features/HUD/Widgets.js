@@ -1,20 +1,19 @@
 import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
-import { registerWhen } from "../../utils/functions";
 
 // let a = 0
 function widget(find, overlay) {
-  if (!settings[`${overlay.setting}`]) return
   try {
     overlay.message = ""
+    if (!settings[`${overlay.setting}`] || !settings.widget) return
     let tab = TabList.getNames()
     const start = tab.findIndex(e => e.includes(find))
     tab = tab.slice(start)
-    const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.includes("ACTIVE"))|| e.removeFormatting().startsWith("               ")) && i != 0)
+    const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘)/g))|| e.removeFormatting().startsWith("               ")) && i)
     tab = tab.slice(0, end)
-    tab.forEach(e => overlay.message += `${ e }\n`)
-    // if (find == "Jacob's Contest:" & a == 0) {
+    overlay.message = tab.join("\n")
+    // if (find == "Powders:" & !a) {
     //   tab.forEach(e => ChatLib.chat(e))
     //   a++
     // }
@@ -84,7 +83,35 @@ const contestExample =
  &e○ &fWheat`;
 const contestOverlay = new Overlay("contest", ["Garden"], () => true, data.contestL, "moveContest", contestExample);
 
-registerWhen(register("step", () => {
+const commExample =
+`&9&lCommissions:
+ &fSludge Slayer: &a88%
+ &fJade Crystal Hunter: &c0%
+ &fHard Stone Miner: &aDONE
+ &fAmethyst Crystal Hunter: &c0%`;
+const commOverlay = new Overlay("comm", ["Crystal Hollows", "Dwarven Mines"], () => true, data.commL, "moveComm", commExample);
+
+const powderExample =
+`&9&lPowders:
+ Mithril Powder: &26,531,123
+ Gemstone Powder: &d32,365,321`;
+const powderOverlay = new Overlay("powder", ["Crystal Hollows", "Dwarven Mines"], () => true, data.powderL, "movePowder", powderExample);
+
+const trophyExample =
+`&6&lTrophy Fish:
+ &8●&7●&6●&b○ &aSlugfish &7(197)
+ &8●&7●&6●&b○ &9Vanille &7(330)
+ &8●&7●&6●&b○ &9Obfuscated 3 &7(197)
+ &8●&7●&6●&b○ &5Karate Fish &7(69)
+ &8●&7●&6●&b○ &5Soul Fish &7(164)`;
+const trophyOverlay = new Overlay("trophy", ["Crimson Isle"], () => true, data.trophyL, "moveTrophy", trophyExample);
+
+
+
+const customExample = `&e&lCustom Widget:`
+const customOverlay = new Overlay("custom", ["all"], () => true, data.customL, "moveCustom", customExample);
+
+register("step", () => {
   widget("Stats:", statsOverlay)
   widget("Pet:", petOverlay)
   widget("Bestiary:", bestiaryOverlay)
@@ -92,4 +119,9 @@ registerWhen(register("step", () => {
   widget("Pests:", pestOverlay)
   widget("Visitors:", visitorOverlay)
   widget("Jacob's Contest:", contestOverlay)
-}).setFps(2), () => settings.widget)
+  widget("Commissions:", commOverlay)
+  widget("Powders:", powderOverlay)
+  widget("Trophy Fish:", trophyOverlay)
+
+  widget(settings.widgetText, customOverlay)
+}).setFps(2)
