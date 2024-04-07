@@ -11,16 +11,13 @@ let noFind = 0;
 function findWorld() {
   if (noFind == 10) return;
   noFind++;
-  // TODO: match(/(Area|Dungeon)/g)
-  world = TabList.getNames().find(tab => tab.match(/(Area|Dungeon)/g));
-  if (world == undefined)
+  world = TabList?.getNames()?.find(tab => tab?.match(/(Area|Dungeon)/g))?.removeFormatting();
+  if (!world)
     delay(() => {
       findWorld()
     }, 1000);
   else {
-    world = world.removeFormatting();
     world = world.substring(world.indexOf(': ') + 2);
-
     setRegisters();
   }
 }
@@ -37,7 +34,7 @@ register("worldUnload", () => {
 
 register("chat", () => {
   delay(() => {
-    world = undefined
+    if (!world) return
     findWorld()
     setRegisters()
   }, 5000)

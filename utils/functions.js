@@ -1,3 +1,5 @@
+import { consts } from "./constants";
+
 export function fixLength(x) {
   if (x.toString().length === 2) return x;
   else return `0${x}`;
@@ -32,3 +34,25 @@ export function setRegisters() {
 delay(() => {
   setRegisters()
 }, 1000);
+
+export function holding(EA = false, type = "", string = "") {
+  try {
+    let item = Player.getHeldItem();
+    if (!item) return
+    if (EA) item = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")
+    if (type) item = item[`get${ type }`](string)
+    return item
+  } catch (err) {ChatLib.chat(`${consts.PREFIX} &4${err}`)}
+}
+
+export function getVec3Pos(vec) {
+  return [vec.field_72450_a, vec.field_72448_b, vec.field_72449_c]
+}
+
+export function getVec3iPos(vec) {
+  return [~~vec.field_177962_a, ~~vec.field_177960_b, ~~vec.field_177961_c]
+}
+
+export function getRGB1(setting) {
+  return [setting.getRed() / 255, setting.getGreen() / 255, setting.getBlue() / 255]
+}

@@ -612,27 +612,6 @@ class Settings {
     category: 'QOL'
   })
   highlightColor = Color.GREEN;
-
-  @SwitchProperty({
-    name: "Render Armor Bar",
-    description: "Toggle on to remove armor bar above health",
-    category: "QOL"
-  })
-  armor = false
-  
-  @SwitchProperty({
-    name: "Render Food Bar",
-    description: "Toggle on to remove food bar",
-    category: "QOL"
-  })
-  food = false
-    
-  @SwitchProperty({
-    name: "Disable Falling Blocks",
-    description: "Removes falling blocks",
-    category: "QOL"
-  })
-  falling = false  
     
   @SwitchProperty({
     name: "Tracks Damage Armor Stands",

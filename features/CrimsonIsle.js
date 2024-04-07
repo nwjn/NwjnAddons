@@ -2,20 +2,24 @@ import settings from "../config";
 import { registerWhen } from "../utils/functions";
 import { getWorld } from "../utils/world";
 
+function coords() {
+  return `x: ${ ~~Player.getX() }, y: ${~~Player.getY()}, z: ${~~Player.getZ()}`
+}
+
 registerWhen(register("chat", () => {
-  ChatLib.say(`/pc x: ${ Math.round(Player.getX())}, y: ${Math.round(Player.getY())}, z: ${Math.round(Player.getZ())} [NwjnAddons] Lord Jawbus!!!`)
+  ChatLib.say(`/pc ${coords()} [NwjnAddons] Lord Jawbus!!!`)
 }).setCriteria("You have angered a legendary creature... Lord Jawbus has arrived."), () => getWorld() == "Crimson Isle" && settings.jawbus);
 
 registerWhen(register("chat", () => {
-  ChatLib.say(`/pc x: ${ Math.round(Player.getX())}, y: ${Math.round(Player.getY())}, z: ${Math.round(Player.getZ())} [NwjnAddons] Thunder!!!`)
+  ChatLib.say(`/pc ${coords()} [NwjnAddons] Thunder!!!`)
 }).setCriteria("You hear a massive rumble as Thunder emerges."), () => getWorld() == "Crimson Isle" && settings.thunder);
 
 registerWhen(register("chat", () => {
-  ChatLib.say(`/pc x: ${ Math.round(Player.getX())}, y: ${Math.round(Player.getY())}, z: ${Math.round(Player.getZ())} [NwjnAddons] Plhlegblast!!!`)
+  ChatLib.say(`/pc ${coords()} [NwjnAddons] Plhlegblast!!!`)
 }).setCriteria("WOAH! A Plhlegblast appeared."), () => getWorld() == "Crimson Isle" && settings.plhlegblast);
 
 registerWhen(register("chat", () => {
-  ChatLib.say(`/pc x: ${ Math.round(Player.getX())}, y: ${Math.round(Player.getY())}, z: ${Math.round(Player.getZ())} [NwjnAddons] Vanquisher!!!`)
+  ChatLib.say(`/pc ${coords()} [NwjnAddons] Vanquisher!!!`)
 }).setCriteria("A Vanquisher is spawning nearby!"), () => settings.announceVanqs && getWorld() == "Crimson Isle");
 
 
@@ -23,7 +27,7 @@ let totalDamage = 0
 registerWhen(register("step", () => {
   if (!World.isLoaded()) return
   Scoreboard.getLines().forEach(line => {
-    line = ChatLib.removeFormatting(line.toString());
+    line = line.toString().removeFormatting()
     if (line.includes("Boss: ")) {
       line = line.replace(/(\W|[a-zA-Z]+)/g, "")
       totalDamage = parseInt(line)
@@ -175,14 +179,18 @@ registerWhen(register("chat", (fish, rarity, event) => {
   fish = fish.substring(fish.indexOf(" ") + 1)
   fish = fish.replaceAll(/\W/g, "")
   if (!(fish in fishes)) return
-  let ghoti = fishes[fish]
+  const ghoti = fishes[fish]
   switch (rarity) {
     case "BRONZE": ghoti.bronze++; break;
     case "SILVER": ghoti.silver++; break;
     case "GOLD": ghoti.gold++; break;
     case "DIAMOND": ghoti.diamond++; break;
   }
-  let chat = ChatLib.getChatMessage(event, true)
+  /*
+  TODO: test
+  ghoti[rarity.toLowerCase()]++
+  */
+  const chat = ChatLib.getChatMessage(event, true)
   cancel(event)
   ChatLib.chat(`${chat} &8${ghoti.bronze}&r-&7${ghoti.silver}&r-&6${ghoti.gold}&r-&b${ghoti.diamond} &d(${ghoti.bronze + ghoti.silver + ghoti.gold + ghoti.diamond})`)
 }).setCriteria("TROPHY FISH! You caught ${fish} ${rarity}."), () => getWorld() == "Crimson Isle" && settings.fish);

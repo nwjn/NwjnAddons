@@ -18,4 +18,4 @@ export const EntityPlayer = Java.type("net.minecraft.client.entity.EntityOtherPl
 export const EntityMagmaCube = Java.type(`net.minecraft.entity.monster.EntityMagmaCube`)
 export const EntityGiant = Java.type("net.minecraft.entity.monster.EntityGiantZombie");
 export const SMA = Java.type('net.minecraft.entity.SharedMonsterAttributes');
-export const PLAYERMP = Player.asPlayerMP()
+export const PLAYERMP = Player.asPlayerMP();

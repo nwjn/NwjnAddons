@@ -22,8 +22,8 @@ import { setRegisters } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
 import { setMobHighlight } from "./features/Bestiary";
-data.autosave()
 
+let changes;
 register("command", (arg) => {  
   if (!arg) {
     settings.openGUI();
@@ -35,17 +35,19 @@ register("command", (arg) => {
     case "gui":
       openGUI();
       break;
+    case "ver":
     case "version":
       ChatLib.chat(`${ consts.PREFIX } &bYou are currently on version &e${ version }`);
       break;
+    case "changes":
     case "changelog":
       ChatLib.chat(`${ consts.PREFIX } &eChangelog:\n&r${ changes }`);
       break;
     case "party":
-      ChatLib.chat(`${ consts.PREFIX } &eParty Command List:\n&cNote: run the command by adding the . symbol in front of a party message\n.time => shows the players current time\n.coords => sends the coords of the player\n.stats => sends the stats of the player\n.profile => sends the profile fruit name of the profile\n.wealth => sends the player's current financial status\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.raider => puts party into infernal kuudra\n.dropper => puts party into dropper game`);
+      ChatLib.chat(`${ consts.PREFIX } &eParty Command List:\n&r.time => shows the players current time\n.coords => sends the coords of the player\n.stats => sends the stats of the player\n.profile => sends the profile fruit name of the profile\n.wealth => sends the player's current financial status\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.raider => puts party into infernal kuudra\n.dropper => puts party into dropper game`);
       break;
     case "commands":
-      ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/fakepb <p1> <p2> <p3> <p4> <tokens> => makes a fake kuudra complete msg\n/calc <equation> => must use spaces but simple calculator with systems of equations\n/deal => trades player in front of you without needing to type name\n/avg <...args> => gets the avg of the numbers after the command`);
+      ChatLib.chat(`${ consts.PREFIX } &eCommand List:&r\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/calc <equation> => calculates\n/deal => trades player in front of you without needing to type name`);
       break;
     case "reload":
       setRegisters();
@@ -59,11 +61,15 @@ register("command", (arg) => {
 if (data.first_time) {
   data.first_time = false; 
   data.save();
+
   ChatLib.chat("");
-  new TextComponent(ChatLib.getCenteredText(`${ consts.PREFIX }`)).chat();
-  new TextComponent(ChatLib.getCenteredText(`&aUse '/nwjn' For settings!`)).chat();
-  new TextComponent(ChatLib.getCenteredText(`&aUse '/nwjn help' For commands!`)).chat();
-  new TextComponent(ChatLib.getCenteredText(`&aDM 'nwjn' on discord for questions!`)).chat()
+  ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------`)
+  ChatLib.chat(`&aUse '/nwjn' For settings!`)
+  ChatLib.chat(`&aUse '/nwjn commands' For commands!`);
+  new TextComponent(`&aClick &3here&a for discord link!`)
+    .setClickAction("run_command")
+    .setClickValue(`/ct copy https://discord.gg/3S3wXpC4gE`)
+    .chat()
   ChatLib.chat("");
 };
 
@@ -75,7 +81,7 @@ register("worldLoad", () => {
     let ctVersionArray = (res.data.releases[0].releaseVersion).split('.'),
     currentVersionArray = version.split('.'),
     newVersion = false
-    changes = res.data.releases[0].changelog
+    changes = res.data.releases[0].changelog.toString()
     for(let i = ctVersionArray.length; i >= 0; i--)
     {
       if (ctVersionArray[i] > currentVersionArray[i])
@@ -101,6 +107,28 @@ register("worldLoad", () => {
   })
 })
 
+if (data.version != version) {
+  ChatLib.chat("");
+  ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------`)
+  ChatLib.chat(`&eHey, it looks like Chattriggers updated NwjnAddons while you were away.`)
+  new TextComponent(`&eClick &3here&e to view what you missed!`)
+      .setClickAction("run_command")
+      .setClickValue(`/nwjn changelog`)
+      .chat()
+  ChatLib.chat("");
+  data.version = version; data.save();
+}
+
+register("serverConnect", () => {
+  // TODO: TEST
+  setTimeout(() => {
+    new TextComponent(`${ consts.PREFIX } &d&lBROADCAST&r: Click this message and join the discord!`)
+      .setClickAction("run_command")
+      .setClickValue(`/ct copy https://discord.gg/3S3wXpC4gE`)
+      .chat()
+  }, 3000)
+})
+
 register("guiClosed", (event) => {
   if (event?.toString()?.includes("vigilance")) {
     setRegisters()
@@ -108,33 +136,19 @@ register("guiClosed", (event) => {
   }
 });
 
-
-/*
-- remove pearlbox size, align display, fresh size, and savehotbar
-- added .dropper
-- removed .build
-- new math commands
-- Note: must have spaces between symbols and numbers
-- 1: /calc <equation>
-- 2: /stacks <num>
-- 3: /avg <...nums>
-- 4: /deal
-- Note: trades player in front of u without having to type ign
-*/
-
-// TODO: party and dm message replying using msg id
+// TODO: click a dm message to start typing to them
 // TODO: find fix for double death animation?
 // TODO: on screen armor and equipment display
 
 register("chat", (pet) => {
   data.pet = pet
   data.save()
-}).setCriteria("Autopet equipped your [${*}] ${pet}! VIEW RULE");
+}).setCriteria("&cAutopet &eequipped your &7[${*}] ${pet}&e! &a&lVIEW RULE&r");
 
 register("chat", (pet) => {
   data.pet = pet
   data.save()
-}).setCriteria("You summoned your ${pet}!");
+}).setCriteria("&r&aYou summoned your &r${pet}&r&a!&r");
 
 register("chat", () => {
   data.pet = "None"
@@ -142,3 +156,15 @@ register("chat", () => {
 }).setCriteria("You despawned your ${*}!");
 
 // TODO: timers to use ticks instead of steps
+// TODO: uuid prio calculator
+// TODO: click in chat to translate
+// TODO: add better nausea effect to not be cancer inducing
+
+
+/*
+* Changelog
+*[v(version)] - (release date)
+- improved hitbox visuals
+- fixed poison display
+- made a discord server (please vote on the polls for changes)
+*/

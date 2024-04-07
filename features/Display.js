@@ -1,7 +1,7 @@
 import settings from "../config";
 import { data } from "../utils/data";
-import { EntityPlayer, consts } from "../utils/constants";
-import { delay, registerWhen } from "../utils/functions";
+import { EntityPlayer, PLAYERMP, consts } from "../utils/constants";
+import { delay, registerWhen, holding } from "../utils/functions";
 import { Overlay } from "../utils/overlay";
 import { data } from "../utils/data";
 import RenderLib from "../../RenderLib";
@@ -14,6 +14,14 @@ registerWhen(register("chat", () => {
   if (settings.nextVisitor == 1) getTime = 720
   else if (settings.nextVisitor == 2) getTime = 900
 }).setCriteria("${*} has arrived on your Garden!"), () => settings.nextVisitor != 0);
+
+/*
+TODO: TEST & REPLACE
+let getTime = 0
+registerWhen(register("chat", () => {
+  getTime = settings.nextVisitor == 1 ? 720 : 900
+}).setCriteria("${*} has arrived on your Garden!"), () => settings.nextVisitor);
+*/
 
 const legionExample = `&eLegion: &cAlone :(`
 const legionOverlay = new Overlay("legion", ["all"], () => true, data.legionL, "moveLegion", legionExample);
@@ -35,6 +43,11 @@ registerWhen(register("renderWorld", () => {
   else {
     legionOverlay.message = `&eLegion: &cAlone :(`
   }
+  /*
+  // TODO: TEST & REPLACE
+  const players = World.getAllEntitiesOfType(EntityPlayer.class).filter(e => PLAYERMP.distanceTo(e) < 30 && World.getPlayerByName(e.getName())?.getPing() == 1).length + 1
+  legionOverlay.message = players > 1 ? `&eLegion: &a${players}` : `&eLegion: &cAlone :(`
+  */
 }), () => settings.legion);
 
 const gyroExample = `&6Gravity Storm: &a0s`
@@ -50,7 +63,12 @@ registerWhen(register("chat", (percent) => {
 registerWhen(register("clicked", (x, y, button, down) => {
   let holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")
   if (holding?.getString("id") != "GYROKINETIC_WAND" || button != 0 || down != true || gyroLeft > 0 || Player.getContainer() == undefined || Client.isInGui()) return
-  gyroUsed = new Date().getTime()
+  gyroUsed = Date.now()
+  /*
+  TODO: TEST & REPLACE
+  if (holding(true, "String", "id") != "GYROKINETIC_WAND" || button || !down || gyroLeft > 0 || !Player.getContainer() || Client.isInGui()) return
+  gyroUsed = Date.now()
+  */
 }), () => settings.gravityStorm)
 
 const manaExample = `&cFero: &a0%\n&cStrong: &a0%`
@@ -76,14 +94,13 @@ registerWhen(register("chat", (player, mana) => {
 }).setCriteria("Party > ${name}: Used ${mana} mana${*}"), () => settings.manaEnchant)
 
 registerWhen(register("renderWorld", () => {
-  let holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")
-  if (!holding?.getString("id")?.includes("END_STONE_")) return
+  if (holding(true, "String", "id") != "END_STONE_SWORD") return
   World.getAllEntitiesOfType(EntityPlayer.class).forEach(player => {
     if (Player.asPlayerMP().distanceTo(player) > 5) return
       let ping = World.getPlayerByName(player.getName())?.getPing()
     if (ping != 1) return
     if (Player.asPlayerMP().canSeeEntity(player)) {
-      RenderLib.drawInnerEspBox(player.getX(), player.getY(), player.getZ(), 1, 2, 1, 0.667, 0, 0.25, true)
+      RenderLib.drawInnerEspBox(player.getRenderX(), player.getRenderY(), player.getRenderZ(), 1, 2, 1, 0.667, 0, 0.25, true)
     }
   }) 
 }), () => settings.endstone);
@@ -116,7 +133,7 @@ register("step", () => {
       World.playSound("note.pling", 5, 1)
     }
   }
-  let newTime = new Date().getTime()
+  let newTime = Date.now()
   if (settings.gravityStorm) {
     gyroLeft = gyroCD - (newTime - gyroUsed) / 1000
 

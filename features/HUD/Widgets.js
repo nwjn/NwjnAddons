@@ -4,20 +4,18 @@ import { Overlay } from "../../utils/overlay";
 
 // let a = 0
 function widget(find, overlay) {
-  try {
-    overlay.message = ""
-    if (!settings[`${overlay.setting}`] || !settings.widget) return
-    let tab = TabList.getNames()
-    const start = tab.findIndex(e => e.includes(find))
-    tab = tab.slice(start)
-    const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘)/g))|| e.removeFormatting().startsWith("               ")) && i)
-    tab = tab.slice(0, end)
-    overlay.message = tab.join("\n")
-    // if (find == "Powders:" & !a) {
-    //   tab.forEach(e => ChatLib.chat(e))
-    //   a++
-    // }
-  } catch (err) {}
+  overlay.message = ""
+  if (!settings[`${overlay.setting}`] || !settings.widget) return
+  let tab = TabList.getNames()
+  const start = tab.findIndex(e => e.includes(find))
+  tab = tab.slice(start)
+  const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘)/g))|| e.removeFormatting().startsWith("               ")) && i)
+  tab = tab.slice(0, end)
+  overlay.message = tab.join("\n")
+  // if (find == "Powders:" & !a) {
+  //   tab.forEach(e => ChatLib.chat(e))
+  //   a++
+  // }
 }
 
 const statsExample =
@@ -89,6 +87,7 @@ const commExample =
  &fJade Crystal Hunter: &c0%
  &fHard Stone Miner: &aDONE
  &fAmethyst Crystal Hunter: &c0%`;
+ // TODO: ADD NEW MINING ISLAND TO SET
 const commOverlay = new Overlay("comm", ["Crystal Hollows", "Dwarven Mines"], () => true, data.commL, "moveComm", commExample);
 
 const powderExample =
@@ -112,16 +111,18 @@ const customExample = `&e&lCustom Widget:`
 const customOverlay = new Overlay("custom", ["all"], () => true, data.customL, "moveCustom", customExample);
 
 register("step", () => {
-  widget("Stats:", statsOverlay)
-  widget("Pet:", petOverlay)
-  widget("Bestiary:", bestiaryOverlay)
-  widget("Crop Milestones:", cropOverlay)
-  widget("Pests:", pestOverlay)
-  widget("Visitors:", visitorOverlay)
-  widget("Jacob's Contest:", contestOverlay)
-  widget("Commissions:", commOverlay)
-  widget("Powders:", powderOverlay)
-  widget("Trophy Fish:", trophyOverlay)
+  try {
+    widget("Stats:", statsOverlay);
+    widget("Pet:", petOverlay);
+    widget("Bestiary:", bestiaryOverlay);
+    widget("Crop Milestones:", cropOverlay);
+    widget("Pests:", pestOverlay);
+    widget("Visitors:", visitorOverlay);
+    widget("Jacob's Contest:", contestOverlay);
+    widget("Commissions:", commOverlay);
+    widget("Powders:", powderOverlay);
+    widget("Trophy Fish:", trophyOverlay);
 
-  widget(settings.widgetText, customOverlay)
+    widget(settings.widgetText, customOverlay);
+  } catch (err) {}
 }).setFps(2)

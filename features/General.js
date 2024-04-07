@@ -1,5 +1,5 @@
 import settings from "../config"
-import { delay, registerWhen, fixLength } from "../utils/functions"
+import { delay, registerWhen, fixLength, holding, getRGB1 } from "../utils/functions"
 import { getWorld } from "../utils/world";
 import { data } from "../utils/data";
 import RenderLib from "RenderLib"
@@ -51,7 +51,7 @@ function formatWaypoints(waypoints, r, g, b) {
 
 register("step", () => {
   formatted = [];
-  formatWaypoints(chatWaypoints, settings.waypointColor.getRed() / 255, settings.waypointColor.getGreen() / 255, settings.waypointColor.getBlue() / 255);
+  formatWaypoints(chatWaypoints, ...getRGB1(settings.waypointColor));
 }).setFps(5);
 
 function renderWaypoint(waypoints) {
@@ -123,119 +123,91 @@ register("renderSlot", (slot) => {
   data.save()
 })
 
-registerWhen(register("chat", (player, command, event) => {
+registerWhen(register("chat", (player, command) => {
   player = player.removeFormatting().substring(player.indexOf(" ") + 1);
   delay(() => {
-    if (command.includes("time")) {
-      let hours = new Date().getHours();
-      let minutes = new Date().getMinutes();
-      let seconds = new Date().getSeconds();
-      ChatLib.say(`/party chat ${ fixLength(hours) }:${ fixLength(minutes) }:${ fixLength(seconds) }`);
+    command = command.toLowerCase()
+    switch (command) {
+      case "time":
+        ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
+      case "coord":
+      case "loc":
+      case "coords":
+        ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
+      case "server":
+      case "area":
+        const server = TabList.getNames().find(e => e.removeFormatting().startsWith(" Server: "))?.removeFormatting()?.substring(9);
+        ChatLib.command(`pc ${ getWorld() } | ${ server }`); break;
+      case "pow":
+      case "power":
+        ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
+      case "pet":
+        ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
+      case "build":
+        ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
+      case "t5":
+      case "raider":
+        ChatLib.command(`joininstance kuudra_infernal`); break;
+      case "dropper":
+        ChatLib.command(`play arcade_dropper`); break;
+      case "warp":
+        ChatLib.command(`p warp`); break;
+      case "transfer":
+      case "pt":
+        ChatLib.command(`party transfer ${ player }`); break;
+      case "allinvite":
+      case "allinv":
+      case "invite":
+      case "inv":
+        ChatLib.command(`/p settings allinvite`); break;
     }
-    else if (command.includes("coords")) {
-      ChatLib.say(`/party chat x: ${ Math.round(Player.getX())}, y: ${Math.round(Player.getY())}, z: ${Math.round(Player.getZ())}`)
-    }
-    else if (command.includes("stats")) {
-      if (getWorld() == "The Rift" || getWorld() == "Garden") return
-      let stats = "Unknown"
-      TabList.getNames().forEach(name => {
-        name = ChatLib.removeFormatting(name)
-        if (name.includes("Speed: ✦")) stats = `${name.substring(name.lastIndexOf(" ") + 1)}`
-        if (name.includes("Strength: ❁")) stats = stats + " | " + `${name.substring(name.lastIndexOf(" ") + 1)}`
-        if (name.includes("Crit Chance: ☣")) stats = stats + " | " + `${name.substring(name.lastIndexOf(" ") + 1)}`
-        if (name.includes("Crit Damage: ☠")) stats = stats + " | " + `${name.substring(name.lastIndexOf(" ") + 1)}`
-        if (name.includes("Attack Speed: ⚔")) stats = stats + " | " + `${name.substring(name.lastIndexOf(" ") + 1)}`
-      })
-      ChatLib.say(`/party chat ${stats}`)
-    }
-    else if (command.includes("profile")) {
-      let profile = "Unknown"
-      TabList.getNames().forEach(tab => {
-        if (tab.includes("Profile: ")) profile = tab
-      })
-      ChatLib.say(`/party chat ${profile.removeFormatting()}`)
-    }
-    else if (command.includes("wealth")) {
-      let bank = "Unknown"
-      let purse = "Unknown"
-      TabList.getNames().forEach(tab => {
-        if (tab.includes("Bank: ")) bank = tab.removeFormatting()
-      })
-      Scoreboard.getLines().forEach(line => {
-        if (line.toString().includes("Purse: ")) purse = line.toString().removeFormatting()
-      })
-      ChatLib.say(`/party chat ${bank} | ${purse}`)
-    }
-    else if (command.includes("power")) {
-      ChatLib.say(`/party chat Stone: ${data.power} | Tuning: ${data.tuning} | Enrich: ${data.enrich} | MP: ${data.mp}`)
-    }
-    else if (command.includes("warp")) {
-      ChatLib.say(`/p warp`)
-    }
-    else if (command.includes("transfer")) {
-      ChatLib.say(`/party transfer ${player}`)
-    }
-    else if (command.includes("allinv")) {
-      ChatLib.say(`/p settings allinvite`)
-    }
-    else if (command.includes("pet")) {
-      ChatLib.say(`/party chat ${data.pet}`)
-    }
-    else if (command.includes("version")) {
-      ChatLib.say(`/party chat Version: ${version}`)
-    }
-    else if (command.includes("raider")) {
-      ChatLib.command(`joininstance kuudra_infernal`)
-    }
-    else if (command.includes("dropper")) {
-      ChatLib.command(`play arcade_dropper`)
-    }
+    // TODO: make leader check for leader commands
   }, 200);
 }).setCriteria("Party > ${player}: .${command}"), () => settings.party)
 
 let reaperUsed = 0
 registerWhen(register("soundPlay", () => {
   let armor = Player.getInventory()?.getStackInSlot(38)?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
-  if (armor == "REAPER_CHESTPLATE") reaperUsed = new Date().getTime()
+  if (armor == "REAPER_CHESTPLATE") reaperUsed = Date.now()
 }).setCriteria("mob.zombie.remedy"), () => settings.reaper);
 
 registerWhen(register("renderWorld", () => {
   World.getAllEntitiesOfType(EntityArmorStand.class).forEach(stand => {
     let name = ChatLib.removeFormatting(stand.getName())
-    if (Player.asPlayerMP().canSeeEntity(stand) && name.includes("҉") && name.includes("Bloodfiend")) RenderLib.drawEspBox(stand.getX(), stand.getY() - 2, stand.getZ(), 1, 2, 1, 0.2, 0.46667, 1, true)
+    if (Player.asPlayerMP().canSeeEntity(stand) && name.includes("҉") && name.includes("Bloodfiend")) RenderLib.drawEspBox(stand.getRenderX(), stand.getRenderY() - 2, stand.getRenderZ(), 1, 2, 1, 0.2, 0.46667, 1, true)
   })
 }), () => getWorld() == "The Rift" && settings.steakAble);
 
-registerWhen(register("renderEntity", (entity, position, ticks, event) => {
-  if (entity.getClassName() != "EntityArmorStand" || !entity?.getName()?.removeFormatting()?.includes(" 0/")) return
-  cancel(event)
-}), () => settings.dead);
-
 registerWhen(register("entityDeath", (entity) => {
-  entity.getEntity().func_70106_y()
+  entity = entity.getEntity()
+  entity.func_70106_y()
+  // TODO: try 0.5, 0.5, 0.5
+  const tag = World.getWorld().func_72872_a(EntityArmorStand.class, entity.func_174813_aQ().func_72314_b(1, 1, 1)).filter(e => e.toString().includes("§c❤"))
+  tag.forEach(tag => tag.func_70106_y())
 }), () => settings.dead)
 
 let blockBroken = 0
 let time = 0
 registerWhen(register("blockBreak", (block) => {
-  if (!block.toString().includes("type=minecraft:log") || Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id") != "TREECAPITATOR_AXE") return;
-  if (time <= 0) blockBroken = new Date().getTime()
+  if (!block.toString().includes("type=minecraft:log") || holding(true, "String", "id") != "TREECAPITATOR_AXE") return;
+  if (time <= 0) blockBroken = Date.now()
 }), () => settings.treecap && (getWorld() == "Hub" || getWorld() == "The Park"))
 
 registerWhen(register("renderOverlay", () => {
   if (settings.reaper) {
-    let reaperTime = new Date().getTime()
+    let reaperTime = Date.now()
     reaperTime = 6 - (reaperTime - reaperUsed) / 1000
     if (reaperTime >= 0) Renderer.drawString(`${ reaperTime.toFixed(3) }`, Renderer.screen.getWidth() / 2 - 13, Renderer.screen.getHeight() / 2 + 10)
   }
   if (settings.treecap) {
     let cd = 2
     if (data.pet.includes("Monkey")) cd = 1
-    time = new Date().getTime()
+    time = Date.now()
     time = cd - (time - blockBroken) / 1000
     if (time >= 0) Renderer.drawString(`${ time.toFixed(3) }`, Renderer.screen.getWidth() / 2 - 13, Renderer.screen.getHeight() / 2 - 15)
   }
 }), () => (settings.treecap && (getWorld() == "Hub" || getWorld() == "The Park")) || (settings.reaper));
+// TODO (TEST & REPLACE): ["Hub", "The Park"].includes(getWorld())
 
 let events = []
 registerWhen(register("actionBar", (event) => {

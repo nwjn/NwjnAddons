@@ -2,6 +2,7 @@ import PogObject from "PogData"
 
 export let data = new PogObject("NwjnAddons", {
   "first_time": true,
+  "modVer": "0.8.0",
   "power": "Unknown",
   "tuning": "Unknown",
   "enrich": "Unknown",
@@ -12,7 +13,7 @@ export let data = new PogObject("NwjnAddons", {
   "mobsHighlight": {},
   "standList": [],
   "playerList": [],
-  "lastMini": [],
+  "lastMinis": [],
   "flare": {
     "kills": 0,
     "xp": 0,

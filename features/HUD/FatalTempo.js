@@ -1,7 +1,7 @@
 import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
-import { registerWhen } from "../../utils/functions";
+import { registerWhen, holding } from "../../utils/functions";
 import { getWorld } from "../../utils/world";
 
 const ftExample = `Fatal Tempo: 0%`;
@@ -10,20 +10,15 @@ const ftOverlay = new Overlay("ft", ["all"], () => true, data.ftL, "moveFt", ftE
 let ftHits = [];
 let time = 0
 let hits = 1
-const ftHitsNum = () => {
+
+function ftHitsNum() {
   return ftHits.length * hits;
-};
-const ftPercent = (ftLvl) => {
-  const percent = ftHitsNum() * ftLvl * 10;
+}
+
+function ftPercent(level) {
+  const percent = ftHitsNum() * level * 10;
   return percent <= 200 ? percent : 200;
 }
-/*
-TODO:
-const ftPercent = (ftLvl) => {
-  const percent = ftHits.length * hits * ftLvl * 10;
-  return percent <= 200 ? percent : 200;
-}
-*/
 
 registerWhen(register("actionBar", (stacks) => {
   hits = getWorld() == "Kuudra" ? (stacks == 10 ? 5 : 3) : 1;
@@ -37,8 +32,8 @@ registerWhen(register("renderOverlay", () => {
   percent = ftPercent(ftLevel);
   countdown = countdown < 0 ? countdown : 3 - (countdown - time) / 1000;
   const color = (countdown > 0 && countdown < 1) ? "&c" : "&f";
+  
   if (percent == 200 && countdown < 3) {
-    // TODO: define renderer.screen as constant
     const option = settings.ftTimer
     const x = (Renderer.screen.getWidth() / 2 - 13 - (option - 1) * 9) / option
     const y = (Renderer.screen.getHeight() / 2 - 15 - (option - 1) * 5.5) / option
@@ -47,27 +42,23 @@ registerWhen(register("renderOverlay", () => {
   }
 }), () => settings.ft);
 
-registerWhen(register("soundPlay", (pos, name) => {
-  if ((getWorld() == "Kuudra" && name.toString() != "random.bow") || (getWorld() != "Kuudra" && name.toString() != "random.successful_hit")) return
-  const holding = Player.getHeldItem()
-  if (holding.getRegistryName() != "minecraft:bow") return
-  const ftLvl = holding?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes").getCompoundTag("enchantments").getTag("ultimate_fatal_tempo");
+function addHits() {
+  if (holding(true, "String", "id") != "TERMINATOR") return
+  const ftLvl = holding(true).getCompoundTag("enchantments").getTag("ultimate_fatal_tempo");
   if (ftLvl) {
-    time = new Date().getTime();
+    time = Date.now();
     ftLevel = ftLvl;
     ftHits.push(time);
   }
-}), () => settings.ft);
+}
+registerWhen(register("soundPlay", addHits).setCriteria("random.bow"), () => settings.ft && getWorld() == "Kuudra");
+
+registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings.ft && getWorld() != "Kuudra");
 
 registerWhen(register("step", () => {
-  if(ftHitsNum() > 0 && new Date().getTime() - ftHits[ftHits.length - 1] >= 3000)ftHits = [];
-  countdown = new Date().getTime()
-  /* 
-  TODO:
-  const time = new Date().getTime()
+  const time = Date.now()
   if (ftHits && time - ftHits[ftHits.length - 1] >= 3000) ftHits = [];
   countdown = time;
-  */
 }).setFps(50), () => settings.ft);
 
 registerWhen(register("step", () => {

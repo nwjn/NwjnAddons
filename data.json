@@ -1,12 +1,14 @@
 {
+    "1495": 1495,
     "first_time": false,
-    "power": "Bizarre",
+    "modVer": "0.8.0",
+    "power": "Warrior",
     "tuning": "155☠",
-    "enrich": "46 on Magic Find",
+    "enrich": "46 on Crit Chance",
     "mp": "1,552",
-    "pet": "Golden Dragon",
-    "gummy": -1,
-    "wisp": -1,
+    "pet": "&6Blaze",
+    "gummy": 0,
+    "wisp": 0,
     "mobsHighlight": {},
     "standList": [
         ""
@@ -14,7 +16,7 @@
     "playerList": [
         ""
     ],
-    "lastMini": [],
+    "lastMinis": [],
     "flare": {
         "kills": 0,
         "xp": 0,
@@ -56,8 +58,8 @@
         1
     ],
     "legionL": [
-        381,
-        197,
+        4.333343505859375,
+        102.85768127441406,
         1
     ],
     "gyroL": [
@@ -129,5 +131,11 @@
         473.0000114440918,
         15.3118896484375,
         1
-    ]
+    ],
+    "lastMini": [],
+    "-1": -1,
+    "false": false,
+    "true": true,
+    "arg": 1465,
+    "version": "0.8.1"
 }

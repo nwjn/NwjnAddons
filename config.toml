@@ -1,6 +1,6 @@
 
 [general]
-	rend_arrows = true
+	rend_arrows = false
 	waypoint_color = "255,255,0,255"
 	chat_type_waypoint_rendering = 0
 	stops_entity_death_animation = true
@@ -42,7 +42,7 @@
 		pest_widget = false
 		commission_widget = false
 		crop_milestone_widget = false
-		custom_widget = true
+		custom_widget = false
 		visitor_widget = false
 		jacob_widget = false
 		bestiary_widget = true
@@ -60,22 +60,22 @@
 		highlight_players_in_align_radius = false
 
 	[hud.legion]
-		legion_display = true
+		legion_display = false
 
 	[hud.mana]
 		mana_enchant_calc = false
-		endstone_sword_party_notify = false
+		endstone_sword_party_notify = true
 		cumulative_fero_mana = 0
-		endstone_sword_mana_drain_range = false
+		endstone_sword_mana_drain_range = true
 		cumulative_strong_mana = 0
 
 	[hud.blaze]
-		blaze_display = true
+		blaze_display = false
 
 	[hud.fatal_tempo]
-		fatal_tempo_settings = 0
-		fatal_tempo_timer_scale = 1.0
-		fatal_tempo_display = false
+		fatal_tempo_settings = 1
+		fatal_tempo_timer_scale = 1.2
+		fatal_tempo_display = true
 
 	[hud.bestiary]
 		mob_highlight_counter = false
@@ -94,7 +94,7 @@
 		mage_gyro = false
 
 [bestiary]
-	mob_esp = "MagmaCube"
+	mob_esp = ""
 	armor_stand_esp_color = "255,0,255,0"
 	armor_stand_names_esp = ""
 	player_esp_color = "255,255,0,255"
@@ -105,7 +105,7 @@
 
 [crimson_isle]
 	announce_vanquishers = true
-	trophy_fish_session_counter = true
+	trophy_fish_session_counter = false
 	announce_jawbus = false
 	announce_plhlegblasts = false
 	announce_thunder = false
@@ -116,10 +116,10 @@
 	agro_range_color = "255,255,0,0"
 	totem_range = false
 	gyro_color_opacity = 0.5
-	agro_range = false
+	agro_range = true
 	agro_color_opacity = 0.5
 	removed_boss_dialouge = true
-	tracks_damage_armor_stands = true
+	tracks_damage_armor_stands = false
 	totem_color_opacity = 0.25
 	totem_range_options = 0
 	gyro_range_color = "255,255,0,255"

@@ -1,5 +1,5 @@
 import settings from "../config";
-import { registerWhen } from "../utils/functions";
+import { registerWhen, getRGB1 } from "../utils/functions";
 import RenderLib from "../../RenderLib";
 
 registerWhen(register("chat", (msg) => {
@@ -49,11 +49,11 @@ registerWhen(register('drawBlockHighlight', (pos, event) => {
   return cancel(event)
 }), () => settings.highlight)
 
-registerWhen(register('renderWorld', (pticks) => {
-  if (block === null || block === undefined) return
+registerWhen(register('renderWorld', () => {
+  if (!block) return
   try {
     if (['Water', 'Lava'].includes(block.type.getName())) return
-    RenderLib.drawEspBox(block.x + .5, block.y, block.z + .5, getSize('width'), getSize('height'), settings.highlightColor.getRed() / 255, settings.highlightColor.getGreen() / 255, settings.highlightColor.getBlue() / 255, 1, false)
+    RenderLib.drawEspBox(block.x + .5, block.y, block.z + .5, getSize('width'), getSize('height'), ...getRGB1(settings.highlightColor), 1, false)
     block = null
   } catch(error) {}
 }), () => settings.highlight)
@@ -70,23 +70,10 @@ function getSize(type) {
   }
 }
 
-registerWhen(register("renderArmor", (event) => {
-  cancel(event)
-}), () => settings.armor);
-
-registerWhen(register("renderFood", (event) => {
-  cancel(event)
-}), () => settings.food);
-
-registerWhen(register("renderEntity", (entity, pos, pticks, event) => {
-  if (entity.getClassName() != "EntityFallingBlock") return
-  cancel(event)
-}), () => settings.falling);
-
-// TODO: armor display and equipment display
+// // TODO: armor display and equipment display
 // register("renderOverlay", () => {
-//   Player.getInventory().getStackInSlot(39).draw(50, 50, 1) // helm
-//   Player.getInventory().getStackInSlot(38).draw(50, 65, 1) // cp
-//   Player.getInventory().getStackInSlot(37).draw(50, 80, 1) // leg
-//   Player.getInventory().getStackInSlot(36).draw(50, 95, 1) // boot
+//   Player.armor?.getHelmet()?.draw(50, 50, 1)
+//   Player.armor?.getChestplate()?.draw(50, 65, 1)
+//   Player.armor?.getLeggings()?.draw(50, 80, 1)
+//   Player.armor?.getBoots()?.draw(50, 95, 1)
 // })
