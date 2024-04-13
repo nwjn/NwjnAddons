@@ -1,0 +1,70 @@
+{
+    "id": "minecraft:bow",
+    "Count": 1,
+    "tag": {
+        "ench": [],
+        "Unbreakable": 1,
+        "HideFlags": 254,
+        "display": {
+            "Lore": [
+                "§7Gear Score: §d1036 §8(4323)",
+                "§7Damage: §c+401 §e(+60) §8(+2,057.2)",
+                "§7Strength: §c+140 §e(+60) §6[+5] §9(+20) §8(+750.6)",
+                "§7Crit Chance: §c+65% §9(+60%) §8(+100.75%)",
+                "§7Crit Damage: §c+280% §8(+1,417.8%)",
+                "§7Bonus Attack Speed: §c+44% §8(+62%)",
+                "§7Ferocity: §a+5 §8(+7.75)",
+                "§7Shot Cooldown: §a0.35s",
+                "",
+                "§d§l§d§lFatal Tempo II§9, §9Chance IV§9, §9Cubism VI",
+                "§9Dragon Tracer V§9, §9Impaling III§9, §9Infinite Quiver X",
+                "§9Overload V§9, §9Piercing I§9, §9Power VII",
+                "§9Snipe III§9, §9Vicious V",
+                "",
+                "§7Shoots §b3 §7arrows at once.",
+                "§7Can damage endermen.",
+                "",
+                "§cDivides your §9☣ Crit Chance §cby 4!",
+                "",
+                "§6Ability: Salvation  §e§lLEFT CLICK",
+                "§7Can be casted after landing §63 §7hits.",
+                "§7§7Shoot a beam, penetrating up to §e5",
+                "§e§7enemies.",
+                "§7The beam always crits.",
+                "§8Soulflow Cost: §3§31⸎",
+                "",
+                "§dShortbow: Instantly shoots!",
+                "",
+                "§8§l* §8Co-op Soulbound §8§l*",
+                "§d§l§ka§r §d§l§d§lMYTHIC DUNGEON BOW §d§l§ka"
+            ],
+            "Name": "§dHasty Terminator §6✪§6✪§6✪§6✪§6✪§c➍"
+        },
+        "ExtraAttributes": {
+            "rarity_upgrades": 1,
+            "hot_potato_count": 15,
+            "dungeon_item": 1,
+            "modifier": "hasty",
+            "art_of_war_count": 1,
+            "upgrade_level": 9,
+            "id": "TERMINATOR",
+            "enchantments": {
+                "impaling": 3,
+                "chance": 4,
+                "ultimate_fatal_tempo": 2,
+                "vicious": 5,
+                "piercing": 1,
+                "infinite_quiver": 10,
+                "power": 7,
+                "snipe": 3,
+                "cubism": 6,
+                "aiming": 5,
+                "overload": 5
+            },
+            "uuid": "8b633801-de4c-4e92-9f14-cd9bc5481f26",
+            "donated_museum": 1,
+            "timestamp": 1683066180000
+        }
+    },
+    "Damage": 0
+}

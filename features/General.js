@@ -90,6 +90,7 @@ registerWhen(register("chat", (player, spacing, x, y, z) => {
   delay(() => {
     if (chatWaypoints[0][0].equals(player)) chatWaypoints.shift()
   }, settings.waypoint * time);
+  // todo: allow for info after waypoint
 }).setCriteria("${player}&f${spacing}x: ${x}, y: ${y}, z: ${z}&r"), () => settings.waypoint != 0);
 
 
@@ -132,6 +133,7 @@ registerWhen(register("chat", (player, command) => {
         ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
       case "coord":
       case "loc":
+      case "location":
       case "coords":
         ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
       case "server":
@@ -150,16 +152,18 @@ registerWhen(register("chat", (player, command) => {
         ChatLib.command(`joininstance kuudra_infernal`); break;
       case "dropper":
         ChatLib.command(`play arcade_dropper`); break;
+      case "pw":
       case "warp":
         ChatLib.command(`p warp`); break;
       case "transfer":
       case "pt":
+      case "ptme":
         ChatLib.command(`party transfer ${ player }`); break;
       case "allinvite":
       case "allinv":
       case "invite":
       case "inv":
-        ChatLib.command(`/p settings allinvite`); break;
+        ChatLib.command(`p settings allinvite`); break;
     }
     // TODO: make leader check for leader commands
   }, 200);
@@ -189,7 +193,7 @@ registerWhen(register("entityDeath", (entity) => {
 let blockBroken = 0
 let time = 0
 registerWhen(register("blockBreak", (block) => {
-  if (!block.toString().includes("type=minecraft:log") || holding(true, "String", "id") != "TREECAPITATOR_AXE") return;
+  if (!block.toString().includes("type=minecraft:log") || holding("String", "id") != "TREECAPITATOR_AXE") return;
   if (time <= 0) blockBroken = Date.now()
 }), () => settings.treecap && (getWorld() == "Hub" || getWorld() == "The Park"))
 
@@ -221,6 +225,17 @@ registerWhen(register("actionBar", (event) => {
 register("worldUnload", () => {
   events = []
 })
+/*
+todo: test & replace
+let lastText = "";
+  registerWhen(register("actionBar", (event) => {
+  let chat = ChatLib.getChatMessage(event, false)
+  chat = chat.substring(chat.indexOf("     "), chat.lastIndexOf("     "))
+  if (lastChat == chat) return
+  ChatLib.chat(chat)
+  lastChat = chat
+}).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp);
+*/
 
 let warp = false
 registerWhen(register("chat", () => {
@@ -250,7 +265,7 @@ registerWhen(register("chat", (event) => {
 
 let rendArrows = 0
 registerWhen(register("soundPlay", () => {
-  const holding = Player.getHeldItem().getRegistryName()
+  const holding = holding().getRegistryName()
   if (holding != "minecraft:bow" && holding != "minecraft:bone") return
   rendArrows++;
   if (rendArrows > 1) return;

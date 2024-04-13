@@ -88,13 +88,13 @@ const commExample =
  &fHard Stone Miner: &aDONE
  &fAmethyst Crystal Hunter: &c0%`;
  // TODO: ADD NEW MINING ISLAND TO SET
-const commOverlay = new Overlay("comm", ["Crystal Hollows", "Dwarven Mines"], () => true, data.commL, "moveComm", commExample);
+const commOverlay = new Overlay("comm", ["Crystal Hollows", "Dwarven Mines", "Mineshaft"], () => true, data.commL, "moveComm", commExample);
 
 const powderExample =
 `&9&lPowders:
  Mithril Powder: &26,531,123
  Gemstone Powder: &d32,365,321`;
-const powderOverlay = new Overlay("powder", ["Crystal Hollows", "Dwarven Mines"], () => true, data.powderL, "movePowder", powderExample);
+const powderOverlay = new Overlay("powder", ["Crystal Hollows", "Dwarven Mines", "Mineshaft"], () => true, data.powderL, "movePowder", powderExample);
 
 const trophyExample =
 `&6&lTrophy Fish:

@@ -1,4 +1,4 @@
-import { comma, consts } from "../utils/constants";
+import { comma, consts, EntityArmorStand } from "../utils/constants";
 import { holding } from "../utils/functions";
 
 register("command", () => {
@@ -10,12 +10,13 @@ register("command", () => {
   holding()?.getLore()?.forEach(line => {
     if (line.toString().includes("COMMON") || line.toString().includes("RARE") || line.toString().includes("EPIC") || line.toString().includes("LEGENDARY") || line.toString().includes("MYTHIC") || line.toString().includes("DIVINE") || line.toString().includes("SPECIAL")) rarity = line
   })
-  ChatLib.chat(`\nName: ${ holding()?.getName() }\nRegistry Name: ${ holding()?.getRegistryName() }\nSkyblock ID: ${ holding(true, "String", "id") }\nRarity: ${ rarity }\n`)
+  ChatLib.chat(`\nName: ${ holding()?.getName() }\nRegistry Name: ${ holding()?.getRegistryName() }\nSkyblock ID: ${ holding("String", "id") }\nRarity: ${ rarity }\n`)
 }).setName("itemInfo", true).setAliases("item");
 
 register("command", () => {
   const looking = Player.lookingAt()
 
+  // todo: instance of Entity
   if (!looking.toString().startsWith("Entity")) {
     ChatLib.chat(looking)
     return
@@ -51,6 +52,30 @@ register("command", (...args) => {
 register("command", () => {
   const looking = Player.lookingAt()
   if (looking?.getClassName() == "EntityOtherPlayerMP") ChatLib.command(`trade ${ looking?.getName() }`)
-  // TODO (TEST & REPLACE)
-  // if (looking instanceof EntityOtherPlayerMP) ChatLib.command(`trade ${ looking?.getName() }`)
+  // todo: instance of EntityPlayer.class
 }).setName("deal", true);
+
+register("command", (index) => {
+  const tab = TabList.getNames()[parseInt(index)]
+  ChatLib.chat(tab)
+}).setName("/tab");
+
+register("command", () => {
+  const nbt = Player.getHeldItem()?.getNBT()
+  FileLib.delete("NwjnAddons", "temp.json")
+  FileLib.write("NwjnAddons", "temp.json", JSON.stringify(nbt.toObject(), null, 4), true);
+}).setName("nbt");
+
+register("command", () => {
+  const corpses = World.getAllEntitiesOfType(EntityArmorStand.class).filter(a => a.getName() == "Armor Stand" && !a.isInvisible())
+  if (!corpses) return
+
+  let i = corpses.length
+  new Thread(() => {
+    while (i--) {
+      ChatLib.say(`/pc x: ${ ~~corpses[i].getX() }, y: ${ ~~corpses[i].getY() }, z: ${ ~~corpses[i].getZ() }`)
+      ChatLib.chat(i + 1)
+      Thread.sleep(500)
+    }
+  }).start()
+}).setName("sendCorpses")

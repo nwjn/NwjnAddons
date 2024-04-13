@@ -49,6 +49,7 @@ registerWhen(register('drawBlockHighlight', (pos, event) => {
   return cancel(event)
 }), () => settings.highlight)
 
+// todo: figure out why this shits on performance
 registerWhen(register('renderWorld', () => {
   if (!block) return
   try {

@@ -42,18 +42,31 @@ registerWhen(register("renderOverlay", () => {
   }
 }), () => settings.ft);
 
-function addHits() {
-  if (holding(true, "String", "id") != "TERMINATOR") return
-  const ftLvl = holding(true).getCompoundTag("enchantments").getTag("ultimate_fatal_tempo");
+// todo: figure out why breaking
+// function addHits() {
+//   if (holding("String", "id") != "TERMINATOR") return
+//   const ftLvl = holding("EA").getCompoundTag("enchantments").getTag("ultimate_fatal_tempo");
+//   if (ftLvl) {
+//     time = Date.now();
+//     ftLevel = ftLvl;
+//     ftHits.push(time);
+//   }
+// }
+// registerWhen(register("soundPlay", addHits).setCriteria("random.bow"), () => settings.ft && getWorld() == "Kuudra");
+
+// registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings.ft && getWorld() != "Kuudra");
+
+registerWhen(register("soundPlay", (pos, name) => {
+  if ((getWorld() == "Kuudra" && name.toString() != "random.bow") || (getWorld() != "Kuudra" && name.toString() != "random.successful_hit")) return
+  const holding = Player.getHeldItem()
+  if (holding.getRegistryName() != "minecraft:bow") return
+  const ftLvl = holding?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes").getCompoundTag("enchantments").getTag("ultimate_fatal_tempo");
   if (ftLvl) {
-    time = Date.now();
+    time = new Date().getTime();
     ftLevel = ftLvl;
     ftHits.push(time);
   }
-}
-registerWhen(register("soundPlay", addHits).setCriteria("random.bow"), () => settings.ft && getWorld() == "Kuudra");
-
-registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings.ft && getWorld() != "Kuudra");
+}), () => settings.ft);
 
 registerWhen(register("step", () => {
   const time = Date.now()

@@ -61,12 +61,11 @@ registerWhen(register("chat", (percent) => {
 }).setCriteria("[Mage] Cooldown Reduction ${*}% -> ${percent}%"), () => settings.mageCD)
 
 registerWhen(register("clicked", (x, y, button, down) => {
-  let holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")
-  if (holding?.getString("id") != "GYROKINETIC_WAND" || button != 0 || down != true || gyroLeft > 0 || Player.getContainer() == undefined || Client.isInGui()) return
+  if (holding("String", "id") != "GYROKINETIC_WAND" || button != 0 || down != true || gyroLeft > 0 || Player.getContainer() == undefined || Client.isInGui()) return
   gyroUsed = Date.now()
   /*
   TODO: TEST & REPLACE
-  if (holding(true, "String", "id") != "GYROKINETIC_WAND" || button || !down || gyroLeft > 0 || !Player.getContainer() || Client.isInGui()) return
+  if (holding("String", "id") != "GYROKINETIC_WAND" || button || !down || gyroLeft > 0 || !Player.getContainer() || Client.isInGui()) return
   gyroUsed = Date.now()
   */
 }), () => settings.gravityStorm)
@@ -94,7 +93,7 @@ registerWhen(register("chat", (player, mana) => {
 }).setCriteria("Party > ${name}: Used ${mana} mana${*}"), () => settings.manaEnchant)
 
 registerWhen(register("renderWorld", () => {
-  if (holding(true, "String", "id") != "END_STONE_SWORD") return
+  if (holding("String", "id") != "END_STONE_SWORD") return
   World.getAllEntitiesOfType(EntityPlayer.class).forEach(player => {
     if (Player.asPlayerMP().distanceTo(player) > 5) return
       let ping = World.getPlayerByName(player.getName())?.getPing()

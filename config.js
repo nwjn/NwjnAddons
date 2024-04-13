@@ -614,6 +614,13 @@ class Settings {
   highlightColor = Color.GREEN;
     
   @SwitchProperty({
+    name: "Mineshaft Helper",
+    description: "Shows location of corpses and exit in mineshafts",
+    category: "Beta (WIP)"
+  })
+  mineshaft = false
+
+  @SwitchProperty({
     name: "Tracks Damage Armor Stands",
     description: "Spams ur chat with damage tags",
     category: "Beta (WIP)"

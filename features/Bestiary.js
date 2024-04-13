@@ -173,6 +173,7 @@ registerWhen(register("renderWorld", () => {
 let filteredStands = []
 registerWhen(register("step", () => {
   const STANDS = World.getAllEntitiesOfType(EntityArmorStand.class).filter(e => e.getName() != "Armor Stand")
+  // const STANDS = World.getAllEntitiesOfType(EntityArmorStand.class)
   filteredStands = []
   STANDS.forEach(stand => {
     data.standList.forEach(entry => {

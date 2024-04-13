@@ -120,11 +120,10 @@ if (data.version != version) {
 }
 
 register("serverConnect", () => {
-  // TODO: TEST
   setTimeout(() => {
-    new TextComponent(`${ consts.PREFIX } &d&lBROADCAST&r: Click this message and join the discord!`)
+    new TextComponent(`${ consts.PREFIX } &d&lBROADCAST&r: If clicking HUD or search bar crashes you, then you need to delete config.toml file or reimport module`)
       .setClickAction("run_command")
-      .setClickValue(`/ct copy https://discord.gg/3S3wXpC4gE`)
+      .setClickValue(`/ct files`)
       .chat()
   }, 3000)
 })
@@ -159,12 +158,3 @@ register("chat", () => {
 // TODO: uuid prio calculator
 // TODO: click in chat to translate
 // TODO: add better nausea effect to not be cancer inducing
-
-
-/*
-* Changelog
-*[v(version)] - (release date)
-- improved hitbox visuals
-- fixed poison display
-- made a discord server (please vote on the polls for changes)
-*/

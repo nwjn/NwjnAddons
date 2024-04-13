@@ -35,14 +35,21 @@ delay(() => {
   setRegisters()
 }, 1000);
 
-export function holding(EA = false, type = "", string = "") {
-  try {
-    let item = Player.getHeldItem();
-    if (!item) return
-    if (EA) item = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")
-    if (type) item = item[`get${ type }`](string)
-    return item
-  } catch (err) {ChatLib.chat(`${consts.PREFIX} &4${err}`)}
+/**
+ * Gets the current held item or if specified any extra information from ExtraAttributes
+ * 
+ * @param {String} returnType - the type to get and return
+ * @param {String} tag - the tag identifiter to get
+ * @returns {Item|String|Number|null}
+ */
+export function holding(returnType = "", tag = "") {
+  let item = Player.getHeldItem();
+  if (!item) return null
+  if (!returnType) return item
+  item = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")
+  if (returnType == "EA") return item
+  item = item[`get${ returnType }`](tag)
+  return item
 }
 
 export function getVec3Pos(vec) {
