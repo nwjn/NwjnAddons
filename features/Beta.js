@@ -2,7 +2,7 @@ import settings from "../config";
 import { registerWhen, holding, getVec3Pos, getVec3iPos, getRGB1 } from "../utils/functions";
 import renderBeaconBeam from "BeaconBeam"
 import RenderLib from "RenderLib"
-import { EntityArmorStand, PLAYERMP } from "../utils/constants";
+import { EntityArmorStand } from "../utils/constants";
 import { getWorld } from "../utils/world";
 
 registerWhen(register("chat", (event) => {
@@ -78,6 +78,7 @@ function renderWaypoint(text, coords, hex, rgb) {
 }
 
 let exit = false;
+let claimed = []
 registerWhen(register("renderWorld", () => {
   try {
     const entities = World.getAllEntitiesOfType(EntityArmorStand.class).filter(a => a?.getName() == "Armor Stand" && !a.isInvisible())
@@ -85,7 +86,8 @@ registerWhen(register("renderWorld", () => {
       
     let i = entities.length
     while (i--) {
-      const armor = new EntityLivingBase(entities[i].getEntity()).getItemInSlot(4).getName().removeFormatting()
+      let armor = new EntityLivingBase(entities[i].getEntity()).getItemInSlot(4)?.getName()?.removeFormatting()
+      if (claimed.some(e => entities[i].getPos().distance(e) < 15) || !armor) continue;
       let [text, rgb] = [];
       switch (armor) {
         case "Lapis Armor Helmet":
@@ -94,22 +96,21 @@ registerWhen(register("renderWorld", () => {
           [text, rgb] = ["Tungsten", [0.667, 0.667, 0.667]]; break;
         case "Yog Helmet":
           [text, rgb] = ["Umber", [1, 0.667, 0]]; break;
-        default:
+        case "Vanguard Helmet":
           [text, rgb] = ["Vanguard", [0.333, 1, 1]]; break;
+        default: continue;
       }
       renderWaypoint(text, [~~entities[i].getRenderX(), ~~entities[i].getRenderY(), ~~entities[i].getRenderZ()], 0xff5555, rgb)
     }
-    if (exit) renderWaypoint("Exit", [~~exit.getRenderX(), ~~exit.getRenderY(), ~~exit.getRenderZ()], 0x55ffff, [1, 0, 0])
-  } catch (err) {}
+    if (exit) renderWaypoint("Exit", [(~~exit.getRenderX()) - 0.5, ~~exit.getRenderY(), (~~exit.getRenderZ()) - 0.5], 0x55ffff, [1, 0, 0])
+  } catch (err) {ChatLib.chat(`render: ${err}`)}
 }), () => settings.mineshaft && getWorld() == "Mineshaft");
 
 registerWhen(register("chat", () => {
-  try {
-    const corpse = World.getWorld().func_72872_a(EntityArmorStand.class, Player.lookingAt().getEntity().func_174813_aQ().func_72314_b(1, 1, 1)).filter(e => e.toString().startsWith("EntityArmorStand['Armor Stand'"))
-    corpse.forEach(a => a.func_70106_y())
-  } catch (err) {}
+  claimed.push(Player.asPlayerMP().getPos())
 }).setCriteria("  FROZEN CORPSE LOOT! "), () => settings.mineshaft && getWorld() == "Mineshaft");
 
 register("worldUnload", () => {
   exit = false
+  claimed.length = 0
 })

@@ -1,6 +1,6 @@
 import settings from "../config";
 import { data } from "../utils/data";
-import { EntityPlayer, PLAYERMP, consts } from "../utils/constants";
+import { EntityPlayer, consts } from "../utils/constants";
 import { delay, registerWhen, holding } from "../utils/functions";
 import { Overlay } from "../utils/overlay";
 import { data } from "../utils/data";
@@ -45,7 +45,7 @@ registerWhen(register("renderWorld", () => {
   }
   /*
   // TODO: TEST & REPLACE
-  const players = World.getAllEntitiesOfType(EntityPlayer.class).filter(e => PLAYERMP.distanceTo(e) < 30 && World.getPlayerByName(e.getName())?.getPing() == 1).length + 1
+  const players = World.getAllEntitiesOfType(EntityPlayer.class).filter(e => Player.asPlayerMP().distanceTo(e) < 30 && World.getPlayerByName(e.getName())?.getPing() == 1).length + 1
   legionOverlay.message = players > 1 ? `&eLegion: &a${players}` : `&eLegion: &cAlone :(`
   */
 }), () => settings.legion);

@@ -3,7 +3,7 @@ import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
 import { registerWhen, holding } from "../../utils/functions";
 import { getWorld } from "../../utils/world";
-import { comma, PLAYERMP } from "../../utils/constants";
+import { comma } from "../../utils/constants";
 
 const champExample = `&6Champion XP: &e0 (+0)`
 const champOverlay = new Overlay("champ", ["Crimson Isle"], () => true, data.champL, "moveChamp", champExample)
@@ -15,7 +15,7 @@ let lastChamp = 0
 registerWhen(register("entityDeath", (entity) => {
   // entity hp % 5_000_000 == 0
   try {
-    if (entity.getClassName() != "EntityBlaze" || PLAYERMP?.distanceTo(entity) > 10) return
+    if (entity.getClassName() != "EntityBlaze" || Player.asPlayerMP()?.distanceTo(entity) > 10) return
     const champion = holding("Double", "champion_combat_xp")
     const gainedChamp = champion - lastChamp
     lastChamp = champion;

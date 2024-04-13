@@ -66,16 +66,8 @@ register("command", () => {
   FileLib.write("NwjnAddons", "temp.json", JSON.stringify(nbt.toObject(), null, 4), true);
 }).setName("nbt");
 
-register("command", () => {
-  const corpses = World.getAllEntitiesOfType(EntityArmorStand.class).filter(a => a.getName() == "Armor Stand" && !a.isInvisible())
-  if (!corpses) return
-
-  let i = corpses.length
-  new Thread(() => {
-    while (i--) {
-      ChatLib.say(`/pc x: ${ ~~corpses[i].getX() }, y: ${ ~~corpses[i].getY() }, z: ${ ~~corpses[i].getZ() }`)
-      ChatLib.chat(i + 1)
-      Thread.sleep(500)
-    }
-  }).start()
-}).setName("sendCorpses")
+register("command", (i) => {
+  const nbt = new EntityLivingBase(Player.lookingAt().getEntity()).getItemInSlot(i).getNBT()
+  FileLib.delete("NwjnAddons", "temp.json")
+  FileLib.write("NwjnAddons", "temp.json", JSON.stringify(nbt.toObject(), null, 4), true);
+}).setName("peek", true)

@@ -4,7 +4,7 @@ import { delay, registerWhen, getRGB1 } from "../utils/functions";
 import { getWorld } from "../utils/world";
 import { data } from "../utils/data";
 import { Overlay } from "../utils/overlay";
-import { EntityArmorStand, EntityPlayer, PLAYERMP, SMA } from "../utils/constants";
+import { EntityArmorStand, EntityPlayer, SMA } from "../utils/constants";
 
 // TODO (ADD): if ~ instead of - then % the entry hp and see if r = 0
 const monsters = [
@@ -250,7 +250,7 @@ registerWhen(register("step", () => {
   const MATCHOS = World.getAllEntitiesOfType(EntityPlayer.class).filter(matcho => matcho.getName() == "matcho ")
 
   mobCountOverlay.message = mobCountOverlay.message.includes("Matcho") ? mobCountOverlay.message.replace(/Matcho: [0-9]+\n/g, `Matcho: ${MATCHOS.length}\n`) : mobCountOverlay.message += `Matcho: ${MATCHOS.length}\n`
-  filteredMatchos = MATCHOS.filter(matcho => PLAYERMP.canSeeEntity(matcho))
+  filteredMatchos = MATCHOS.filter(matcho => Player.asPlayerMP().canSeeEntity(matcho))
 }).setFps(2), () => settings.matcho && getWorld() == "Crimson Isle")
 
 registerWhen(register("renderWorld", () => {
@@ -274,7 +274,7 @@ registerWhen(register("step", () => {
   const KEEPERS = World.getAllEntitiesOfType(CAVE_SPIDER_CLASS).filter(keeper => keeper.getEntity().func_110148_a(SMA.field_111267_a).func_111125_b() % 3000 == 0)
   mobCountOverlay.message = mobCountOverlay.message.indexOf("Keeper") == -1 ? mobCountOverlay.message + `\nKeeper: ${ KEEPERS.length }\n` : mobCountOverlay.message.replace(/Keeper: [0-9]+\n/g, `Keeper: ${ KEEPERS.length }\n`)
   
-  filteredKeepers = KEEPERS.filter(keeper => PLAYERMP.canSeeEntity(keeper))
+  filteredKeepers = KEEPERS.filter(keeper => Player.asPlayerMP().canSeeEntity(keeper))
 }).setFps(2), () => settings.keeper && getWorld() == "Spider's Den")
 
 registerWhen(register("renderWorld", () => {
