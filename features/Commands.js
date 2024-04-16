@@ -65,9 +65,3 @@ register("command", () => {
   FileLib.delete("NwjnAddons", "temp.json")
   FileLib.write("NwjnAddons", "temp.json", JSON.stringify(nbt.toObject(), null, 4), true);
 }).setName("nbt");
-
-register("command", (i) => {
-  const nbt = new EntityLivingBase(Player.lookingAt().getEntity()).getItemInSlot(i).getNBT()
-  FileLib.delete("NwjnAddons", "temp.json")
-  FileLib.write("NwjnAddons", "temp.json", JSON.stringify(nbt.toObject(), null, 4), true);
-}).setName("peek", true)

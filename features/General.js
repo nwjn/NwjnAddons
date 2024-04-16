@@ -125,7 +125,7 @@ register("renderSlot", (slot) => {
 })
 
 registerWhen(register("chat", (player, command) => {
-  player = player.removeFormatting().substring(player.indexOf(" ") + 1);
+  player = player.removeFormatting().substring(player.indexOf(" ") + 1).replace(/[^A-Za-z0-9_]/g, "");
   delay(() => {
     command = command.toLowerCase()
     switch (command) {

@@ -25,8 +25,9 @@ registerWhen(register("chat", (mini) => {
     case "ASHFANG": data.lastMini.push("&cAshfang"); break;
     case "MAGMA BOSS": data.lastMini.push("&4Magma Boss"); break;
     case "MAGE OUTLAW": data.lastMini.push("&5Mage Outlaw"); break;
+    default: return;
   }
-  data.lastMini.length > 4 && data.lastMini.shift()
+  data.lastMini.length > 4 && data.lastMini.pop()
   data.save()
   */
   

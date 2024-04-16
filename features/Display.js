@@ -7,7 +7,7 @@ import { data } from "../utils/data";
 import RenderLib from "../../RenderLib";
 
 const visitorExample = `Next Visitor: &cClaim Visitor!`
-const visitorOverlay = new Overlay("nextVisitor", ["all"], () => true, data.visitorL, "moveVisitor", visitorExample);
+const visitorOverlay = new Overlay("nextVisitor", ["all"], () => true, data.visitorL, "moveVisitors", visitorExample);
 
 let getTime = 0
 registerWhen(register("chat", () => {

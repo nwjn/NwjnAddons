@@ -1,15 +1,20 @@
 {
     "1495": 1495,
     "first_time": false,
-    "modVer": "0.8.0",
-    "power": "Demonic",
-    "tuning": "155❁",
+    "version": "0.9.6",
+    "power": "Silky",
+    "tuning": "155☠",
     "enrich": "46 on Ferocity",
     "mp": "1,552",
     "pet": "&6Scatha",
     "gummy": 0,
     "wisp": 0,
-    "mobsHighlight": {},
+    "mobsHighlight": {
+        "Skeleton": {
+            "mobType": "monster",
+            "hps": []
+        }
+    },
     "standList": [
         ""
     ],
@@ -43,7 +48,7 @@
         1
     ],
     "clockL": [
-        157,
+        7,
         429,
         1.2000000000000002
     ],
@@ -127,15 +132,20 @@
         15.649444580078125,
         1
     ],
+    "corpseL": [
+        627,
+        22,
+        1
+    ],
     "customL": [
         616,
         14.6358642578125,
         1
     ],
+    "modVer": "0.8.0",
     "lastMini": [],
     "-1": -1,
     "false": false,
     "true": true,
-    "arg": 1465,
-    "version": "0.9.5"
+    "arg": 1465
 }

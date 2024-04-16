@@ -21,5 +21,5 @@ registerWhen(register("entityDeath", (entity) => {
     lastChamp = champion;
     if (!gainedChamp) return
     champOverlay.message = `&6Champion XP: &e${ comma(champion.toFixed(0)) } (${ gainedChamp > 0 ? "+" : ""}${ comma(gainedChamp.toFixed(1)) })`
-  } catch (e) {ChatLib.chat(`&c${err}`)}
+  } catch (e) {}
 }), () => getWorld() == "Crimson Isle" && settings.champ);

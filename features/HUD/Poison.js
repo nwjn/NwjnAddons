@@ -24,7 +24,7 @@ registerWhen(register("step", () => {
     poisonOverlay.message = `${(items["Twilight Arrow Poison"] == 0 ? "&c" : "&d") + items["Twilight Arrow Poison"] }&8x &5Twilight Arrow Poison\n${(items["Flint Arrow"] == 0 ? "&c" : "&d") + items["Flint Arrow"] }&8x &rFlint Arrows\n${(items["Toxic Arrow Poison"] == 0 ? "&c" : "&d") + items["Toxic Arrow Poison"]}&8x &aToxic Arrow Poison`
     /*
     TODO (TEST & REPLACE):
-    const i = inv.length
+    let i = inv.length
     while(i--) items[inv[i].getName().removeFormatting()] += inv[i].getStackSize()
 
     poisonOverlay.message =

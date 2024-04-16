@@ -34,7 +34,8 @@
 [hud]
 
 	[hud.widget]
-		custom_widget_text = "Collection:"
+		custom_widget_text = ""
+		frozen_corpse_widget = true
 		trophy_fish_widget = false
 		pet_widget = true
 		stats_widget = true
@@ -42,7 +43,7 @@
 		pest_widget = false
 		commission_widget = true
 		crop_milestone_widget = false
-		custom_widget = true
+		custom_widget = false
 		visitor_widget = false
 		jacob_widget = false
 		bestiary_widget = true
@@ -73,7 +74,7 @@
 		blaze_display = false
 
 	[hud.fatal_tempo]
-		fatal_tempo_settings = 1
+		fatal_tempo_settings = 0
 		fatal_tempo_timer_scale = 1.2
 		fatal_tempo_display = false
 
@@ -94,7 +95,7 @@
 		mage_gyro = false
 
 [bestiary]
-	mob_esp = ""
+	mob_esp = "Skeleton"
 	armor_stand_esp_color = "255,0,255,0"
 	armor_stand_names_esp = ""
 	player_esp_color = "255,255,0,255"
@@ -112,6 +113,7 @@
 	better_magma_boss_message = false
 
 ["beta_(wip)"]
+	lapis_only = false
 	gyro_range = false
 	corpse_waypoints = true
 	agro_range = false

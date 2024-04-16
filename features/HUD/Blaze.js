@@ -27,8 +27,8 @@ registerWhen(register("chat", () => {
 
 registerWhen(register("step", (elapsed) => {
   if (!getWorld()) return;
-  gummy && gummy--
-  wisp && wisp--
+  gummy && (gummy--)
+  wisp && (wisp--)
   
   blazeOverlay.message = `&aGummy: &f${ timeFormat(gummy) }\n&7Wisp: &f${ timeFormat(wisp) }`;
 

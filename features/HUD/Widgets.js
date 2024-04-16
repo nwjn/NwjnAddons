@@ -9,7 +9,7 @@ function widget(find, overlay) {
   let tab = TabList.getNames()
   const start = tab.findIndex(e => e.includes(find))
   tab = tab.slice(start)
-  const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘)/g))|| e.removeFormatting().startsWith("               ")) && i)
+  const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘|Ends In)/g))|| e.removeFormatting().startsWith("               ")) && i)
   tab = tab.slice(0, end)
   overlay.message = tab.join("\n")
   // if (find == "Powders:" & !a) {
@@ -105,6 +105,13 @@ const trophyExample =
  &8●&7●&6●&b○ &5Soul Fish &7(164)`;
 const trophyOverlay = new Overlay("trophy", ["Crimson Isle"], () => true, data.trophyL, "moveTrophy", trophyExample);
 
+const corpseExample =
+`&b&lFrozen Corpses:
+  &9Lapis&r: &c&lNOT LOOTED
+  &9Lapis&r: &c&lNOT LOOTED
+  &9Lapis&r: &c&lNOT LOOTED
+  &9Lapis&r: &c&lNOT LOOTED`;
+const corpseOverlay = new Overlay("corpse", ["Mineshaft"], () => true, data.corpseL, "moveCorpse", corpseExample);
 
 
 const customExample = `&e&lCustom Widget:`
@@ -121,6 +128,7 @@ register("step", () => {
     widget("Jacob's Contest:", contestOverlay);
     widget("Commissions:", commOverlay);
     widget("Powders:", powderOverlay);
+    widget("Frozen Corpses:", corpseOverlay);
     widget("Trophy Fish:", trophyOverlay);
 
     widget(settings.widgetText, customOverlay);

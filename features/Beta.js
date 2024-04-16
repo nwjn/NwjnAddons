@@ -74,22 +74,35 @@ function renderWaypoint(text, coords, hex, rgb) {
   RenderLib.drawEspBox(...coords, 1, 1, ...rgb, 1, true);
   RenderLib.drawInnerEspBox(...coords, 1, 1, ...rgb, 0.25, true);
   Tessellator.drawString(text, ...coords, hex, true);
-  renderBeaconBeam(coords[0] - 0.5, coords[1], coords[2] - 0.5, ...rgb, 0.5, false, settings.waypointHeight);
+  renderBeaconBeam(coords[0] - 0.5, coords[1], coords[2] - 0.5, ...rgb, 0.5, false, 75);
 }
 
 let exit = false;
 let claimed = []
-registerWhen(register("renderWorld", () => {
-  try {
-    const entities = World.getAllEntitiesOfType(EntityArmorStand.class).filter(a => a?.getName() == "Armor Stand" && !a.isInvisible())
-    if (!exit) exit = World.getAllEntitiesOfType(EntityArmorStand.class).find(a => a?.getName() == "Exit the Glacite Mineshaft")
-      
-    let i = entities.length
-    while (i--) {
-      let armor = new EntityLivingBase(entities[i].getEntity()).getItemInSlot(4)?.getName()?.removeFormatting()
-      if (claimed.some(e => entities[i].getPos().distance(e) < 15) || !armor) continue;
+let corpses = []
+/**
+ * ! Fixed waypoints in the sense that once its rendered it does not move, interpret that as you will
+ */
+registerWhen(register("playerJoined", (playerMP) => {
+  if (playerMP.getName() != Player.getName()) return;
+  exit = [(~~playerMP.getX()) - 0.5, ~~playerMP.getY(), (~~playerMP.getZ()) - 0.5] // gets coords on joining shaft
+}), () => settings.mineshaft)
+
+registerWhen(register("step", () => {
+  if (corpses.length >= 4) return; // 4 corpse cap
+  const entities = World.getAllEntitiesOfType(EntityArmorStand.class).filter(a => !a.getEntity().func_95999_t() && !a.isInvisible()) // entities with invisibilty are removed
+  if (!entities) return;
+    
+  let i = entities.length
+  while (i--) {
+    const entity = entities[i];
+    const pos = entity.getPos();
+    
+    if (corpses.some(e => pos?.compareTo(e.vec) == 0) || claimed.some(e => pos.distance(e) < 7)) continue; // if corpse is already rendered or claimed, skip finding its coords
+    try {
+      const helm = new EntityLivingBase(entity.getEntity()).getItemInSlot(4).getName().removeFormatting();
       let [text, rgb] = [];
-      switch (armor) {
+      switch (helm) {
         case "Lapis Armor Helmet":
           [text, rgb] = ["Lapis", [0.333, 0.333, 1]]; break;
         case "Mineral Helmet":
@@ -100,10 +113,25 @@ registerWhen(register("renderWorld", () => {
           [text, rgb] = ["Vanguard", [0.333, 1, 1]]; break;
         default: continue;
       }
-      renderWaypoint(text, [~~entities[i].getRenderX(), ~~entities[i].getRenderY(), ~~entities[i].getRenderZ()], 0xff5555, rgb)
-    }
-    if (exit) renderWaypoint("Exit", [(~~exit.getRenderX()) - 0.5, ~~exit.getRenderY(), (~~exit.getRenderZ()) - 0.5], 0x55ffff, [1, 0, 0])
-  } catch (err) {ChatLib.chat(`render: ${err}`)}
+      corpses.push(
+        {
+          "loc": [~~entity.getX(), ~~entity.getY(), ~~entity.getZ()],
+          "vec": entity.getPos(),
+          "text": text,
+          "rgb": rgb
+        });
+    } catch (e) {}
+  }
+}).setDelay(1), () => settings.mineshaft && getWorld() == "Mineshaft")
+
+registerWhen(register("renderWorld", () => {
+  let x = corpses.length
+  while (x--) {
+    const corpse = corpses[x];
+    if (claimed.some(e => corpse.vec.distance(e) < 7) || (settings.lapis && corpse.text != "Lapis")) continue;
+    renderWaypoint(corpse.text, corpse.loc, 0xff5555, corpse.rgb);
+  }
+  if (exit) renderWaypoint("Exit", exit, 0x55ffff, [1, 0, 0])
 }), () => settings.mineshaft && getWorld() == "Mineshaft");
 
 registerWhen(register("chat", () => {
@@ -113,4 +141,5 @@ registerWhen(register("chat", () => {
 register("worldUnload", () => {
   exit = false
   claimed.length = 0
-})
+  corpses.length = 0
+});

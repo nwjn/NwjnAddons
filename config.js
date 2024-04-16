@@ -1,4 +1,5 @@
 import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, @SliderProperty, @ColorProperty, @PercentSliderProperty, @DecimalSliderProperty, Color} from "../Vigilance/index"
+import { version } from "./utils/constants"
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
   getCategoryComparator: () => (a, b) => {
@@ -180,7 +181,7 @@ class Settings {
     
   @SwitchProperty({
     name: "Align Display",
-    description: "Shows how long you are under alignment for",
+    description: "Shows how long you are under alignment for -> /moveAlign",
     category: "HUD",
     subcategory: "Align"
   })
@@ -188,7 +189,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Mob Highlight Counter",
-    description: "Shows the number of each mob highlighted by mob esp",
+    description: "Shows the number of each mob highlighted by mob esp -> /moveMob",
     category: "HUD",
     subcategory: "Bestiary"
   })
@@ -196,7 +197,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Blaze Display",
-    description: "Shows how much time left on gummy and wisp pot",
+    description: "Shows how much time left on gummy and wisp pot -> /moveBlaze",
     category: "HUD",
     subcategory: "Blaze"
   })
@@ -205,7 +206,7 @@ class Settings {
   // TODO: rename Flare Display
   @SwitchProperty({
     name: "Champion Display",
-    description: `Champion gained on killing a flare`,
+    description: `Champion gained on killing a flare -> /moveChamp`,
     category: "HUD",
     subcategory: "Champion"
   })
@@ -213,7 +214,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Clock Display",
-    description: "Shows your current time",
+    description: "Shows your current time -> /moveClock",
     category: "HUD",
     subcategory: "Clock",
   })
@@ -222,7 +223,7 @@ class Settings {
   // TODO: add option for on hit and on shoot
   @SwitchProperty({
     name: "Fatal Tempo Display",
-    description: `Approximate ft percent\n&cSOUND MUST BE ON`,
+    description: `Approximate ft percent -> /moveFT\n&cSOUND MUST BE ON`,
     category: "HUD",
     subcategory: "Fatal Tempo"
   })
@@ -257,7 +258,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Gyro Display",
-    description: "Shows how long your gyro cd is",
+    description: "Shows how long your gyro cd is -> /moveGyro",
     category: "HUD",
     subcategory: "Gyro"
   })
@@ -281,7 +282,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Mana Enchant Calc",
-    description: "Approximate buff of your mana enchants",
+    description: "Approximate buff of your mana enchants -> /moveMana",
     category: "HUD",
     subcategory: "Mana"
   })
@@ -309,7 +310,7 @@ class Settings {
   
   @SwitchProperty({
     name: "Legion Display",
-    description: "Shows the number of players in your legion radius",
+    description: "Shows the number of players in your legion radius -> /moveLegion",
     category: "HUD",
     subcategory: "Legion"
   })
@@ -317,7 +318,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Poison Display",
-    description: `Displays the amount of poisons in your inventory`,
+    description: `Displays the amount of poisons in your inventory -> /movePoison`,
     category: "HUD",
     subcategory: "Poison"
   })
@@ -325,7 +326,7 @@ class Settings {
 
   @SelectorProperty({
     name: "Next Visitor Display",
-    description: "Shows time until next visitor",
+    description: "Shows time until next visitor -> /moveVisitors",
     category: "HUD",
     subcategory: "Visitor",
     options: ["Off", "12 Minutes", "15 Minutes"]
@@ -334,7 +335,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Miniboss Display",
-    description: "Shows your recent CI miniboss kills",
+    description: "Shows your recent CI miniboss kills -> /moveMini",
     category: "HUD",
     subcategory: "Miniboss"
   })
@@ -350,7 +351,7 @@ class Settings {
 
   @CheckboxProperty({
     name: "Stats Widget",
-    description: "Show stats widget on HUD",
+    description: "Show stats widget on HUD -> /moveStats",
     category: "HUD",
     subcategory: "Widget"
   })
@@ -358,7 +359,7 @@ class Settings {
 
   @CheckboxProperty({
     name: "Pet Widget",
-    description: "Show pet widget on HUD",
+    description: "Show pet widget on HUD -> /movePet",
     category: "HUD",
     subcategory: "Widget"
   })
@@ -366,7 +367,7 @@ class Settings {
     
   @CheckboxProperty({
     name: "Bestiary Widget",
-    description: "Show bestidary widget on HUD",
+    description: "Show bestidary widget on HUD -> /moveBestiary",
     category: "HUD",
     subcategory: "Widget"
   })
@@ -374,7 +375,7 @@ class Settings {
   
   @CheckboxProperty({
     name: "Crop Milestone Widget",
-    description: "Show crop milestone widget on HUD",
+    description: "Show crop milestone widget on HUD -> /moveCrop",
     category: "HUD",
     subcategory: "Widget"
   })
@@ -382,7 +383,7 @@ class Settings {
     
   @CheckboxProperty({
     name: "Pest Widget",
-    description: "Show pest widget on HUD",
+    description: "Show pest widget on HUD -> /movePest",
     category: "HUD",
     subcategory: "Widget"
   })
@@ -390,7 +391,7 @@ class Settings {
     
   @CheckboxProperty({
     name: "Visitor Widget",
-    description: "Show visitor widget on HUD",
+    description: "Show visitor widget on HUD -> /moveVisitor",
     category: "HUD",
     subcategory: "Widget"
   })
@@ -398,7 +399,7 @@ class Settings {
     
   @CheckboxProperty({
     name: "Jacob Widget",
-    description: "Show jacob contest widget on HUD",
+    description: "Show jacob contest widget on HUD -> /moveContest",
     category: "HUD",
     subcategory: "Widget"
   })
@@ -406,7 +407,7 @@ class Settings {
 
   @CheckboxProperty({
     name: "Commission Widget",
-    description: "Show commission widget on HUD",
+    description: "Show commission widget on HUD -> /moveComm",
     category: "HUD",
     subcategory: "Widget"
   })
@@ -414,15 +415,23 @@ class Settings {
 
   @CheckboxProperty({
     name: "Powder Widget",
-    description: "Show powder widget on HUD",
+    description: "Show powder widget on HUD -> /movePowder",
     category: "HUD",
     subcategory: "Widget"
   })
   powder = false
 
   @CheckboxProperty({
+    name: "Frozen Corpse Widget",
+    description: "Show frozen corpse widget on HUD -> /moveCorpse",
+    category: "HUD",
+    subcategory: "Widget"
+  })
+  corpse = false
+
+  @CheckboxProperty({
     name: "Trophy Fish Widget",
-    description: "Show trophy fish widget on HUD",
+    description: "Show trophy fish widget on HUD -> /moveTrophy",
     category: "HUD",
     subcategory: "Widget"
   })
@@ -430,7 +439,7 @@ class Settings {
 
   @CheckboxProperty({
     name: "Custom Widget",
-    description: "Enter widget title from tablist (i.e. 'Fire Sales:' or 'Timers:'",
+    description: "Enter widget title from tablist (i.e. 'Fire Sales:' or 'Timers:' -> /moveCustom",
     category: "HUD",
     subcategory: "Widget"
   })
@@ -621,6 +630,13 @@ class Settings {
   mineshaft = false
 
   @SwitchProperty({
+    name: "Lapis Only",
+    description: "Shows location of only lapis corpses",
+    category: "Beta (WIP)"
+  })
+  lapis = false
+
+  @SwitchProperty({
     name: "Tracks Damage Armor Stands",
     description: "Spams ur chat with damage tags",
     category: "Beta (WIP)"
@@ -707,6 +723,7 @@ class Settings {
 
   constructor() {
     this.initialize(this);
+    this.setCategoryDescription("General", `&d&l[NwjnAddons-v${version}]&r by nwjn\n&cSome features in this module require game language on English (US)`);
     this.setCategoryDescription("Bestiary", "bestiary")
     this.setCategoryDescription("Crimson Isle", "endgame island fr");
     this.setCategoryDescription("Kuudra", "1b/h")
@@ -725,6 +742,7 @@ class Settings {
     this.addDependency("Commission Widget", "Widget Display")
     this.addDependency("Powder Widget", "Widget Display")
     this.addDependency("Trophy Fish Widget", "Widget Display")
+    this.addDependency("Frozen Corpse Widget", "Widget Display")
 
     this.addDependency("Custom Widget", "Widget Display")
     this.addDependency("Custom Widget Text", "Custom Widget")

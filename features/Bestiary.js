@@ -139,7 +139,8 @@ registerWhen(register("renderWorld", () => {
       // TODO (CHANGE): FILTER AND REMOVE FROM RENDERWORLD TRIGGER
       World.getAllEntitiesOfType(MOB).forEach(entity => {
         const ENTITY_GE = entity.getEntity();
-        // if (entity.isInvisible()) return;
+        if (entity.isInvisible()) return;
+        // todo: show on 
         let maxHP = ENTITY_GE.func_110148_a(SMA.field_111267_a).func_111125_b();
         let currentHP = ENTITY_GE.func_110143_aJ();
         if (currentHP <= 0) return;
@@ -173,7 +174,6 @@ registerWhen(register("renderWorld", () => {
 let filteredStands = []
 registerWhen(register("step", () => {
   const STANDS = World.getAllEntitiesOfType(EntityArmorStand.class).filter(e => e.getName() != "Armor Stand")
-  // const STANDS = World.getAllEntitiesOfType(EntityArmorStand.class)
   filteredStands = []
   STANDS.forEach(stand => {
     data.standList.forEach(entry => {
