@@ -290,38 +290,10 @@ register("worldUnload", () => {
   missing = ""
 });
 
-registerWhen(register("renderEntity", (entity, position, ticks, event) => {
-  if (entity.getClassName() != "EntityArmorStand") return
-  if (!entity.toString().removeFormatting().includes(["[Lv"])) return
-  // todo: setDead
-  cancel(event)
-}), () => settings.kuudraTags && getWorld() == "Kuudra")
-
 registerWhen(register("renderSlot", (slot, gui, event) => {
   if (!slot?.toString().includes("ContainerLocalMenu: Perk Menu")) return
   slot = slot.getItem()?.getName()?.removeFormatting()
-  if (slot?.includes("Steady Hands") || slot?.includes("Bomberman") || slot == "Elle's Lava Rod" || slot == "Elle's Pickaxe" || slot == "Auto Revive" || (settings.renderStun && ((slot?.includes("Mining Frenzy") || slot?.includes("Human Cannonball"))))) {
+  if (slot?.includes("Steady Hands") || slot?.includes("Bomberman") || slot == "Elle's Lava Rod" || slot == "Elle's Pickaxe" || slot == "Auto Revive" || slot?.includes("Mining Frenzy") || slot?.includes("Human Cannonball")) {
     cancel(event)
   }
 }), () => settings.renderPerk && getWorld() == "Kuudra")
-
-registerWhen(register("guiMouseClick", (x, y, button, gui, event) => {
-  let slot = Client.currentGui.getSlotUnderMouse()
-  if (!slot?.toString()?.includes("ContainerLocalMenu: Perk Menu")) return
-  slot = slot?.getItem()?.getName()?.removeFormatting()
-  if (slot?.includes("Steady Hands") || slot?.includes("Bomberman") || slot == "Elle's Lava Rod" || slot == "Elle's Pickaxe" || slot == "Auto Revive" || (settings.renderStun && (slot?.includes("Mining Frenzy") || slot?.includes("Human Cannonball")))) {
-    cancel(event)
-  }
-}), () => settings.renderPerk && getWorld() == "Kuudra");
-
-const ZOMBIES = Java.type("net.minecraft.entity.monster.EntityZombie").class;
-const MID = new Vec3i(-102, 79, -95)
-
-registerWhen(register("renderWorld", () => {
-  if (phase != 2) return
-  World.getAllEntitiesOfType(ZOMBIES).forEach(zombie => {
-    if (zombie.getMotionX() == 0 && zombie.getMotionZ() == 0 && zombie.getY() == 79 && MID.distance(zombie.getPos()) < 15) {
-      RenderLib.drawEspBox(zombie.getRenderX(), zombie.getRenderY(), zombie.getRenderZ(), zombie.getWidth(), zombie.getHeight(), 1, 1, 1, 1, true)
-    }
-  })
-}), () => getWorld() == "Kuudra" && settings.breakingPiles)

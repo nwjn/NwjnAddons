@@ -9,7 +9,7 @@ function widget(find, overlay) {
   let tab = TabList.getNames()
   const start = tab.findIndex(e => e.includes(find))
   tab = tab.slice(start)
-  const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘|Ends In)/g))|| e.removeFormatting().startsWith("               ")) && i)
+  const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘|Ends in)/g))|| e.removeFormatting().startsWith("               ")) && i)
   tab = tab.slice(0, end)
   overlay.message = tab.join("\n")
   // if (find == "Powders:" & !a) {

@@ -65,3 +65,7 @@ register("command", () => {
   FileLib.delete("NwjnAddons", "temp.json")
   FileLib.write("NwjnAddons", "temp.json", JSON.stringify(nbt.toObject(), null, 4), true);
 }).setName("nbt");
+
+register("command", () => {
+  console.clear()
+}).setName("clearConsole")

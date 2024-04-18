@@ -4,20 +4,21 @@ import { getWorld } from "../utils/world";
 import { data } from "../utils/data";
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
-import { EntityArmorStand, version } from "../utils/constants";
+import { EntityArmorStand, version, SMA } from "../utils/constants";
+import { getIsLeader } from "../utils/Party";
 
 // Credit: Volcaddons on ct for waypoints
 let chatWaypoints = [];
 let formatted = [];
 
-register("worldUnload", () => {
+registerWhen(register("worldUnload", () => {
   chatWaypoints = []
   formatted = []
-})
+}), () => settings.waypoint != 0)
 
-register("renderWorld", () => {
+registerWhen(register("renderWorld", () => {
   renderWaypoint(formatted);
-});
+}), () => settings.waypoint != 0);
 
 function formatWaypoints(waypoints, r, g, b) {
   if (!waypoints.length) return;
@@ -52,7 +53,7 @@ function formatWaypoints(waypoints, r, g, b) {
 register("step", () => {
   formatted = [];
   formatWaypoints(chatWaypoints, ...getRGB1(settings.waypointColor));
-}).setFps(5);
+}).setFps(2);
 
 function renderWaypoint(waypoints) {
   if (!waypoints.length) return;
@@ -124,8 +125,10 @@ register("renderSlot", (slot) => {
   data.save()
 })
 
-registerWhen(register("chat", (player, command) => {
+registerWhen(register("chat", (player, command, event) => {
   player = player.removeFormatting().substring(player.indexOf(" ") + 1).replace(/[^A-Za-z0-9_]/g, "");
+  const chatEvent = event
+  let CommandMsg = false
   delay(() => {
     command = command.toLowerCase()
     switch (command) {
@@ -149,33 +152,43 @@ registerWhen(register("chat", (player, command) => {
         ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
       case "t5":
       case "raider":
-        ChatLib.command(`joininstance kuudra_infernal`); break;
+        CommandMsg = `joininstance kuudra_infernal`; break;
       case "dropper":
-        ChatLib.command(`play arcade_dropper`); break;
+        CommandMsg = `play arcade_dropper`; break;
       case "pw":
       case "warp":
-        ChatLib.command(`p warp`); break;
+        CommandMsg = `p warp`; break;
       case "transfer":
       case "pt":
       case "ptme":
-        ChatLib.command(`party transfer ${ player }`); break;
+        CommandMsg = `party transfer ${ player }`; break;
       case "allinvite":
       case "allinv":
       case "invite":
       case "inv":
-        ChatLib.command(`p settings allinvite`); break;
+        CommandMsg = `p settings allinvite`; break;
+      default: return;
     }
-    // TODO: make leader check for leader commands
+    if (getIsLeader()) {
+      if (settings.leader) {
+        new TextComponent(`&a&l[CONFIRM]`).setHoverValue(`Runs /${ CommandMsg }`).setClickAction("run_command").setClickValue(`/${ CommandMsg }`).chat()
+        ChatLib.addToSentMessageHistory(-1, `/${CommandMsg}`)
+      }
+      else {
+        ChatLib.command(CommandMsg)
+      }
+    }
   }, 200);
 }).setCriteria("Party > ${player}: .${command}"), () => settings.party)
 
 let reaperUsed = 0
 registerWhen(register("soundPlay", () => {
-  let armor = Player.getInventory()?.getStackInSlot(38)?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
+  const armor = Player.armor?.getChestplate()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
   if (armor == "REAPER_CHESTPLATE") reaperUsed = Date.now()
 }).setCriteria("mob.zombie.remedy"), () => settings.reaper);
 
 registerWhen(register("renderWorld", () => {
+  // todo: zone check
   World.getAllEntitiesOfType(EntityArmorStand.class).forEach(stand => {
     let name = ChatLib.removeFormatting(stand.getName())
     if (Player.asPlayerMP().canSeeEntity(stand) && name.includes("҉") && name.includes("Bloodfiend")) RenderLib.drawEspBox(stand.getRenderX(), stand.getRenderY() - 2, stand.getRenderZ(), 1, 2, 1, 0.2, 0.46667, 1, true)
@@ -184,84 +197,56 @@ registerWhen(register("renderWorld", () => {
 
 registerWhen(register("entityDeath", (entity) => {
   entity = entity.getEntity()
+  const hp = entity.func_110148_a(SMA.field_111267_a).func_111125_b();
   entity.func_70106_y()
-  // TODO: try 0.5, 0.5, 0.5
-  const tag = World.getWorld().func_72872_a(EntityArmorStand.class, entity.func_174813_aQ().func_72314_b(1, 1, 1)).filter(e => e.toString().includes("§c❤"))
+
+  // todo: test
+  const tag = World.getWorld().func_72872_a(EntityArmorStand.class, entity.func_174813_aQ().func_72314_b(0.5, 0.5, 0.5)).filter(e => e.toString().removeFormatting().includes(`${hp}❤`))
   tag.forEach(tag => tag.func_70106_y())
 }), () => settings.dead)
 
 let blockBroken = 0
 let time = 0
 registerWhen(register("blockBreak", (block) => {
-  if (!block.toString().includes("type=minecraft:log") || holding("String", "id") != "TREECAPITATOR_AXE") return;
-  if (time <= 0) blockBroken = Date.now()
-}), () => settings.treecap && (getWorld() == "Hub" || getWorld() == "The Park"))
+  // todo:test
+  if (block.toString().includes("type=minecraft:log") && holding("String", "id") == "TREECAPITATOR_AXE" && time <= 0) blockBroken = Date.now();
+}), () => settings.treecap && ["Hub", "The Park"].includes(getWorld()))
 
 registerWhen(register("renderOverlay", () => {
   if (settings.reaper) {
-    let reaperTime = Date.now()
-    reaperTime = 6 - (reaperTime - reaperUsed) / 1000
+    const reaperTime = 6 - (Date.now() - reaperUsed) / 1000
     if (reaperTime >= 0) Renderer.drawString(`${ reaperTime.toFixed(3) }`, Renderer.screen.getWidth() / 2 - 13, Renderer.screen.getHeight() / 2 + 10)
   }
   if (settings.treecap) {
-    let cd = 2
-    if (data.pet.includes("Monkey")) cd = 1
-    time = Date.now()
-    time = cd - (time - blockBroken) / 1000
+    const cd = data.pet.includes("Monkey") ? 1 : 2
+    time = cd - (Date.now() - blockBroken) / 1000
     if (time >= 0) Renderer.drawString(`${ time.toFixed(3) }`, Renderer.screen.getWidth() / 2 - 13, Renderer.screen.getHeight() / 2 - 15)
   }
-}), () => (settings.treecap && (getWorld() == "Hub" || getWorld() == "The Park")) || (settings.reaper));
-// TODO (TEST & REPLACE): ["Hub", "The Park"].includes(getWorld())
+}), () => (settings.treecap && ["Hub", "The Park"].includes(getWorld()) || (settings.reaper)));
 
-let events = []
-registerWhen(register("actionBar", (event) => {
-  let chat = ChatLib.getChatMessage(event, false)
-  chat = chat.substring(chat.indexOf("     "), chat.lastIndexOf("     "))
-  if (events.includes(chat)) return
-  events.push(chat)
-  ChatLib.chat(chat)
-}).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp);
+// let events = []
+// registerWhen(register("actionBar", (event) => {
+//   let chat = ChatLib.getChatMessage(event, false)
+//   chat = chat.substring(chat.indexOf("     "), chat.lastIndexOf("     "))
+//   if (events.includes(chat)) return
+//   events.push(chat)
+//   ChatLib.chat(chat)
+// }).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp);
 
-register("worldUnload", () => {
-  events = []
-})
-/*
-todo: test & replace
-let lastText = "";
+// register("worldUnload", () => {
+//   events = []
+// })
+// /*
+// todo: test & replace
+let lastBar = "";
   registerWhen(register("actionBar", (event) => {
   let chat = ChatLib.getChatMessage(event, false)
   chat = chat.substring(chat.indexOf("     "), chat.lastIndexOf("     "))
-  if (lastChat == chat) return
+  if (lastBar == chat) return
   ChatLib.chat(chat)
-  lastChat = chat
+  lastBar = chat
 }).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp);
-*/
-
-let warp = false
-registerWhen(register("chat", () => {
-  if (settings.pWarp == "" || settings.pPlayer == "") return
-  delay(() => {
-    ChatLib.say(`/party ${ settings.pPlayer }`)
-    warp = true
-    delay(() => {
-      warp = false
-    }, 60000);
-  }, 500)
-}).setCriteria(`${ settings.pWarp }`).setContains(), () => settings.pWarp != "");
-
-registerWhen(register("chat", (event) => {
-  if (settings.pWarp == "" || settings.pPlayer == "") return
-  let chat = ChatLib.getChatMessage(event)
-  if (!chat.includes(`${ settings.pPlayer } `)) return
-  if (warp == true) {
-    delay(() => {
-      ChatLib.say(`/p warp`)
-      delay(() => {
-        ChatLib.say(`/party leave`)
-      }, 500);
-    }, 500);
-  }
-}).setCriteria(` joined the party.`).setContains(), () => settings.pWarp != "");
+// */
 
 let rendArrows = 0
 registerWhen(register("soundPlay", () => {

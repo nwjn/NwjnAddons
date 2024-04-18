@@ -1,41 +1,45 @@
 import { delay, setRegisters } from "./functions";
 
-let game = undefined;
-export function getGame() { return game; };
-// Credit: volcaddons for findworld
+// Credit: Adapted from volcaddons findworld
 let world = undefined;
 export function getWorld() { return world; };
-let noFind = 0;
+let spawn = undefined;
+export function getSpawn() { return spawn; };
 
 
-function findWorld() {
-  if (noFind == 10) return;
-  noFind++;
+function findWorld(noFind = 10) {
+  if (!noFind) {
+    world = undefined;
+    return;
+  }
+  noFind--;
   world = TabList?.getNames()?.find(tab => tab?.match(/(Area|Dungeon)/g))?.removeFormatting();
   if (!world)
     delay(() => {
-      findWorld()
-    }, 1000);
+      findWorld(noFind)
+    }, 500);
   else {
     world = world.substring(world.indexOf(': ') + 2);
     setRegisters();
   }
 }
 
-register("worldLoad", () => {
-  noFind = 0;
-  world = undefined
+register("worldload", () => {
+  trackJoin.register()
+})
+
+const trackJoin = register("playerJoined", (player) => {
+  if (player.getName() != Player.getName()) return;
+  [world, spawn] = [undefined, [~~player.getX(), ~~player.getY(), ~~player.getZ()]]
+  setRegisters() // pre registerset so registers w/o world check arent delayed
   findWorld()
-});
+  trackJoin.unregister()
+}).unregister();
 
-register("worldUnload", () => {
-  world = undefined
-});
-
-register("chat", () => {
-  delay(() => {
-    if (!world) return
-    findWorld()
-    setRegisters()
-  }, 5000)
-}).setCriteria(/Sending( you|) to( server|) (mini|mega)[0-9A-Z]+(\.\.\.|!)/g);
+// on ct load
+spawn = [~~Player.getX(), ~~Player.getY(), ~~Player.getZ()]
+findWorld();
+delay(() => {
+  setRegisters()
+  trackJoin.unregister()
+}, 1000)

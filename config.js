@@ -46,7 +46,14 @@ class Settings {
     description: "Enables party commands (full list at /nwjn party)",
     category: "General"
   })
-  party = false  
+  party = false
+  
+  @SwitchProperty({
+    name: "Confirm Leader Commands",
+    description: "Adds a confirm button when a party member sends a leader command or press up arrow while in chat",
+    category: "General"
+  })
+  leader = false
     
   @SwitchProperty({
     name: "Rend Arrows",
@@ -88,21 +95,7 @@ class Settings {
     description: "Renders a timer above crosshair for when u can use treecap ability again",
     category: "General"
   })
-  treecap = false  
-    
-  @TextProperty({
-    name: "Party and Warp on Chat Message",
-    description: "Parties and warps the player inputted in the below text entry whenever the chat message that includes what is in this text entry is in the chat.",
-    category: "General"
-  })
-  pWarp = ""  
-    
-  @TextProperty({
-    name: "Invited Player Name",
-    description: "The player name to invite when the thing above happens",
-    category: "General"
-  })
-  pPlayer = ""  
+  treecap = false   
     
   // TODO: Remove unnecessary symbols using negated set like [^'"!?:;\/]
   @TextProperty({
@@ -511,25 +504,11 @@ class Settings {
   teammateColor = Color.MAGENTA;
 
   @SwitchProperty({
-    name: "Stop Rendering Mob Nametags in Kuudra",
-    description: "title",
-    category: "Kuudra"
-  })
-  kuudraTags = false
-
-  @SwitchProperty({
     name: "Stop Rendering Useless Perks",
     description: "Stops the useless perks rendering in the gui and stops you from clicking them",
     category: "Kuudra"
   })
   renderPerk = false
-
-  @SwitchProperty({
-    name: "Not stunning?",
-    description: "Enabled = do not render mining frenzy or cannonball",
-    category: "Kuudra"
-  })
-  renderStun = false
 
   @SwitchProperty({
     name: "No Pre! No Second!",
@@ -572,13 +551,6 @@ class Settings {
     category: "Kuudra"
   })
   inBuild = false;
-
-  @SwitchProperty({
-    name: "Breaking Piles",
-    description: `Highlights mobs that are not moving (helps figure out which mobs are breaking piles although is a little spotty)`,
-    category: "Kuudra"
-  })
-  breakingPiles = false;
 
   @SwitchProperty({
     name: "Notify Party On Fresh",
@@ -730,8 +702,6 @@ class Settings {
     this.setCategoryDescription("QOL", "Quality of Life")
     this.setCategoryDescription("Beta (WIP)", "Features that are currently incomplete but are planned and have some functionality")
 
-    this.addDependency("Not stunning?", "Stop Rendering Useless Perks")
-
     this.addDependency("Stats Widget", "Widget Display")
     this.addDependency("Pet Widget", "Widget Display")
     this.addDependency("Bestiary Widget", "Widget Display")
@@ -746,6 +716,8 @@ class Settings {
 
     this.addDependency("Custom Widget", "Widget Display")
     this.addDependency("Custom Widget Text", "Custom Widget")
+
+    this.addDependency("Confirm Leader Commands", "Party Commands")
   }
 }
 export default new Settings();

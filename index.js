@@ -22,6 +22,7 @@ import { setRegisters } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
 import { setMobHighlight } from "./features/Bestiary";
+import "./utils/Party"
 
 let changes;
 register("command", (arg) => {  
@@ -121,10 +122,13 @@ if (data.version != version) {
 
 register("serverConnect", () => {
   setTimeout(() => {
-    new TextComponent(`${ consts.PREFIX } &d&lBROADCAST&r: If clicking HUD or search bar crashes you, then you need to delete config.toml file or reimport module`)
+    ChatLib.chat("")
+    new TextComponent(`${ consts.PREFIX } &4&lPSA&r: For those wondering if &b&ncorpse waypoints&r are legit, the truth is there is no clear line, it uses the &b&nsame method as skytils coreleone waypoint&r so there are big mods that do the same. Of course &call mods are use at your own risk&r, and as always you can turn it off or delete the module. For more questions, join the &ndiscord&r.`)
       .setClickAction("run_command")
-      .setClickValue(`/ct files`)
+      .setHoverValue("Copies the discord link")
+      .setClickValue(`/ct copy https://discord.gg/3S3wXpC4gE`)
       .chat()
+    ChatLib.chat("")
   }, 3000)
 })
 
@@ -158,3 +162,4 @@ register("chat", () => {
 // TODO: uuid prio calculator
 // TODO: click in chat to translate
 // TODO: add better nausea effect to not be cancer inducing
+// TODO: add nick to data if applicable

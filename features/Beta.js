@@ -1,9 +1,9 @@
 import settings from "../config";
-import { registerWhen, holding, getVec3Pos, getVec3iPos, getRGB1 } from "../utils/functions";
+import { registerWhen, holding, getVec3Pos, getVec3iPos, getRGB1, setRegisters } from "../utils/functions";
 import renderBeaconBeam from "BeaconBeam"
 import RenderLib from "RenderLib"
 import { EntityArmorStand } from "../utils/constants";
-import { getWorld } from "../utils/world";
+import { getSpawn, getWorld } from "../utils/world";
 
 registerWhen(register("chat", (event) => {
   cancel(event)
@@ -77,69 +77,74 @@ function renderWaypoint(text, coords, hex, rgb) {
   renderBeaconBeam(coords[0] - 0.5, coords[1], coords[2] - 0.5, ...rgb, 0.5, false, 75);
 }
 
-let exit = false;
 let claimed = []
 let corpses = []
-/**
- * ! Fixed waypoints in the sense that once its rendered it does not move, interpret that as you will
- */
-registerWhen(register("playerJoined", (playerMP) => {
-  if (playerMP.getName() != Player.getName()) return;
-  exit = [(~~playerMP.getX()) - 0.5, ~~playerMP.getY(), (~~playerMP.getZ()) - 0.5] // gets coords on joining shaft
-}), () => settings.mineshaft)
+const CORPSE_TYPES = {
+  "Lapis Armor Helmet": {
+    name: "Lapis",
+    color: [0.33, 0.33, 1]
+  },
+  "Mineral Helmet": {
+    name: "Tungsten",
+    color: [0.66, 0.66, 0.66]
+  },
+  "Yog Helmet": {
+    name: "Umber",
+    color: [1, 0.66, 0]
+  },
+  "Vanguard Helmet": {
+    name: "Vanguard",
+    color: [0.33, 1, 1]
+  }
+}
 
 registerWhen(register("step", () => {
-  if (corpses.length >= 4) return; // 4 corpse cap
-  const entities = World.getAllEntitiesOfType(EntityArmorStand.class).filter(a => !a.getEntity().func_95999_t() && !a.isInvisible()) // entities with invisibilty are removed
-  if (!entities) return;
+  const entities = World.getAllEntitiesOfType(EntityArmorStand.class).filter(a => !a.getEntity().func_95999_t() && !a.isInvisible() && a?.getEntity()?.func_71124_b(4)); // only visible stands that also have default name and have helm
     
-  let i = entities.length
-  while (i--) {
+  let i = entities.length; while (i--) {
     const entity = entities[i];
     const pos = entity.getPos();
     
     if (corpses.some(e => pos?.compareTo(e.vec) == 0) || claimed.some(e => pos.distance(e) < 7)) continue; // if corpse is already rendered or claimed, skip finding its coords
-    try {
-      const helm = new EntityLivingBase(entity.getEntity()).getItemInSlot(4).getName().removeFormatting();
-      let [text, rgb] = [];
-      switch (helm) {
-        case "Lapis Armor Helmet":
-          [text, rgb] = ["Lapis", [0.333, 0.333, 1]]; break;
-        case "Mineral Helmet":
-          [text, rgb] = ["Tungsten", [0.667, 0.667, 0.667]]; break;
-        case "Yog Helmet":
-          [text, rgb] = ["Umber", [1, 0.667, 0]]; break;
-        case "Vanguard Helmet":
-          [text, rgb] = ["Vanguard", [0.333, 1, 1]]; break;
-        default: continue;
+
+    const helm = entity.getEntity()?.func_71124_b(4)?.func_82833_r()?.removeFormatting();
+    const [text, rgb] = [CORPSE_TYPES[helm].name, CORPSE_TYPES[helm].color]
+    if (!text || !rgb) continue;
+    corpses.push(
+      {
+        "loc": [~~entity.getX(), ~~entity.getY(), ~~entity.getZ()],
+        "vec": pos,
+        "text": text,
+        "rgb": rgb
       }
-      corpses.push(
-        {
-          "loc": [~~entity.getX(), ~~entity.getY(), ~~entity.getZ()],
-          "vec": entity.getPos(),
-          "text": text,
-          "rgb": rgb
-        });
-    } catch (e) {}
+    );
   }
-}).setDelay(1), () => settings.mineshaft && getWorld() == "Mineshaft")
+  }).setDelay(1), () => settings.mineshaft && getWorld() == "Mineshaft")
 
 registerWhen(register("renderWorld", () => {
-  let x = corpses.length
-  while (x--) {
+  let x = corpses.length; while (x--) {
     const corpse = corpses[x];
     if (claimed.some(e => corpse.vec.distance(e) < 7) || (settings.lapis && corpse.text != "Lapis")) continue;
     renderWaypoint(corpse.text, corpse.loc, 0xff5555, corpse.rgb);
   }
-  if (exit) renderWaypoint("Exit", exit, 0x55ffff, [1, 0, 0])
-}), () => settings.mineshaft && getWorld() == "Mineshaft");
+  renderWaypoint("Exit", getSpawn(), 0x55ffff, [1, 0, 0])
+  }), () => settings.mineshaft && getWorld() == "Mineshaft");
 
 registerWhen(register("chat", () => {
   claimed.push(Player.asPlayerMP().getPos())
 }).setCriteria("  FROZEN CORPSE LOOT! "), () => settings.mineshaft && getWorld() == "Mineshaft");
 
+// backup
+let backup = false
+registerWhen(register("chat", () => {
+  if (backup == false) {
+    backup = true
+    setTimeout(() => setRegisters(), 3000)
+  }
+}).setCriteria(" ⛏ ${*} entered the mineshaft!"), () => settings.mineshaft)
+
 register("worldUnload", () => {
-  exit = false
   claimed.length = 0
   corpses.length = 0
+  backup = false
 });

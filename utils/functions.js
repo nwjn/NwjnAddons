@@ -31,9 +31,6 @@ export function setRegisters() {
     }
   });
 }
-delay(() => {
-  setRegisters()
-}, 1000);
 
 /**
  * Gets the current held item or if specified any extra information from ExtraAttributes
