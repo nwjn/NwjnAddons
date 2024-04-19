@@ -3,7 +3,6 @@ import { registerWhen, holding, getVec3Pos, getVec3iPos, getRGB1, setRegisters }
 import renderBeaconBeam from "BeaconBeam"
 import RenderLib from "RenderLib"
 import { EntityArmorStand } from "../utils/constants";
-import { getSpawn, getWorld } from "../utils/world";
 
 registerWhen(register("chat", (event) => {
   cancel(event)
@@ -79,6 +78,7 @@ function renderWaypoint(text, coords, hex, rgb) {
 
 let claimed = []
 let corpses = []
+let exit = false;
 const CORPSE_TYPES = {
   "Lapis Armor Helmet": {
     name: "Lapis",
@@ -98,9 +98,14 @@ const CORPSE_TYPES = {
   }
 }
 
-registerWhen(register("step", () => {
-  const entities = World.getAllEntitiesOfType(EntityArmorStand.class).filter(a => !a.getEntity().func_95999_t() && !a.isInvisible() && a?.getEntity()?.func_71124_b(4)); // only visible stands that also have default name and have helm
-    
+const findCorpses = register("step", () => {
+  const stands = World.getAllEntitiesOfType(EntityArmorStand.class)
+  const entities = stands.filter(a => a?.getEntity()?.func_71124_b(4)); // only visible stands that also have default name and have helm
+  const find = stands.find(a => a?.getName() == "Exit the Glacite Mineshaft");
+  if (find) {
+    exit = [(~~find.getX()) - 0.5, ~~find.getY(), (~~find.getZ()) - 0.5]
+  }
+
   let i = entities.length; while (i--) {
     const entity = entities[i];
     const pos = entity.getPos();
@@ -108,7 +113,7 @@ registerWhen(register("step", () => {
     if (corpses.some(e => pos?.compareTo(e.vec) == 0) || claimed.some(e => pos.distance(e) < 7)) continue; // if corpse is already rendered or claimed, skip finding its coords
 
     const helm = entity.getEntity()?.func_71124_b(4)?.func_82833_r()?.removeFormatting();
-    const [text, rgb] = [CORPSE_TYPES[helm].name, CORPSE_TYPES[helm].color]
+    const [text, rgb] = [CORPSE_TYPES[helm]?.name, CORPSE_TYPES[helm]?.color]
     if (!text || !rgb) continue;
     corpses.push(
       {
@@ -119,32 +124,36 @@ registerWhen(register("step", () => {
       }
     );
   }
-  }).setDelay(1), () => settings.mineshaft && getWorld() == "Mineshaft")
+}).setDelay(1).unregister()
 
-registerWhen(register("renderWorld", () => {
+const renderCorpses = register("renderWorld", () => {
   let x = corpses.length; while (x--) {
     const corpse = corpses[x];
     if (claimed.some(e => corpse.vec.distance(e) < 7) || (settings.lapis && corpse.text != "Lapis")) continue;
     renderWaypoint(corpse.text, corpse.loc, 0xff5555, corpse.rgb);
   }
-  renderWaypoint("Exit", getSpawn(), 0x55ffff, [1, 0, 0])
-  }), () => settings.mineshaft && getWorld() == "Mineshaft");
+  if (exit) renderWaypoint("Exit", exit, 0x55ffff, [1, 0, 0])
+}).unregister();
 
-registerWhen(register("chat", () => {
+const lootCorpses = register("chat", () => {
   claimed.push(Player.asPlayerMP().getPos())
-}).setCriteria("  FROZEN CORPSE LOOT! "), () => settings.mineshaft && getWorld() == "Mineshaft");
+}).setCriteria("  FROZEN CORPSE LOOT! ").unregister()
 
 // backup
-let backup = false
+let inShaft = false
 registerWhen(register("chat", () => {
-  if (backup == false) {
-    backup = true
-    setTimeout(() => setRegisters(), 3000)
-  }
+  if (inShaft) return;
+  findCorpses.register()
+  renderCorpses.register()
+  lootCorpses.register()
 }).setCriteria(" ⛏ ${*} entered the mineshaft!"), () => settings.mineshaft)
 
 register("worldUnload", () => {
   claimed.length = 0
   corpses.length = 0
-  backup = false
+  exit = false
+  inShaft = false
+  findCorpses.unregister()
+  renderCorpses.unregister()
+  lootCorpses.unregister()
 });

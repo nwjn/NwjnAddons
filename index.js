@@ -22,6 +22,7 @@ import { setRegisters } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
 import { setMobHighlight } from "./features/Bestiary";
+import { resetWorld } from "./utils/world";
 import "./utils/Party"
 
 let changes;
@@ -51,7 +52,7 @@ register("command", (arg) => {
       ChatLib.chat(`${ consts.PREFIX } &eCommand List:&r\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/calc <equation> => calculates\n/deal => trades player in front of you without needing to type name`);
       break;
     case "reload":
-      setRegisters();
+      resetWorld()
       ChatLib.chat(`${ consts.PREFIX } &aReloaded all registers!`);
       break;
     default:
@@ -82,7 +83,7 @@ register("worldLoad", () => {
     let ctVersionArray = (res.data.releases[0].releaseVersion).split('.'),
     currentVersionArray = version.split('.'),
     newVersion = false
-    changes = res.data.releases[0].changelog.toString()
+    changes = res.data.releases[0].changelog.toString().replaceAll("\r", "")
     for(let i = ctVersionArray.length; i >= 0; i--)
     {
       if (ctVersionArray[i] > currentVersionArray[i])

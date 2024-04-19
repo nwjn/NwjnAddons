@@ -79,12 +79,6 @@ register("chat", (player1, player2) => {
   isLeader = ign === getPlayerName(player2);
 }).setCriteria("${player1} has promoted ${player2} to Party Leader");
 
-// Event handler for detecting the first party invite (player1 invites player2)
-register("chat", (player1, player2) => {
-  isLeader = ign === getPlayerName(player1);
-  inParty = true;
-}).setCriteria("${player1} invited ${player2} to the party! They have 60 seconds to accept.");
-
 
 // --- TRACK PARTY INTERACTIONS ---
 
@@ -99,7 +93,6 @@ register("chat", () => {
   inParty = false;
   party = new Set();
 }).setCriteria("You have been kicked from the party by ${player}");
-
 
 // --- CONTROL FOR GAME/CT RS ---
 

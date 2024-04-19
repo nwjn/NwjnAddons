@@ -1,12 +1,12 @@
 {
     "1495": 1495,
     "first_time": false,
-    "version": "0.9.8",
+    "version": "0.9.9",
     "power": "Warrior",
     "tuning": "233✦",
     "enrich": "46 on Speed",
     "mp": "1,558",
-    "pet": "&6Mole",
+    "pet": "&6T-Rex",
     "gummy": 0,
     "wisp": 0,
     "mobsHighlight": {},
@@ -133,8 +133,8 @@
         1
     ],
     "customL": [
-        3,
-        109,
+        83,
+        429,
         1
     ],
     "modVer": "0.8.0",

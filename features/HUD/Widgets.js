@@ -1,6 +1,8 @@
 import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
+import { resetWorld } from "../../utils/world";
+import { registerWhen } from "../../utils/functions";
 
 // let a = 0
 function widget(find, overlay) {
@@ -117,7 +119,8 @@ const corpseOverlay = new Overlay("corpse", ["Mineshaft"], () => true, data.corp
 const customExample = `&e&lCustom Widget:`
 const customOverlay = new Overlay("custom", ["all"], () => true, data.customL, "moveCustom", customExample);
 
-register("step", () => {
+registerWhen(register("step", (elapsed) => {
+  if (elapsed % 4 == 0) resetWorld() // resetsWorld every 2 seconds
   try {
     widget("Stats:", statsOverlay);
     widget("Pet:", petOverlay);
@@ -133,4 +136,4 @@ register("step", () => {
 
     widget(settings.widgetText, customOverlay);
   } catch (err) {}
-}).setFps(2)
+}).setFps(2), () => settings.widget)

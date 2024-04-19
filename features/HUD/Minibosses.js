@@ -16,20 +16,6 @@ registerWhen(register("chat", (mini) => {
   else if (mini == "MAGE OUTLAW") data.lastMini.push("&5Mage Outlaw")
   if (data.lastMini.length > 4) data.lastMini.shift()
   data.save()
-  /*
-  todo (TEST & REPLACE):
-  mini = mini.trim()
-  switch (mini) {
-    case "BLADESOUL": data.lastMini.push("&8Bladesoul"); break;
-    case "BARBARIAN DUKE X": data.lastMini.push("&eBarbarian Duke X"); break;
-    case "ASHFANG": data.lastMini.push("&cAshfang"); break;
-    case "MAGMA BOSS": data.lastMini.push("&4Magma Boss"); break;
-    case "MAGE OUTLAW": data.lastMini.push("&5Mage Outlaw"); break;
-    default: return;
-  }
-  data.lastMini.length > 4 && data.lastMini.pop()
-  data.save()
-  */
   
   miniOverlay.message = miniExample + data.lastMini.join("\n");
 }).setCriteria("${mini} DOWN!"), () => getWorld() == "Crimson Isle" && settings.mini);
