@@ -77,13 +77,6 @@ class Settings {
   dead = false  
 
   @SwitchProperty({
-    name: "Steak-Able Vamp Hitbox",
-    description: "Shows a hitbox when a Vamp Slayer is steak-able",
-    category: "General"
-  })
-  steakAble = false 
-
-  @SwitchProperty({
     name: "Skyblock XP Gain Message",
     description: "Takes action bar skyblock xp gained message and pastes them in chat",
     category: "General"

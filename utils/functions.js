@@ -49,14 +49,6 @@ export function holding(returnType = "", tag = "") {
   return item
 }
 
-export function getVec3Pos(vec) {
-  return [vec.field_72450_a, vec.field_72448_b, vec.field_72449_c]
-}
-
-export function getVec3iPos(vec) {
-  return [~~vec.field_177962_a, ~~vec.field_177960_b, ~~vec.field_177961_c]
-}
-
 export function getRGB1(setting) {
   return [setting.getRed() / 255, setting.getGreen() / 255, setting.getBlue() / 255]
 }

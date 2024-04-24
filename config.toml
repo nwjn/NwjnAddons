@@ -51,7 +51,7 @@
 		powder_widget = true
 
 	[hud.poison]
-		poison_display = true
+		poison_display = false
 
 	[hud.clock]
 		time_display = 1
@@ -114,24 +114,24 @@
 	better_magma_boss_message = false
 
 ["beta_(wip)"]
-	lapis_only = false
-	gyro_range = false
+	lapis_only = true
+	gyro_range = true
 	corpse_waypoints = true
 	agro_range = false
 	tracks_damage_armor_stands = false
 	totem_color_opacity = 0.25
 	agro_range_color = "255,255,0,0"
 	totem_range = false
-	gyro_color_opacity = 0.5
+	gyro_color_opacity = 0.52307785
 	agro_color_opacity = 0.5
 	removed_boss_dialouge = true
 	totem_range_options = 0
-	gyro_range_color = "255,255,0,255"
+	gyro_range_color = "255,249,0,249"
 	totem_range_color = "255,0,255,255"
 	mineshaft_helper = true
 
 [qol]
-	toggle_block_highlight = false
+	toggle_block_highlight = true
 	render_armor_bar = true
 	remove_discord_warnings = true
 	render_food_bar = true

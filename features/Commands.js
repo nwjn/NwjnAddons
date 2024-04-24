@@ -1,16 +1,15 @@
-import { comma, consts, EntityArmorStand } from "../utils/constants";
-import { holding } from "../utils/functions";
-
+import { comma, consts } from "../utils/constants";
 register("command", () => {
   ChatLib.clearChat()
 }).setName("clearchat", true)
 
 register("command", () => {
   let rarity = "None"
-  holding()?.getLore()?.forEach(line => {
+  const holding = Player.getHeldItem()
+  holding?.getLore()?.forEach(line => {
     if (line.toString().includes("COMMON") || line.toString().includes("RARE") || line.toString().includes("EPIC") || line.toString().includes("LEGENDARY") || line.toString().includes("MYTHIC") || line.toString().includes("DIVINE") || line.toString().includes("SPECIAL")) rarity = line
   })
-  ChatLib.chat(`\nName: ${ holding()?.getName() }\nRegistry Name: ${ holding()?.getRegistryName() }\nSkyblock ID: ${ holding("String", "id") }\nRarity: ${ rarity }\n`)
+  ChatLib.chat(`\nName: ${ holding?.getName() }\nRegistry Name: ${ holding?.getRegistryName() }\nSkyblock ID: ${ holding?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id") }\nRarity: ${ rarity }\n`)
 }).setName("itemInfo", true).setAliases("item");
 
 register("command", () => {

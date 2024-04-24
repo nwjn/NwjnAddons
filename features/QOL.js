@@ -13,11 +13,11 @@ registerWhen(register("chat", (msg) => {
 // Credit: Adapted from Block Highlight on ct
 let block;
 registerWhen(register('drawBlockHighlight', (pos, event) => {
-  block = block.toString().startsWith('Block{type=minecraft:air') ? block = null : World.getBlockAt(pos.x, pos.y, pos.z)
-  return cancel(event)
+  block = World.getBlockAt(pos.x, pos.y, pos.z)
+  block = block.toString().startsWith('Block{type=minecraft:air') ? null : block
+  cancel(event)
 }), () => settings.highlight)
 
-// todo: figure out why this shits on performance
 registerWhen(register('renderWorld', () => {
   if (block == null) return
   RenderLib.drawEspBox(block.x + .5, block.y, block.z + .5, 1, 1, ...getRGB1(settings.highlightColor), 1, false)

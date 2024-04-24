@@ -11,17 +11,8 @@ const visitorOverlay = new Overlay("nextVisitor", ["all"], () => true, data.visi
 
 let getTime = 0
 registerWhen(register("chat", () => {
-  if (settings.nextVisitor == 1) getTime = 720
-  else if (settings.nextVisitor == 2) getTime = 900
-}).setCriteria("${*} has arrived on your Garden!"), () => settings.nextVisitor != 0);
-
-/*
-TODO: TEST & REPLACE
-let getTime = 0
-registerWhen(register("chat", () => {
   getTime = settings.nextVisitor == 1 ? 720 : 900
-}).setCriteria("${*} has arrived on your Garden!"), () => settings.nextVisitor);
-*/
+}).setCriteria("${*} has arrived on your Garden!"), () => settings.nextVisitor != 0);
 
 const legionExample = `&eLegion: &cAlone :(`
 const legionOverlay = new Overlay("legion", ["all"], () => true, data.legionL, "moveLegion", legionExample);
@@ -61,13 +52,9 @@ registerWhen(register("chat", (percent) => {
 }).setCriteria("[Mage] Cooldown Reduction ${*}% -> ${percent}%"), () => settings.mageCD)
 
 registerWhen(register("clicked", (x, y, button, down) => {
-  if (holding("String", "id") != "GYROKINETIC_WAND" || button != 0 || down != true || gyroLeft > 0 || Player.getContainer() == undefined || Client.isInGui()) return
+  const holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id");
+  if (holding != "GYROKINETIC_WAND" || button != 0 || down != true || gyroLeft > 0 || Client.isInGui()) return
   gyroUsed = Date.now()
-  /*
-  TODO: TEST & REPLACE
-  if (holding("String", "id") != "GYROKINETIC_WAND" || button || !down || gyroLeft > 0 || !Player.getContainer() || Client.isInGui()) return
-  gyroUsed = Date.now()
-  */
 }), () => settings.gravityStorm)
 
 const manaExample = `&cFero: &a0%\n&cStrong: &a0%`
@@ -93,7 +80,8 @@ registerWhen(register("chat", (player, mana) => {
 }).setCriteria("Party > ${name}: Used ${mana} mana${*}"), () => settings.manaEnchant)
 
 registerWhen(register("renderWorld", () => {
-  if (holding("String", "id") != "END_STONE_SWORD") return
+  const holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id");
+  if (holding != "END_STONE_SWORD") return
   World.getAllEntitiesOfType(EntityPlayer.class).forEach(player => {
     if (Player.asPlayerMP().distanceTo(player) > 5) return
       let ping = World.getPlayerByName(player.getName())?.getPing()

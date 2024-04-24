@@ -132,24 +132,24 @@ registerWhen(register("chat", (player, command, event) => {
   delay(() => {
     command = command.toLowerCase()
     switch (command) {
-      case "time":
-        ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
-      case "coord":
-      case "loc":
-      case "location":
-      case "coords":
-        ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
-      case "server":
-      case "area":
-        const server = TabList.getNames().find(e => e.removeFormatting().startsWith(" Server: "))?.removeFormatting()?.substring(9);
-        ChatLib.command(`pc ${ getWorld() } | ${ server }`); break;
-      case "pow":
-      case "power":
-        ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
-      case "pet":
-        ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
-      case "build":
-        ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
+      // case "time":
+      //   ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
+      // case "coord":
+      // case "loc":
+      // case "location":
+      // case "coords":
+      //   ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
+      // case "server":
+      // case "area":
+      //   const server = TabList.getNames().find(e => e.removeFormatting().startsWith(" Server: "))?.removeFormatting()?.substring(9);
+      //   ChatLib.command(`pc ${ getWorld() } | ${ server }`); break;
+      // case "pow":
+      // case "power":
+      //   ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
+      // case "pet":
+      //   ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
+      // case "build":
+      //   ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
       case "t5":
       case "raider":
         CommandMsg = `joininstance kuudra_infernal`; break;
@@ -170,7 +170,7 @@ registerWhen(register("chat", (player, command, event) => {
       default: return;
     }
     if (getIsLeader()) {
-      if (settings.leader) {
+      if (settings.leader && CommandMsg) {
         new TextComponent(`&a&l[CONFIRM]`).setHoverValue(`Runs /${ CommandMsg }`).setClickAction("run_command").setClickValue(`/${ CommandMsg }`).chat()
         ChatLib.addToSentMessageHistory(-1, `/${CommandMsg}`)
       }
@@ -187,14 +187,6 @@ registerWhen(register("soundPlay", () => {
   if (armor == "REAPER_CHESTPLATE") reaperUsed = Date.now()
 }).setCriteria("mob.zombie.remedy"), () => settings.reaper);
 
-registerWhen(register("renderWorld", () => {
-  // todo: zone check
-  World.getAllEntitiesOfType(EntityArmorStand.class).forEach(stand => {
-    let name = ChatLib.removeFormatting(stand.getName())
-    if (Player.asPlayerMP().canSeeEntity(stand) && name.includes("҉") && name.includes("Bloodfiend")) RenderLib.drawEspBox(stand.getRenderX(), stand.getRenderY() - 2, stand.getRenderZ(), 1, 2, 1, 0.2, 0.46667, 1, true)
-  })
-}), () => getWorld() == "The Rift" && settings.steakAble);
-
 registerWhen(register("entityDeath", (entity) => {
   entity = entity.getEntity()
   const hp = entity.func_110148_a(SMA.field_111267_a).func_111125_b();
@@ -209,7 +201,8 @@ let blockBroken = 0
 let time = 0
 registerWhen(register("blockBreak", (block) => {
   // todo:test
-  if (block.toString().includes("type=minecraft:log") && holding("String", "id") == "TREECAPITATOR_AXE" && time <= 0) blockBroken = Date.now();
+  const holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id");
+  if (block.toString().includes("type=minecraft:log") && holding == "TREECAPITATOR_AXE" && time <= 0) blockBroken = Date.now();
 }), () => settings.treecap && ["Hub", "The Park"].includes(getWorld()))
 
 registerWhen(register("renderOverlay", () => {
@@ -250,7 +243,7 @@ let lastBar = "";
 
 let rendArrows = 0
 registerWhen(register("soundPlay", () => {
-  const holding = holding().getRegistryName()
+  const holding = Player.getHeldItem()?.getRegistryName()
   if (holding != "minecraft:bow" && holding != "minecraft:bone") return
   rendArrows++;
   if (rendArrows > 1) return;

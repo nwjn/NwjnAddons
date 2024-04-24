@@ -80,18 +80,8 @@ register("worldLoad", () => {
   if (ctNoti) return
   axios.get(`https://chattriggers.com/api/modules/1528`)
   .then(res => {
-    let ctVersionArray = (res.data.releases[0].releaseVersion).split('.'),
-    currentVersionArray = version.split('.'),
-    newVersion = false
     changes = res.data.releases[0].changelog.toString().replaceAll("\r", "")
-    for(let i = ctVersionArray.length; i >= 0; i--)
-    {
-      if (ctVersionArray[i] > currentVersionArray[i])
-        newVersion = true
-      else if (currentVersionArray[i] > ctVersionArray[i])
-        newVersion = false
-    }
-    if(newVersion)
+    if(res.data.releases[0].releaseVersion != version)
     {
       ChatLib.chat("");
       ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------`)

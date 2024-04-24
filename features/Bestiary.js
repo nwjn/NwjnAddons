@@ -229,11 +229,11 @@ registerWhen(register("renderWorld", () => {
 
 let filteredPlayers = []
 registerWhen(register("step", () => {
-  const PLAYERS = World.getAllEntitiesOfType(EntityPlayer.class).filter(e => !e.isInvisible() && ((settings.player == "Player" ? World.getPlayerByName(e.getName())?.getPing() == 1 : false) || (settings.player == "Any") || (settings.player)))
+  const PLAYERS = World.getAllEntitiesOfType(EntityPlayer.class).filter(e => !e.isInvisible() && ((settings.player == "Player" && World.getPlayerByName(e.getName())?.getPing() == 1) || (settings.player == "Any")))
   filteredPlayers = []
   PLAYERS.forEach(player => {
     data.playerList.forEach(entry => {
-      if (player.getName().includes(entry) || entry == "Player" || entry == "Any") filteredPlayers.push(player)
+      if (player.getName().includes(entry) || ["Player", "Any"].includes(entry)) filteredPlayers.push(player)
     })
   })
 }).setFps(2), () => settings.player)

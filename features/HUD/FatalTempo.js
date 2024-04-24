@@ -1,7 +1,7 @@
 import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
-import { registerWhen, holding } from "../../utils/functions";
+import { registerWhen } from "../../utils/functions";
 import { getWorld } from "../../utils/world";
 
 const ftExample = `Fatal Tempo: 0%`;
@@ -42,30 +42,17 @@ registerWhen(register("renderOverlay", () => {
   }
 }), () => settings.ft);
 
-function addHits() {
-  if (holding("String", "id") != "TERMINATOR") return
-  const ftLvl = holding("EA").getCompoundTag("enchantments").getTag("ultimate_fatal_tempo");
+registerWhen(register("soundPlay", (pos, name) => {
+  if ((getWorld() == "Kuudra" && name.toString() != "random.bow") || (getWorld() != "Kuudra" && name.toString() != "random.successful_hit")) return
+  const holding = Player.getHeldItem()
+  if (holding.getRegistryName() != "minecraft:bow") return
+  const ftLvl = holding?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes").getCompoundTag("enchantments").getTag("ultimate_fatal_tempo");
   if (ftLvl) {
-    time = Date.now();
+    time = new Date().getTime();
     ftLevel = ftLvl;
     ftHits.push(time);
   }
-}
-registerWhen(register("soundPlay", addHits).setCriteria("random.bow"), () => settings.ft && getWorld() == "Kuudra");
-
-registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings.ft && getWorld() != "Kuudra");
-
-// registerWhen(register("soundPlay", (pos, name) => {
-//   if ((getWorld() == "Kuudra" && name.toString() != "random.bow") || (getWorld() != "Kuudra" && name.toString() != "random.successful_hit")) return
-//   const holding = Player.getHeldItem()
-//   if (holding.getRegistryName() != "minecraft:bow") return
-//   const ftLvl = holding?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes").getCompoundTag("enchantments").getTag("ultimate_fatal_tempo");
-//   if (ftLvl) {
-//     time = new Date().getTime();
-//     ftLevel = ftLvl;
-//     ftHits.push(time);
-//   }
-// }), () => settings.ft);
+}), () => settings.ft);
 
 registerWhen(register("step", () => {
   const time = Date.now()

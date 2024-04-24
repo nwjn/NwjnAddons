@@ -1,5 +1,5 @@
 import settings from "../config";
-import { registerWhen, holding, getVec3Pos, getVec3iPos, getRGB1, setRegisters } from "../utils/functions";
+import { registerWhen, getRGB1 } from "../utils/functions";
 import renderBeaconBeam from "BeaconBeam"
 import RenderLib from "RenderLib"
 import { EntityArmorStand } from "../utils/constants";
@@ -25,8 +25,17 @@ registerWhen(register("step", () => {
 }).setDelay(20), () => settings.damageTracker)
 
 // Credit: GriffinOwO on ct for gyro
+function getVec3Pos(vec) {
+  return [vec.field_72450_a, vec.field_72448_b, vec.field_72449_c]
+}
+
+function getVec3iPos(vec) {
+  return [parseInt(vec.func_177958_n()), parseInt(vec.func_177956_o()), parseInt(vec.func_177952_p())]
+}
+
 registerWhen(register("renderWorld", (partialTick) => {
-  if (holding("String", "id") != "GYROKINETIC_WAND") return;
+  let holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")
+  if (holding?.getString("id") != "GYROKINETIC_WAND") return;
 
   const moveObject = Player.getPlayer().func_174822_a(25, partialTick);
 
@@ -48,11 +57,12 @@ registerWhen(register("renderWorld", (partialTick) => {
   const [sx, sy, sz] = getVec3Pos(moveObject.field_72307_f);
   
   const [rx, ry, rz] = true ? [x + 0.5, y + 1, z + 0.5] : [sx, sy, sz]
-  RenderLib.drawCyl(rx, ry, rz, 10, 1, 0.25, 30, 1, 0, 90, 90, ...getRGB1(settings.gyroColor), settings.gyroOpacity, false, false);
+  RenderLib.drawCyl(rx, ry, rz, 10, 1, 0.25, 30, 1, 0, 90, 90, settings.gyroColor.getRed() / 255, settings.gyroColor.getGreen() / 255, settings.gyroColor.getBlue() / 255, settings.gyroOpacity, false, false);
 }), () => settings.gyro);
 
 registerWhen(register("renderWorld", () => {
-  if (!["JINGLE_BELLS", "ENRAGER"].includes(holding("String", "id"))) return;
+  const holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id");
+  if (!["JINGLE_BELLS", "ENRAGER"].includes(holding)) return;
   RenderLib.drawCyl(Player.getRenderX(), Player.getRenderY(), Player.getRenderZ(), 10, 1, 0.25, 30, 1, 0, 90, 90, ...getRGB1(settings.agroColor), settings.agroOpacity, false, false);
 }), () => settings.agro);
 
@@ -64,7 +74,8 @@ registerWhen(register("renderWorld", () => {
   })
 
   const block = Player.lookingAt()
-  if (block.toString().includes('minecraft:air') || settings.totemOptions == 1 || holding("String", "id") != "TOTEM_OF_CORRUPTION") return
+  const holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id");
+  if (block.toString().includes('minecraft:air') || settings.totemOptions == 1 || holding != "TOTEM_OF_CORRUPTION") return
   RenderLib.drawCyl(block.getRenderX() + 0.5, block.getRenderY() + 1, block.getRenderZ() + 0.5, 18, 1, 0.25, 30, 1, 0, 90, 90, ...getRGB1(settings.totemColor), settings.totemOpacity, false, false);
 }), () => settings.totem);
 
@@ -137,22 +148,32 @@ const renderCorpses = register("renderWorld", () => {
 
 const lootCorpses = register("chat", () => {
   claimed.push(Player.asPlayerMP().getPos())
-}).setCriteria("  FROZEN CORPSE LOOT! ").unregister()
+}).setCriteria("  ${*} CORPSE LOOT! ").unregister()
+
 
 // backup
-let inShaft = false
-registerWhen(register("chat", () => {
-  if (inShaft) return;
+let registered = false
+function registerThis() {
+  if (registered) return;
+  registered = true;
   findCorpses.register()
   renderCorpses.register()
   lootCorpses.register()
-}).setCriteria(" ⛏ ${*} entered the mineshaft!"), () => settings.mineshaft)
+}
+
+registerWhen(register("chat", registerThis).setCriteria(" ⛏ ${*} entered the mineshaft!").setPriority(Priority.HIGHEST), () => settings.mineshaft)
+
+registerWhen(register("chat", () => {
+  registerThis()
+  registered = false
+}).setCriteria("Sending to Mineshaft...").setPriority(Priority.HIGHEST), () => settings.mineshaft)
 
 register("worldUnload", () => {
+  if (!registered) return
   claimed.length = 0
   corpses.length = 0
   exit = false
-  inShaft = false
+  registered = false
   findCorpses.unregister()
   renderCorpses.unregister()
   lootCorpses.unregister()
