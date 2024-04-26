@@ -21,7 +21,7 @@ import "./features/QOL/DiscordCleaner"
 import "./features/QOL/VisitorCleaner"
 
 import "./features/Utilities/DamageTracker"
-import "./features/Beta/Mineshaft"
+import "./features/Beta/CorpseWaypoints"
 
 import { version, PREFIX } from "./utils/constants";
 import { data } from "./utils/data";
