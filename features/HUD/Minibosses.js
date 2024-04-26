@@ -17,9 +17,11 @@ registerWhen(register("chat", (mini) => {
   if (data.lastMini.length > 4) data.lastMini.shift()
   data.save()
   
-  miniOverlay.message = miniExample + data.lastMini.join("\n");
+  miniOverlay.setMessage(miniExample + data.lastMini.join("\n"))
 }).setCriteria("${mini} DOWN!"), () => getWorld() == "Crimson Isle" && settings.mini);
 
-if (settings.mini) { // on load
-  miniOverlay.message = miniExample + data.lastMini.join("\n");
-}
+import { onWorldJoin } from "../../utils/functions";
+onWorldJoin(() => {
+  if (!settings.mini) return
+  miniOverlay.setMessage(miniExample + data.lastMini.join("\n"))
+})

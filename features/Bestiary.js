@@ -111,7 +111,7 @@ export function setMobHighlight() {
 let mobsHighlighted = {}
 register("guiClosed", (event) => {
   if (!event?.toString().includes("vigilance")) return
-  mobCountOverlay.message = ""
+  mobCountOverlay.setMessage("")
   delay(() => {
     mobsHighlighted = {}
     Object.keys(data.mobsHighlight).forEach((mob) => {
@@ -128,7 +128,7 @@ register("guiClosed", (event) => {
 
 const mobCountExample = `&eZombie: 0`
 const mobCountOverlay = new Overlay("mobEspCount", ["all"], () => true, data.mobCountL, "moveCount", mobCountExample);
-mobCountOverlay.message = ""
+mobCountOverlay.setMessage("")
 
 registerWhen(register("renderWorld", () => {
   let mobsHighlight = data.mobsHighlight;
@@ -162,10 +162,12 @@ registerWhen(register("renderWorld", () => {
     
       // mobCountOverlay.message = mobCountOverlay.message.includes(mobHighlightKey) ? mobCountOverlay.message.replace(new RegExp(`(${ mobHighlightKey }: [0-9]+\n|&eZombie: 0)`), `${ mobHighlightKey }: ${ num }\n`) : `${ mobHighlightKey }: ${ num }\n`;
       if (mobCountOverlay.message.includes(mobHighlightKey)) {
-        mobCountOverlay.message = mobCountOverlay.message.replace(new RegExp(`(${ mobHighlightKey }: [0-9]+\n|&eZombie: 0)`), `${ mobHighlightKey }: ${ num }\n`)
+        const txt = mobCountOverlay.message.replace(new RegExp(`(${ mobHighlightKey }: [0-9]+\n|&eZombie: 0)`), `${ mobHighlightKey }: ${ num }\n`)
+        mobCountOverlay.setMessage(txt)
       }
       else {
-        mobCountOverlay.message += `${ mobHighlightKey }: ${ num }\n`
+        const txt = mobCountOverlay.message + `${ mobHighlightKey }: ${ num }\n`
+        mobCountOverlay.setMessage(txt)
       }
     } catch (error) {}
   });
@@ -246,10 +248,13 @@ registerWhen(register("renderWorld", () => {
 
 let filteredMatchos = []
 registerWhen(register("step", () => {
-  if (!settings.rawMobList) mobCountOverlay.message = ""
+  if (!settings.rawMobList) mobCountOverlay.setMessage("")
   const MATCHOS = World.getAllEntitiesOfType(EntityPlayer.class).filter(matcho => matcho.getName() == "matcho ")
 
-  mobCountOverlay.message = mobCountOverlay.message.includes("Matcho") ? mobCountOverlay.message.replace(/Matcho: [0-9]+\n/g, `Matcho: ${MATCHOS.length}\n`) : mobCountOverlay.message += `Matcho: ${MATCHOS.length}\n`
+  const txt = mobCountOverlay.message.includes("Matcho") ? mobCountOverlay.message.replace(/Matcho: [0-9]+\n/g, `Matcho: ${ MATCHOS.length }\n`) : mobCountOverlay.message += `Matcho: ${ MATCHOS.length }\n`
+  
+  mobCountOverlay.setMessage(txt) 
+
   filteredMatchos = MATCHOS.filter(matcho => Player.asPlayerMP().canSeeEntity(matcho))
 }).setFps(2), () => settings.matcho && getWorld() == "Crimson Isle")
 
@@ -270,9 +275,12 @@ registerWhen(register("renderWorld", () => {
 let filteredKeepers = []
 const CAVE_SPIDER_CLASS = Java.type("net.minecraft.entity.monster.EntityCaveSpider").class
 registerWhen(register("step", () => {
-  if (!settings.rawMobList) mobCountOverlay.message = ""
+  if (!settings.rawMobList) mobCountOverlay.setMessage("")
   const KEEPERS = World.getAllEntitiesOfType(CAVE_SPIDER_CLASS).filter(keeper => keeper.getEntity().func_110148_a(SMA.field_111267_a).func_111125_b() % 3000 == 0)
-  mobCountOverlay.message = mobCountOverlay.message.indexOf("Keeper") == -1 ? mobCountOverlay.message + `\nKeeper: ${ KEEPERS.length }\n` : mobCountOverlay.message.replace(/Keeper: [0-9]+\n/g, `Keeper: ${ KEEPERS.length }\n`)
+  
+  const txt = mobCountOverlay.message.indexOf("Keeper") == -1 ? mobCountOverlay.message + `\nKeeper: ${ KEEPERS.length }\n` : mobCountOverlay.message.replace(/Keeper: [0-9]+\n/g, `Keeper: ${ KEEPERS.length }\n`)
+
+  mobCountOverlay.setMessage(txt)
   
   filteredKeepers = KEEPERS.filter(keeper => Player.asPlayerMP().canSeeEntity(keeper))
 }).setFps(2), () => settings.keeper && getWorld() == "Spider's Den")

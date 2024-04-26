@@ -13,24 +13,22 @@ export let data = new PogObject("NwjnAddons", {
   "mobsHighlight": {},
   "standList": [],
   "playerList": [],
-  "lastMinis": [],
+  "lastMini": [],
   "flare": {
     "kills": 0,
     "xp": 0,
     "vanqs": 0
   },
-  "ftL": [15, 250, 1],
-  "champL": [15, 250, 1],
-  "poisonL": [15, 250, 1],
-  "blazeL": [15, 250, 1],
-  "clockL": [15, 250, 1],
-  "visitorL": [15, 250, 1],
-  "miniL": [15, 250, 1],
-  "legionL": [15, 250, 1],
-  "gyroL": [15, 250, 1],
-  "keyGuardL": [15, 250, 1],
-  "manaL": [15, 250, 1],
-  "mobCountL": [15, 250, 1],
+  "ftL": [80, 250, 1],
+  "champL": [150, 150, 1],
+  "poisonL": [300, 300, 1],
+  "blazeL": [90, 300, 1],
+  "clockL": [10, 350, 1],
+  "miniL": [125, 125, 1],
+  "legionL": [50, 50, 1],
+  "gyroL": [280, 110, 1],
+  "manaL": [100, 100, 1],
+  "mobCountL": [50, 50, 1],
 
   "statsL": [15, 250, 1],
   "petL": [15, 250, 1],
@@ -46,7 +44,3 @@ export let data = new PogObject("NwjnAddons", {
 
   "customL": [15, 250, 1]
 }, "data.json");
-
-register("gameUnload", () => {
-  data.save();
-});

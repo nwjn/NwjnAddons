@@ -1,10 +1,10 @@
 import settings from "../config"
-import { delay, registerWhen, fixLength, holding, getRGB1 } from "../utils/functions"
+import { delay, registerWhen, getRGB1 } from "../utils/functions"
 import { getWorld } from "../utils/world";
 import { data } from "../utils/data";
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
-import { EntityArmorStand, version, SMA } from "../utils/constants";
+import { EntityArmorStand, SMA } from "../utils/constants";
 import { getIsLeader } from "../utils/Party";
 
 // Credit: Volcaddons on ct for waypoints

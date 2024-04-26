@@ -1,4 +1,4 @@
-import { comma, consts } from "../utils/constants";
+import { comma, PREFIX } from "../utils/constants";
 register("command", () => {
   ChatLib.clearChat()
 }).setName("clearchat", true)
@@ -39,9 +39,10 @@ register("command", () => {
 register("command", (...args) => {
   try {
     const equat = args.join("").replace(/,/g, "")
-    ChatLib.chat(`${consts.PREFIX}&r: ${comma(equat)} = ${comma(eval(equat))}`)
-  } catch (err) {ChatLib.chat(`${consts.PREFIX}&r: ${err}`)}
+    ChatLib.chat(`${PREFIX}&r: ${comma(equat)} = ${comma(eval(equat))}`)
+  } catch (err) {ChatLib.chat(`${PREFIX}&r: ${err}`)}
 }).setName("calc", true)
+
 
 register("command", () => {
   const looking = Player.lookingAt()
@@ -49,17 +50,39 @@ register("command", () => {
 }).setName("deal", true);
 
 // dev tools
-register("command", (index) => {
-  const tab = TabList.getNames()[parseInt(index)]
-  ChatLib.chat(tab)
-}).setName("/tab");
+
+if (Player.getName() == "nwjn") {
+  let code = []
+
+  register("command", (...args) => {
+    try {
+      const command = args.shift()
+      switch (command) {
+        case "add": 
+          code.push(args.join(" "));
+          ChatLib.chat(`&dEval added new code:&r ${args.join(" ")}`);
+          break;
+        case "reset": 
+          code.length = 0;
+          ChatLib.chat(`&dEval reset all code`);  break;
+        case "view":
+          ChatLib.chat(`&dCode:`)
+          ChatLib.chat(code.join("\n"));
+          break;
+        case "run":
+          ChatLib.chat(`&dRunning code...`);
+          eval(code.join("\n"));
+          ChatLib.command("eval reset", true)
+          break;
+        default: return;
+      }
+      ChatLib.chat("")
+    } catch (err) {ChatLib.chat(`${PREFIX} Eval: &c${err}`)}
+  }).setName("eval", true)
+}
 
 register("command", () => {
   const nbt = Player.getHeldItem()?.getNBT()
   FileLib.delete("NwjnAddons", "dev.json")
   FileLib.write("NwjnAddons", "dev.json", JSON.stringify(nbt.toObject(), null, 4), true);
 }).setName("nbt");
-
-register("command", () => {
-  console.clear()
-}).setName("clearConsole")

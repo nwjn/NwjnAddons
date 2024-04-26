@@ -1,19 +1,18 @@
 import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
-import { resetWorld } from "../../utils/world";
 import { registerWhen } from "../../utils/functions";
 
 // let a = 0
 function widget(find, overlay) {
-  overlay.message = ""
+  overlay.setMessage("")
   if (!settings[`${overlay.setting}`] || !settings.widget) return
   let tab = TabList.getNames()
   const start = tab.findIndex(e => e.includes(find))
   tab = tab.slice(start)
   const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘|Ends in)/g))|| e.removeFormatting().startsWith("               ")) && i)
   tab = tab.slice(0, end)
-  overlay.message = tab.join("\n")
+  overlay.setMessage(tab.join("\n"))
   // if (find == "Powders:" & !a) {
   //   tab.forEach(e => ChatLib.chat(e))
   //   a++
@@ -119,8 +118,7 @@ const corpseOverlay = new Overlay("corpse", ["Mineshaft"], () => true, data.corp
 const customExample = `&e&lCustom Widget:`
 const customOverlay = new Overlay("custom", ["all"], () => true, data.customL, "moveCustom", customExample);
 
-registerWhen(register("step", (elapsed) => {
-  if (elapsed % 4 == 0) resetWorld() // resetsWorld every 2 seconds
+registerWhen(register("step", () => {
   try {
     widget("Stats:", statsOverlay);
     widget("Pet:", petOverlay);

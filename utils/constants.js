@@ -1,17 +1,13 @@
 export const comma = (num) => {
-  if (num.toString()?.includes(".")) {
-    const [intVal, floatVal] = num.toString()?.split(".")
-    return intVal.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + "." + floatVal
-  }
-  return num.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  if (!num.toString()?.includes(".")) return num.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  
+  const [intVal, floatVal] = num.toString()?.split(".")
+  return intVal.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + "." + floatVal
 }
 
 export const version = (JSON.parse(FileLib.read("NwjnAddons", "metadata.json"))).version
 
-export const consts = {
-  PREFIX: "&d&l[NwjnAddons]&r",
-  WIP: "&cThis feature is still in development!",
-};
+export const PREFIX = "&d&l[NwjnAddons]&r"
 
 export const EntityArmorStand = Java.type("net.minecraft.entity.item.EntityArmorStand")
 export const EntityPlayer = Java.type("net.minecraft.client.entity.EntityOtherPlayerMP")

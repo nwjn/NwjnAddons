@@ -1,37 +1,55 @@
-import { delay, setRegisters } from "./functions";
 
-// Credit: Adapted from volcaddons findworld
+// Credit: Volcaronitee
+
+/**
+ * Variables used to store world data.
+*/
 let world = undefined;
 export function getWorld() { return world; };
+let game = undefined
+export function getGame() { return game }
+let noFind = 0;
 
-function findWorld(noFind = 10) {
-  try {
-    if (noFind == 10) world = undefined
-    if (!noFind) return;
-    noFind--;
-    const tab = TabList.getNames()?.find(tab => tab?.match(/(Area|Dungeon)/g))?.removeFormatting();
-    if (!tab)
-      delay(() => {
-        findWorld(noFind)
-      }, 1000);
-    else {
-      world = tab.substring(tab.indexOf(': ') + 2);
-      setRegisters();
-    }
-  } catch (err) {}
+import { delay, setRegisters } from "./functions";
+
+/**
+ * Identifies the current world the player is in based on the tab list.
+ */
+function findWorld() {
+    if (!World.isLoaded()) return;
+
+    // Infinite loop prevention
+    if (noFind === 10) return;
+    noFind++;
+
+    // Get world from tab list
+  world = TabList.getNames().find(tab => tab.match(/(Area|Dungeon):/g));
+  game = Scoreboard.getTitle()
+
+  if (world === undefined) {
+    // If the world is not found, try again after a delay
+    delay(() => findWorld(), 1000);
+
+  } else {
+    // Get world formatted
+    world = world.removeFormatting().split(": ").slice(-1).toString();
+    game = game.removeFormatting()
+
+    delay(() => setRegisters(), 500);
+  }
 }
 
-register("worldLoad", () => {
-  setRegisters()
-  findWorld()
+import { onWorldJoin, onWorldLeave } from "./functions";
+/**
+ * Set and reset world on world change.
+ */
+onWorldJoin(() => {
+  noFind = 0;
+  findWorld();
 })
 
-// on ct load
-findWorld();
-delay(() => {
-  setRegisters()
-}, 1000);
-
-export function resetWorld() {
-  findWorld()
-}
+onWorldLeave(() => {
+  world = undefined;
+  game = undefined;
+  setRegisters();
+});

@@ -2,14 +2,6 @@ import settings from "../config";
 import { registerWhen, getRGB1 } from "../utils/functions";
 import RenderLib from "../../RenderLib";
 
-registerWhen(register("chat", (msg) => {
-  let chat = ChatLib.getChatMessage(msg, true)
-  cancel(msg)
-  chat = chat.replace("&r&cPlease be mindful of Discord links in chat as they may pose a security risk&r", "")
-  chat = chat.substring(-1, chat.length - 1)
-  ChatLib.chat(chat)
-}).setChatCriteria("&r&cPlease be mindful of Discord links in chat as they may pose a security risk&r").setContains(), () => settings.discord);
-
 // Credit: Adapted from Block Highlight on ct
 let block;
 registerWhen(register('drawBlockHighlight', (pos, event) => {

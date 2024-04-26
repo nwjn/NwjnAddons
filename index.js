@@ -1,28 +1,34 @@
 import settings from "./config";
 import "./features/Bestiary"
-import "./features/Beta"
+import "./features/Beta(Move)"
 import "./features/Commands"
 import "./features/CrimsonIsle"
 import "./features/Display"
 import "./features/General"
 import "./features/Kuudra"
-import "./features/QOL"
+import "./features/QOL(Move)"
 
-import "./features/HUD/Blaze"
-import "./features/HUD/Champion"
+import "./features/HUD/BlazeTimers"
+import "./features/HUD/FlareTracker"
 import "./features/HUD/Clock"
 import "./features/HUD/FatalTempo"
 import "./features/HUD/Minibosses"
 import "./features/HUD/Poison"
 import "./features/HUD/Widgets"
 
-import { version, consts } from "./utils/constants";
+import "./features/QOL/BossCleaner"
+import "./features/QOL/DiscordCleaner"
+import "./features/QOL/VisitorCleaner"
+
+import "./features/Utilities/DamageTracker"
+import "./features/Beta/Mineshaft"
+
+import { version, PREFIX } from "./utils/constants";
 import { data } from "./utils/data";
 import { setRegisters } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
 import { setMobHighlight } from "./features/Bestiary";
-import { resetWorld } from "./utils/world";
 import "./utils/Party"
 
 let changes;
@@ -39,24 +45,20 @@ register("command", (arg) => {
       break;
     case "ver":
     case "version":
-      ChatLib.chat(`${ consts.PREFIX } &bYou are currently on version &e${ version }`);
+      ChatLib.chat(`${ PREFIX } &bYou are currently on version &e${ version }`);
       break;
     case "changes":
     case "changelog":
-      ChatLib.chat(`${ consts.PREFIX } &eChangelog:\n&r${ changes }`);
+      ChatLib.chat(`${ PREFIX } &eChangelog:\n&r${ changes }`);
       break;
     case "party":
-      ChatLib.chat(`${ consts.PREFIX } &eParty Command List:\n&r.time => shows the players current time\n.coords => sends the coords of the player\n.stats => sends the stats of the player\n.profile => sends the profile fruit name of the profile\n.wealth => sends the player's current financial status\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.raider => puts party into infernal kuudra\n.dropper => puts party into dropper game`);
+      ChatLib.chat(`${ PREFIX } &eParty Command List:\n&r.time => shows the players current time\n.coords => sends the coords of the player\n.stats => sends the stats of the player\n.profile => sends the profile fruit name of the profile\n.wealth => sends the player's current financial status\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.raider => puts party into infernal kuudra\n.dropper => puts party into dropper game`);
       break;
     case "commands":
-      ChatLib.chat(`${ consts.PREFIX } &eCommand List:&r\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/calc <equation> => calculates\n/deal => trades player in front of you without needing to type name`);
-      break;
-    case "reload":
-      resetWorld()
-      ChatLib.chat(`${ consts.PREFIX } &aReloaded all registers!`);
+      ChatLib.chat(`${ PREFIX } &eCommand List:&r\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/calc <equation> => calculates\n/deal => trades player in front of you without needing to type name`);
       break;
     default:
-      ChatLib.chat(`${consts.PREFIX} &r\n/nwjn => opens settings\n/nwjn gui => opens gui mover\n/nwjn version => gets the current nwjnaddons version\n/nwjn changes => see the latest changes\n/nwjn party => see all party commands\n/nwjn commands => see all commands\n/nwjn reload => reloads all registers in case they aren't working`)
+      ChatLib.chat(`${PREFIX} &r\n/nwjn => opens settings\n/nwjn gui => opens gui mover\n/nwjn version => gets the current nwjnaddons version\n/nwjn changes => see the latest changes\n/nwjn party => see all party commands\n/nwjn commands => see all commands\n/nwjn reload => reloads all registers in case they aren't working`)
   }
 }).setCommandName(`nwjn`, true).setAliases("nwjnaddons", "njwn").setTabCompletions("version", "changes", "party", "help", "gui")
 
@@ -65,7 +67,7 @@ if (data.first_time) {
   data.save();
 
   ChatLib.chat("");
-  ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------`)
+  ChatLib.chat(`&r&d&m--------------&r${ PREFIX }&r&d&m--------------`)
   ChatLib.chat(`&aUse '/nwjn' For settings!`)
   ChatLib.chat(`&aUse '/nwjn commands' For commands!`);
   new TextComponent(`&aClick &3here&a for discord link!`)
@@ -84,7 +86,7 @@ register("worldLoad", () => {
     if(res.data.releases[0].releaseVersion != version)
     {
       ChatLib.chat("");
-      ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------`)
+      ChatLib.chat(`&r&d&m--------------&r${ PREFIX }&r&d&m--------------`)
       ChatLib.chat(`&eNwjnAddons has an available update!`)
       ChatLib.chat("");
       ChatLib.chat(`&eChangelog:&r \n${ changes }`)
@@ -101,7 +103,7 @@ register("worldLoad", () => {
 
 if (data.version != version) {
   ChatLib.chat("");
-  ChatLib.chat(`&r&d&m--------------&r${ consts.PREFIX }&r&d&m--------------`)
+  ChatLib.chat(`&r&d&m--------------&r${ PREFIX }&r&d&m--------------`)
   ChatLib.chat(`&eHey, it looks like Chattriggers updated NwjnAddons while you were away.`)
   new TextComponent(`&eClick &3here&e to view what you missed!`)
       .setClickAction("run_command")
@@ -114,7 +116,7 @@ if (data.version != version) {
 register("serverConnect", () => {
   setTimeout(() => {
     ChatLib.chat("")
-    new TextComponent(`${ consts.PREFIX } &4&lPSA&r: For those wondering if &b&ncorpse waypoints&r are legit, the truth is there is no clear line, it uses the &b&nsame method as skytils coreleone waypoint&r so there are big mods that do the same. Of course &call mods are use at your own risk&r, and as always you can turn it off or delete the module. For more questions, join the &ndiscord&r.`)
+    new TextComponent(`${ PREFIX } &4&lPSA&r: For those wondering if &b&ncorpse waypoints&r are legit, the truth is there is no clear line, it uses the &b&nsame method as skytils coreleone waypoint&r so there are big mods that do the same. Of course &call mods are use at your own risk&r, and as always you can turn it off or delete the module. For more questions, join the &ndiscord&r.`)
       .setClickAction("run_command")
       .setHoverValue("Copies the discord link")
       .setClickValue(`/ct copy https://discord.gg/3S3wXpC4gE`)

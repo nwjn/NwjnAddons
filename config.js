@@ -158,6 +158,13 @@ class Settings {
   }  
 
   @SwitchProperty({
+    name: "Draw with Shadow",
+    description: "Option for rendering HUDS with text shadow",
+    category: "HUD"
+  })
+  textShadow = false
+
+  @SwitchProperty({
     name: "Highlight Players in Align Radius",
     description: "Highlights players when they are in align radius",
     category: "HUD",
@@ -206,33 +213,48 @@ class Settings {
   })
   clock = false;
 
-  // TODO: add option for on hit and on shoot
-  @SwitchProperty({
-    name: "Fatal Tempo Display",
-    description: `Approximate ft percent -> /moveFT\n&cSOUND MUST BE ON`,
-    category: "HUD",
-    subcategory: "Fatal Tempo"
-  })
-  ft = false
+  // Fatal Tempo
+    @SwitchProperty({
+      name: "Fatal Tempo Display",
+      description: `Approximate ft percent -> /moveFT\n&cSOUND MUST BE ON`,
+      category: "HUD",
+      subcategory: "Fatal Tempo"
+    })
+    ft = false
 
-  @DecimalSliderProperty({
-    name: "Fatal Tempo Timer Scale",
-    description: "Change the scale of the timer for ft above crosshair",
-    minF: 1,
-    maxF: 2.5,
-    category: "HUD",
-    subcategory: "Fatal Tempo"
-  })
-  ftTimer = 1;
+    @SelectorProperty({
+      name: "➤ Fatal Tempo Settings",
+      description: "     Select when to show Fatal Tempo Display",
+      category: "HUD",
+      subcategory: "Fatal Tempo",
+      options: ["Always", "Over 0 Percent", "At 200 Percent"]
+    })
+    ftShowWhen = 0;
 
-  @SelectorProperty({
-    name: "Fatal Tempo Settings",
-    description: "Select Fatal Tempo Display settings",
-    category: "HUD",
-    subcategory: "Fatal Tempo",
-    options: ["Show Always", "Show Only Over 0", "Show Only At 200"]
-  })
-  ftOptions = 0;
+    @CheckboxProperty({
+      name: "➤ Fatal Tempo Show Title",
+      description: "     Toggle showing `Fatal Tempo: ` prefix",
+      category: "HUD",
+      subcategory: "Fatal Tempo"
+    })
+    ftShowTitle = true
+
+    @CheckboxProperty({
+      name: "➤ Fatal Tempo Show Percent",
+      description: "     Toggle showing `0-200` percent",
+      category: "HUD",
+      subcategory: "Fatal Tempo"
+    })
+    ftShowPercent = true
+    
+    @CheckboxProperty({
+      name: "➤ Fatal Tempo Show Time Left",
+      description: "     Toggle showing `0-3s`",
+      category: "HUD",
+      subcategory: "Fatal Tempo"
+    })
+    ftShowTime = true  
+  //
 
   @SwitchProperty({
     name: "Mage Gyro",
@@ -260,7 +282,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Endstone Sword Party Notify",
-    description: "Tells the party how much you extreme focused",
+    description: "Tells your team when you are extremely focused",
     category: "HUD",
     subcategory: "Mana"
   })
@@ -309,15 +331,6 @@ class Settings {
     subcategory: "Poison"
   })
   poison = false
-
-  @SelectorProperty({
-    name: "Next Visitor Display",
-    description: "Shows time until next visitor -> /moveVisitors",
-    category: "HUD",
-    subcategory: "Visitor",
-    options: ["Off", "12 Minutes", "15 Minutes"]
-  })
-  nextVisitor = 0;
 
   @SwitchProperty({
     name: "Miniboss Display",
@@ -477,7 +490,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Better Magma Boss Message",
-    description: "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35% &7(100%)",
+    description: "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35 &7(100)",
     category: "Crimson Isle"
   })
   magma = false
@@ -565,13 +578,6 @@ class Settings {
     category: "Kuudra"
   })
   kuudraHitbox = false
-    
-  @SwitchProperty({
-    name: "Remove Discord Warnings",
-    description: "Remove the annoying red text that appears whenever someone types discord in p chat",
-    category: "QOL"
-  })
-  discord = false
 
   @SwitchProperty({
     name: 'Toggle Block Highlight',
@@ -586,6 +592,27 @@ class Settings {
     category: 'QOL'
   })
   highlightColor = Color.GREEN;
+
+  @SwitchProperty({
+    name: "Remove Boss Dialouge",
+    description: "Cancels messages that begin with [BOSS]",
+    category: "QOL"
+  })
+  boss = false  
+
+  @SwitchProperty({
+    name: "Remove NPC Dialouge on Garden",
+    description: "Cancels messages that begin with [NPC]",
+    category: "QOL"
+  })
+  visitorCleaner = false 
+
+  @SwitchProperty({
+    name: "Remove Discord Warnings",
+    description: "Removes:\n&cPlease be mindful of Discord links in chat as they may pose a security risk",
+    category: "QOL"
+  })
+  discord = false
     
   @SwitchProperty({
     name: "Mineshaft Helper",
@@ -607,13 +634,6 @@ class Settings {
     category: "Beta (WIP)"
   })
   damageTracker = false
-
-  @SwitchProperty({
-    name: "Removed Boss Dialouge",
-    description: "Cancels messages that begin with [BOSS]",
-    category: "Beta (WIP)"
-  })
-  boss = false  
   
   @SwitchProperty({
     name: "Gyro Range",
@@ -711,6 +731,13 @@ class Settings {
     this.addDependency("Custom Widget Text", "Custom Widget")
 
     this.addDependency("Confirm Leader Commands", "Party Commands")
+
+    // Fatal Tempo
+      this.addDependency("➤ Fatal Tempo Settings", "Fatal Tempo Display")
+      this.addDependency("➤ Fatal Tempo Show Title", "Fatal Tempo Display")
+      this.addDependency("➤ Fatal Tempo Show Percent", "Fatal Tempo Display")
+      this.addDependency("➤ Fatal Tempo Show Time Left", "Fatal Tempo Display")
+    //
   }
 }
 export default new Settings();

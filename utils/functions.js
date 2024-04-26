@@ -1,11 +1,9 @@
-import { consts } from "./constants";
-
 export function fixLength(x) {
-  if (x.toString().length === 2) return x;
-  else return `0${x}`;
+  return (x.toString().length === 2 ? x : `0${x}`)
 }
 
-// Creidt: volcaddons on ct
+// Creidt: Volcaronitee
+
 const Threading = Java.type("gg.essential.api.utils.Multithreading");
 export function delay(func, time) {
   if (time) {
@@ -32,23 +30,38 @@ export function setRegisters() {
   });
 }
 
-/**
- * Gets the current held item or if specified any extra information from ExtraAttributes
- * 
- * @param {String} returnType - the type to get and return
- * @param {String} tag - the tag identifiter to get
- * @returns {Item|String|Number|null}
- */
-export function holding(returnType = "", tag = "") {
-  let item = Player.getHeldItem();
-  if (!item) return null
-  if (!returnType) return item
-  item = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")
-  if (returnType == "EA") return item
-  item = item[`get${ returnType }`](tag)
-  return item
-}
-
 export function getRGB1(setting) {
   return [setting.getRed() / 255, setting.getGreen() / 255, setting.getBlue() / 255]
 }
+
+let worldJoin = []
+let worldLeave = []
+export function onWorldJoin(func) { worldJoin.push(func); }
+
+export function onWorldLeave(func) { worldLeave.push(func); }
+
+import { data } from "./data";
+
+register("worldLoad", () => {
+  let i = worldJoin.length;
+  while (i--) {
+    worldJoin[i]();
+  }
+  data.save()
+}).setPriority(Priority.LOWEST);
+
+register("worldUnload", () => {
+  let i = worldLeave.length;
+  while (i--) {
+    worldLeave[i]()
+  }
+  data.save()
+}).setPriority(Priority.LOWEST);
+
+register("serverDisconnect", () => {
+  let i = worldLeave.length;
+  while (i--) {
+    worldLeave[i]()
+  }
+  data.save()
+}).setPriority(Priority.LOWEST);

@@ -7,5 +7,5 @@ const clockExample = `&d0:00:00`;
 const clockOverlay = new Overlay("clock", ["all"], () => true, data.clockL, "moveClock", clockExample);
 
 registerWhen(register("step", () => {
-  clockOverlay.message = `&d${ new Date().toLocaleTimeString() }`;
+  clockOverlay.setMessage(`&d${ new Date().toLocaleTimeString() }`);
 }).setDelay(1), () => settings.clock);
