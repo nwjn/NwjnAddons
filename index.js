@@ -91,6 +91,11 @@ register("worldLoad", () => {
   axios.get(`https://chattriggers.com/api/modules/1528`)
   .then(res => {
     changes = res.data.releases[0].changelog.toString().replaceAll("\r", "")
+
+    // !!!! HARD CODE FOR PRE RELEASE ONLY
+    if (version == "0.10.2") return;
+
+
     if(res.data.releases[0].releaseVersion != version)
     {
       ChatLib.chat("");
