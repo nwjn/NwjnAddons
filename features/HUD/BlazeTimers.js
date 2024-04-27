@@ -23,7 +23,7 @@ registerWhen(register("chat", () => {
   wisp = data.pet.includes("Parrot") ? 2_520 : 1_800;
 }).setChatCriteria("BUFF! You ${*} with Wisp's Ice-Flavored Water I! Press TAB or type /effects to view your active effects!"), () => settings.blaze);
 
-registerWhen(register("step", (elapsed) => {
+registerWhen(register("step", () => {
   gummy && (gummy--)
   wisp && (wisp--)
   

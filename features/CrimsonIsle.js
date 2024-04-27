@@ -40,7 +40,7 @@ registerWhen(register('chat', (damage, event) => {
   cancel(event)
   if (totalDamage > 100) totalDamage = 100
   ChatLib.chat(`&4&lMagma Boss&r &8> &c+${damage}% &7(${totalDamage}%)`)
-}).setCriteria("The Magma Boss angers! (+${damage}% Damage)"), () => settings.magma && getWorld() == "Crimson Isle")
+}).setCriteria("The Magma Boss angers! (+${damage}% Damage)").setPriority(Priority.LOWEST), () => settings.magma && getWorld() == "Crimson Isle")
 
 registerWhen(register('worldUnload', () => {
   totalDamage = 0
@@ -193,4 +193,4 @@ registerWhen(register("chat", (fish, rarity, event) => {
   const chat = ChatLib.getChatMessage(event, true)
   cancel(event)
   ChatLib.chat(`${chat} &8${ghoti.bronze}&r-&7${ghoti.silver}&r-&6${ghoti.gold}&r-&b${ghoti.diamond} &d(${ghoti.bronze + ghoti.silver + ghoti.gold + ghoti.diamond})`)
-}).setCriteria("TROPHY FISH! You caught ${fish} ${rarity}."), () => getWorld() == "Crimson Isle" && settings.fish);
+}).setCriteria("TROPHY FISH! You caught ${fish} ${rarity}.").setPriority(Priority.LOWEST), () => getWorld() == "Crimson Isle" && settings.fish);

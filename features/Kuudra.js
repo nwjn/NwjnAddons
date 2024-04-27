@@ -149,7 +149,7 @@ registerWhen(register("chat", (supply, event) => {
   // TODO: TEST & REPLCE
   // time = Scoreboard.getLines().find(line => line.toString().includes("Time Elapsed")).toString()
   ChatLib.chat(`${name} &a&lrecovered a supply at ${time}! &r&8(${supply}/6)`)
-}).setCriteria("${*} recovered one of Elle's supplies! (${supply}/6)"), () => settings.customSupply && getWorld() == "Kuudra")
+}).setCriteria("${*} recovered one of Elle's supplies! (${supply}/6)").setPriority(Priority.LOWEST), () => settings.customSupply && getWorld() == "Kuudra")
 
 registerWhen(register("renderWorld", () => {
   // TODO: CHANGE
@@ -296,4 +296,4 @@ registerWhen(register("renderSlot", (slot, gui, event) => {
   if (slot?.includes("Steady Hands") || slot?.includes("Bomberman") || slot == "Elle's Lava Rod" || slot == "Elle's Pickaxe" || slot == "Auto Revive" || slot?.includes("Mining Frenzy") || slot?.includes("Human Cannonball")) {
     cancel(event)
   }
-}), () => settings.renderPerk && getWorld() == "Kuudra")
+}).setPriority(Priority.LOWEST), () => settings.renderPerk && getWorld() == "Kuudra")

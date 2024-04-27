@@ -9,19 +9,21 @@ const miniOverlay = new Overlay("mini", ["Crimson Isle"], () => true, data.miniL
 
 registerWhen(register("chat", (mini) => {
   mini = mini.trim()
-  if (mini == "BLADESOUL") data.lastMini.push("&8Bladesoul")
-  else if (mini == "BARBARIAN DUKE X") data.lastMini.push("&eBarbarian Duke X")
-  else if (mini == "ASHFANG") data.lastMini.push("&cAshfang")
-  else if (mini == "MAGMA BOSS") data.lastMini.push("&4Magma Boss")
-  else if (mini == "MAGE OUTLAW") data.lastMini.push("&5Mage Outlaw")
+
+  switch (mini) {
+    case "BLADESOUL": mini = "&8Bladesoul"; break;
+    case "BARBARIAN DUKE X": mini = "&eBarbarian Duke X"; break;
+    case "ASHFANG": mini = "&cAshfang"; break;
+    case "MAGMA BOSS": mini = "&4Magma Boss"; break;
+    case "MAGE OUTLAW": mini = "&5Mage Outlaw"; break;
+    default: return;
+  }
+  data.lastMini.push(mini)
+
   if (data.lastMini.length > 4) data.lastMini.shift()
   data.save()
   
   miniOverlay.setMessage(miniExample + data.lastMini.join("\n"))
-}).setCriteria("${mini} DOWN!"), () => getWorld() == "Crimson Isle" && settings.mini);
+}).setCriteria("${mini} DOWN!"), () => getWorld() == "Crimson Isle");
 
-import { onWorldJoin } from "../../utils/functions";
-onWorldJoin(() => {
-  if (!settings.mini) return
-  miniOverlay.setMessage(miniExample + data.lastMini.join("\n"))
-})
+miniOverlay.setMessage(miniExample + data.lastMini.join("\n"))

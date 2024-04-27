@@ -1,4 +1,5 @@
 import { delay } from "./functions";
+import { PREFIX } from "./constants";
 
 function getPlayerName(player) {
   let name = player;
@@ -14,7 +15,7 @@ function getPlayerName(player) {
 
 // --- VARIABLES ---
 
-// The player's in-game name (initially set to "limga")
+// The player's in-game name
 let ign = Player.getName();
 
 // Variables to track party status and leadership
@@ -34,13 +35,13 @@ export function getIsLeader() { return isLeader };
 register("chat", () => {
   inParty = true;
   isLeader = true;
-}).setCriteria("Party is capped at ${cap} players.");
+}).setCriteria("Party is capped at ${*} players.");
 
 // Event handler for detecting when the party is disbanded (/p disband)
-register("chat", (player) => {
+register("chat", () => {
   inParty = false;
   isLeader = false;
-}).setCriteria("${player} has disbanded the party!");
+}).setCriteria("${*} has disbanded the party!");
 
 // Event handler for detecting an empty party (party disbands when all invites expire and it's empty)
 register("chat", () => {
@@ -55,38 +56,38 @@ register("chat", () => {
   party = new Set();
 }).setCriteria("You left the party.");
 
-// Not in party backup
+// Not in party
 register("chat", () => {
   inParty = false;
   isLeader = false;
-}).setCriteria("You are not in a party right now.");
+}).setCriteria("You are not${*}in a party${*}");
 
 
 // --- TRACK PARTY LEADER ---
 
 // Event handler for detecting party leadership transfers
-register("chat", (player1, player2) => {
+register("chat", (player1) => {
   isLeader = ign === getPlayerName(player1);
-}).setCriteria("The party was transferred to ${player1} by ${player2}");
+}).setCriteria("The party was transferred to ${player1} by ${*}");
 
 // Event handler for detecting party leadership transfers due to player leaving
-register("chat", (player1, player2) => {
+register("chat", (player1) => {
   isLeader = ign === getPlayerName(player1);
-}).setCriteria("The party was transferred to ${player1} because ${player2} left");
+}).setCriteria("The party was transferred to ${player1} because ${*} left");
 
 // Event handler for detecting party leadership transfers due to promotion
-register("chat", (player1, player2) => {
+register("chat", (player2) => {
   isLeader = ign === getPlayerName(player2);
-}).setCriteria("${player1} has promoted ${player2} to Party Leader");
+}).setCriteria("${*} has promoted ${player2} to Party Leader");
 
 
 // --- TRACK PARTY INTERACTIONS ---
 
 // Event handler for detecting when a player first joins the party
-register("chat", (player) => {
+register("chat", () => {
   isLeader = false;
   inParty = true;
-}).setCriteria("You have joined ${player}'s party!");
+}).setCriteria("You have joined ${*}'s party!");
 
 // Event handler for detecting when a player is kicked from the party
 register("chat", () => {
@@ -95,26 +96,21 @@ register("chat", () => {
 }).setCriteria("You have been kicked from the party by ${player}");
 
 // --- CONTROL FOR GAME/CT RS ---
-
-// Cancel event when detecting is in progress to avoid unintended interactions with other chat events
-const cancelChat = register("chat", (event) => {
-  cancel(event);
-});
+const checkParty = () => {
+  ChatLib.chat(`${PREFIX}: Running party list...`)
+  delay(() => { ChatLib.command("p list"); }, 500);
+}
 
 // Event handler for game load
 register("gameLoad", () => {
   ign = Player.getName();
-  cancelChat.register();
-  delay(() => { ChatLib.command("p list"); }, 500);
-  delay(() => { cancelChat.unregister() }, 1000);
+  checkParty()
 });
 
 // Event handler for detecting game chat message (Welcomes players to Hypixel SkyBlock)
 register("chat", () => {
   ign = Player.getName();
-  cancelChat.register();
-  delay(() => { ChatLib.command("p list"); }, 500);
-  delay(() => { cancelChat.unregister() }, 1000);
+  checkParty()
 }).setCriteria("Welcome to Hypixel SkyBlock!");
 
 // Remove message on restart

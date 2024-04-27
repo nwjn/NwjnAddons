@@ -34,6 +34,16 @@ export function getRGB1(setting) {
   return [setting.getRed() / 255, setting.getGreen() / 255, setting.getBlue() / 255]
 }
 
+const SMA = Java.type('net.minecraft.entity.SharedMonsterAttributes');
+export function getMaxHP(entity) {
+  return entity.getEntity().func_110148_a(SMA.field_111267_a).func_111125_b()
+}
+
+export function getNowHP(entity) {
+  return entity.getEntity().func_110143_aJ()
+}
+
+
 let worldJoin = []
 let worldLeave = []
 export function onWorldJoin(func) { worldJoin.push(func); }

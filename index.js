@@ -1,12 +1,10 @@
 import settings from "./config";
-import "./features/Bestiary"
-import "./features/Beta(Move)"
+import "./features/Bestiary(Move)"
 import "./features/Commands"
 import "./features/CrimsonIsle"
 import "./features/Display"
 import "./features/General"
 import "./features/Kuudra"
-import "./features/QOL(Move)"
 
 import "./features/HUD/BlazeTimers"
 import "./features/HUD/FlareTracker"
@@ -16,19 +14,29 @@ import "./features/HUD/Minibosses"
 import "./features/HUD/Poison"
 import "./features/HUD/Widgets"
 
+import "./features/Bestiary/MobHighlight"
+import "./features/Bestiary/PlayerHighlight"
+import "./features/Bestiary/StandHighlight"
+
+import "./features/QOL/BlockHighlight"
 import "./features/QOL/BossCleaner"
 import "./features/QOL/DiscordCleaner"
 import "./features/QOL/VisitorCleaner"
 
-import "./features/Utilities/DamageTracker"
+import "./features/Beta/AgroCircle"
 import "./features/Beta/CorpseWaypoints"
+import "./features/Beta/GyroCircle"
+import "./features/Beta/TotemCircle"
+
+import "./features/Utilities/Calculator"
+import "./features/Utilities/DamageTracker"
 
 import { version, PREFIX } from "./utils/constants";
+import { setMobHighlight, mobCountOverlay } from "./features/Bestiary/MobHighlight";
 import { data } from "./utils/data";
 import { setRegisters } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
-import { setMobHighlight } from "./features/Bestiary";
 import "./utils/Party"
 
 let changes;
@@ -128,7 +136,12 @@ register("serverConnect", () => {
 register("guiClosed", (event) => {
   if (event?.toString()?.includes("vigilance")) {
     setRegisters()
+    mobCountOverlay.setMessage("")
     setMobHighlight()
+
+    data.standList = settings.stand.split(", ")
+    data.playerList = settings.player.split(", ")
+    data.save()
   }
 });
 
@@ -156,3 +169,19 @@ register("chat", () => {
 // TODO: click in chat to translate
 // TODO: add better nausea effect to not be cancer inducing
 // TODO: add nick to data if applicable
+
+// // TODO: armor display and equipment display
+// register("renderOverlay", () => {
+//   Player.armor?.getHelmet()?.draw(50, 50, 1)
+//   Player.armor?.getChestplate()?.draw(50, 65, 1)
+//   Player.armor?.getLeggings()?.draw(50, 80, 1)
+//   Player.armor?.getBoots()?.draw(50, 95, 1)
+// })
+
+/*
+TODO
+const name = Player.getName()
+const nick = Player.getDisplayName() == name ? false : Player.getDisplayname()
+*/
+
+// see if World.getSeed() can determine world name

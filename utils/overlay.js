@@ -24,6 +24,7 @@ function renderScale(scale, text, x, y, align, flex) {
  * Variables used to move all active GUIs.
  */
 const GUI_INSTRUCT = "Use +/- to scale, R to reset, L to swap align, H to swap flex, B to show BG, or W to change view";
+
 const gui = new Gui();
 const background = new Gui();
 
@@ -41,13 +42,13 @@ const moving = register("renderOverlay", () => {
         if (!settings[overlay.setting]) return;
         // Draw example text and box
         const scale = overlay.loc[2];
-        const x = overlay.loc[0] - (overlay.loc[3] ? overlay.eWidth - 3*scale : 0);
+        const x = overlay.loc[0] - (overlay.loc[3] ? (overlay.eWidth - 3) * scale : 0);
         const y = overlay.loc[1];
 
         Renderer.drawRect(
-            Renderer.color(0, 0, 0, 128),
+            overlay.loc[5] ? Renderer.color(0, 0, 0, 128) : Renderer.color(128, 128, 128, 128),
             x - 3*scale, y - 3*scale,
-            overlay.eWidth + 6*scale, overlay.eHeight + 6*scale
+            (overlay.eWidth + 6) * scale, (overlay.eHeight + 6) * scale
         );
         renderScale(overlay.loc[2], overlay.example, overlay.X, overlay.Y, overlay.loc[3], overlay.loc[4]);
     });
@@ -68,7 +69,7 @@ const clicking = register("guiMouseClick", (x, y) => {
 
     overlays.forEach(overlay => {
         const scale = overlay.loc[2];
-        const oX = overlay.loc[0] - (overlay.loc[3] ? overlay.eWidth - 3*scale : 0);
+        const oX = overlay.loc[0] - (overlay.loc[3] ? (overlay.eWidth - 3) * scale : 0);
         const oY = overlay.loc[1];
 
         if (x > oX - 3*scale &&

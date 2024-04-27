@@ -60,7 +60,7 @@ registerWhen(register("step", () => {
       }
     );
   }
-}).setDelay(1), () => settings.mineshaft && getWorld() === "Mineshaft")
+}).setDelay(1).setPriority(Priority.HIGHEST), () => settings.mineshaft && getWorld() === "Mineshaft")
 
 registerWhen(register("renderWorld", () => {
   let x = corpses.length; while (x--) {
@@ -82,4 +82,10 @@ onWorldLeave(() => {
   claimed.length = 0
   corpses.length = 0
   exit = false
-})
+});
+
+/*
+TODO
+Base corpse locs off mineshaft's spawn location
+try World.spawn.getX()
+*/

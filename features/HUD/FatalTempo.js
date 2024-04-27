@@ -13,7 +13,7 @@ let ftLevel = 0;
 
 const addHits = () => {
   const holding = Player.getHeldItem()
-  if (!["minecraft:bow", "minecraft:bone"].includes(holding?.getRegistryName())) return
+  if (holding?.getRegistryName() !== "minecraft:bow") return
 
   const ftLvl = holding.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getCompoundTag("enchantments")?.getTag("ultimate_fatal_tempo");
   if (!ftLvl) return
@@ -26,19 +26,26 @@ const addHits = () => {
 registerWhen(register("soundPlay", addHits).setCriteria("tile.piston.out"), () => settings.ft && getWorld() === "Kuudra");
 registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings.ft && getWorld() !== "Kuudra");
 
-const calcString = (countdown, percent) => {
+const calcString = (countdown = 0, percent = 0) => {
   countdown = countdown >= 0 ? countdown : 0
   percent = percent <= 200 ? percent : 200
   let displayText = settings.ftShowTitle ? `Fatal Tempo: ` : ""
 
-  displayText +=
-    (countdown > 1 && percent === 200) ? "&a" :
-    (countdown > 0 && percent > 0) ? "&e" :
-    "&c"
+  displayText += settings.ftShowPercent ? 
+    ((percent === 200) ? "&a" :
+    (percent > 0) ? "&e" :
+    "&c")
+  : ""
 
   displayText += settings.ftShowPercent ? `${percent}%` : ""
 
-  displayText += (settings.ftShowPercent && settings.ftShowTime) ? " | " : ""
+  displayText += (settings.ftShowPercent && settings.ftShowTime) ? " &r| " : ""
+
+  displayText += settings.ftShowTime ?
+    ((countdown > 1.25) ? "&a" :
+    (countdown > 0) ? "&e" :
+    "&c")
+  : ""
 
   displayText += settings.ftShowTime ? `${ countdown.toFixed(2) }s` : ""
 
@@ -60,4 +67,6 @@ registerWhen(register("tick", () => {
   }
 
   ftOverlay.setMessage(calcString(countdown, percent))
-}), () => settings.ft)
+}), () => settings.ft);
+
+ftOverlay.setMessage(calcString())

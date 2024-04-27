@@ -3,7 +3,7 @@ import { version } from "./utils/constants"
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["General", "Bestiary", "Crimson Isle", "HUD", "Kuudra", "QOL", "Beta (WIP)"]
+    const categories = ["General", "Bestiary", "Crimson Isle", "HUD", "Kuudra", "QOL", "Beta (WIP)", "Utilities"]
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   }
 })
@@ -90,10 +90,9 @@ class Settings {
   })
   treecap = false   
     
-  // TODO: Remove unnecessary symbols using negated set like [^'"!?:;\/]
   @TextProperty({
     name: "Mob ESP",
-    description: "Draws hitboxes around inputted mob entity\n&cA mob from net.minecraft.entity.monster or net.minecraft.entity.passive\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
+    description: "Draws hitboxes around inputted mob entity\n&3@see &cnet.minecraft.entity.(monster|passive|boss)&r\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
     category: "Bestiary"
   })
   rawMobList = "" 
@@ -121,7 +120,7 @@ class Settings {
 
   @TextProperty({
     name: "Player Names ESP",
-    description: "Draws hitboxes around players that include the inputted name\n'Any' draws all player entites\n'Player' draws all real players",
+    description: "Draws hitboxes around players that include the inputted name\n'Player' draws all real players",
     category: "Bestiary"
   })
   player = "" 
@@ -628,6 +627,15 @@ class Settings {
   })
   lapis = false
 
+
+  @SwitchProperty({
+    name: "Tracks Damage Armor Stands",
+    description: "Spams ur chat with damage tags",
+    category: "Beta (WIP)"
+  })
+  damageTracker = false
+  
+  
   @SwitchProperty({
     name: "Tracks Damage Armor Stands",
     description: "Spams ur chat with damage tags",
@@ -705,6 +713,20 @@ class Settings {
     options: ["Only When Held", "Only Placed", "Both"]
   })
   totemOptions = 0;
+
+  @SwitchProperty({
+    name: "Damage Tracker",
+    description: "Shows damage tags in chat",
+    category: "Utilities"
+  })
+  damageTracker = false
+
+  @SwitchProperty({
+    name: "Dev Commands",
+    description: "Super duper secret settings",
+    category: "Utilities"
+  })
+  devTools = false
 
   constructor() {
     this.initialize(this);
