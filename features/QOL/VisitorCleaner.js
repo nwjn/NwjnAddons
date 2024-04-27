@@ -4,4 +4,4 @@ import { getWorld } from "../../utils/world";
 
 registerWhen(register("chat", (event) => {
   cancel(event)
-}).setCriteria("[NPC] ${*}").setPriority(Priority.LOWEST), () => settings.visitorCleaner && getWorld() === "Garden");
+}).setCriteria("[NPC] ${*}"), () => settings.visitorCleaner && getWorld() === "Garden");
