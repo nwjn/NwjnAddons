@@ -1,9 +1,8 @@
 import settings from "../config";
+import WorldUtil from "../utils/world"
 import RenderLib from "RenderLib"
-import { registerWhen, getRGB1 } from "../utils/functions";
-import { getWorld } from "../utils/world";
-import { data } from "../utils/data";
-import { EntityArmorStand, EntityPlayer, SMA } from "../utils/constants";
+import { registerWhen } from "../utils/functions";
+import { EntityPlayer, SMA } from "../utils/constants";
 import { mobCountOverlay } from "./Bestiary/MobHighlight";
 
 let filteredMatchos = []
@@ -16,7 +15,7 @@ registerWhen(register("step", () => {
   mobCountOverlay.setMessage(txt) 
 
   filteredMatchos = MATCHOS.filter(matcho => Player.asPlayerMP().canSeeEntity(matcho))
-}).setFps(2), () => settings.matcho && getWorld() == "Crimson Isle")
+}).setFps(2), () => settings.matcho && WorldUtil.worldIs("Crimson Isle"))
 
 registerWhen(register("renderWorld", () => {
   // MOVED MATCHO ALERT TO THE MOB COUNT OVERLAY
@@ -30,7 +29,7 @@ registerWhen(register("renderWorld", () => {
     RenderLib.drawEspBox(x, y, z, w, h, 0, 1, 0, 1, false);
     Tessellator.drawString(`Matcho`, x, y + h + 0.5, z, 0x00ff00, false);
   })
-}), () => getWorld() == "Crimson Isle" && settings.matcho)
+}), () =>  WorldUtil.worldIs("Crimson Isle") && settings.matcho)
 
 let filteredKeepers = []
 const CAVE_SPIDER_CLASS = Java.type("net.minecraft.entity.monster.EntityCaveSpider").class
@@ -43,7 +42,7 @@ registerWhen(register("step", () => {
   mobCountOverlay.setMessage(txt)
   
   filteredKeepers = KEEPERS.filter(keeper => Player.asPlayerMP().canSeeEntity(keeper))
-}).setFps(2), () => settings.keeper && getWorld() == "Spider's Den")
+}).setFps(2), () => settings.keeper && WorldUtil.worldIs("Spider's Den"))
 
 registerWhen(register("renderWorld", () => {
   filteredKeepers.forEach(keeper => {
@@ -51,4 +50,4 @@ registerWhen(register("renderWorld", () => {
     RenderLib.drawEspBox(x, y - 0.7, z, 1, 1, 0, 1, 0, 1, false);
     Tessellator.drawString(`Keeper`, x, y + 1.5, z, 0x00ff00, false);
   })
-}), () => getWorld() == "Spider's Den" && settings.keeper);
+}), () => WorldUtil.worldIs("Spider's Den") && settings.keeper);

@@ -2,7 +2,7 @@ import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
 import { registerWhen } from "../../utils/functions";
-import { getWorld } from "../../utils/world";
+import WorldUtil from "../../utils/world"
 
 const ftExample = `Fatal Tempo:&c 0% | 0.00s`;
 const ftOverlay = new Overlay("ft", ["all"], () => true, data.ftL, "moveFt", ftExample);
@@ -23,8 +23,8 @@ const addHits = () => {
   hits++
 }
 
-registerWhen(register("soundPlay", addHits).setCriteria("tile.piston.out"), () => settings.ft && getWorld() === "Kuudra");
-registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings.ft && getWorld() !== "Kuudra");
+registerWhen(register("soundPlay", addHits).setCriteria("tile.piston.out"), () => settings.ft && WorldUtil.worldIs("Kuudra"));
+registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings.ft && !WorldUtil.worldIs("Kuudra"));
 
 const calcString = (countdown = 0, percent = 0) => {
   countdown = countdown >= 0 ? countdown : 0

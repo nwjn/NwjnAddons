@@ -2,7 +2,7 @@ import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
 import { registerWhen, fixLength } from "../../utils/functions";
-import { getGame} from "../../utils/world";
+import WorldUtil from "../../utils/world"
 
 const blazeExample = 
 `&aGummy: &cInactive
@@ -28,7 +28,7 @@ registerWhen(register("step", () => {
   wisp && (wisp--)
   
   blazeOverlay.setMessage(`&aGummy: &f${ timeFormat(gummy) }\n&7Wisp: &f${ timeFormat(wisp) }`);
-}).setDelay(1), () => settings.blaze && getGame() == "SKYBLOCK");
+}).setDelay(1), () => settings.blaze && WorldUtil.isSkyblock());
 
 
 import { onWorldJoin, onWorldLeave } from "../../utils/functions";

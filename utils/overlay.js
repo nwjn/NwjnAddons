@@ -1,9 +1,9 @@
 import settings from "../config"
+import WorldUtil from "../utils/world"
 import { registerWhen } from "./functions";
-import { getWorld, getGame } from "./world";
 import { PREFIX } from "./constants";
 
-// Credit: Volcaronitee
+// Credit: My father, Volcaronitee
 
 /**
  * Render scaled text on a graphical canvas or rendering context.
@@ -107,17 +107,17 @@ const keying = register("guiKey", (char, keyCode, currentGui, event) => {
         worldView = !worldView;
         if (worldView) {
             overlays = overlays.filter(overlay => {
-                if (!overlay.requires.has(getWorld()) && !overlay.requires.has("all")) {
+                if (!overlay.requires.has(WorldUtil.world) && !overlay.requires.has("all")) {
                     overlaid.push(overlay);
                     return false;
                 }
                 return true;
             });
-            Client.showTitle(`Changed to &e${getWorld()}&r view!`, PREFIX, 0, 40, 0);
+            Client.showTitle(`Changed to &e${ WorldUtil.world}&r view!`, PREFIX, 0, 30, 0);
         } else {
             overlays.push(...overlaid);
             overlaid.length = 0;
-            Client.showTitle(`Changed to Global view!`, PREFIX, 0, 40, 0);
+            Client.showTitle(`Changed to Global view!`, PREFIX, 0, 30, 0);
         }
     } else if (keyCode === 1) {
         moving.unregister();
@@ -236,7 +236,7 @@ export class Overlay {
                     );
                 renderScale(this.loc[2], this.message, this.X, this.Y, this.loc[3], this.loc[4]);
             }
-        }), () => settings[this.setting] && (this.requires.has(getWorld()) || this.requires.has("all")));
+        }), () => settings[this.setting] && (this.requires.has(WorldUtil.world) || this.requires.has("all")));
 
         // Register editing stuff
         this.dragging = register("dragged", (dx, dy, x, y) => {

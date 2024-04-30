@@ -2,7 +2,7 @@ export function fixLength(x) {
   return (x.toString().length === 2 ? x : `0${x}`)
 }
 
-// Creidt: Volcaronitee
+// Creidt: My father, Volcaronitee
 
 const Threading = Java.type("gg.essential.api.utils.Multithreading");
 export function delay(func, time) {
@@ -41,6 +41,10 @@ export function getMaxHP(entity) {
 
 export function getNowHP(entity) {
   return entity.getEntity().func_110143_aJ()
+}
+
+export function getDistance(array1, array2) {
+  return Math.abs(Math.hypot(array1[0] - array2[0], array1[1] - array2[1], array1[2] - array2[2]))
 }
 
 

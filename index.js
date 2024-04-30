@@ -4,7 +4,7 @@ import "./features/Commands"
 import "./features/CrimsonIsle"
 import "./features/Display"
 import "./features/General"
-import "./features/Kuudra"
+import "./features/Kuudra(Move)"
 
 import "./features/HUD/BlazeTimers"
 import "./features/HUD/FlareTracker"
@@ -13,6 +13,12 @@ import "./features/HUD/FatalTempo"
 import "./features/HUD/Minibosses"
 import "./features/HUD/Poison"
 import "./features/HUD/Widgets"
+
+import "./features/Kuudra/PearlWaypoints"
+import "./features/Kuudra/Phase"
+import "./features/Kuudra/SupplyPiles"
+import "./features/Kuudra/SupplyWaypoints"
+import "./features/Kuudra/Team"
 
 import "./features/Bestiary/MobHighlight"
 import "./features/Bestiary/PlayerHighlight"
@@ -24,7 +30,7 @@ import "./features/QOL/DiscordCleaner"
 import "./features/QOL/VisitorCleaner"
 
 import "./features/Beta/AgroCircle"
-import "./features/Beta/CorpseWaypoints"
+import "./features/Beta/MineshaftWaypoints"
 import "./features/Beta/GyroCircle"
 import "./features/Beta/TotemCircle"
 
@@ -38,6 +44,7 @@ import { setRegisters } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
 import "./utils/Party"
+import WorldUtil from "./utils/world"
 
 let changes;
 register("command", (arg) => {  
@@ -65,6 +72,9 @@ register("command", (arg) => {
     case "commands":
       ChatLib.chat(`${ PREFIX } &eCommand List:&r\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/calc <equation> => calculates\n/deal => trades player in front of you without needing to type name`);
       break;
+    case "reload": 
+      WorldUtil.resetWorld()
+      ChatLib.chat(`${PREFIX} &aReloading all triggers...`)
     default:
       ChatLib.chat(`${PREFIX} &r\n/nwjn => opens settings\n/nwjn gui => opens gui mover\n/nwjn version => gets the current nwjnaddons version\n/nwjn changes => see the latest changes\n/nwjn party => see all party commands\n/nwjn commands => see all commands\n/nwjn reload => reloads all registers in case they aren't working`)
   }
@@ -129,7 +139,7 @@ if (data.version != version) {
 register("serverConnect", () => {
   setTimeout(() => {
     ChatLib.chat("")
-    new TextComponent(`${ PREFIX } &4&lPSA&r: For those wondering if &b&ncorpse waypoints&r are legit, the truth is there is no clear line, it uses the &b&nsame method as skytils coreleone waypoint&r so there are big mods that do the same. Of course &call mods are use at your own risk&r, and as always you can turn it off or delete the module. For more questions, join the &ndiscord&r.`)
+    new TextComponent(`${ PREFIX } &d[Broadcast]: &rAll non-los (line of sight) and esp loopholes are being removed. Join the &ndiscord&r for any questions.`)
       .setClickAction("run_command")
       .setHoverValue("Copies the discord link")
       .setClickValue(`/ct copy https://discord.gg/3S3wXpC4gE`)
@@ -189,4 +199,4 @@ const name = Player.getName()
 const nick = Player.getDisplayName() == name ? false : Player.getDisplayname()
 */
 
-// see if World.getSeed() can determine world name
+// try to add custom color code shit

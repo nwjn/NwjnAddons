@@ -541,7 +541,7 @@ class Settings {
     description: "Shows where to drop supplies",
     category: "Kuudra"
   })
-  supply = false
+  supplyPiles = false
 
   @SwitchProperty({
     name: "Supply Pearl Lineup",

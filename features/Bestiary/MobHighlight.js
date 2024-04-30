@@ -6,17 +6,10 @@ import { registerWhen, getRGB1, getMaxHP } from "../../utils/functions";
 import { PREFIX } from "../../utils/constants";
 
 // TODO (ADD): if ~ instead of - then % the entry hp and see if r = 0
-// TODO (FIX): CURRENTLY ARMOR STANDS DONT TAKE SPACES IN ENTRY
 // TODO (ADD): Command to add mob to settings.rawmoblist
-// TODO (ADD): add support for entity.boss
 // TODO (CHANGE): on overlay show the health aswell so that multiple health entries of the same mobtype aren't combined
 export function setMobHighlight() {
-  let mobsHighlight = {}
-  if (!settings.rawMobList) {
-    data.mobsHighlight = mobsHighlight
-    data.save()
-    return
-  }
+  if (!settings.rawMobList) return;
   /*
      * Raw entry in form:
      * `<Mob>(-\d[kKmMbB]?(|\d[kKmMbB]?)+)?`
@@ -24,15 +17,19 @@ export function setMobHighlight() {
      *    |   |- Delimiter between monster & health value(s)
      *    |- A monster from net.minecraft.entity.monster or net.minecraft.entity.passive
   */
-  const mobList = settings.rawMobList.split(",")
+  const mobList = settings.rawMobList.split(", ")
   let i = mobList.length
   while (i--) {
-    const [entryMob, hpsRaw] = mobList[i].split("-", 2)
+    const [entryMob, hpsRaw] = mobList[i].split("-")
 
+    // Check if entry is valid
     const mob = getClassOfEntity(entryMob)
     if (!mob) return
 
-    const hps = hpsRaw?.split("|")?.map(hpRaw => {
+    const hps = hpsRaw ? 
+      hpsRaw?.split("|")?.map(hpRaw => {
+      
+      // replace character number symbols with actual numbers
       let hp = parseFloat(hpRaw.match(/[\d\.]+/g))
 
       if (hpRaw.match(/k/gi)) hp *= 1_000
@@ -40,16 +37,18 @@ export function setMobHighlight() {
       if (hpRaw.match(/b/gi)) hp *= 1_000_000_000
 
       return hp;
-    })
-    mobsHighlight = {
-      ...mobsHighlight,
+    }) : false
+
+    // add and save to the list to highlight
+    data.mobsHighlight = {
+      ...data.mobsHighlight,
       [mob]: hps
     }
   }
-  data.mobsHighlight = mobsHighlight
   data.save()
 }
 
+// types to test
 const MOB_TYPES = ["monster", "passive", "boss"];
 function getClassOfEntity(entity, index = 0) {
   try {
@@ -58,6 +57,7 @@ function getClassOfEntity(entity, index = 0) {
 
     // recurses if mobClass.toString() throws error
     const testClass = mobClass.toString()
+    // return with underscores so it can be called later
     return packageName.replace(/\./g, "_");
   } catch(err) {
     if (index < MOB_TYPES.length) return getClassOfEntity(entity, index + 1)
@@ -75,15 +75,18 @@ registerWhen(register("renderWorld", () => {
   const entries = Object.entries(data.mobsHighlight)
   let i = entries.length
   while (i--) {
-    const entityClass = entries[i][0].replace(/_/g, ".")
+    const entityClass = entries[i][0].replace(/_/g, ".") //reformats the classname
     const hps = entries[i][1]
 
-    const entities = World.getAllEntitiesOfType(Java.type(entityClass).class).filter(e => !e.isInvisible() && !e.isDead() && Player.asPlayerMP().canSeeEntity(e) && (hps && hps.includes(getMaxHP(e))))
+    // Filters out invisible, non LOS, dead, and non-includeded hps of entities
+    const entities = World.getAllEntitiesOfType(Java.type(entityClass).class).filter(e => !e.isInvisible() && Player.asPlayerMP().canSeeEntity(e) && !e.isDead() && (!hps || hps.includes(getMaxHP(e))))
     let ii = entities.length
     while (ii--) {
       const entity = entities[ii];
       RenderLib.drawEspBox(entity.getRenderX(), entity.getRenderY(), entity.getRenderZ(), entity.getWidth(), entity.getHeight(), ...getRGB1(settings.espColor), 1, false)
     }
+
+    if (!settings.mobEspCount) return;
     const className = entityClass.split("Entity").slice(-1)
     const TEMPLATE = `${ className }: ${ entities.length }\n`
 
@@ -91,4 +94,4 @@ registerWhen(register("renderWorld", () => {
     const txt = currMessage.includes(className) ? currMessage.replace(new RegExp(`(${ className }: [0-9]+\n|&eZombie: 0)`), TEMPLATE) : currMessage + TEMPLATE
     mobCountOverlay.setMessage(txt)
   }
-}), () => data.mobsHighlight != "")
+}), () => data.mobsHighlight != "");

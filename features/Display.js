@@ -1,6 +1,6 @@
 import settings from "../config";
 import { data } from "../utils/data";
-import { EntityPlayer, PREFIX } from "../utils/constants";
+import { EntityPlayer } from "../utils/constants";
 import { delay, registerWhen } from "../utils/functions";
 import { Overlay } from "../utils/overlay";
 import { data } from "../utils/data";

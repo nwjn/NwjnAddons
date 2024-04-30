@@ -1,13 +1,13 @@
 import settings from "../config"
+import WorldUtil from "../utils/world"
 import { delay, registerWhen, getRGB1 } from "../utils/functions"
-import { getWorld } from "../utils/world";
 import { data } from "../utils/data";
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
 import { EntityArmorStand, SMA } from "../utils/constants";
 import { getIsLeader } from "../utils/Party";
 
-// Credit: Volcaddons on ct for waypoints
+// Credit: My father, Volcaronitee
 let chatWaypoints = [];
 let formatted = [];
 
@@ -132,24 +132,24 @@ registerWhen(register("chat", (player, command, event) => {
   delay(() => {
     command = command.toLowerCase()
     switch (command) {
-      // case "time":
-      //   ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
-      // case "coord":
-      // case "loc":
-      // case "location":
-      // case "coords":
-      //   ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
-      // case "server":
-      // case "area":
-      //   const server = TabList.getNames().find(e => e.removeFormatting().startsWith(" Server: "))?.removeFormatting()?.substring(9);
-      //   ChatLib.command(`pc ${ getWorld() } | ${ server }`); break;
-      // case "pow":
-      // case "power":
-      //   ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
-      // case "pet":
-      //   ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
-      // case "build":
-      //   ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
+      case "time":
+        ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
+      case "coord":
+      case "loc":
+      case "location":
+      case "coords":
+        ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
+      case "server":
+      case "area":
+        const server = TabList.getNames().find(e => e.removeFormatting().startsWith(" Server: "))?.removeFormatting()?.substring(9);
+        ChatLib.command(`pc ${WorldUtil.toString()}`); break;
+      case "pow":
+      case "power":
+        ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
+      case "pet":
+        ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
+      case "build":
+        ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
       case "t5":
       case "raider":
         CommandMsg = `joininstance kuudra_infernal`; break;
@@ -203,7 +203,7 @@ registerWhen(register("blockBreak", (block) => {
   // todo:test
   const holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id");
   if (block.toString().includes("type=minecraft:log") && holding == "TREECAPITATOR_AXE" && time <= 0) blockBroken = Date.now();
-}), () => settings.treecap && ["Hub", "The Park"].includes(getWorld()))
+}), () => settings.treecap && WorldUtil.worldIs(["Hub", "The Park"]))
 
 registerWhen(register("renderOverlay", () => {
   if (settings.reaper) {
@@ -215,7 +215,7 @@ registerWhen(register("renderOverlay", () => {
     time = cd - (Date.now() - blockBroken) / 1000
     if (time >= 0) Renderer.drawString(`${ time.toFixed(3) }`, Renderer.screen.getWidth() / 2 - 13, Renderer.screen.getHeight() / 2 - 15)
   }
-}), () => (settings.treecap && ["Hub", "The Park"].includes(getWorld()) || (settings.reaper)));
+}), () => (settings.treecap && WorldUtil.worldIs(["Hub", "The Park"]) || (settings.reaper)));
 
 // let events = []
 // registerWhen(register("actionBar", (event) => {
