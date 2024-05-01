@@ -3,16 +3,10 @@ import WorldUtil from "../utils/world"
 import RenderLib from "RenderLib"
 import { registerWhen } from "../utils/functions";
 import { EntityPlayer, SMA } from "../utils/constants";
-import { mobCountOverlay } from "./Bestiary/MobHighlight";
 
 let filteredMatchos = []
 registerWhen(register("step", () => {
-  if (!settings.rawMobList) mobCountOverlay.setMessage("")
   const MATCHOS = World.getAllEntitiesOfType(EntityPlayer.class).filter(matcho => matcho.getName() == "matcho ")
-
-  const txt = mobCountOverlay.message.includes("Matcho") ? mobCountOverlay.message.replace(/Matcho: [0-9]+\n/g, `Matcho: ${ MATCHOS.length }\n`) : mobCountOverlay.message += `Matcho: ${ MATCHOS.length }\n`
-  
-  mobCountOverlay.setMessage(txt) 
 
   filteredMatchos = MATCHOS.filter(matcho => Player.asPlayerMP().canSeeEntity(matcho))
 }).setFps(2), () => settings.matcho && WorldUtil.worldIs("Crimson Isle"))
@@ -34,12 +28,7 @@ registerWhen(register("renderWorld", () => {
 let filteredKeepers = []
 const CAVE_SPIDER_CLASS = Java.type("net.minecraft.entity.monster.EntityCaveSpider").class
 registerWhen(register("step", () => {
-  if (!settings.rawMobList) mobCountOverlay.setMessage("")
   const KEEPERS = World.getAllEntitiesOfType(CAVE_SPIDER_CLASS).filter(keeper => keeper.getEntity().func_110148_a(SMA.field_111267_a).func_111125_b() % 3000 == 0)
-  
-  const txt = mobCountOverlay.message.indexOf("Keeper") == -1 ? mobCountOverlay.message + `\nKeeper: ${ KEEPERS.length }\n` : mobCountOverlay.message.replace(/Keeper: [0-9]+\n/g, `Keeper: ${ KEEPERS.length }\n`)
-
-  mobCountOverlay.setMessage(txt)
   
   filteredKeepers = KEEPERS.filter(keeper => Player.asPlayerMP().canSeeEntity(keeper))
 }).setFps(2), () => settings.keeper && WorldUtil.worldIs("Spider's Den"))

@@ -7,7 +7,7 @@ export const comma = (num) => {
 
 export const version = (JSON.parse(FileLib.read("NwjnAddons", "metadata.json"))).version
 
-export const PREFIX = "&d&l[NwjnAddons]&r"
+export const PREFIX = "&r&d&l[NwjnAddons]&r"
 
 export const EntityArmorStand = Java.type("net.minecraft.entity.item.EntityArmorStand")
 export const EntityPlayer = Java.type("net.minecraft.client.entity.EntityOtherPlayerMP")

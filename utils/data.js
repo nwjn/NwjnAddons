@@ -28,7 +28,6 @@ export let data = new PogObject("NwjnAddons", {
   "legionL": [50, 50, 1],
   "gyroL": [280, 110, 1],
   "manaL": [100, 100, 1],
-  "mobCountL": [50, 50, 1],
 
   "statsL": [15, 250, 1],
   "petL": [15, 250, 1],

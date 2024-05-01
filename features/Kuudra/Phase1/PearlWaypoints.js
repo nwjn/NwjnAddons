@@ -1,13 +1,9 @@
-import settings from "../../config"
-import WorldUtil from "../../utils/world";
-import RenderLib from "../../../RenderLib"
-import { registerWhen } from "../../utils/functions";
-import { getPhase } from "./Phase";
+import settings from "../../../config"
+import RenderLib from "../../../../RenderLib"
+import KuudraUtil from "../KuudraUtil"
 
-// ! CAUTION...Cancer inducing code ahead.
-registerWhen(register("renderWorld", () => {
-  if (getPhase() != 1) return;
-
+// todo: bfr...
+KuudraUtil.registerWhen(register("renderWorld", () => {
   // Triangle
   RenderLib.drawInnerEspBox(-97, 157, -112, 1, 1, 1, 0, 0, 1, true);
   RenderLib.drawEspBox(-70.5, 79, -134.5, 1, 1, 2, 0, 0, 1, false);
@@ -31,4 +27,4 @@ registerWhen(register("renderWorld", () => {
   // /
   RenderLib.drawInnerEspBox(-105, 157, -98, 1, 1, 0, 0, 1, 1, true);
   RenderLib.drawEspBox(-112.5, 76.5, -68.5, 1, 1, 0, 0, 1, 1, false);
-}), () => WorldUtil.worldIs("Kuudra") && settings.supplyPiles)
+}), () => KuudraUtil.isPhase(1) && settings.pearl)

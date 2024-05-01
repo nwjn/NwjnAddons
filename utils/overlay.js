@@ -84,7 +84,7 @@ const clicking = register("guiMouseClick", (x, y) => {
  * Handles movement of the selected overlay.
  * Updates location and normalized coordinates based on delta coordinates.
  */
-const dragging = register("dragged", (dx, dy, x, y) => {
+const dragging = register("dragged", (dx, dy) => {
     if (currentOverlay === undefined || !gui.isOpen()) return;
 
     if (gui.isOpen()) {
@@ -101,7 +101,7 @@ const dragging = register("dragged", (dx, dy, x, y) => {
  * Listens for specific keys: Enter (increase), Minus (decrease), r (reset).
  * Updates normalized coordinates and calls "setSize" after scaling.
  */
-const keying = register("guiKey", (char, keyCode, currentGui, event) => {
+const keying = register("guiKey", (_, keyCode) => {
     // View Change
     if (keyCode === 17) {
         worldView = !worldView;

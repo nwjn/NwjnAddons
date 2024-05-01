@@ -125,10 +125,9 @@ register("renderSlot", (slot) => {
   data.save()
 })
 
-registerWhen(register("chat", (player, command, event) => {
+registerWhen(register("chat", (player, command) => {
   player = player.removeFormatting().substring(player.indexOf(" ") + 1).replace(/[^A-Za-z0-9_]/g, "");
-  const chatEvent = event
-  let CommandMsg = false
+  let CommandMsg;
   delay(() => {
     command = command.toLowerCase()
     switch (command) {
@@ -141,7 +140,7 @@ registerWhen(register("chat", (player, command, event) => {
         ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
       case "server":
       case "area":
-        const server = TabList.getNames().find(e => e.removeFormatting().startsWith(" Server: "))?.removeFormatting()?.substring(9);
+      case "world":
         ChatLib.command(`pc ${WorldUtil.toString()}`); break;
       case "pow":
       case "power":

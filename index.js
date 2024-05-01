@@ -14,11 +14,12 @@ import "./features/HUD/Minibosses"
 import "./features/HUD/Poison"
 import "./features/HUD/Widgets"
 
-import "./features/Kuudra/PearlWaypoints"
-import "./features/Kuudra/Phase"
-import "./features/Kuudra/SupplyPiles"
-import "./features/Kuudra/SupplyWaypoints"
-import "./features/Kuudra/Team"
+import "./features/Kuudra/KuudraUtil"
+import "./features/Kuudra/Phase1/CustomSupply"
+import "./features/Kuudra/Phase1/NoPre"
+import "./features/Kuudra/Phase1/PearlWaypoints"
+import "./features/Kuudra/Phase1/SupplyDrops"
+import "./features/Kuudra/Phase1/SupplyWaypoints"
 
 import "./features/Bestiary/MobHighlight"
 import "./features/Bestiary/PlayerHighlight"
@@ -38,7 +39,7 @@ import "./features/Utilities/Calculator"
 import "./features/Utilities/DamageTracker"
 
 import { version, PREFIX } from "./utils/constants";
-import { setMobHighlight, mobCountOverlay } from "./features/Bestiary/MobHighlight";
+import { setMobHighlight } from "./features/Bestiary/MobHighlight";
 import { data } from "./utils/data";
 import { setRegisters } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
@@ -52,7 +53,7 @@ register("command", (arg) => {
     settings.openGUI();
     return;
   }
-  arg = arg?.toLowerCase()
+  arg = arg.toLowerCase()
   
   switch (arg) {
     case "gui":
@@ -67,7 +68,7 @@ register("command", (arg) => {
       ChatLib.chat(`${ PREFIX } &eChangelog:\n&r${ changes }`);
       break;
     case "party":
-      ChatLib.chat(`${ PREFIX } &eParty Command List:\n&r.time => shows the players current time\n.coords => sends the coords of the player\n.stats => sends the stats of the player\n.profile => sends the profile fruit name of the profile\n.wealth => sends the player's current financial status\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.raider => puts party into infernal kuudra\n.dropper => puts party into dropper game`);
+      ChatLib.chat(`${ PREFIX } &eParty Command List:\n&r.time => shows the players current time\n.coords => sends the coords of the player\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.t5 => puts party into infernal kuudra\n.dropper => puts party into dropper game`);
       break;
     case "commands":
       ChatLib.chat(`${ PREFIX } &eCommand List:&r\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/calc <equation> => calculates\n/deal => trades player in front of you without needing to type name`);
@@ -151,7 +152,6 @@ register("serverConnect", () => {
 register("guiClosed", (event) => {
   if (event?.toString()?.includes("vigilance")) {
     setRegisters()
-    mobCountOverlay.setMessage("")
     setMobHighlight()
 
     data.standList = settings.stand.split(", ")
@@ -179,11 +179,8 @@ register("chat", () => {
   data.save()
 }).setCriteria("You despawned your ${*}!");
 
-// TODO: timers to use ticks instead of steps
 // TODO: uuid prio calculator
-// TODO: click in chat to translate
 // TODO: add better nausea effect to not be cancer inducing
-// TODO: add nick to data if applicable
 
 // // TODO: armor display and equipment display
 // register("renderOverlay", () => {

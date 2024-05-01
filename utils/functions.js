@@ -47,6 +47,10 @@ export function getDistance(array1, array2) {
   return Math.abs(Math.hypot(array1[0] - array2[0], array1[1] - array2[1], array1[2] - array2[2]))
 }
 
+export function extractIGN(player) {
+  return player.removeFormatting().split("] ").slice(-1).replace(/[^A-Za-z0-9_]/g, "")
+}
+
 
 let worldJoin = []
 let worldLeave = []
@@ -62,7 +66,7 @@ register("worldLoad", () => {
     worldJoin[i]();
   }
   data.save()
-}).setPriority(Priority.LOWEST);
+})
 
 register("worldUnload", () => {
   let i = worldLeave.length;
@@ -70,7 +74,7 @@ register("worldUnload", () => {
     worldLeave[i]()
   }
   data.save()
-}).setPriority(Priority.LOWEST);
+})
 
 register("serverDisconnect", () => {
   let i = worldLeave.length;
@@ -78,4 +82,4 @@ register("serverDisconnect", () => {
     worldLeave[i]()
   }
   data.save()
-}).setPriority(Priority.LOWEST);
+})

@@ -1,5 +1,4 @@
 import { onWorldJoin, onWorldLeave, delay, setRegisters } from "./functions";
-import { PREFIX } from "./constants";
 
 // Credit: Inspired by My father, Volcaronitee
 class WorldUtil {
@@ -20,10 +19,7 @@ class WorldUtil {
   }
   
   findWorld(tries = 10) {
-    if (!tries) {
-      ChatLib.chat(`${ PREFIX }: &cCouldn't find world. Run '/nwjn reload' to try again.`)
-      return;
-    };
+    if (!tries) return;
     tries--;
 
     const TABLIST = TabList.getNames()
@@ -87,43 +83,3 @@ class WorldUtil {
 }
 
 export default new WorldUtil;
-
-// Credit: Volcaronitee
-
-/**
- * Variables used to store world data.
-*/
-let world = undefined;
-export function getWorld() { return world; };
-
-/**
- * Identifies the current world the player is in based on the tab list.
- */
-function findWorld(tries = 10) {
-  if (!World.isLoaded() || !tries) return;
-  tries--;
-
-  const worldLine = TabList.getNames().find(tab => tab.match(/(Area|Dungeon):/g));
-
-  if (!worldLine) {
-    delay(() => findWorld(tries), 1000);
-
-  } else {
-    world = worldLine.removeFormatting().split(": ").slice(-1).toString();
-
-    delay(() => setRegisters(), 500);
-  }
-}
-
-/**
- * Set and reset world on world change.
- */
-onWorldJoin(() => {
-  noFind = 0;
-  findWorld();
-})
-
-onWorldLeave(() => {
-  world = undefined;
-  setRegisters();
-});

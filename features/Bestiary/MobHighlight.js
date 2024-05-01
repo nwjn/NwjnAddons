@@ -1,7 +1,6 @@
 import settings from "../../config"
 import RenderLib from "RenderLib"
 import { data } from "../../utils/data";
-import { Overlay } from "../../utils/overlay";
 import { registerWhen, getRGB1, getMaxHP } from "../../utils/functions";
 import { PREFIX } from "../../utils/constants";
 
@@ -9,7 +8,10 @@ import { PREFIX } from "../../utils/constants";
 // TODO (ADD): Command to add mob to settings.rawmoblist
 // TODO (CHANGE): on overlay show the health aswell so that multiple health entries of the same mobtype aren't combined
 export function setMobHighlight() {
-  if (!settings.rawMobList) return;
+  if (!settings.rawMobList) {
+    data.mobsHighlight = {};
+    return;
+  };
   /*
      * Raw entry in form:
      * `<Mob>(-\d[kKmMbB]?(|\d[kKmMbB]?)+)?`
@@ -67,10 +69,6 @@ function getClassOfEntity(entity, index = 0) {
   }
 }
 
-const mobCountExample = `&eZombie: 0`
-export const mobCountOverlay = new Overlay("mobEspCount", ["all"], () => true, data.mobCountL, "moveCount", mobCountExample);
-mobCountOverlay.setMessage("")
-
 registerWhen(register("renderWorld", () => {
   const entries = Object.entries(data.mobsHighlight)
   let i = entries.length
@@ -85,13 +83,5 @@ registerWhen(register("renderWorld", () => {
       const entity = entities[ii];
       RenderLib.drawEspBox(entity.getRenderX(), entity.getRenderY(), entity.getRenderZ(), entity.getWidth(), entity.getHeight(), ...getRGB1(settings.espColor), 1, false)
     }
-
-    if (!settings.mobEspCount) return;
-    const className = entityClass.split("Entity").slice(-1)
-    const TEMPLATE = `${ className }: ${ entities.length }\n`
-
-    let currMessage = mobCountOverlay.message
-    const txt = currMessage.includes(className) ? currMessage.replace(new RegExp(`(${ className }: [0-9]+\n|&eZombie: 0)`), TEMPLATE) : currMessage + TEMPLATE
-    mobCountOverlay.setMessage(txt)
   }
 }), () => data.mobsHighlight != "");
