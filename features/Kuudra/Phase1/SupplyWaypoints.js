@@ -20,7 +20,7 @@ KuudraUtil.registerWhen(register("tick", () => {
 KuudraUtil.registerWhen(register("renderWorld", () => {
   let i = giants.length
   while (i--) {
-    const giant = giants[i]
+    let giant = giants[i]
 
     renderBeaconBeam(
       ...giant,

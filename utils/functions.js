@@ -48,7 +48,7 @@ export function getDistance(array1, array2) {
 }
 
 export function extractIGN(player) {
-  return player.removeFormatting().split("] ").slice(-1).toString().replace(/[^A-Za-z0-9_]/g, "")
+  return player?.removeFormatting()?.split("] ")?.slice(-1)?.toString()?.replace(/[^A-Za-z0-9_]/g, "")
 }
 
 export function realPlayer(playerName) {

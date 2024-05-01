@@ -62,7 +62,7 @@ KuudraUtil.registerWhen(register("chat", () => {
     ChatLib.say(`/pc No ${ KuudraUtil.preSpot }!`);
   }
   else if (!second) {
-    switch (preSpot) {
+    switch (KuudraUtil.preSpot) {
       case "Triangle": second = "Shop"; break;
       case "X": second = "X Cannon"; break;
       case "Slash": second = "Square"; break;

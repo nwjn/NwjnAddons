@@ -47,10 +47,10 @@ class KuudraUtil {
    * Resets all variables
    */
   reset() {
-    this.supplies = references.supplies
+    this.supplies = [true, true, true, true, true, true]
     this.phase = false
     this.preSpot = ""
-    this.preLoc = references.preLoc
+    this.preLoc = [0, 0, 0]
     this.missing = ""
     this.freshers = new Set()
     this.freshTime = 0

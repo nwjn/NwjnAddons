@@ -30,8 +30,8 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
 
       KuudraUtil.build = build
 
-      const freshLeft = 10 - (Date.now() - freshTime) / 1000;
-      if (freshLeft < 0) continue;
+      const freshLeft = 10 - (Date.now() - KuudraUtil.freshTime) / 1000;
+      if (freshLeft < 0 || freshLeft > 10) continue;
 
       Tessellator.drawString(
         `${ freshLeft.toFixed(2) }`,
