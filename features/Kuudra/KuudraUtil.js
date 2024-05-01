@@ -1,4 +1,4 @@
-import { onWorldJoin } from "../../utils/functions"
+import { onWorldLeave } from "../../utils/functions"
 
 // const reference = JSON.parse(FileLib.read("NwjnAddons/features/Kuudra", "KuudraData.json"))
 const references = {
@@ -6,9 +6,17 @@ const references = {
   preLoc: [0, 0, 0]
 }
 
+// TODO: find players in the run and save them as teammates
 class KuudraUtil {
   constructor() {
     this.registers = []
+    this.reset()
+
+    // TODO: add pre-fight phase for message "Starting in 5"
+    // register("chat", () => {
+    //   this.phase = 0
+    //   this.setRegisters()
+    // }).setCriteria("")
 
     register("chat", () => {
       this.phase = 1
@@ -22,7 +30,6 @@ class KuudraUtil {
 
     register("chat", () => {
       this.phase = 3
-      this.fresh = []
       this.setRegisters()
     }).setCriteria("[NPC] Elle: Phew! The Ballista is finally ready! It should be strong enough to tank Kuudra's blows now!")
 
@@ -31,9 +38,8 @@ class KuudraUtil {
       this.setRegisters()
     }).setCriteria("[NPC] Elle: POW! SURELY THAT'S IT! I don't think he has any more in him!");
 
-    onWorldJoin(() => {
+    onWorldLeave(() => {
       this.reset()
-      this.setRegisters(false)
     })
   }
   
@@ -41,14 +47,31 @@ class KuudraUtil {
    * Resets all variables
    */
   reset() {
-    this.preSpot = ""
-    this.preLoc = [0, 0, 0]
-    this.missing = ""
-    this.phase = 0
-    this.fresh = []
     this.supplies = references.supplies
+    this.phase = false
+    this.preSpot = ""
+    this.preLoc = references.preLoc
+    this.missing = ""
+    this.freshers = new Set()
+    this.freshTime = 0
+    this.build = 0
+
+    this.setRegisters(false)
   }
 
+  /**
+   * True -> When in a real phase
+   * @returns {Boolean}
+   */
+  inKuudra() {
+    return Boolean(this.phase)
+  }
+
+  /**
+   * True -> Phase in param is current phase
+   * @param {Number} phase 
+   * @returns {Boolean}
+   */
   isPhase(phase) {
     return (this.phase == phase)
   }

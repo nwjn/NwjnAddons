@@ -499,7 +499,7 @@ class Settings {
     description: "title",
     category: "Kuudra"
   })
-  teammates = false
+  teamHighlight = false
   
   @ColorProperty({
     name: 'Teammate Color',
@@ -513,7 +513,7 @@ class Settings {
     description: "Stops the useless perks rendering in the gui and stops you from clicking them",
     category: "Kuudra"
   })
-  renderPerk = false
+  cancelUselessPerk = false
 
   @SwitchProperty({
     name: "No Pre! No Second!",
@@ -555,7 +555,7 @@ class Settings {
     description: `Progress text on each pile shows through walls, beacons to unfinished piles, big percentage over ballista for amount complete, fresh timer over ballista if u fresh`,
     category: "Kuudra"
   })
-  inBuild = false;
+  buildHelper = false;
 
   @SwitchProperty({
     name: "Notify Party On Fresh",
@@ -572,11 +572,11 @@ class Settings {
   freshHitbox = false
   
   @SwitchProperty({
-    name: "Shows Kuudra",
+    name: "Shows Kuudra's HP and Hitbox",
     description: "Draw a hitbox around kuudra to help various parts of the run",
     category: "Kuudra"
   })
-  kuudraHitbox = false
+  kuudraHP = false
 
   @SwitchProperty({
     name: 'Toggle Block Highlight',

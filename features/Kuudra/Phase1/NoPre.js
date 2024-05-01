@@ -3,7 +3,7 @@ import { EntityGiant } from "../../../utils/constants";
 import { getDistance } from "../../../utils/functions";
 import KuudraUtil from "../KuudraUtil";
 
-// todo: clean this shit up
+// ! cancer
 KuudraUtil.registerWhen(register("chat", () => {
   if (Player.asPlayerMP().distanceTo(-67.5, 77, -122.5) < 15) {
     KuudraUtil.preSpot = "Triangle";
@@ -28,17 +28,16 @@ const xCannon = [-143, 76, -125]
 const square = [-143, 76, -80]
 
 KuudraUtil.registerWhen(register("chat", () => {
-  console.log("a")
   if (!KuudraUtil.preSpot) return;
 
-  const crates = World.getAllEntitiesOfType(EntityGiant.class).filter(e => e.getEntity().func_70694_bm()?.toString() == "1xitem.skull@3").map(giant => {
-    let calc = (giant.getYaw() + 130) * (Math.PI / 180)
+  const crates = World.getAllEntitiesOfType(EntityGiant.class).filter(e =>
+    e.getEntity().func_70694_bm()?.toString() == "1xitem.skull@3"
+  ).map(giant => {
+    const yaw = giant.getYaw()
+    const x = giant.getX() + (3.7 * Math.cos((yaw + 130) * (Math.PI / 180)));
+    const z = giant.getZ() + (3.7 * Math.sin((yaw + 130) * (Math.PI / 180)));
 
-    return [
-      giant.getX() + (3.7 * Math.cos(calc)),
-      76,
-      giant.getZ() + (3.7 * Math.sin(calc))
-    ]
+    return ([x, 75, z])
   })
 
   let pre = false
@@ -74,5 +73,5 @@ KuudraUtil.registerWhen(register("chat", () => {
 }).setCriteria("[NPC] Elle: Not again!"), () => KuudraUtil.isPhase(1) && settings.noPre)
 
 KuudraUtil.registerWhen(register("chat", (supply) => {
-  missing = supply
+  KuudraUtil.missing = supply
 }).setCriteria("Party > ${*}: No ${supply}!"), () => KuudraUtil.isPhase(1) && settings.noPre)

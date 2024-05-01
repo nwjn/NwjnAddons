@@ -3,25 +3,30 @@ import renderBeaconBeam from "../../../../BeaconBeam"
 import { EntityGiant } from "../../../utils/constants";
 import KuudraUtil from "../KuudraUtil"
 
-// todo: whats that brotha
+// ! canca
 let giants = []
 KuudraUtil.registerWhen(register("tick", () => {
-  giants = World.getAllEntitiesOfType(EntityGiant.class).filter(e => e.getEntity().func_70694_bm()?.toString() == "1xitem.skull@3").map(giant => {
-    let calc = (giant.getYaw() + 130) * (Math.PI / 180)
+  giants = World.getAllEntitiesOfType(EntityGiant.class).filter(e =>
+    e.getEntity().func_70694_bm()?.toString() == "1xitem.skull@3"
+  ).map(giant => {
+    const yaw = giant.getYaw()
+    const x = giant.getRenderX() + (3.7 * Math.cos((yaw + 130) * (Math.PI / 180)));
+    const z = giant.getRenderZ() + (3.7 * Math.sin((yaw + 130) * (Math.PI / 180)));
 
-    return [
-      giant.getRenderX() + (3.7 * Math.cos(calc)),
-      75,
-      giant.getRenderZ() + (3.7 * Math.sin(calc))
-    ]
+    return ([x, 75, z])
   })
 }), () => KuudraUtil.isPhase(1) && settings.supplyWaypoints);
 
 KuudraUtil.registerWhen(register("renderWorld", () => {
   let i = giants.length
   while (i--) {
-    let giant = giants[i]
+    const giant = giants[i]
 
-    renderBeaconBeam(...giant, 0, 1, 1, 0.8, true, 100);
+    renderBeaconBeam(
+      ...giant,
+      ...[0, 1, 1, 0.8],
+      true,
+      100
+    );
   }
 }), () => KuudraUtil.isPhase(1) && settings.supplyWaypoints);

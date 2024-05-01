@@ -1,10 +1,10 @@
 import settings from "./config";
+
 import "./features/Bestiary(Move)"
 import "./features/Commands"
 import "./features/CrimsonIsle"
 import "./features/Display"
 import "./features/General"
-import "./features/Kuudra(Move)"
 
 import "./features/HUD/BlazeTimers"
 import "./features/HUD/FlareTracker"
@@ -14,12 +14,26 @@ import "./features/HUD/Minibosses"
 import "./features/HUD/Poison"
 import "./features/HUD/Widgets"
 
-import "./features/Kuudra/KuudraUtil"
-import "./features/Kuudra/Phase1/CustomSupply"
-import "./features/Kuudra/Phase1/NoPre"
-import "./features/Kuudra/Phase1/PearlWaypoints"
-import "./features/Kuudra/Phase1/SupplyDrops"
-import "./features/Kuudra/Phase1/SupplyWaypoints"
+// Kuudra {
+  import "./features/Kuudra/KuudraUtil"
+  
+  // misc
+    import "./features/Kuudra/misc/CancelUselessPerk"
+    import "./features/Kuudra/misc/KuudraHP"
+    import "./features/Kuudra/misc/TeamHighlight"
+    
+  // P1
+    import "./features/Kuudra/Phase1/CustomSupplyMessage"
+    import "./features/Kuudra/Phase1/NoPre"
+    import "./features/Kuudra/Phase1/PearlWaypoints"
+    import "./features/Kuudra/Phase1/SupplyDrops"
+    import "./features/Kuudra/Phase1/SupplyWaypoints"
+    
+  // P2
+    import "./features/Kuudra/Phase2/BuildHelper"
+    import "./features/Kuudra/Phase2/FreshBoxes"
+    import "./features/Kuudra/Phase2/FreshMessage"
+// Kuudra }
 
 import "./features/Bestiary/MobHighlight"
 import "./features/Bestiary/PlayerHighlight"

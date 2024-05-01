@@ -2,7 +2,6 @@ import settings from "../../../config"
 import RenderLib from "../../../../RenderLib"
 import KuudraUtil from "../KuudraUtil"
 
-// todo: bfr...
 KuudraUtil.registerWhen(register("renderWorld", () => {
   // Triangle
   RenderLib.drawInnerEspBox(-97, 157, -112, 1, 1, 1, 0, 0, 1, true);
