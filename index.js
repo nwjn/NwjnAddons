@@ -62,7 +62,6 @@ import { data } from "./utils/data";
 import { setRegisters } from "./utils/functions"
 import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
-import "./utils/Party"
 import WorldUtil from "./utils/world"
 
 let changes;

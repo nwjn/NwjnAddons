@@ -49,7 +49,7 @@ class Settings {
   party = false
   
   @SwitchProperty({
-    name: "Confirm Leader Commands",
+    name: "Leader Commands",
     description: "Adds a confirm button when a party member sends a leader command or press up arrow while in chat",
     category: "General"
   })
@@ -745,7 +745,7 @@ class Settings {
     this.addDependency("Custom Widget", "Widget Display")
     this.addDependency("Custom Widget Text", "Custom Widget")
 
-    this.addDependency("Confirm Leader Commands", "Party Commands")
+    this.addDependency("Leader Commands", "Party Commands")
 
     // Fatal Tempo
       this.addDependency("➤ Fatal Tempo Settings", "Fatal Tempo Display")

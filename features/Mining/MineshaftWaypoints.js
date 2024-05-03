@@ -5,8 +5,8 @@ import RenderLib from "RenderLib"
 import { PREFIX } from "../../utils/constants";
 
 const data = JSON.parse(FileLib.read("NwjnAddons/features/Mining", "MineshaftData.json"))
-let claimed = []
-let room;
+let checkedCorpses = []
+let currentRoom;
 
 function renderWaypoint(text, coords, hex, rgb) {
   RenderLib.drawEspBox(...coords, 1, 1, ...rgb, 1, true);
@@ -27,7 +27,7 @@ function findRoomType(tries) {
   const type = line?.endsWith("2") ? "Crystal" : line
 
   if (type in data.rooms && material in data.names) {
-    room = data.rooms[type]
+    currentRoom = data.rooms[type]
     const name = data.names[material]
 
     const formatName = type === "Crystal" ? `${name} Crystal` : name
@@ -39,28 +39,20 @@ function findRoomType(tries) {
 }
 
 registerWhen(register("renderWorld", () => {
-  if (!room) return;
-  const corpses = room.corpses
+  if (!currentRoom) return;
+  const corpses = currentRoom.corpses
   let i = corpses.length;
   while (i--) {
     let corpse = corpses[i]
-    if (claimed.some(e => getDistance(e, corpse) < 5)) continue;
-    if (Player.asPlayerMP().distanceTo(...corpse) < 3) claimed.push([Player.getX(), Player.getY(), Player.getZ()])
+    if (checkedCorpses.some(e => getDistance(e, corpse) < 5)) continue;
+    if (Player.asPlayerMP().distanceTo(...corpse) < 3) checkedCorpses.push([Player.getX(), Player.getY(), Player.getZ()])
     renderWaypoint("Guess", corpse, 0xff5555, [1, 0, 0]);
   }
-  renderWaypoint("Exit", room.exit, 0x55ffff, [1, 0, 0])
+  renderWaypoint("Exit", currentRoom.exit, 0x55ffff, [1, 0, 0])
 }), () => settings.mineshaft);
 
-register("chat", () => {
-  claimed.push([Player.getX(), Player.getY(), Player.getZ()])
-}).setCriteria("  ${*} CORPSE LOOT! ")
-
-register("chat", () => {
-  claimed.push([Player.getX(), Player.getY(), Player.getZ()])
-}).setCriteria("You need to be holding ${*} Key to unlock this corpse!")
-
 onWorldJoin(() => {
-  room = undefined
-  claimed.length = 0
+  currentRoom = undefined
+  checkedCorpses.length = 0
   findRoomType(10)
 })

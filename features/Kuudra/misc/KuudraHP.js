@@ -3,6 +3,7 @@ import RenderLib from "../../../../RenderLib"
 import KuudraUtil from "../KuudraUtil";
 import { EntityMagmaCube, comma } from "../../../utils/constants";
 import { getMaxHP } from "../../../utils/functions";
+import RenderUtil from "../../../utils/RenderUtil";
 
 function calcString(hp) {
   const scaledHP = KuudraUtil.isPhase(4) ? hp * 3.5 : hp
@@ -37,12 +38,10 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
   );
 
   // hp
-  Tessellator.drawString(
+  RenderUtil.drawStringWithDepth(
     calcString(boss.getEntity().func_110143_aJ()),
     x, y + boss.getHeight(), z,
     0xffffff,
-    false,
-    0.5,
-    false
+    0.5
   )
-}), () => KuudraUtil.inKuudra() && settings.kuudraHP)
+}), () => KuudraUtil.inKuudra() && settings.kuudraHP);

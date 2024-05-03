@@ -1,7 +1,6 @@
 import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
-import { registerWhen } from "../../utils/functions";
 
 // let a = 0
 function widget(find, overlay) {
@@ -13,10 +12,6 @@ function widget(find, overlay) {
   const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘|Ends in)/g))|| e.removeFormatting().startsWith("               ")) && i)
   tab = tab.slice(0, end)
   overlay.setMessage(tab.join("\n"))
-  // if (find == "Powders:" & !a) {
-  //   tab.forEach(e => ChatLib.chat(e))
-  //   a++
-  // }
 }
 
 const statsExample =
@@ -118,7 +113,7 @@ const corpseOverlay = new Overlay("corpse", ["Mineshaft"], () => true, data.corp
 const customExample = `&e&lCustom Widget:`
 const customOverlay = new Overlay("custom", ["all"], () => true, data.customL, "moveCustom", customExample);
 
-registerWhen(register("step", () => {
+register("step", () => {
   try {
     widget("Stats:", statsOverlay);
     widget("Pet:", petOverlay);
@@ -134,4 +129,4 @@ registerWhen(register("step", () => {
 
     widget(settings.widgetText, customOverlay);
   } catch (err) {}
-}).setFps(2), () => settings.widget)
+}).setFps(2)

@@ -5,7 +5,6 @@ import { data } from "../utils/data";
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
 import { EntityArmorStand, SMA } from "../utils/constants";
-import { getIsLeader } from "../utils/Party";
 
 // Credit: My father, Volcaronitee
 let chatWaypoints = [];
@@ -168,14 +167,8 @@ registerWhen(register("chat", (player, command) => {
         CommandMsg = `p settings allinvite`; break;
       default: return;
     }
-    if (getIsLeader()) {
-      if (settings.leader && CommandMsg) {
-        new TextComponent(`&a&l[CONFIRM]`).setHoverValue(`Runs /${ CommandMsg }`).setClickAction("run_command").setClickValue(`/${ CommandMsg }`).chat()
-        ChatLib.addToSentMessageHistory(-1, `/${CommandMsg}`)
-      }
-      else if (CommandMsg) {
-        ChatLib.command(CommandMsg)
-      }
+    if (settings.leader && CommandMsg) {
+      ChatLib.command(CommandMsg)
     }
   }, 200);
 }).setCriteria("Party > ${player}: .${command}"), () => settings.party)
