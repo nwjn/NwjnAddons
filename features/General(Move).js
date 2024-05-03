@@ -173,7 +173,7 @@ registerWhen(register("chat", (player, command) => {
         new TextComponent(`&a&l[CONFIRM]`).setHoverValue(`Runs /${ CommandMsg }`).setClickAction("run_command").setClickValue(`/${ CommandMsg }`).chat()
         ChatLib.addToSentMessageHistory(-1, `/${CommandMsg}`)
       }
-      else {
+      else if (CommandMsg) {
         ChatLib.command(CommandMsg)
       }
     }

@@ -1,4 +1,4 @@
-import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, @SliderProperty, @ColorProperty, @PercentSliderProperty, @DecimalSliderProperty, Color} from "../Vigilance/index"
+import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, @SliderProperty, @ColorProperty, @PercentSliderProperty, @DecimalSliderProperty, Color} from  "../Vigilance/index"
 import { version } from "./utils/constants"
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
@@ -496,7 +496,7 @@ class Settings {
   
   @SwitchProperty({
     name: "Highlight Teammates in kuudra",
-    description: "title",
+    description: "Draws a box of the selected color on teammates, changes to green if that player gets fresh tool",
     category: "Kuudra"
   })
   teamHighlight = false
@@ -510,7 +510,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Stop Rendering Useless Perks",
-    description: "Stops the useless perks rendering in the gui and stops you from clicking them",
+    description: "Stops the useless perks rendering in the gui\n&cDoes not stop you from clicking them",
     category: "Kuudra"
   })
   cancelUselessPerk = false
@@ -552,24 +552,17 @@ class Settings {
     
   @SwitchProperty({
     name: "Build Helper",
-    description: `Progress text on each pile shows through walls, beacons to unfinished piles, big percentage over ballista for amount complete, fresh timer over ballista if u fresh`,
+    description: `Beacons on unfinished piles, big percentage over ballista for amount complete, fresh timer over ballista if u fresh`,
     category: "Kuudra"
   })
   buildHelper = false;
 
   @SwitchProperty({
     name: "Notify Party On Fresh",
-    description: "Auto say `FRESH!` in party chat when you get fresh tools",
+    description: "Say `FRESH!` in party chat when you get fresh tools",
     category: "Kuudra"
   })
   fresh = false
-
-  @SwitchProperty({
-    name: "Draw Hitboxes Around Freshers",
-    description: "Draw hitboxes around party members who have freshed",
-    category: "Kuudra"
-  })
-  freshHitbox = false
   
   @SwitchProperty({
     name: "Shows Kuudra's HP and Hitbox",

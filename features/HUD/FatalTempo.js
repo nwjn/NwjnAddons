@@ -1,7 +1,7 @@
 import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
-import { registerWhen } from "../../utils/functions";
+import { registerWhen, clamp } from "../../utils/functions";
 import WorldUtil from "../../utils/world"
 
 const ftExample = `Fatal Tempo:&c 0% | 0.00s`;
@@ -27,8 +27,8 @@ registerWhen(register("soundPlay", addHits).setCriteria("tile.piston.out"), () =
 registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings.ft && !WorldUtil.worldIs("Kuudra"));
 
 const calcString = (countdown = 0, percent = 0) => {
-  countdown = countdown >= 0 ? countdown : 0
-  percent = percent <= 200 ? percent : 200
+  countdown = clamp(countdown, 0, 3)
+  percent = clamp(percent, 0, 200)
   let displayText = settings.ftShowTitle ? `Fatal Tempo: ` : ""
 
   displayText += settings.ftShowPercent ? 

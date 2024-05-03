@@ -2,11 +2,11 @@ import settings from "../../config";
 import RenderLib from "RenderLib"
 import { registerWhen, getRGB1 } from "../../utils/functions";
 import { data } from "../../utils/data";
-import { EntityPlayer } from "../../utils/constants";
+import { realPlayer } from "../../utils/functions";
 
 let filteredPlayers = []
 registerWhen(register("step", () => {
-  const PLAYERS = World.getAllEntitiesOfType(EntityPlayer.class).filter(e => !e.isInvisible() && (settings.player == "Player" && World.getPlayerByName(e.getName())?.getPing() == 1))
+  const PLAYERS = World.getAllPlayers().filter(e => !e.isInvisible() && (settings.player == "Player" && realPlayer(e)))
   
   filteredPlayers = []
   PLAYERS.forEach(player => {
@@ -17,7 +17,10 @@ registerWhen(register("step", () => {
 }).setFps(2), () => settings.player)
 
 registerWhen(register("renderWorld", () => {
-  filteredPlayers.forEach(player => {
-    RenderLib.drawEspBox(player.getRenderX(), player.getRenderY(), player.getRenderZ(), 1, 2, ...getRGB1(settings.playerColor), 1, false)
-  })
+  let i = filteredPlayers
+  while (i--) {
+    const player = filteredPlayers[i]
+
+    RenderLib.drawEspBox(player.getRenderX(), player.getRenderY(), player.getRenderZ(), 0.6, 1.8, ...getRGB1(settings.playerColor), 1, false)
+  }
 }), () => settings.player)

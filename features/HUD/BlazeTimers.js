@@ -16,16 +16,16 @@ function timeFormat (seconds) {
 let gummy;
 let wisp;
 registerWhen(register("chat", () => {
-  gummy = 3_600; 
+  gummy = 3_600; // 60 minutes as seconds
 }).setChatCriteria("You ate a Re-heated Gummy Polar Bear!"), () => settings.blaze)
 
 registerWhen(register("chat", () => {
-  wisp = data.pet.includes("Parrot") ? 2_520 : 1_800;
+  wisp = data.pet.includes("Parrot") ? 2_520 : 1_800; // 42 min with parrot, else 30min as seconds
 }).setChatCriteria("BUFF! You ${*} with Wisp's Ice-Flavored Water I! Press TAB or type /effects to view your active effects!"), () => settings.blaze);
 
 registerWhen(register("step", () => {
-  gummy && (gummy--)
-  wisp && (wisp--)
+  if (gummy) gummy--
+  if (wisp) wisp--
   
   blazeOverlay.setMessage(`&aGummy: &f${ timeFormat(gummy) }\n&7Wisp: &f${ timeFormat(wisp) }`);
 }).setDelay(1), () => settings.blaze && WorldUtil.isSkyblock());

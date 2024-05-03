@@ -1,48 +1,48 @@
 import { onWorldLeave } from "../../utils/functions"
 
 // const reference = JSON.parse(FileLib.read("NwjnAddons/features/Kuudra", "KuudraData.json"))
-const references = {
-  supplies: [true, true, true, true, true, true],
-  preLoc: [0, 0, 0]
-}
 
 // TODO: find players in the run and save them as teammates
 class KuudraUtil {
   constructor() {
-    this.registers = []
-    this.reset()
-
-    // TODO: add pre-fight phase for message "Starting in 5"
-    // register("chat", () => {
-    //   this.phase = 0
-    //   this.setRegisters()
-    // }).setCriteria("")
+    this.registers = [];
+    this.reset();
 
     register("chat", () => {
-      this.phase = 1
+      this.phase = -1
       this.setRegisters()
-    }).setCriteria("[NPC] Elle: Okay adventurers, I will go and fish up Kuudra!")
+    }).setCriteria("[NPC] Elle: Talk with me to begin!")
 
     register("chat", () => {
-      this.phase = 2
-      this.setRegisters()
-    }).setCriteria("[NPC] Elle: OMG! Great work collecting my supplies!")
+      this.phase = 1;
+      this.setRegisters();
+    }).setCriteria("[NPC] Elle: Okay adventurers, I will go and fish up Kuudra!");
 
     register("chat", () => {
-      this.phase = 3
-      this.setRegisters()
-    }).setCriteria("[NPC] Elle: Phew! The Ballista is finally ready! It should be strong enough to tank Kuudra's blows now!")
+      this.phase = 2;
+      this.setRegisters();
+    }).setCriteria("[NPC] Elle: OMG! Great work collecting my supplies!");
 
     register("chat", () => {
-      this.phase = 4
-      this.setRegisters()
+      this.phase = 3;
+      this.freshers.clear()
+      this.setRegisters();
+    }).setCriteria("[NPC] Elle: Phew! The Ballista is finally ready! It should be strong enough to tank Kuudra's blows now!");
+
+    register("chat", () => {
+      this.phase = 4;
+      this.setRegisters();
     }).setCriteria("[NPC] Elle: POW! SURELY THAT'S IT! I don't think he has any more in him!");
 
     onWorldLeave(() => {
-      this.reset()
-    })
+      this.reset();
+    });
+
+    this.registerWhen(register("guiClosed", (event) => {
+      if (event?.toString()?.includes("vigilance")) this.setRegisters()
+    }), () => this.inKuudra());
   }
-  
+
   /**
    * Resets all variables
    */

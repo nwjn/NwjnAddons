@@ -1,5 +1,5 @@
 import settings from "../config";
-import { registerWhen } from "../utils/functions";
+import { registerWhen, clamp } from "../utils/functions";
 import WorldUtil from "../utils/world"
 
 function coords() {
@@ -26,19 +26,16 @@ registerWhen(register("chat", () => {
 let totalDamage = 0
 registerWhen(register("step", () => {
   if (!World.isLoaded()) return
-  Scoreboard.getLines().forEach(line => {
-    line = line.toString().removeFormatting()
-    if (line.includes("Boss: ")) {
-      line = line.replace(/(\W|[a-zA-Z]+)/g, "")
-      totalDamage = parseInt(line)
-    }
-  })
+
+  const line = Scoreboard.getLines().find(l => l.toString().removeFormatting().includes("Boss: "))
+  if (line) totalDamage = parseInt(line.toString().removeFormatting().replace(/[^0-9]/g, ""))
 }).setDelay(5), () => settings.magma)
 
 registerWhen(register('chat', (damage, event) => {
-  totalDamage = totalDamage + parseInt(damage)
+  totalDamage = clamp(totalDamage + parseInt(damage), 0, 100)
+
   cancel(event)
-  if (totalDamage > 100) totalDamage = 100
+
   ChatLib.chat(`&4&lMagma Boss&r &8> &c+${damage}% &7(${totalDamage}%)`)
 }).setCriteria("The Magma Boss angers! (+${damage}% Damage)").setPriority(Priority.LOWEST), () => settings.magma && WorldUtil.worldIs("Crimson Isle"))
 

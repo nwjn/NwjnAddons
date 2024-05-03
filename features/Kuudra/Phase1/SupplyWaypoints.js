@@ -2,6 +2,7 @@ import settings from "../../../config"
 import renderBeaconBeam from "../../../../BeaconBeam"
 import { EntityGiant } from "../../../utils/constants";
 import KuudraUtil from "../KuudraUtil"
+import { getDistance } from "../../../utils/functions";
 
 // ! canca
 let giants = []
@@ -15,6 +16,10 @@ KuudraUtil.registerWhen(register("tick", () => {
 
     return ([x, 75, z])
   })
+  // todo: add setting to not render supply if its next to you
+  // .filter(giant => 
+  //   Player.asPlayerMP().distanceTo(...giant) > 2
+  // );
 }), () => KuudraUtil.isPhase(1) && settings.supplyWaypoints);
 
 KuudraUtil.registerWhen(register("renderWorld", () => {

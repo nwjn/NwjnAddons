@@ -1,10 +1,9 @@
 import settings from "./config";
 
-import "./features/Bestiary(Move)"
 import "./features/Commands"
-import "./features/CrimsonIsle"
+import "./features/CrimsonIsle(Move)"
 import "./features/Display"
-import "./features/General"
+import "./features/General(Move)"
 
 import "./features/HUD/BlazeTimers"
 import "./features/HUD/FlareTracker"
@@ -35,17 +34,22 @@ import "./features/HUD/Widgets"
     import "./features/Kuudra/Phase2/FreshMessage"
 // Kuudra }
 
-import "./features/Bestiary/MobHighlight"
-import "./features/Bestiary/PlayerHighlight"
-import "./features/Bestiary/StandHighlight"
+// Bestiary {
+  import "./features/Bestiary/Keeper"
+  import "./features/Bestiary/Matcho"
+  import "./features/Bestiary/MobHighlight"
+  import "./features/Bestiary/PlayerHighlight"
+  import "./features/Bestiary/StandHighlight"
+// Bestiary }
 
 import "./features/QOL/BlockHighlight"
 import "./features/QOL/BossCleaner"
 import "./features/QOL/DiscordCleaner"
 import "./features/QOL/VisitorCleaner"
 
+import "./features/Mining/MineshaftWaypoints"
+
 import "./features/Beta/AgroCircle"
-import "./features/Beta/MineshaftWaypoints"
 import "./features/Beta/GyroCircle"
 import "./features/Beta/TotemCircle"
 
@@ -87,9 +91,10 @@ register("command", (arg) => {
     case "commands":
       ChatLib.chat(`${ PREFIX } &eCommand List:&r\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/calc <equation> => calculates\n/deal => trades player in front of you without needing to type name`);
       break;
-    case "reload": 
-      WorldUtil.resetWorld()
-      ChatLib.chat(`${PREFIX} &aReloading all triggers...`)
+    case "reload":
+      WorldUtil.resetWorld();
+      ChatLib.chat(`${ PREFIX } &aReloading all triggers...`);
+      break;
     default:
       ChatLib.chat(`${PREFIX} &r\n/nwjn => opens settings\n/nwjn gui => opens gui mover\n/nwjn version => gets the current nwjnaddons version\n/nwjn changes => see the latest changes\n/nwjn party => see all party commands\n/nwjn commands => see all commands\n/nwjn reload => reloads all registers in case they aren't working`)
   }

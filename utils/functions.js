@@ -51,10 +51,12 @@ export function extractIGN(player) {
   return player?.removeFormatting()?.split("] ")?.slice(-1)?.toString()?.replace(/[^A-Za-z0-9_]/g, "")
 }
 
-export function realPlayer(playerName) {
-  const ping = World.getPlayerByName(playerName)?.getPing()
+export function realPlayer(playerMP) {
+  return (playerMP.getPing() === 1)
+}
 
-  return (ping === 1)
+export function clamp(number, min, max) {
+  return Math.max(min, Math.min(number, max));
 }
 
 
