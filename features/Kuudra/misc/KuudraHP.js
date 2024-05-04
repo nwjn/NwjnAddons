@@ -26,33 +26,6 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
   )
   if (!boss) return;
 
-  const [x, y, z] = [boss.getRenderX(), boss.getRenderY(), boss.getRenderZ()]
-
-  // hitbox
-  RenderLib.drawEspBox(
-    x, y, z,
-    boss.getWidth(), boss.getHeight(),
-    1, 1, 0, 0.5,
-    false
-  );
-
-  const yaw = Player.getYaw()
-  const xx = boss.getRenderX() + (12 * Math.cos((yaw) * (Math.PI / 180)));
-  const zz = boss.getRenderZ() + (-12 * Math.cos((yaw) * (Math.PI / 180)));
-
-  // hp
-  RenderUtil.drawStringWithDepth(
-    calcString(boss.getEntity().func_110143_aJ()),
-    xx, y + boss.getHeight(), zz,
-    0xffffff,
-    0.5
-  )
-}), () => KuudraUtil.isFight() && settings.kuudraHP);
-
-register("renderWorld", () => {
-  const boss = World.getAllEntitiesOfType(EntityMagmaCube.class)[0]
-  if (!boss) return;
-
   const [x, y, z, w, h] = [boss.getRenderX(), boss.getRenderY(), boss.getRenderZ(), boss.getWidth(), boss.getHeight()]
 
   // hitbox
@@ -69,4 +42,4 @@ register("renderWorld", () => {
     x, y, z,
     w, h
   )
-})
+}), () => KuudraUtil.isFight() && settings.kuudraHP);
