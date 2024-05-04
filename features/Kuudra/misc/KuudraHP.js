@@ -3,7 +3,6 @@ import RenderLib from "../../../../RenderLib"
 import KuudraUtil from "../KuudraUtil";
 import { EntityMagmaCube, comma } from "../../../utils/constants";
 import { getMaxHP } from "../../../utils/functions";
-import RenderUtil from "../../../utils/RenderUtil";
 
 function calcString(hp) {
   const scaledHP = KuudraUtil.isPhase(4) ? hp * 3.5 : hp
@@ -37,11 +36,37 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
     false
   );
 
+  const yaw = Player.getYaw()
+  const xx = boss.getRenderX() + (12 * Math.cos((yaw) * (Math.PI / 180)));
+  const zz = boss.getRenderZ() + (-12 * Math.cos((yaw) * (Math.PI / 180)));
+
   // hp
   RenderUtil.drawStringWithDepth(
     calcString(boss.getEntity().func_110143_aJ()),
-    x, y + boss.getHeight(), z,
+    xx, y + boss.getHeight(), zz,
     0xffffff,
     0.5
   )
-}), () => KuudraUtil.inKuudra() && settings.kuudraHP);
+}), () => KuudraUtil.isFight() && settings.kuudraHP);
+
+register("renderWorld", () => {
+  const boss = World.getAllEntitiesOfType(EntityMagmaCube.class)[0]
+  if (!boss) return;
+
+  const [x, y, z, w, h] = [boss.getRenderX(), boss.getRenderY(), boss.getRenderZ(), boss.getWidth(), boss.getHeight()]
+
+  // hitbox
+  RenderLib.drawEspBox(
+    x, y, z,
+    w, h,
+    1, 1, 0, 0.5,
+    false
+  );
+
+  // hp
+  KuudraUtil.drawKuudraHP(
+    calcString(boss.getEntity().func_110143_aJ()),
+    x, y, z,
+    w, h
+  )
+})

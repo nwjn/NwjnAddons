@@ -41,6 +41,10 @@ class KuudraUtil {
     this.registerWhen(register("guiClosed", (event) => {
       if (event?.toString()?.includes("vigilance")) this.setRegisters()
     }), () => this.inKuudra());
+    
+    // render stuff
+    this.fontRenderer = Renderer.getFontRenderer()
+    this.renderManager = Renderer.getRenderManager()
   }
 
   /**
@@ -68,6 +72,14 @@ class KuudraUtil {
   }
 
   /**
+   * True -> When in pahse 1-4
+   * @returns {Boolean}
+   */
+  isFight() {
+    return this.phase > 0
+  }
+
+  /**
    * True -> Phase in param is current phase
    * @param {Number} phase 
    * @returns {Boolean}
@@ -90,6 +102,45 @@ class KuudraUtil {
         trigger[2] = false;
       }
     });
+  }
+
+  drawKuudraHP(text, x, y, z, w, h) {
+    const yaw = Player.getYaw()
+    const wShift = w / (2 ** 0.25)
+    const hShift = h * 0.75
+
+    const xShift = x + (wShift * Math.cos((yaw - 90) * (Math.PI / 180)))
+    const yShift = y + hShift
+    const zShift = z + (wShift * Math.sin((yaw - 90) * (Math.PI / 180)))
+    
+    const renderPos = Tessellator.getRenderPos(xShift, yShift, zShift)
+    const color = 0xffffff
+
+    const lScale = 0.2
+
+    const xMultiplier = Client.getMinecraft().field_71474_y.field_74320_O == 2 ? -1 : 1
+
+    Tessellator.colorize(1, 1, 1, 0.5)
+    Tessellator.pushMatrix()
+
+    Tessellator.translate(renderPos.x, renderPos.y, renderPos.z)
+    Tessellator.rotate(-this.renderManager.field_78735_i, 0, 1, 0)
+    Tessellator.rotate(this.renderManager.field_78732_j * xMultiplier, 1, 0, 0)
+
+    Tessellator.scale(-lScale, -lScale, lScale)
+    Tessellator.disableLighting
+    Tessellator.depthMask(false)
+
+    Tessellator.enableBlend()
+    Tessellator.blendFunc(770, 771)
+
+    const textWidth = this.fontRenderer.func_78256_a(text)
+    this.fontRenderer.func_78276_b(text, -textWidth / 2, 0, color)
+
+    Tessellator.colorize(1, 1, 1, 1)
+    Tessellator.depthMask(true)
+    Tessellator.enableDepth()
+    Tessellator.popMatrix()
   }
 }
 
