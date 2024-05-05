@@ -90,7 +90,6 @@ registerWhen(register("chat", (player, spacing, x, y, z) => {
   delay(() => {
     if (chatWaypoints[0][0].equals(player)) chatWaypoints.shift()
   }, settings.waypoint * time);
-  // todo: allow for info after waypoint
 }).setCriteria("${player}&f${spacing}x: ${x}, y: ${y}, z: ${z}&r"), () => settings.waypoint != 0);
 
 
@@ -184,7 +183,6 @@ registerWhen(register("entityDeath", (entity) => {
   const hp = entity.func_110148_a(SMA.field_111267_a).func_111125_b();
   entity.func_70106_y()
 
-  // todo: test
   const tag = World.getWorld().func_72872_a(EntityArmorStand.class, entity.func_174813_aQ().func_72314_b(0.5, 0.5, 0.5)).filter(e => e.toString().removeFormatting().includes(`${hp}❤`))
   tag.forEach(tag => tag.func_70106_y())
 }), () => settings.dead)
@@ -192,7 +190,6 @@ registerWhen(register("entityDeath", (entity) => {
 let blockBroken = 0
 let time = 0
 registerWhen(register("blockBreak", (block) => {
-  // todo:test
   const holding = Player.getHeldItem()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id");
   if (block.toString().includes("type=minecraft:log") && holding == "TREECAPITATOR_AXE" && time <= 0) blockBroken = Date.now();
 }), () => settings.treecap && WorldUtil.worldIs(["Hub", "The Park"]))
@@ -209,20 +206,6 @@ registerWhen(register("renderOverlay", () => {
   }
 }), () => (settings.treecap && WorldUtil.worldIs(["Hub", "The Park"]) || (settings.reaper)));
 
-// let events = []
-// registerWhen(register("actionBar", (event) => {
-//   let chat = ChatLib.getChatMessage(event, false)
-//   chat = chat.substring(chat.indexOf("     "), chat.lastIndexOf("     "))
-//   if (events.includes(chat)) return
-//   events.push(chat)
-//   ChatLib.chat(chat)
-// }).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp);
-
-// register("worldUnload", () => {
-//   events = []
-// })
-// /*
-// todo: test & replace
 let lastBar = "";
   registerWhen(register("actionBar", (event) => {
   let chat = ChatLib.getChatMessage(event, false)
@@ -231,12 +214,11 @@ let lastBar = "";
   ChatLib.chat(chat)
   lastBar = chat
 }).setCriteria("+${*} SkyBlock XP").setContains(), () => settings.sbxp);
-// */
 
 let rendArrows = 0
 registerWhen(register("soundPlay", () => {
   const holding = Player.getHeldItem()?.getRegistryName()
-  if (holding != "minecraft:bow" && holding != "minecraft:bone") return
+  if (!["minecraft:bone", "minecraft:bow"].includes(holding)) return
   rendArrows++;
   if (rendArrows > 1) return;
   setTimeout(() => {

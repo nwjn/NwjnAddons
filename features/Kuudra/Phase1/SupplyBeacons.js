@@ -1,8 +1,7 @@
-import settings from "../../../config"
+import kuudraConfig from "../kuudraConfig";
 import renderBeaconBeam from "../../../../BeaconBeam"
 import { EntityGiant } from "../../../utils/constants";
 import KuudraUtil from "../KuudraUtil"
-import { getDistance } from "../../../utils/functions";
 
 // ! canca
 let giants = []
@@ -20,7 +19,7 @@ KuudraUtil.registerWhen(register("tick", () => {
   // .filter(giant => 
   //   Player.asPlayerMP().distanceTo(...giant) > 2
   // );
-}), () => KuudraUtil.isPhase(1) && settings.supplyWaypoints);
+}), () => KuudraUtil.isPhase(1) && kuudraConfig.supplyBeacons);
 
 KuudraUtil.registerWhen(register("renderWorld", () => {
   let i = giants.length
@@ -34,4 +33,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
       100
     );
   }
-}), () => KuudraUtil.isPhase(1) && settings.supplyWaypoints);
+}), () => KuudraUtil.isPhase(1) && kuudraConfig.supplyBeacons);

@@ -14,6 +14,7 @@ import "./features/HUD/Poison"
 import "./features/HUD/Widgets"
 
 // Kuudra {
+  import kuudraConfig from "./features/Kuudra/kuudraConfig";
   import "./features/Kuudra/KuudraUtil"
   
   // misc
@@ -23,13 +24,19 @@ import "./features/HUD/Widgets"
     
   // P1
     import "./features/Kuudra/Phase1/CustomSupplyMessage"
-    import "./features/Kuudra/Phase1/NoPre"
-    import "./features/Kuudra/Phase1/PearlWaypoints"
+    import "./features/Kuudra/Phase1/NoSupply"
+    import "./features/Kuudra/Phase1/PearlLineups"
     import "./features/Kuudra/Phase1/SupplyDrops"
-    import "./features/Kuudra/Phase1/SupplyWaypoints"
+    import "./features/Kuudra/Phase1/SupplyBeacons"
     
   // P2
-    import "./features/Kuudra/Phase2/BuildHelper"
+    import "./features/Kuudra/Phase2/BuildBuilders"
+    import "./features/Kuudra/Phase2/BuildFresh"
+    import "./features/Kuudra/Phase2/BuildPercent"
+    import "./features/Kuudra/Phase2/BuildPiles"
+    import "./features/Kuudra/Phase2/BuildStands"
+    import "./features/Kuudra/Phase2/ProgressWithPhase"
+    
     import "./features/Kuudra/Phase2/FreshBoxes"
     import "./features/Kuudra/Phase2/FreshMessage"
 // Kuudra }
@@ -73,6 +80,9 @@ register("command", (arg) => {
   arg = arg.toLowerCase()
   
   switch (arg) {
+    case "kuudra":
+      kuudraConfig.openGUI();
+      break;
     case "gui":
       openGUI();
       break;
@@ -158,7 +168,7 @@ if (data.version != version) {
 register("serverConnect", () => {
   setTimeout(() => {
     ChatLib.chat("")
-    new TextComponent(`${ PREFIX } &d[Broadcast]: &rAll non-los (line of sight) and esp loopholes are being removed. Join the &ndiscord&r for any questions.`)
+    new TextComponent(`${ PREFIX } &d[Broadcast]: &rJoin the &ndiscord&r for any questions.`)
       .setClickAction("run_command")
       .setHoverValue("Copies the discord link")
       .setClickValue(`/ct copy https://discord.gg/3S3wXpC4gE`)

@@ -11,8 +11,11 @@ const poisonOverlay = new Overlay("poison", ["all"], () => true, data.poisonL, "
 
 // TODO (ADD): 9th slot arrows left
 registerWhen(register("step", () => {
+  if (!World.isLoaded()) return;
+
   let items = {"Twilight Arrow Poison": 0, "Flint Arrow": 0, "Toxic Arrow Poison": 0}
-  const inv = Player.getInventory().getItems()?.filter(item => /(dyePowder|arrow)/g.test(item?.toString()))
+  const inv = Player.getInventory()?.getItems()?.filter(item => /(dyePowder|arrow)/g.test(item?.toString()))
+  if (!inv) return;
 
   let i = inv.length; while (i--) {
     items[inv[i].getName().removeFormatting()] += inv[i].getStackSize();

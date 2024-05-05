@@ -37,7 +37,7 @@ registerWhen(register('chat', (damage, event) => {
   cancel(event)
 
   ChatLib.chat(`&4&lMagma Boss&r &8> &c+${damage}% &7(${totalDamage}%)`)
-}).setCriteria("The Magma Boss angers! (+${damage}% Damage)").setPriority(Priority.LOWEST), () => settings.magma && WorldUtil.worldIs("Crimson Isle"))
+}).setCriteria("The Magma Boss angers! (+${damage}% Damage)"), () => settings.magma && WorldUtil.worldIs("Crimson Isle"))
 
 registerWhen(register('worldUnload', () => {
   totalDamage = 0

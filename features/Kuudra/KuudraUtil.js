@@ -1,8 +1,5 @@
 import { onWorldLeave } from "../../utils/functions"
 
-// const reference = JSON.parse(FileLib.read("NwjnAddons/features/Kuudra", "KuudraData.json"))
-
-// TODO: find players in the run and save them as teammates
 class KuudraUtil {
   constructor() {
     this.registers = [];
@@ -58,7 +55,10 @@ class KuudraUtil {
     this.missing = ""
     this.freshers = new Set()
     this.freshTime = 0
+    this.freshLeft = 0
     this.build = 0
+    this.builders = 0
+    this.buildPiles = []
 
     this.setRegisters(false)
   }
@@ -106,15 +106,15 @@ class KuudraUtil {
 
   drawKuudraHP(text, x, y, z, w, h) {
     const yaw = Player.getYaw()
-    const wShift = w / (2 ** 0.25)
-    const hShift = h * 0.75
+    const wShift = w / (2 ** 0.7)
+    const hShift = h / 2
 
     const xShift = x + (wShift * Math.cos((yaw - 90) * (Math.PI / 180)))
     const yShift = y + hShift
     const zShift = z + (wShift * Math.sin((yaw - 90) * (Math.PI / 180)))
     
     const renderPos = Tessellator.getRenderPos(xShift, yShift, zShift)
-    const color = 0xffffff
+    const color = 0x00ffffff
 
     const lScale = 0.2
 

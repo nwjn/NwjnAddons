@@ -3,6 +3,7 @@ import { registerWhen, delay, getDistance, onWorldJoin } from "../../utils/funct
 import renderBeaconBeam from "BeaconBeam"
 import RenderLib from "RenderLib"
 import { PREFIX } from "../../utils/constants";
+import WorldUtil from "../../utils/world"
 
 const data = JSON.parse(FileLib.read("NwjnAddons/features/Mining", "MineshaftData.json"))
 let checkedCorpses = []
@@ -17,7 +18,7 @@ function renderWaypoint(text, coords, hex, rgb) {
 
 
 function findRoomType(tries) {
-  if (!tries) return
+  if (!tries || (WorldUtil.isSkyblock() && !WorldUtil.worldIs("Mineshaft"))) return
   tries--
 
   const scoreboard = Scoreboard.getLines()

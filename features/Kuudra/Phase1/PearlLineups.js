@@ -1,4 +1,4 @@
-import settings from "../../../config"
+import kuudraConfig from "../kuudraConfig";
 import RenderLib from "../../../../RenderLib"
 import KuudraUtil from "../KuudraUtil"
 
@@ -26,4 +26,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
   // /
   RenderLib.drawInnerEspBox(-105, 157, -98, 1, 1, 0, 0, 1, 1, true);
   RenderLib.drawEspBox(-112.5, 76.5, -68.5, 1, 1, 0, 0, 1, 1, false);
-}), () => KuudraUtil.isPhase(1) && settings.pearl)
+}), () => KuudraUtil.isPhase(1) && kuudraConfig.pearl)

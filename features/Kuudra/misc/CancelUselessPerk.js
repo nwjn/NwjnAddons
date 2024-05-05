@@ -1,4 +1,4 @@
-import settings from "../../../config"
+import kuudraConfig from "../kuudraConfig";
 import KuudraUtil from "../KuudraUtil";
 
 const unrenderThese = [
@@ -17,4 +17,4 @@ KuudraUtil.registerWhen(register("renderSlot", (slot, _, event) => {
   const name = slot.getItem()?.getName()?.removeFormatting()
   
   if (name && regex.test(name)) cancel(event)
-}), () => KuudraUtil.inKuudra() && settings.cancelUselessPerk);
+}), () => KuudraUtil.inKuudra() && kuudraConfig.cancelUselessPerk);

@@ -1,4 +1,5 @@
 import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, @SliderProperty, @ColorProperty, @PercentSliderProperty, @DecimalSliderProperty, Color} from  "../Vigilance/index"
+import kuudraConfig from "./features/Kuudra/kuudraConfig"
 import { version } from "./utils/constants"
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
@@ -10,7 +11,7 @@ import { version } from "./utils/constants"
 class Settings {    
   @SliderProperty({
     name: "Draw Chat Waypoints",
-    description: "Creates waypoints taken from chat messages in patcher sendcoords format and how long they should stay (in seconds)",
+    description: "Creates waypoints taken from chat messages in patcher sendcoords format and how long they should stay (in seconds)\n&cTurned off at 0",
     min: 0,
     max: 160,
     category: "General"
@@ -49,8 +50,8 @@ class Settings {
   party = false
   
   @SwitchProperty({
-    name: "Leader Commands",
-    description: "Adds a confirm button when a party member sends a leader command or press up arrow while in chat",
+    name: "➤ Leader Commands",
+    description: "     Toggle for commands such as .t5, .dropper, .transfer",
     category: "General"
   })
   leader = false
@@ -180,14 +181,6 @@ class Settings {
   align = false
 
   @SwitchProperty({
-    name: "Mob Highlight Counter",
-    description: "Shows the number of each mob highlighted by mob esp -> /moveMob",
-    category: "HUD",
-    subcategory: "Bestiary"
-  })
-  mobEspCount = false
-
-  @SwitchProperty({
     name: "Blaze Display",
     description: "Shows how much time left on gummy and wisp pot -> /moveBlaze",
     category: "HUD",
@@ -240,7 +233,7 @@ class Settings {
 
     @CheckboxProperty({
       name: "➤ Fatal Tempo Show Percent",
-      description: "     Toggle showing `0-200` percent",
+      description: "     Toggle showing `0-200％` percentage",
       category: "HUD",
       subcategory: "Fatal Tempo"
     })
@@ -489,87 +482,20 @@ class Settings {
 
   @SwitchProperty({
     name: "Better Magma Boss Message",
-    description: "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35 &7(100)",
+    description: "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35％ &7(100％)",
     category: "Crimson Isle"
   })
   magma = false
   
-  @SwitchProperty({
-    name: "Highlight Teammates in kuudra",
-    description: "Draws a box of the selected color on teammates, changes to green if that player gets fresh tool",
-    category: "Kuudra"
+  @ButtonProperty({
+    name: "Kuudra Settings",
+    description: "Click here for the kuudra settings page",
+    category: "Kuudra",
+    placeholder: "Click!"
   })
-  teamHighlight = false
-  
-  @ColorProperty({
-    name: 'Teammate Color',
-    description: `Sets the color for teammates`,
-    category: 'Kuudra'
-  })
-  teammateColor = Color.MAGENTA;
-
-  @SwitchProperty({
-    name: "Stop Rendering Useless Perks",
-    description: "Stops the useless perks rendering in the gui\n&cDoes not stop you from clicking them",
-    category: "Kuudra"
-  })
-  cancelUselessPerk = false
-
-  @SwitchProperty({
-    name: "No Pre! No Second!",
-    description: "Tells party if you dont have a pre or second\n&csometimes breaks on certain spots on x",
-    category: "Kuudra"
-  })
-  noPre = false  
-    
-  @SwitchProperty({
-    name: "Custom Supply Drop Message",
-    description: "Shows a message including time when a supply is dropped:\n&r&6[MVP&r&9++&r&6] nwjn&r&f &a&lrecovered a supply at 18s! &r&8(1/6)&r",
-    category: "Kuudra"
-  })
-  customSupply = false  
-    
-  @SwitchProperty({
-    name: "Accurate Supply Waypoints",
-    description: "Draws accurate waypoints where supplies are",
-    category: "Kuudra"
-  })
-  supplyWaypoints = false  
-
-  @SwitchProperty({
-    name: "Supply Drop Waypoints",
-    description: "Shows where to drop supplies",
-    category: "Kuudra"
-  })
-  supplyPiles = false
-
-  @SwitchProperty({
-    name: "Supply Pearl Lineup",
-    description: "Shows you a box to where to pearl for instant supply drop",
-    category: "Kuudra"
-  })
-  pearl = false
-    
-  @SwitchProperty({
-    name: "Build Helper",
-    description: `Beacons on unfinished piles, big percentage over ballista for amount complete, fresh timer over ballista if u fresh`,
-    category: "Kuudra"
-  })
-  buildHelper = false;
-
-  @SwitchProperty({
-    name: "Notify Party On Fresh",
-    description: "Say `FRESH!` in party chat when you get fresh tools",
-    category: "Kuudra"
-  })
-  fresh = false
-  
-  @SwitchProperty({
-    name: "Shows Kuudra's HP and Hitbox",
-    description: "Draw a hitbox around kuudra to help various parts of the run",
-    category: "Kuudra"
-  })
-  kuudraHP = false
+  kuudra() {
+    kuudraConfig.openGUI()
+  }
 
   @SwitchProperty({
     name: 'Toggle Block Highlight',
@@ -583,7 +509,7 @@ class Settings {
     description: `Sets the color for block highlight`,
     category: 'QOL'
   })
-  highlightColor = Color.GREEN;
+  highlightColor = Color.MAGENTA;
 
   @SwitchProperty({
     name: "Remove Boss Dialouge",
@@ -607,19 +533,11 @@ class Settings {
   discord = false
     
   @SwitchProperty({
-    name: "Mineshaft Helper",
-    description: "Shows location of corpses and exit in mineshafts",
+    name: "Mineshaft Waypoints",
+    description: "Shows guesses of corpses and exit in mineshafts, walk within 3 blocks of a waypoint to remove it",
     category: "Beta (WIP)"
   })
   mineshaft = false
-
-  @SwitchProperty({
-    name: "Lapis Only",
-    description: "Shows location of only lapis corpses",
-    category: "Beta (WIP)"
-  })
-  lapis = false
-
 
   @SwitchProperty({
     name: "Tracks Damage Armor Stands",
@@ -745,7 +663,7 @@ class Settings {
     this.addDependency("Custom Widget", "Widget Display")
     this.addDependency("Custom Widget Text", "Custom Widget")
 
-    this.addDependency("Leader Commands", "Party Commands")
+    this.addDependency("➤ Leader Commands", "Party Commands")
 
     // Fatal Tempo
       this.addDependency("➤ Fatal Tempo Settings", "Fatal Tempo Display")
