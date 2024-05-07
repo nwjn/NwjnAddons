@@ -72,13 +72,11 @@ registerWhen(register("renderWorld", () => {
     const hps = entries[i][1]
 
     // Filters out invisible, non LOS, dead, and non-includeded hps of entities
-    // const entities = World.getAllEntitiesOfType(Java.type(entityClass).class).filter(e => !e.isInvisible() && Player.asPlayerMP().canSeeEntity(e) && !e.isDead() && (!hps || hps.includes(getMaxHP(e))))
-    const entities = World.getAllEntitiesOfType(Java.type(entityClass).class).filter(e => !e.isDead() && (!hps || hps.includes(getMaxHP(e))))
+    const entities = World.getAllEntitiesOfType(Java.type(entityClass).class).filter(e => !e.isInvisible() && Player.asPlayerMP().canSeeEntity(e) && !e.isDead() && (!hps || hps.includes(getMaxHP(e))))
     let ii = entities.length
     while (ii--) {
       const entity = entities[ii];
-      // RenderLib.drawEspBox(entity.getRenderX(), entity.getRenderY(), entity.getRenderZ(), entity.getWidth(), entity.getHeight(), ...getRGB1(settings.mobHighlightColor), 1, false)
-      RenderLib.drawEspBox(entity.getRenderX(), entity.getRenderY(), entity.getRenderZ(), entity.getWidth(), entity.getHeight(), ...getRGB1(settings.mobHighlightColor), 1, true)
+      RenderLib.drawEspBox(entity.getRenderX(), entity.getRenderY(), entity.getRenderZ(), entity.getWidth(), entity.getHeight(), ...getRGB1(settings.mobHighlightColor), 1, false)
     }
   }
 }), () => data.mobsHighlight !== "");

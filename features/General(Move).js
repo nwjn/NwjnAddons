@@ -126,51 +126,50 @@ register("renderSlot", (slot) => {
 registerWhen(register("chat", (player, command) => {
   player = player.removeFormatting().substring(player.indexOf(" ") + 1).replace(/[^A-Za-z0-9_]/g, "");
   let CommandMsg;
-  delay(() => {
-    command = command.toLowerCase()
-    switch (command) {
-      case "time":
-        ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
-      case "coord":
-      case "loc":
-      case "location":
-      case "coords":
-        ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
-      case "server":
-      case "area":
-      case "world":
-        ChatLib.command(`pc ${WorldUtil.toString()}`); break;
-      case "pow":
-      case "power":
-        ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
-      case "pet":
-        ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
-      case "build":
-        ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
-      case "t5":
-      case "raider":
-        CommandMsg = `joininstance kuudra_infernal`; break;
-      case "dropper":
-        CommandMsg = `play arcade_dropper`; break;
-      case "pw":
-      case "warp":
-        CommandMsg = `p warp`; break;
-      case "transfer":
-      case "pt":
-      case "ptme":
-        CommandMsg = `party transfer ${ player }`; break;
-      case "allinvite":
-      case "allinv":
-      case "invite":
-      case "inv":
-        CommandMsg = `p settings allinvite`; break;
-      default: return;
-    }
-    if (settings.leader && CommandMsg) {
-      ChatLib.command(CommandMsg)
-    }
-  }, 200);
-}).setCriteria("Party > ${player}: .${command}"), () => settings.party)
+
+  command = command.toLowerCase()
+  switch (command) {
+    case "time":
+      ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
+    case "coord":
+    case "loc":
+    case "location":
+    case "coords":
+      ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
+    case "server":
+    case "area":
+    case "world":
+      ChatLib.command(`pc ${WorldUtil.toString()}`); break;
+    case "pow":
+    case "power":
+      ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
+    case "pet":
+      ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
+    case "build":
+      ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
+    case "t5":
+    case "raider":
+      CommandMsg = `joininstance kuudra_infernal`; break;
+    case "dropper":
+      CommandMsg = `play arcade_dropper`; break;
+    case "pw":
+    case "warp":
+      CommandMsg = `p warp`; break;
+    case "transfer":
+    case "pt":
+    case "ptme":
+      CommandMsg = `party transfer ${ player }`; break;
+    case "allinvite":
+    case "allinv":
+    case "invite":
+    case "inv":
+      CommandMsg = `p settings allinvite`; break;
+    default: return;
+  }
+  if (settings.leader && CommandMsg) {
+    ChatLib.command(CommandMsg)
+  }
+}).setCriteria(/Party > (.+): [.?!](.+)/), () => settings.party)
 
 let reaperUsed = 0
 registerWhen(register("soundPlay", () => {
@@ -183,7 +182,7 @@ registerWhen(register("entityDeath", (entity) => {
   mcEntity.func_70106_y()
 
   Client.scheduleTask(1, () => {
-    const stands = World.getWorld().func_72872_a(EntityArmorStand.class, mcEntity.func_174813_aQ().func_72314_b(2, 2, 2)).filter(e => e.toString().removeFormatting().includes("0/"))
+    const stands = World.getWorld().func_72872_a(EntityArmorStand.class, mcEntity.func_174813_aQ().func_72314_b(2, 2, 2)).filter(e => e.toString().match(/§r §[^a]0§f\//g))
     stands.forEach(stand => stand.func_70106_y())
   })
 }), () => settings.dead)

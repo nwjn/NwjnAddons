@@ -44,7 +44,7 @@ class Settings {
     
   @SwitchProperty({
     name: "Party Commands",
-    description: "Enables party commands (full list at /nwjn party)",
+    description: "Enables party commands, universally triggers on [.!?] commands",
     category: "General"
   })
   party = false

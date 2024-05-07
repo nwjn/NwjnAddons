@@ -21,8 +21,3 @@ registerWhen(register("entityDeath", (entity) => {
   if (!gainedChamp) return
   champOverlay.setMessage(`&6Champion XP: &e${ comma(champion.toFixed(0)) } (${ gainedChamp > 0 ? "+" : "" }${ comma(gainedChamp.toFixed(1)) })`)
 }), () => WorldUtil.worldIs("Crimson Isle") && settings.champ);
-
-/*
-TODO (ADD): add xp/pet xp tracker
-TODO (TEST): test possible error of it not working on first load
-*/
