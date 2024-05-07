@@ -4,7 +4,7 @@ import { version } from "./utils/constants"
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["General", "Bestiary", "Crimson Isle", "HUD", "Kuudra", "QOL", "Beta (WIP)", "Utilities"]
+    const categories = ["General", "Bestiary", "Crimson Isle", "HUD", "Kuudra", "Mining", "QOL", "Beta (WIP)", "Utilities"]
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   }
 })
@@ -92,49 +92,49 @@ class Settings {
   treecap = false   
     
   @TextProperty({
-    name: "Mob ESP",
+    name: "Mob Highlight",
     description: "Draws hitboxes around inputted mob entity\n&3@see &cnet.minecraft.entity.(monster|passive|boss)&r\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
     category: "Bestiary"
   })
   rawMobList = "" 
     
   @ColorProperty({
-    name: 'Mob ESP Color',
+    name: 'Mob Highlight Color',
     description: `Sets the color for monster hitboxes`,
     category: 'Bestiary'
   })
-  espColor = Color.YELLOW
+  mobHighlightColor = Color.YELLOW
   
   @TextProperty({
-    name: "Armor Stand Names ESP",
+    name: "Armor Stand Names Highlight",
     description: "Draws hitboxes around armor stands that include the inputted name",
     category: "Bestiary"
   })
   stand = "" 
     
   @ColorProperty({
-    name: 'Armor Stand ESP Color',
+    name: 'Armor Stand Highlight Color',
     description: `Sets the color for armor stand hitboxes`,
     category: 'Bestiary'
   })
   standColor = Color.GREEN
 
   @TextProperty({
-    name: "Player Names ESP",
+    name: "Player Highlight",
     description: "Draws hitboxes around players that include the inputted name\n'Player' draws all real players",
     category: "Bestiary"
   })
   player = "" 
     
   @ColorProperty({
-    name: 'Player ESP Color',
+    name: 'Player Highlight Color',
     description: `Sets the color for player hitboxes`,
     category: 'Bestiary'
   })
   playerColor = Color.MAGENTA
 
   @SwitchProperty({
-    name: "Matcho!",
+    name: "Matcho",
     description: `Matcho box and text`,
     category: "Bestiary"
   })
@@ -165,22 +165,6 @@ class Settings {
   textShadow = false
 
   @SwitchProperty({
-    name: "Highlight Players in Align Radius",
-    description: "Highlights players when they are in align radius",
-    category: "HUD",
-    subcategory: "Align"
-  })
-  alignHighlight = false  
-    
-  @SwitchProperty({
-    name: "Align Display",
-    description: "Shows how long you are under alignment for -> /moveAlign",
-    category: "HUD",
-    subcategory: "Align"
-  })
-  align = false
-
-  @SwitchProperty({
     name: "Blaze Display",
     description: "Shows how much time left on gummy and wisp pot -> /moveBlaze",
     category: "HUD",
@@ -188,7 +172,6 @@ class Settings {
   })
   blaze = false 
   
-  // TODO: rename Flare Display
   @SwitchProperty({
     name: "Champion Display",
     description: `Champion gained on killing a flare -> /moveChamp`,
@@ -451,7 +434,6 @@ class Settings {
   })
   fish = false
     
-  // TODO: allow for public chat
   @SwitchProperty({
     name: "Announce Vanquishers",
     description: `Announces Vanquisher coords to party`,
@@ -498,6 +480,20 @@ class Settings {
   }
 
   @SwitchProperty({
+    name: "Mineshaft Waypoints",
+    description: "Shows guesses of corpses and exit in mineshafts, walk within 3 blocks of a guess waypoint to remove it",
+    category: "Mining"
+  })
+  mineshaftWaypoints = false
+
+  @SwitchProperty({
+    name: "Mineshaft Pity",
+    description: "Displays your chance of spawning a mineshaft adjusted with pity on your HUD\n&cComing soon!",
+    category: "Mining"
+  })
+  mineshaftPity = false
+
+  @SwitchProperty({
     name: 'Toggle Block Highlight',
     description: 'Toggles block highlight',
     category: 'QOL'
@@ -531,13 +527,6 @@ class Settings {
     category: "QOL"
   })
   discord = false
-    
-  @SwitchProperty({
-    name: "Mineshaft Waypoints",
-    description: "Shows guesses of corpses and exit in mineshafts, walk within 3 blocks of a waypoint to remove it",
-    category: "Beta (WIP)"
-  })
-  mineshaft = false
 
   @SwitchProperty({
     name: "Tracks Damage Armor Stands",

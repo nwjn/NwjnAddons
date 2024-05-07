@@ -29,7 +29,7 @@ class KuudraUtil {
     register("chat", () => {
       this.phase = 4;
       this.setRegisters();
-    }).setCriteria("[NPC] Elle: POW! SURELY THAT'S IT! I don't think he has any more in him!");
+    }).setCriteria("[NPC] Elle: POW! SURELY THAT'S IT! I don't think he has any more in him!")
 
     onWorldLeave(() => {
       this.reset();
@@ -76,7 +76,7 @@ class KuudraUtil {
    * @returns {Boolean}
    */
   isFight() {
-    return this.phase > 0
+    return (this.phase > 0)
   }
 
   /**
@@ -104,9 +104,12 @@ class KuudraUtil {
     });
   }
 
-  drawKuudraHP(text, x, y, z, w, h) {
+  /**
+   * Same as Tesselator.drawString() but with depth check and slightly more customized
+   */
+  drawKuudraHP(text, x, y, z, w, h, color = 0x00ffffff, lScale = 0.2) {
     const yaw = Player.getYaw()
-    const wShift = w / (2 ** 0.7)
+    const wShift = w * 0.8
     const hShift = h / 2
 
     const xShift = x + (wShift * Math.cos((yaw - 90) * (Math.PI / 180)))
@@ -114,9 +117,6 @@ class KuudraUtil {
     const zShift = z + (wShift * Math.sin((yaw - 90) * (Math.PI / 180)))
     
     const renderPos = Tessellator.getRenderPos(xShift, yShift, zShift)
-    const color = 0x00ffffff
-
-    const lScale = 0.2
 
     const xMultiplier = Client.getMinecraft().field_71474_y.field_74320_O == 2 ? -1 : 1
 

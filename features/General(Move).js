@@ -179,12 +179,13 @@ registerWhen(register("soundPlay", () => {
 }).setCriteria("mob.zombie.remedy"), () => settings.reaper);
 
 registerWhen(register("entityDeath", (entity) => {
-  entity = entity.getEntity()
-  const hp = entity.func_110148_a(SMA.field_111267_a).func_111125_b();
-  entity.func_70106_y()
+  const mcEntity = entity.getEntity()
+  mcEntity.func_70106_y()
 
-  const tag = World.getWorld().func_72872_a(EntityArmorStand.class, entity.func_174813_aQ().func_72314_b(0.5, 0.5, 0.5)).filter(e => e.toString().removeFormatting().includes(`${hp}❤`))
-  tag.forEach(tag => tag.func_70106_y())
+  Client.scheduleTask(1, () => {
+    const stands = World.getWorld().func_72872_a(EntityArmorStand.class, mcEntity.func_174813_aQ().func_72314_b(2, 2, 2)).filter(e => e.toString().removeFormatting().includes("0/"))
+    stands.forEach(stand => stand.func_70106_y())
+  })
 }), () => settings.dead)
 
 let blockBroken = 0

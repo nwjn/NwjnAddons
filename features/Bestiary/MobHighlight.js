@@ -4,14 +4,9 @@ import { data } from "../../utils/data";
 import { registerWhen, getRGB1, getMaxHP } from "../../utils/functions";
 import { PREFIX } from "../../utils/constants";
 
-// TODO (ADD): if ~ instead of - then % the entry hp and see if r = 0
-// TODO (ADD): Command to add mob to settings.rawmoblist
-// TODO (CHANGE): on overlay show the health aswell so that multiple health entries of the same mobtype aren't combined
 export function setMobHighlight() {
-  if (!settings.rawMobList) {
-    data.mobsHighlight = {};
-    return;
-  };
+  data.mobsHighlight = {};
+  if (!settings.rawMobList) return;
   /*
      * Raw entry in form:
      * `<Mob>(-\d[kKmMbB]?(|\d[kKmMbB]?)+)?`
@@ -77,11 +72,13 @@ registerWhen(register("renderWorld", () => {
     const hps = entries[i][1]
 
     // Filters out invisible, non LOS, dead, and non-includeded hps of entities
-    const entities = World.getAllEntitiesOfType(Java.type(entityClass).class).filter(e => !e.isInvisible() && Player.asPlayerMP().canSeeEntity(e) && !e.isDead() && (!hps || hps.includes(getMaxHP(e))))
+    // const entities = World.getAllEntitiesOfType(Java.type(entityClass).class).filter(e => !e.isInvisible() && Player.asPlayerMP().canSeeEntity(e) && !e.isDead() && (!hps || hps.includes(getMaxHP(e))))
+    const entities = World.getAllEntitiesOfType(Java.type(entityClass).class).filter(e => !e.isDead() && (!hps || hps.includes(getMaxHP(e))))
     let ii = entities.length
     while (ii--) {
       const entity = entities[ii];
-      RenderLib.drawEspBox(entity.getRenderX(), entity.getRenderY(), entity.getRenderZ(), entity.getWidth(), entity.getHeight(), ...getRGB1(settings.espColor), 1, false)
+      // RenderLib.drawEspBox(entity.getRenderX(), entity.getRenderY(), entity.getRenderZ(), entity.getWidth(), entity.getHeight(), ...getRGB1(settings.mobHighlightColor), 1, false)
+      RenderLib.drawEspBox(entity.getRenderX(), entity.getRenderY(), entity.getRenderZ(), entity.getWidth(), entity.getHeight(), ...getRGB1(settings.mobHighlightColor), 1, true)
     }
   }
-}), () => data.mobsHighlight != "");
+}), () => data.mobsHighlight !== "");

@@ -14,7 +14,7 @@ registerWhen(register("step", () => {
       if (player.getName().includes(entry) || entry == "Player") filteredPlayers.push(player)
     })
   })
-}).setFps(2), () => settings.player)
+}).setFps(2), () => settings.player !== "")
 
 registerWhen(register("renderWorld", () => {
   let i = filteredPlayers
@@ -23,4 +23,4 @@ registerWhen(register("renderWorld", () => {
 
     RenderLib.drawEspBox(player.getRenderX(), player.getRenderY(), player.getRenderZ(), 0.6, 1.8, ...getRGB1(settings.playerColor), 1, false)
   }
-}), () => settings.player)
+}), () => settings.player !== "")

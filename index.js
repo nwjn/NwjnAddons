@@ -39,6 +39,9 @@ import "./features/HUD/Widgets"
     
     import "./features/Kuudra/Phase2/FreshBoxes"
     import "./features/Kuudra/Phase2/FreshMessage"
+    
+  // P3
+    import "./features/Kuudra/Phase3/KuudraHitbox"
 // Kuudra }
 
 // Bestiary {
@@ -130,12 +133,11 @@ register("worldLoad", () => {
   axios.get(`https://chattriggers.com/api/modules/1528`)
   .then(res => {
     changes = res.data.releases[0].changelog.toString().replaceAll("\r", "")
+    const newVer = res.data.releases[0].releaseVersion
 
-    // !!!! HARD CODE FOR PRE RELEASE ONLY
-    if (version == "0.10.2") return;
+    if (newVer == "0.10.1") return;
 
-
-    if(res.data.releases[0].releaseVersion != version)
+    if(newVer != version)
     {
       ChatLib.chat("");
       ChatLib.chat(`&r&d&m--------------&r${ PREFIX }&r&d&m--------------`)
@@ -165,17 +167,17 @@ if (data.version != version) {
   data.version = version; data.save();
 }
 
-register("serverConnect", () => {
-  setTimeout(() => {
-    ChatLib.chat("")
-    new TextComponent(`${ PREFIX } &d[Broadcast]: &rJoin the &ndiscord&r for any questions.`)
-      .setClickAction("run_command")
-      .setHoverValue("Copies the discord link")
-      .setClickValue(`/ct copy https://discord.gg/3S3wXpC4gE`)
-      .chat()
-    ChatLib.chat("")
-  }, 3000)
-})
+// register("serverConnect", () => {
+//   setTimeout(() => {
+//     ChatLib.chat("")
+//     new TextComponent(`${ PREFIX } &d[Broadcast]: &rJoin the &ndiscord&r for any questions.`)
+//       .setClickAction("run_command")
+//       .setHoverValue("Copies the discord link")
+//       .setClickValue(`/ct copy https://discord.gg/3S3wXpC4gE`)
+//       .chat()
+//     ChatLib.chat("")
+//   }, 3000)
+// })
 
 register("guiClosed", (event) => {
   if (event?.toString()?.includes("vigilance")) {
@@ -187,10 +189,6 @@ register("guiClosed", (event) => {
     data.save()
   }
 });
-
-// TODO: click a dm message to start typing to them
-// TODO: find fix for double death animation?
-// TODO: on screen armor and equipment display
 
 register("chat", (pet) => {
   data.pet = pet
@@ -206,22 +204,3 @@ register("chat", () => {
   data.pet = "None"
   data.save()
 }).setCriteria("You despawned your ${*}!");
-
-// TODO: uuid prio calculator
-// TODO: add better nausea effect to not be cancer inducing
-
-// // TODO: armor display and equipment display
-// register("renderOverlay", () => {
-//   Player.armor?.getHelmet()?.draw(50, 50, 1)
-//   Player.armor?.getChestplate()?.draw(50, 65, 1)
-//   Player.armor?.getLeggings()?.draw(50, 80, 1)
-//   Player.armor?.getBoots()?.draw(50, 95, 1)
-// })
-
-/*
-TODO
-const name = Player.getName()
-const nick = Player.getDisplayName() == name ? false : Player.getDisplayname()
-*/
-
-// try to add custom color code shit

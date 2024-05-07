@@ -1,5 +1,5 @@
 import settings from "../../config"
-import { registerWhen, delay, getDistance, onWorldJoin } from "../../utils/functions";
+import { registerWhen, getDistance, onWorldLeave } from "../../utils/functions";
 import renderBeaconBeam from "BeaconBeam"
 import RenderLib from "RenderLib"
 import { PREFIX } from "../../utils/constants";
@@ -17,10 +17,7 @@ function renderWaypoint(text, coords, hex, rgb) {
 }
 
 
-function findRoomType(tries) {
-  if (!tries || (WorldUtil.isSkyblock() && !WorldUtil.worldIs("Mineshaft"))) return
-  tries--
-
+function findRoomType() {
   const scoreboard = Scoreboard.getLines()
   const line = scoreboard[scoreboard.length - 1]?.toString()?.removeFormatting()?.slice(-5)
 
@@ -30,14 +27,15 @@ function findRoomType(tries) {
   if (type in data.rooms && material in data.names) {
     currentRoom = data.rooms[type]
     const name = data.names[material]
-
+  
     const formatName = type === "Crystal" ? `${name} Crystal` : name
-    ChatLib.chat(`${PREFIX}: ${formatName}`)
-  }
-  else {
-    delay(() => findRoomType(tries), 1000);
+    ChatLib.chat(`${ PREFIX }: ${ formatName }`)
   }
 }
+
+registerWhen(register("step", () => {
+  if (!currentRoom) findRoomType()
+}).setDelay(1), () => WorldUtil.worldIs("Mineshaft") && settings.mineshaftWaypoints)
 
 registerWhen(register("renderWorld", () => {
   if (!currentRoom) return;
@@ -50,10 +48,9 @@ registerWhen(register("renderWorld", () => {
     renderWaypoint("Guess", corpse, 0xff5555, [1, 0, 0]);
   }
   renderWaypoint("Exit", currentRoom.exit, 0x55ffff, [1, 0, 0])
-}), () => settings.mineshaft);
+}), () => WorldUtil.worldIs("Mineshaft") && settings.mineshaftWaypoints);
 
-onWorldJoin(() => {
+onWorldLeave(() => {
   currentRoom = undefined
   checkedCorpses.length = 0
-  findRoomType(10)
 })

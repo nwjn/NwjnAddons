@@ -54,8 +54,6 @@ class KuudraSettings {
     // Team Highlight }
 
     // Player View QOL {
-      // todo: add remove nametags with 0 hp
-      // todo: add remove tentacle hp title
       @SwitchProperty({
         name: "Unrender Useless Perks",
         description: "Stops the useless perks rendering their texture in the gui\n&cWon't not stop you from clicking them",
@@ -168,7 +166,6 @@ class KuudraSettings {
   
   // Phase 3 {
     // Renderings {
-      // todo: track eaten and stun msgs to color the hitbox
       @SwitchProperty({
         name: "Draws Kuudra's Hitbox",
         description: "Draws a box around Kuudra's hitbox",
@@ -180,8 +177,6 @@ class KuudraSettings {
   // Phase 3}
   
   // Phase 4 {
-    //todo: remove kuudra hp title
-    // todo: add peek direction chat and arrows
   // Phase 4 }
 }
 export default new KuudraSettings();

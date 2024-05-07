@@ -1,6 +1,5 @@
 import { onWorldJoin, onWorldLeave, delay, setRegisters } from "./functions";
 
-// Credit: Inspired by My father, Volcaronitee
 class WorldUtil {
   constructor() {
     onWorldJoin(() => {

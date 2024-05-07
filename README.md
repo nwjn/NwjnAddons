@@ -8,7 +8,6 @@ How to install:
 2. Navigate to your chattriggers modules folder ".minecraft\config\ChatTriggers\modules
 3. Take the file inside of NwjnAddons.zip and place it in the modules folder
 4. Restart your game or run /ct load
-5. Enjoy!
  
 https://github.com/nwjn/NwjnAddons 
 The NwjnAddons github may have releases and has pre-releases faster than chattriggers.

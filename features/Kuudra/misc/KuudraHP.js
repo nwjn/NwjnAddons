@@ -5,7 +5,6 @@ import { getMaxHP } from "../../../utils/functions";
 
 function calcString(hp) {
   const scaledHP = KuudraUtil.isPhase(4) ? hp * 3.5 : hp
-  // todo: tier check
   const displayHP =
     KuudraUtil.isPhase(4) ? `${ comma(~~(hp * 0.012)) }M &c❤` :
     `${ comma(~~(hp - 25_000)) } &c✳`
