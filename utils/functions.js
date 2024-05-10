@@ -51,6 +51,10 @@ export function extractIGN(player) {
   return player?.removeFormatting()?.split("] ")?.slice(-1)?.toString()?.replace(/[^A-Za-z0-9_]/g, "")
 }
 
+export function extractFormatIGN(player) {
+  return player?.split("> ")?.slice(-1)?.toString()
+}
+
 export function realPlayer(playerMP) {
   return (playerMP.getPing() === 1)
 }

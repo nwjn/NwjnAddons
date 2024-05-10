@@ -46,7 +46,7 @@ export function setMobHighlight() {
 }
 
 // types to test
-const MOB_TYPES = ["monster", "passive", "boss"];
+const MOB_TYPES = ["monster", "passive", "boss", "item"];
 function getClassOfEntity(entity, index = 0) {
   try {
     const packageName = `net.minecraft.entity.${ MOB_TYPES[index] }.Entity${ entity }`
@@ -79,4 +79,4 @@ registerWhen(register("renderWorld", () => {
       RenderLib.drawEspBox(entity.getRenderX(), entity.getRenderY(), entity.getRenderZ(), entity.getWidth(), entity.getHeight(), ...getRGB1(settings.mobHighlightColor), 1, false)
     }
   }
-}), () => data.mobsHighlight !== "");
+}), () => settings.rawMobList !== "" && data.mobsHighlight !== "");

@@ -58,6 +58,7 @@ import "./features/QOL/DiscordCleaner"
 import "./features/QOL/VisitorCleaner"
 
 import "./features/Mining/MineshaftWaypoints"
+import "./features/Mining/MineshaftPity"
 
 import "./features/Beta/AgroCircle"
 import "./features/Beta/GyroCircle"

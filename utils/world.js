@@ -24,18 +24,18 @@ class WorldUtil {
     const TABLIST = TabList.getNames()
     const areaIdx = TABLIST.findIndex(e => e.match(/(Area|Dungeon):/g));
 
-    if (!(~areaIdx)) {
-      delay(() => this.findWorld(tries), 1000);
-      return;
+    if (~areaIdx) {
+      this.world = TABLIST[areaIdx].removeFormatting().split(": ").slice(-1).toString()
+      this.server = TABLIST[areaIdx + 1].removeFormatting().split(": ").slice(-1).toString()
+      
+      const spawn = World.spawn
+      this.spawn = [spawn.getX(), spawn.getY(), spawn.getZ()]
+
+      delay(() => setRegisters(), 500);
     }
-
-    this.world = TABLIST[areaIdx].removeFormatting().split(": ").slice(-1).toString()
-    this.server = TABLIST[areaIdx + 1].removeFormatting().split(": ").slice(-1).toString()
-    
-    const spawn = World.spawn
-    this.spawn = [spawn.getX(), spawn.getY(), spawn.getZ()]
-
-    delay(() => setRegisters(), 500);
+    else {
+      delay(() => this.findWorld(tries), 1000);
+    }
   }
 
   /**
