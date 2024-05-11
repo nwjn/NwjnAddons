@@ -8,8 +8,8 @@ const dataset = JSON.parse(FileLib.read("NwjnAddons/features/Mining", "Mineshaft
 const [VALID_BLOCKS, VALID_SOUNDS] = [dataset.blocks, dataset.sounds]
 
 const pityExample = 
-`&6Shaft Pity: &b1/2000 &7(0.00%)`;
-const pityOverlay = new Overlay("mineshaftPity", ["all"], () => true, data.pityL, "movePity", pityExample)
+`&6Shaft Pity: &b1/2000 &7(0.05%)`;
+const pityOverlay = new Overlay("mineshaftPity", ["Dwarven Mines"], () => true, data.pityL, "movePity", pityExample)
 
 let pityLeft = 2000
 const changePity = (block) => {
