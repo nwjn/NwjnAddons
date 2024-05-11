@@ -5,7 +5,7 @@ import RenderLib from "RenderLib"
 import { PREFIX } from "../../utils/constants";
 import WorldUtil from "../../utils/world"
 
-const data = JSON.parse(FileLib.read("NwjnAddons/features/Mining", "MineshaftData.json"))
+const data = JSON.parse(FileLib.read("NwjnAddons/features/Mining", "MineshaftWaypointsData.json"))
 let checkedCorpses = []
 let currentRoom;
 

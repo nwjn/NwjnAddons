@@ -488,7 +488,7 @@ class Settings {
 
   @SwitchProperty({
     name: "Mineshaft Pity",
-    description: "Displays your chance of spawning a mineshaft adjusted with pity on your HUD\n&cComing soon!",
+    description: "Displays your chance of spawning a mineshaft adjusted with pity on your HUD -> /movePity\n&cSound needs to be on!\n&cBug: Currently works with efficient miner even though skyblock pity doesn't",
     category: "Mining"
   })
   mineshaftPity = false
