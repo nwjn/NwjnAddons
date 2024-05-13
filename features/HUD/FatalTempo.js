@@ -37,7 +37,8 @@ const calcString = (countdown = 0, percent = 0) => {
     "&c")
   : ""
 
-  displayText += settings.ftShowPercent ? `${percent}%` : ""
+  const percentString = percent >= 100 ? percent : `  ${percent}`
+  displayText += settings.ftShowPercent ? `${percentString}%` : ""
 
   displayText += (settings.ftShowPercent && settings.ftShowTime) ? " &r| " : ""
 
