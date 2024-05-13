@@ -7,50 +7,76 @@ import renderBeaconBeam from "BeaconBeam";
 import { EntityArmorStand } from "../utils/constants";
 
 // Credit: My father, Volcaronitee
-let chatWaypoints = [];
-let formatted = [];
 
-onWorldLeave(() => {
-  chatWaypoints = []
-  formatted = []
+let formatted = []
+let chatWaypoints = []
+
+register("tick", () => {
+  formatWaypoints()
+})
+register("renderWorld", () => {
+  renderWaypoints()
 })
 
-registerWhen(register("renderWorld", () => {
-  renderWaypoint();
-}), () => settings.waypoint != 0);
-
+/**
+ * Functions to format waypoints into the above variables to reduce renderOverlay load.
+ */
 function formatWaypoints() {
-  formatted = chatWaypoints.map(waypoint => {
-    let [x, y, z] = [waypoint[1], waypoint[2], waypoint[3]]
-    let distance = ~~(Player.asPlayerMP().distanceTo(x, y, z))
+  let i = chatWaypoints.length
+  formatted = new Array(i)
 
-    return [`${ waypoint[0] } §b[${ distance }m]`, ~~x + 0.5, ~~y - 1, ~~z + 0.5]
-  })
+  while (i--) {
+    let waypoint = chatWaypoints[i]
+    let wp = [["", 0, 0, 0], [0, 0, 0]];
+    let [x, y, z] = [waypoint[1], waypoint[2], waypoint[3]];
+    let distance = Player.asPlayerMP().distanceTo(x, y, z)
+
+    if (distance >= 100) {
+      x = Player.getX() + (x - Player.getX()) * (100 / distance);
+      z = Player.getZ() + (z - Player.getZ()) * (100 / distance);
+    }
+
+    let xSign = x === 0 ? 1 : Math.sign(x);
+    let zSign = z === 0 ? 1 : Math.sign(z);
+    wp[0] = [`${waypoint[0]} §b[${~~distance}m]`, x + 0.5*xSign, y - 1, z + 0.5*zSign];
+
+    if (xSign === 1) xSign = 0;
+    if (zSign === 1) zSign = 0;
+    wp[1] = [x + xSign, y - 1, z + zSign];
+
+    formatted[i] = wp
+  }
 }
 
-function renderWaypoint() {
+function renderWaypoints() {
   let i = formatted.length
   while (i--) {
-    let [box, rgb] = [formatted[i], getRGB1(settings.waypointColor)]
+    let waypoint = formatted[i]
+    let box = waypoint[0];
+    let beam = waypoint[1];
+    let rgb = getRGB1(settings.waypointColor);
 
     RenderLib.drawEspBox(box[1], box[2], box[3], 1, 1, rgb[0], rgb[1], rgb[2], 1, true);
     RenderLib.drawInnerEspBox(box[1], box[2], box[3], 1, 1, rgb[0], rgb[1], rgb[2], 0.25, true);
     Tessellator.drawString(box[0], box[1], box[2] + 1.5, box[3], 0xffffff, true);
-    renderBeaconBeam(~~box[1], box[2], ~~box[3], rgb[0], rgb[1], rgb[2], 0.5, false, settings.waypointHeight);
+    renderBeaconBeam(beam[0], beam[1], beam[2], rgb[0], rgb[1], rgb[2], 0.5, false);
   }
 }
 
 registerWhen(register("chat", (player, _, x, y, z) => {
-  if (settings.waypointFrom == 1 && !player.includes("Party")) return
-  const player = ChatLib.addColor(extractFormatIGN(player))
+  // Gets colors and titles in name
+  player = ChatLib.addColor(player.split("> ").slice(-1).toString())
+
+  // Remove anything after z coords
+  z = z.split(" ")[0]
+  
   chatWaypoints.push([player, parseInt(x), parseInt(y), parseInt(z)]);
 
-  delay(() => {
-    if (chatWaypoints[0][0].equals(player)) chatWaypoints.shift()
-  }, settings.waypoint * 1000);
+  // Delete waypoint after 'X' seconds
+  delay(() => { if (chatWaypoints.length) chatWaypoints.shift(); }, settings.waypoint * 1000);
   
-  formatWaypoints();
-}).setCriteria("${player}&f${spacing}x: ${x}, y: ${y}, z: ${z}&r"), () => settings.waypoint != 0);
+  // &r&9Party &8> &6[MVP&8++&6] nwjn&f: &rx: -363, y: 63, z: -846 &r
+}).setCriteria("${player}:${spacing}x: ${x}, y: ${y}, z: ${z}&r"), () => settings.waypoint != 0);
 
 
 register("chat", (power) => {

@@ -7,6 +7,7 @@ function widget(find, overlay) {
   overlay.setMessage("")
   if (!settings[`${overlay.setting}`] || !settings.widget) return
   let tab = TabList.getNames()
+  if (!tab) return;
   const start = tab.findIndex(e => e.includes(find))
   tab = tab.slice(start)
   const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘|Ends in)/g))|| e.removeFormatting().startsWith("               ")) && i)
@@ -114,6 +115,7 @@ const customExample = `&e&lCustom Widget:`
 const customOverlay = new Overlay("custom", ["all"], () => true, data.customL, "moveCustom", customExample);
 
 register("step", () => {
+  if (!World.isLoaded()) return;
   try {
     widget("Stats:", statsOverlay);
     widget("Pet:", petOverlay);
