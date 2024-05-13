@@ -1,4 +1,5 @@
-import { @Vigilant, @SwitchProperty, @ColorProperty, Color} from "../../../Vigilance/index"
+import { @Vigilant, @SwitchProperty, @ColorProperty, @ParagraphProperty, Color} from "../../../Vigilance/index"
+import { version } from "../../utils/constants"
 
 @Vigilant("NwjnAddons/features/Kuudra", "§d§lNwjnAddons (Kuudra)", {
   getCategoryComparator: () => (a, b) => {
@@ -15,10 +16,10 @@ import { @Vigilant, @SwitchProperty, @ColorProperty, Color} from "../../../Vigil
 class KuudraSettings {
   constructor() {
     this.initialize(this);
-    this.setCategoryDescription("General", "Features for the entire fight")
+    this.setCategoryDescription("General", `&d&l[NwjnAddons-v${version}-Kuudra]&r by nwjn\nFeatures for the entire fight`);
     this.setCategoryDescription("Phase 1", "Supply/Crates phase")
     this.setCategoryDescription("Phase 2", "Build phase")
-    this.setCategoryDescription("Phase 3", "Nothing essential to this part of the fight has been added")
+    this.setCategoryDescription("Phase 3", "Hitsphase")
     this.setCategoryDescription("Phase 4", "Nothing essential to this part of the fight has been added")
 
     this.addDependency("➤ Team Color", "Team Highlight")
@@ -56,7 +57,7 @@ class KuudraSettings {
     // Player View QOL {
       @SwitchProperty({
         name: "Unrender Useless Perks",
-        description: "Stops the useless perks rendering their texture in the gui\n&cWon't not stop you from clicking them",
+        description: "Stops the useless perks rendering their texture in the gui\n&cWill not stop you from clicking",
         category: "General",
         subcategory: "Player View QOL"
       })
@@ -177,6 +178,11 @@ class KuudraSettings {
   // Phase 3}
   
   // Phase 4 {
+    @ParagraphProperty({
+      name: "Upcoming",
+      category: "Phase 4",
+    })
+    paragraph = "New features will be added here soon"
   // Phase 4 }
 }
 export default new KuudraSettings();

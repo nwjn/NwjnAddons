@@ -1,4 +1,4 @@
-import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, @SliderProperty, @ColorProperty, @PercentSliderProperty, @DecimalSliderProperty, Color} from  "../Vigilance/index"
+import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, @SliderProperty, @ColorProperty, @PercentSliderProperty, @DecimalSliderProperty, @ParagraphProperty, Color} from  "../Vigilance/index"
 import kuudraConfig from "./features/Kuudra/kuudraConfig"
 import { version } from "./utils/constants"
 
@@ -91,7 +91,7 @@ class Settings {
   })
   treecap = false   
     
-  @TextProperty({
+  @ParagraphProperty({
     name: "Mob Highlight",
     description: "Draws hitboxes around inputted mob entity\n&3@see &cnet.minecraft.entity.(monster|passive|boss)&r\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
     category: "Bestiary"
@@ -105,7 +105,7 @@ class Settings {
   })
   mobHighlightColor = Color.YELLOW
   
-  @TextProperty({
+  @ParagraphProperty({
     name: "Armor Stand Names Highlight",
     description: "Draws hitboxes around armor stands that include the inputted name",
     category: "Bestiary"
@@ -119,7 +119,7 @@ class Settings {
   })
   standColor = Color.GREEN
 
-  @TextProperty({
+  @ParagraphProperty({
     name: "Player Highlight",
     description: "Draws hitboxes around players that include the inputted name\n'Player' draws all real players",
     category: "Bestiary"
@@ -630,7 +630,7 @@ class Settings {
 
   constructor() {
     this.initialize(this);
-    this.setCategoryDescription("General", `&d&l[NwjnAddons-v${version}]&r by nwjn\n&cSome features in this module require game language on English (US)`);
+    this.setCategoryDescription("General", `&d&l[NwjnAddons-v${version}]&r by nwjn`);
     this.setCategoryDescription("Bestiary", "bestiary")
     this.setCategoryDescription("Crimson Isle", "endgame island fr");
     this.setCategoryDescription("Kuudra", "1b/h")
