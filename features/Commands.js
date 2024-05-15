@@ -27,7 +27,7 @@ register("command", () => {
 
 register("command", () => {
   new Thread(() => {
-    const [x, y, z] = [Player.getX(), Player.getY(), Player.getZ()]
+    const [x, y, z] = [~~Player.getX(), ~~Player.getY(), ~~Player.getZ()]
     ChatLib.say(`/pc x: ${x}, y: ${y}, z: ${z}`)
     Thread.sleep(550)
     ChatLib.say(`/pc x: ${x + 2}, y: ${y}, z: ${z}`)

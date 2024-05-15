@@ -4,7 +4,7 @@ import { delay, registerWhen, getRGB1, onWorldLeave, extractFormatIGN } from "..
 import { data } from "../utils/data";
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
-import { EntityArmorStand } from "../utils/constants";
+import { EntityArmorStand, version } from "../utils/constants";
 
 // Credit: My father, Volcaronitee
 
@@ -114,47 +114,52 @@ registerWhen(register("chat", (player, command) => {
   let CommandMsg;
 
   command = command.toLowerCase()
-  switch (command) {
-    case "time":
-      ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
-    case "coord":
-    case "loc":
-    case "location":
-    case "coords":
-      ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
-    case "server":
-    case "area":
-    case "world":
-      ChatLib.command(`pc ${WorldUtil.toString()}`); break;
-    case "pow":
-    case "power":
-      ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
-    case "pet":
-      ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
-    case "build":
-      ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
-    case "t5":
-    case "raider":
-      CommandMsg = `joininstance kuudra_infernal`; break;
-    case "dropper":
-      CommandMsg = `play arcade_dropper`; break;
-    case "pw":
-    case "warp":
-      CommandMsg = `p warp`; break;
-    case "transfer":
-    case "pt":
-    case "ptme":
-      CommandMsg = `party transfer ${ player }`; break;
-    case "allinvite":
-    case "allinv":
-    case "invite":
-    case "inv":
-      CommandMsg = `p settings allinvite`; break;
-    default: return;
-  }
-  if (settings.leader && CommandMsg) {
-    ChatLib.command(CommandMsg)
-  }
+  setTimeout(() => {
+    switch (command) {
+      case "time":
+        ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
+      case "coord":
+      case "loc":
+      case "location":
+      case "coords":
+        ChatLib.command(`pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`); break;
+      case "server":
+      case "area":
+      case "world":
+        ChatLib.command(`pc ${ WorldUtil.toString() }`); break;
+      case "pow":
+      case "power":
+        ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
+      case "pet":
+        ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
+      case "build":
+        ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
+      case "ver":
+      case "version":
+        ChatLib.command(`pc ${version}`)
+      case "t5":
+      case "raider":
+        CommandMsg = `joininstance kuudra_infernal`; break;
+      case "dropper":
+        CommandMsg = `play arcade_dropper`; break;
+      case "pw":
+      case "warp":
+        CommandMsg = `p warp`; break;
+      case "transfer":
+      case "pt":
+      case "ptme":
+        CommandMsg = `party transfer ${ player }`; break;
+      case "allinvite":
+      case "allinv":
+      case "invite":
+      case "inv":
+        CommandMsg = `p settings allinvite`; break;
+      default: return;
+    }
+    if (settings.leader && CommandMsg) {
+      ChatLib.command(CommandMsg);
+    }
+  }, 300)
 }).setCriteria(/Party > (.+): [.?!](.+)/), () => settings.party)
 
 let reaperUsed = 0
