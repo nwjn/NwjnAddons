@@ -173,7 +173,7 @@ registerWhen(register("entityDeath", (entity) => {
   mcEntity.func_70106_y()
 
   Client.scheduleTask(1, () => {
-    const stands = World.getWorld().func_72872_a(EntityArmorStand.class, mcEntity.func_174813_aQ().func_72314_b(2, 2, 2)).filter(e => e.toString().match(/§r §[^a]0§f\//g))
+    const stands = World.getWorld().func_72872_a(EntityArmorStand.class, mcEntity.func_174813_aQ().func_72314_b(3, 3, 3)).filter(e => e.toString().match(/§r §[^a]0§f\//g))
     stands.forEach(stand => stand.func_70106_y())
   })
 }), () => settings.dead)

@@ -29,13 +29,13 @@ register("command", () => {
   new Thread(() => {
     const [x, y, z] = [~~Player.getX(), ~~Player.getY(), ~~Player.getZ()]
     ChatLib.say(`/pc x: ${x}, y: ${y}, z: ${z}`)
-    Thread.sleep(550)
+    Thread.sleep(300)
     ChatLib.say(`/pc x: ${x + 2}, y: ${y}, z: ${z}`)
-    Thread.sleep(550)
+    Thread.sleep(300)
     ChatLib.say(`/pc x: ${x + 1}, y: ${y + 1}, z: ${z}`)
-    Thread.sleep(550)
+    Thread.sleep(300)
     ChatLib.say(`/pc x: ${x + 1}, y: ${y + 2}, z: ${z}`)
-    Thread.sleep(550)
+    Thread.sleep(300)
   }).start()
 }).setName('rocket', true);
 
