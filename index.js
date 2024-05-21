@@ -14,7 +14,7 @@ import "./features/HUD/Poison"
 import "./features/HUD/Widgets"
 
 // Kuudra {
-  import kuudraConfig from "./features/Kuudra/kuudraConfig";
+  import kuudraConfig from "./features/Kuudra/KuudraConfig";
   import "./features/Kuudra/KuudraUtil"
   
   // misc
@@ -75,6 +75,9 @@ import { openGUI } from "./utils/overlay"
 import axios from "./../axios"
 import WorldUtil from "./utils/world"
 
+// test
+import "./settings"
+
 let changes;
 register("command", (arg) => {  
   if (!arg) {
@@ -111,7 +114,7 @@ register("command", (arg) => {
     default:
       ChatLib.chat(`${PREFIX} &r\n/nwjn => opens settings\n/nwjn gui => opens gui mover\n/nwjn version => gets the current nwjnaddons version\n/nwjn changes => see the latest changes\n/nwjn party => see all party commands\n/nwjn commands => see all commands\n/nwjn reload => reloads all registers in case they aren't working`)
   }
-}).setCommandName(`nwjn`, true).setAliases("nwjnaddons", "njwn").setTabCompletions("version", "changes", "party", "help", "gui")
+}).setCommandName(`nwjn`, true).setAliases("nwjnaddons").setTabCompletions("version", "changes", "party", "help", "gui")
 
 if (data.first_time) {
   data.first_time = false; 
@@ -136,7 +139,7 @@ register("worldLoad", () => {
     changes = res.data.releases[0].changelog.toString().replaceAll("\r", "")
     const newVer = res.data.releases[0].releaseVersion
 
-    if (newVer == "0.10.1") return;
+    if (newVer == "0.11.0") return;
 
     if(newVer != version)
     {

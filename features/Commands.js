@@ -57,6 +57,7 @@ register("command", () => {
 // dev tools
 let code = []
 
+import settings from "../settings"
 registerWhen(register("command", (...args) => {
   try {
     const command = args.shift()
@@ -80,7 +81,7 @@ registerWhen(register("command", (...args) => {
       default: return;
     }
     ChatLib.chat("")
-  } catch (err) {ChatLib.chat(`${PREFIX} Eval: &c${err}`)}
+  } catch (err) { ChatLib.chat(`${ PREFIX } Eval: &c${ err }`);  ChatLib.command("eval reset", true)}
 }).setName("eval", true), () => settings.devTools)
 
 registerWhen(register("command", () => {
