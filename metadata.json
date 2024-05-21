@@ -2,7 +2,7 @@
   "name": "NwjnAddons",
   "creator": "nwjn",
   "description": "if it works, it works, so dont judge the coding",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "entry": "index.js",
   "requires":["Vigilance", "PogData", "axios", "RenderLib", "BeaconBeam"]
 }
