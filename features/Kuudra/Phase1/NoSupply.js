@@ -1,4 +1,4 @@
-import kuudraConfig from "../kuudraConfig";
+import kuudraConfig from "../KuudraConfig";
 import { EntityGiant } from "../../../utils/constants";
 import { getDistance } from "../../../utils/functions";
 import KuudraUtil from "../KuudraUtil";

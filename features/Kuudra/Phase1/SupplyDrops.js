@@ -1,4 +1,4 @@
-import kuudraConfig from "../kuudraConfig";
+import kuudraConfig from "../KuudraConfig";
 import renderBeaconBeam from "../../../../BeaconBeam"
 import { EntityArmorStand } from "../../../utils/constants";
 import KuudraUtil from "../KuudraUtil"

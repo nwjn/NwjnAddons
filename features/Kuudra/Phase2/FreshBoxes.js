@@ -1,4 +1,4 @@
-import kuudraConfig from "../kuudraConfig";
+import kuudraConfig from "../KuudraConfig";
 import KuudraUtil from "../KuudraUtil"
 import { extractIGN } from "../../../utils/functions";
 

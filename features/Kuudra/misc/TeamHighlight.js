@@ -1,4 +1,4 @@
-import kuudraConfig from "../kuudraConfig";
+import kuudraConfig from "../KuudraConfig";
 import RenderLib from "../../../../RenderLib"
 import KuudraUtil from "../KuudraUtil";
 import { realPlayer } from "../../../utils/functions";
