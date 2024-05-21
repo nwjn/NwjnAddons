@@ -76,7 +76,7 @@ import axios from "./../axios"
 import WorldUtil from "./utils/world"
 
 // test
-import "./settings"
+// import "./settings"
 
 let changes;
 register("command", (arg) => {  
