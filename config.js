@@ -1,5 +1,5 @@
 import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, @SliderProperty, @ColorProperty, @PercentSliderProperty, @DecimalSliderProperty, @ParagraphProperty, Color} from  "../Vigilance/index"
-import kuudraConfig from "./features/Kuudra/kuudraConfig"
+import kuudraConfig from "./features/Kuudra/KuudraConfig"
 import { version } from "./utils/constants"
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
