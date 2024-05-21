@@ -57,7 +57,6 @@ register("command", () => {
 // dev tools
 let code = []
 
-import settings from "../settings"
 registerWhen(register("command", (...args) => {
   try {
     const command = args.shift()
