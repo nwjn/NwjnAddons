@@ -21,12 +21,40 @@ function renderScale(scale, text, x, y, align, flex) {
 }
 
 /**
+ * Function to draw a box on the screen.
+ * 
+ * @param {Number} x - X-Coordinate of the box.
+ * @param {Number} y - Y-Coordinate of the box.
+ * @param {Number} z - Z-Index of the box.
+ * @param {Number} width - Width of the box.
+ * @param {Number} height - Height of the box.
+ * @param {Object} rectColor - Renderer.color of the box.
+ * @param {Object} borderColor - Renderer.color of the border.
+ */
+export function drawBox(x, y, width, height, rectColor, borderColor) {
+    Renderer.drawRect(rectColor, x, y, width, height);
+
+    // Draw Outline
+    Renderer.retainTransforms(true);
+    Renderer.translate(x, y, 1);
+    Renderer.drawLine(borderColor, -1, -1, width + 1, -1, 1);
+    Renderer.drawLine(borderColor, -1, -1, -1, height + 1, 1);
+    Renderer.drawLine(borderColor, -1, height + 1, width + 1, height + 1, 1);
+    Renderer.drawLine(borderColor, width + 1, -1, width + 1, height + 1, 1);
+    Renderer.retainTransforms(false);
+}
+
+/**
  * Variables used to move all active GUIs.
  */
 const GUI_INSTRUCT = "Use +/- to scale, R to reset, L to swap align, H to swap flex, B to show BG, or W to change view";
 
 const gui = new Gui();
 const background = new Gui();
+
+const BORDER_COLOR = Renderer.color(128, 128, 128, 128);
+const RECT_COLOR = Renderer.color(0, 0, 0, 128);
+const EDIT_COLOR = Renderer.color(64, 64, 64, 128);
 
 let overlays = [];
 let overlaid = [];
@@ -45,10 +73,10 @@ const moving = register("renderOverlay", () => {
         const x = overlay.loc[0] - (overlay.loc[3] ? (overlay.eWidth - 3) * scale : 0);
         const y = overlay.loc[1];
 
-        Renderer.drawRect(
-            overlay.loc[5] ? Renderer.color(0, 0, 0, 128) : Renderer.color(128, 128, 128, 128),
-            x - 3*scale, y - 3*scale,
-            (overlay.eWidth + 6) * scale, (overlay.eHeight + 6) * scale
+        drawBox(
+            x - 3*scale, y - 3*scale, 0, 
+            (overlay.eWidth + 6) * scale, (overlay.eHeight + 6) * scale, 
+            overlay.loc[5] ? RECT_COLOR : EDIT_COLOR, BORDER_COLOR
         );
         renderScale(overlay.loc[2], overlay.example, overlay.X, overlay.Y, overlay.loc[3], overlay.loc[4]);
     });
@@ -210,10 +238,10 @@ export class Overlay {
 
             // Draw example text
             if (this.loc[5] && this.width !== 0)
-                Renderer.drawRect(
-                    Renderer.color(0, 0, 0, 128),
+                drawBox(
                     this.loc[0] - 3*this.loc[2], this.loc[1] - 3*this.loc[2],
-                    this.eWidth + 6*this.loc[2], this.eHeight + 6*this.loc[2]
+                    this.width + 6*this.loc[2], this.height + 6*this.loc[2],
+                    RECT_COLOR, BORDER_COLOR
                 );
             renderScale(this.loc[2], this.example, this.X, this.Y, this.loc[3], this.loc[4]);
 
@@ -229,10 +257,10 @@ export class Overlay {
             if (!special() && condition() && !gui.isOpen() && !this.gui.isOpen()) {
                 if (this.requires.has("misc")) background.func_146278_c(0);
                 if (this.loc[5] && this.width !== 0 && this.message !== "")
-                    Renderer.drawRect(
-                        Renderer.color(0, 0, 0, 128),
+                    drawBox(
                         this.loc[0] - 3*this.loc[2], this.loc[1] - 3*this.loc[2],
-                        this.width + 6*this.loc[2], this.height + 6*this.loc[2]
+                        this.width + 6*this.loc[2], this.height + 6*this.loc[2],
+                        RECT_COLOR, BORDER_COLOR
                     );
                 renderScale(this.loc[2], this.message, this.X, this.Y, this.loc[3], this.loc[4]);
             }
