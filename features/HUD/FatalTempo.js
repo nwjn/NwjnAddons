@@ -1,8 +1,8 @@
 import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
-import { registerWhen } from "../../utils/functions";
-import { getWorld } from "../../utils/world";
+import { registerWhen, clamp } from "../../utils/functions";
+import WorldUtil from "../../utils/world"
 
 const ftExample = `Fatal Tempo:&c 0% | 0.00s`;
 const ftOverlay = new Overlay("ft", ["all"], () => true, data.ftL, "moveFt", ftExample);
@@ -13,7 +13,7 @@ let ftLevel = 0;
 
 const addHits = () => {
   const holding = Player.getHeldItem()
-  if (!["minecraft:bow", "minecraft:bone"].includes(holding?.getRegistryName())) return
+  if (holding?.getRegistryName() !== "minecraft:bow") return
 
   const ftLvl = holding.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getCompoundTag("enchantments")?.getTag("ultimate_fatal_tempo");
   if (!ftLvl) return
@@ -23,22 +23,30 @@ const addHits = () => {
   hits++
 }
 
-registerWhen(register("soundPlay", addHits).setCriteria("tile.piston.out"), () => settings.ft && getWorld() === "Kuudra");
-registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings.ft && getWorld() !== "Kuudra");
+registerWhen(register("soundPlay", addHits).setCriteria("tile.piston.out"), () => settings.ft && WorldUtil.worldIs("Kuudra"));
+registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings.ft && !WorldUtil.worldIs("Kuudra"));
 
-const calcString = (countdown, percent) => {
-  countdown = countdown >= 0 ? countdown : 0
-  percent = percent <= 200 ? percent : 200
+const calcString = (countdown = 0, percent = 0) => {
+  countdown = clamp(countdown, 0, 3)
+  percent = clamp(percent, 0, 200)
   let displayText = settings.ftShowTitle ? `Fatal Tempo: ` : ""
 
-  displayText +=
-    (countdown > 1 && percent === 200) ? "&a" :
-    (countdown > 0 && percent > 0) ? "&e" :
-    "&c"
+  displayText += settings.ftShowPercent ? 
+    ((percent === 200) ? "&a" :
+    (percent > 0) ? "&e" :
+    "&c")
+  : ""
 
-  displayText += settings.ftShowPercent ? `${percent}%` : ""
+  const percentString = percent >= 100 ? percent : `  ${percent}`
+  displayText += settings.ftShowPercent ? `${percentString}%` : ""
 
-  displayText += (settings.ftShowPercent && settings.ftShowTime) ? " | " : ""
+  displayText += (settings.ftShowPercent && settings.ftShowTime) ? " &r| " : ""
+
+  displayText += settings.ftShowTime ?
+    ((countdown > 1.25) ? "&a" :
+    (countdown > 0) ? "&e" :
+    "&c")
+  : ""
 
   displayText += settings.ftShowTime ? `${ countdown.toFixed(2) }s` : ""
 
@@ -60,4 +68,6 @@ registerWhen(register("tick", () => {
   }
 
   ftOverlay.setMessage(calcString(countdown, percent))
-}), () => settings.ft)
+}), () => settings.ft);
+
+ftOverlay.setMessage(calcString())

@@ -1,9 +1,9 @@
 import settings from "../config"
+import WorldUtil from "../utils/world"
 import { registerWhen } from "./functions";
-import { getWorld } from "./world";
 import { PREFIX } from "./constants";
 
-// Credit: Volcaronitee
+// Credit: My father, Volcaronitee
 
 /**
  * Render scaled text on a graphical canvas or rendering context.
@@ -24,7 +24,6 @@ function renderScale(scale, text, x, y, align, flex) {
  * Variables used to move all active GUIs.
  */
 const GUI_INSTRUCT = "Use +/- to scale, R to reset, L to swap align, H to swap flex, B to show BG, or W to change view";
-const INSTRUCT_WIDTH = Renderer.getStringWidth(GUI_INSTRUCT);
 const gui = new Gui();
 const background = new Gui();
 
@@ -83,7 +82,7 @@ const clicking = register("guiMouseClick", (x, y) => {
  * Handles movement of the selected overlay.
  * Updates location and normalized coordinates based on delta coordinates.
  */
-const dragging = register("dragged", (dx, dy, x, y) => {
+const dragging = register("dragged", (dx, dy) => {
     if (currentOverlay === undefined || !gui.isOpen()) return;
 
     if (gui.isOpen()) {
@@ -100,23 +99,23 @@ const dragging = register("dragged", (dx, dy, x, y) => {
  * Listens for specific keys: Enter (increase), Minus (decrease), r (reset).
  * Updates normalized coordinates and calls "setSize" after scaling.
  */
-const keying = register("guiKey", (char, keyCode, currentGui, event) => {
+const keying = register("guiKey", (_, keyCode) => {
     // View Change
     if (keyCode === 17) {
         worldView = !worldView;
         if (worldView) {
             overlays = overlays.filter(overlay => {
-                if (!overlay.requires.has(getWorld()) && !overlay.requires.has("all")) {
+                if (!overlay.requires.has(WorldUtil.world) && !overlay.requires.has("all")) {
                     overlaid.push(overlay);
                     return false;
                 }
                 return true;
             });
-            Client.showTitle(`Changed to &e${getWorld()}&r view!`, PREFIX, 0, 40, 0);
+            Client.showTitle(`Changed to &e${ WorldUtil.world}&r view!`, PREFIX, 0, 30, 0);
         } else {
             overlays.push(...overlaid);
             overlaid.length = 0;
-            Client.showTitle(`Changed to Global view!`, PREFIX, 0, 40, 0);
+            Client.showTitle(`Changed to Global view!`, PREFIX, 0, 30, 0);
         }
     } else if (keyCode === 1) {
         moving.unregister();
@@ -235,7 +234,7 @@ export class Overlay {
                     );
                 renderScale(this.loc[2], this.message, this.X, this.Y, this.loc[3], this.loc[4]);
             }
-        }), () => settings[this.setting] && (this.requires.has(getWorld()) || this.requires.has("all")));
+        }), () => settings[this.setting] && (this.requires.has(WorldUtil.world) || this.requires.has("all")));
 
         // Register editing stuff
         this.dragging = register("dragged", (dx, dy, x, y) => {

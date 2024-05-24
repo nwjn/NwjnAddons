@@ -2,7 +2,7 @@ import PogObject from "PogData"
 
 export let data = new PogObject("NwjnAddons", {
   "first_time": true,
-  "version": "0.10.1",
+  "version": "0.11.4",
   "power": "Unknown",
   "tuning": "Unknown",
   "enrich": "Unknown",
@@ -28,7 +28,7 @@ export let data = new PogObject("NwjnAddons", {
   "legionL": [50, 50, 1],
   "gyroL": [280, 110, 1],
   "manaL": [100, 100, 1],
-  "mobCountL": [50, 50, 1],
+  "pityL": [220, 120, 1],
 
   "statsL": [15, 250, 1],
   "petL": [15, 250, 1],

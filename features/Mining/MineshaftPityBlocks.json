@@ -1,0 +1,45 @@
+{
+  "blocks": [
+    {
+      "quality": 2,
+      "blocks": [
+        { "name": "Stained Clay", "bit": 9 },
+        { "name": "Wool", "bit": 7 },
+        { "name": "Wool", "bit": 3 },
+        { "name": "Prismarine", "bit": 2 },
+        { "name": "Prismarine", "bit": 1}
+      ]
+    },
+
+    {
+      "quality": 4,
+      "blocks": [
+        { "name": "Stained Glass", "bit": null },
+        { "name": "Stained Glass Pane", "bit": null },
+        
+        { "name": "Packed Ice", "bit": 0 },
+
+        { "name": "Stained Clay", "bit": 12 },
+        { "name": "Red Sandstone Slab", "bit": 8 },
+        { "name": "Hardened Clay", "bit": 0 },
+
+        { "name": "Clay", "bit": 0 },
+        { "name": "Cobblestone", "bit": 0 }
+      ]
+    },
+
+    {
+      "quality": 8,
+      "blocks": [
+        { "name": "Stone", "bit": 4 }
+      ]
+    }
+  ],
+  
+  "sounds": [
+    {"name": "dig.glass", "vol": 1, "pitch": 0.7936508059501648},
+    {"name": "random.orb", "vol": 0.10000000149011612},
+    {"name": "dig.gravel", "vol": 1},
+    {"name": "dig.stone", "vol": 1 }
+  ]
+}

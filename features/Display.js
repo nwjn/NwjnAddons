@@ -1,6 +1,6 @@
 import settings from "../config";
 import { data } from "../utils/data";
-import { EntityPlayer, PREFIX } from "../utils/constants";
+import { EntityPlayer } from "../utils/constants";
 import { delay, registerWhen } from "../utils/functions";
 import { Overlay } from "../utils/overlay";
 import { data } from "../utils/data";
@@ -85,8 +85,7 @@ register("step", () => {
     gyroLeft = gyroCD - (newTime - gyroUsed) / 1000
 
     let txt = ""
-    if (gyroLeft >= 0) txt = `&6Gravity Storm: &c${gyroLeft.toFixed(1)}s`
-    else txt = `&6Gravity Storm: &aOff CD`
+    if (gyroLeft >= 0) txt = `&6Gravity Storm: &c${ gyroLeft.toFixed(1) }s`
     gyroOverlay.setMessage(txt)
   }
   if (settings.manaEnchant) {

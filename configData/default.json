@@ -1,0 +1,614 @@
+{
+    "General": [
+        [
+            "waypoint",
+            "Draw Chat Waypoints",
+            "Creates waypoints taken from chat messages in patcher sendcoords format and how long they should stay (in seconds)\n&cTurned off at 0",
+            1,
+            [
+                0,
+                160
+            ],
+            0
+        ],
+        [
+            "waypointColor",
+            "Waypoint Color",
+            "Sets the color for waypoints",
+            5,
+            [
+                255,
+                255,
+                255
+            ]
+        ],
+        [
+            "waypointFrom",
+            "Chat Type Waypoint Rendering",
+            "Select where to look for chat waypoints",
+            3,
+            [
+                "All",
+                "Party Only"
+            ],
+            0
+        ],
+        [
+            "waypointHeight",
+            "Waypoint Beacon Height",
+            "Changes how high the beacons in the waypoints are (less height = better performance)",
+            1,
+            [
+                0,
+                300
+            ],
+            0
+        ],
+        [
+            "party",
+            "Party Commands",
+            "Enables party commands, universally triggers on [.!?] commands",
+            0,
+            false
+        ],
+        [
+            "leader",
+            "➤ Leader Commands",
+            "     Toggle for commands such as .t5, .dropper, .transfer",
+            0,
+            false
+        ],
+        [
+            "rendArrows",
+            "Rend Arrows",
+            "Shows the number of rend arrows that are pulled",
+            0,
+            false
+        ],
+        [
+            "reaper",
+            "Detect Reaper Armor",
+            "Shows time left for reaper armor under crosshair",
+            0,
+            false
+        ],
+        [
+            "dead",
+            "Stops Entity Death Animation",
+            "Stops entity death animation and removes armor stands that show 0 hp",
+            0,
+            false
+        ],
+        [
+            "sbxp",
+            "Skyblock XP Gain Message",
+            "Takes action bar skyblock xp gained message and pastes them in chat",
+            0,
+            false
+        ],
+        [
+            "treecap",
+            "Treecap Timer",
+            "Renders a timer above crosshair for when u can use treecap ability again",
+            0,
+            false
+        ]
+    ],
+    "Bestiary": [
+        [
+            "rawMobList",
+            "Mob Highlight",
+            "Draws hitboxes around inputted mob entity\n&3@see &cnet.minecraft.entity.(monster|passive|boss)&r\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
+            4,
+            ""
+        ],
+        [
+            "mobHighlightColor",
+            "Mob Highlight Color",
+            "Sets the color for monster hitboxes",
+            5,
+            [
+                255,
+                255,
+                255
+            ]
+        ],
+        [
+            "stand",
+            "Armor Stand Names Highlight",
+            "Draws hitboxes around armor stands that include the inputted name",
+            4,
+            ""
+        ],
+        [
+            "standColor",
+            "Armor Stand Highlight Color",
+            "Sets the color for armor stand hitboxes",
+            5,
+            [
+                255,
+                255,
+                255
+            ]
+        ],
+        [
+            "player",
+            "Player Highlight",
+            "Draws hitboxes around players that include the inputted name\n'Player' draws all real players",
+            4,
+            ""
+        ],
+        [
+            "playerColor",
+            "Player Highlight Color",
+            "Sets the color for player hitboxes",
+            5,
+            [
+                255,
+                255,
+                255
+            ]
+        ],
+        [
+            "matcho",
+            "Matcho",
+            "Matcho box and text",
+            0,
+            false
+        ],
+        [
+            "keeper",
+            "Arachnes Keeper",
+            "Keeper box and text",
+            0,
+            false
+        ]
+    ],
+    "HUD": [
+        [
+            "textShadow",
+            "Draw with Shadow",
+            "Option for rendering HUDS with text shadow",
+            0,
+            false
+        ],
+        [
+            "blaze",
+            "Blaze Display",
+            "Shows how much time left on gummy and wisp pot -> /moveBlaze",
+            0,
+            false
+        ],
+        [
+            "champ",
+            "Champion Display",
+            "Champion gained on killing a flare -> /moveChamp",
+            0,
+            false
+        ],
+        [
+            "clock",
+            "Clock Display",
+            "Shows your current time -> /moveClock",
+            0,
+            false
+        ],
+        [
+            "ft",
+            "Fatal Tempo Display",
+            "Approximate ft percent -> /moveFT\n&cSOUND MUST BE ON",
+            0,
+            false
+        ],
+        [
+            "ftShowWhen",
+            "➤ Fatal Tempo Settings",
+            "     Select when to show Fatal Tempo Display",
+            3,
+            [
+                "Always",
+                "Over 0 Percent",
+                "At 200 Percent"
+            ],
+            0
+        ],
+        [
+            "ftShowTitle",
+            "➤ Fatal Tempo Show Title",
+            "     Toggle showing `Fatal Tempo: ` prefix",
+            0,
+            false
+        ],
+        [
+            "ftShowPercent",
+            "➤ Fatal Tempo Show Percent",
+            "     Toggle showing `0-200％` percentage",
+            0,
+            false
+        ],
+        [
+            "ftShowTime",
+            "➤ Fatal Tempo Show Time Left",
+            "     Toggle showing `0-3s`",
+            0,
+            false
+        ],
+        [
+            "mageCD",
+            "Mage Gyro",
+            "Looks for mage cooldown reduction chat message to change gyrocd",
+            0,
+            false
+        ],
+        [
+            "gravityStorm",
+            "Gyro Display",
+            "Shows how long your gyro cd is -> /moveGyro",
+            0,
+            false
+        ],
+        [
+            "endstone",
+            "Endstone Sword Mana Drain Range",
+            "Highlights players in mana drain range",
+            0,
+            false
+        ],
+        [
+            "endstoneNoti",
+            "Endstone Sword Party Notify",
+            "Tells your team when you are extremely focused",
+            0,
+            false
+        ],
+        [
+            "manaEnchant",
+            "Mana Enchant Calc",
+            "Approximate buff of your mana enchants -> /moveMana",
+            0,
+            false
+        ],
+        [
+            "feroMana",
+            "Cumulative Fero Mana",
+            "Set the amount of fero mana levels you have",
+            1,
+            [
+                0,
+                40
+            ],
+            0
+        ],
+        [
+            "strongMana",
+            "Cumulative Strong Mana",
+            "Set the amount of strong mana levels you have",
+            1,
+            [
+                0,
+                40
+            ],
+            0
+        ],
+        [
+            "legion",
+            "Legion Display",
+            "Shows the number of players in your legion radius -> /moveLegion",
+            0,
+            false
+        ],
+        [
+            "poison",
+            "Poison Display",
+            "Displays the amount of poisons in your inventory -> /movePoison",
+            0,
+            false
+        ],
+        [
+            "mini",
+            "Miniboss Display",
+            "Shows your recent CI miniboss kills -> /moveMini",
+            0,
+            false
+        ],
+        [
+            "widget",
+            "Widget Display",
+            "Renders tab widgets on screen",
+            0,
+            false
+        ],
+        [
+            "stats",
+            "Stats Widget",
+            "Show stats widget on HUD -> /moveStats",
+            0,
+            false
+        ],
+        [
+            "pet",
+            "Pet Widget",
+            "Show pet widget on HUD -> /movePet",
+            0,
+            false
+        ],
+        [
+            "bestiary",
+            "Bestiary Widget",
+            "Show bestidary widget on HUD -> /moveBestiary",
+            0,
+            false
+        ],
+        [
+            "crop",
+            "Crop Milestone Widget",
+            "Show crop milestone widget on HUD -> /moveCrop",
+            0,
+            false
+        ],
+        [
+            "pest",
+            "Pest Widget",
+            "Show pest widget on HUD -> /movePest",
+            0,
+            false
+        ],
+        [
+            "visitor",
+            "Visitor Widget",
+            "Show visitor widget on HUD -> /moveVisitor",
+            0,
+            false
+        ],
+        [
+            "contest",
+            "Jacob Widget",
+            "Show jacob contest widget on HUD -> /moveContest",
+            0,
+            false
+        ],
+        [
+            "comm",
+            "Commission Widget",
+            "Show commission widget on HUD -> /moveComm",
+            0,
+            false
+        ],
+        [
+            "powder",
+            "Powder Widget",
+            "Show powder widget on HUD -> /movePowder",
+            0,
+            false
+        ],
+        [
+            "corpse",
+            "Frozen Corpse Widget",
+            "Show frozen corpse widget on HUD -> /moveCorpse",
+            0,
+            false
+        ],
+        [
+            "trophy",
+            "Trophy Fish Widget",
+            "Show trophy fish widget on HUD -> /moveTrophy",
+            0,
+            false
+        ],
+        [
+            "custom",
+            "Custom Widget",
+            "Enter widget title from tablist (i.e. 'Fire Sales:' or 'Timers:' -> /moveCustom",
+            0,
+            false
+        ],
+        [
+            "widgetText",
+            "Custom Widget Text",
+            "Enter widget text from tablist (i.e. 'Fire Sales:' or 'Timers:')",
+            4,
+            ""
+        ],
+        [
+            "gui",
+            "Move GUI Elements",
+            "Click to edit gui locations",
+            2,
+            0
+        ]
+    ],
+    "Crimson Isle": [
+        [
+            "fish",
+            "Trophy Fish Session Counter",
+            "Changes trophy fish catch messages to show count in that session",
+            0,
+            false
+        ],
+        [
+            "announceVanqs",
+            "Announce Vanquishers",
+            "Announces Vanquisher coords to party",
+            0,
+            false
+        ],
+        [
+            "jawbus",
+            "Announce Jawbus",
+            "Announces Jawbus coords to party",
+            0,
+            false
+        ],
+        [
+            "thunder",
+            "Announce Thunder",
+            "Announces Thunder coords to party",
+            0,
+            false
+        ],
+        [
+            "plhlegblast",
+            "Announce Plhlegblasts",
+            "Announces Plhlegblast coords to party",
+            0,
+            false
+        ],
+        [
+            "magma",
+            "Better Magma Boss Message",
+            "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35％ &7(100％)",
+            0,
+            false
+        ]
+    ],
+    "Mining": [
+        [
+            "mineshaftWaypoints",
+            "Mineshaft Waypoints",
+            "Shows guesses of corpses and exit in mineshafts, walk within 3 blocks of a guess waypoint to remove it",
+            0,
+            false
+        ],
+        [
+            "mineshaftPity",
+            "Mineshaft Pity",
+            "Displays your chance of spawning a mineshaft adjusted with pity on your HUD -> /movePity\n&cSound needs to be on!\n&cBug: Currently works with efficient miner even though skyblock pity doesn't",
+            0,
+            false
+        ]
+    ],
+    "QOL": [
+        [
+            "highlight",
+            "Toggle Block Highlight",
+            "Toggles block highlight",
+            0,
+            false
+        ],
+        [
+            "highlightColor",
+            "Highlight Color",
+            "Sets the color for block highlight",
+            5,
+            [
+                255,
+                255,
+                255
+            ]
+        ],
+        [
+            "boss",
+            "Remove Boss Dialouge",
+            "Cancels messages that begin with [BOSS]",
+            0,
+            false
+        ],
+        [
+            "visitorCleaner",
+            "Remove NPC Dialouge on Garden",
+            "Cancels messages that begin with [NPC]",
+            0,
+            false
+        ],
+        [
+            "discord",
+            "Remove Discord Warnings",
+            "Removes:\n&cPlease be mindful of Discord links in chat as they may pose a security risk",
+            0,
+            false
+        ]
+    ],
+    "Utilities": [
+        [
+            "damageTracker",
+            "Damage Tracker",
+            "Shows damage tags in chat",
+            0,
+            false
+        ],
+        [
+            "devTools",
+            "Dev Commands",
+            "Super duper secret settings",
+            0,
+            false
+        ]
+    ],
+    "Beta (WIP)": [
+        [
+            "gyro",
+            "Gyro Range",
+            "Shows the area that the gyro will take effect when holding",
+            0,
+            false
+        ],
+        [
+            "gyroColor",
+            "Gyro Range Color",
+            "Sets the color for gyro range",
+            5,
+            [
+                255,
+                255,
+                255
+            ]
+        ],
+        [
+            "agro",
+            "Agro Range",
+            "Shows the area that the agro will take effect when enrager or jingle bells held",
+            0,
+            false
+        ],
+        [
+            "agroColor",
+            "Agro Range Color",
+            "Sets the color for agro range",
+            5,
+            [
+                255,
+                255,
+                255
+            ]
+        ],
+        [
+            "totem",
+            "Totem Range",
+            "Shows the area that the totem will take effect when totem placed or held",
+            0,
+            false
+        ],
+        [
+            "totemColor",
+            "Totem Range Color",
+            "Sets the color for totem range",
+            5,
+            [
+                255,
+                255,
+                255
+            ]
+        ],
+        [
+            "totemOptions",
+            "Totem Range Options",
+            "Select when the range will show",
+            3,
+            [
+                "Only When Held",
+                "Only Placed",
+                "Both"
+            ],
+            0
+        ]
+    ],
+    "Kuudra": [
+        [
+            "kuudra",
+            "Kuudra Settings",
+            "Click here for the kuudra settings page",
+            2,
+            0
+        ]
+    ]
+}

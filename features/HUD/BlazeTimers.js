@@ -2,7 +2,7 @@ import settings from "../../config"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
 import { registerWhen, fixLength } from "../../utils/functions";
-import { getGame} from "../../utils/world";
+import WorldUtil from "../../utils/world"
 
 const blazeExample = 
 `&aGummy: &cInactive
@@ -16,19 +16,19 @@ function timeFormat (seconds) {
 let gummy;
 let wisp;
 registerWhen(register("chat", () => {
-  gummy = 3_600; 
+  gummy = 3_600; // 60 minutes as seconds
 }).setChatCriteria("You ate a Re-heated Gummy Polar Bear!"), () => settings.blaze)
 
 registerWhen(register("chat", () => {
-  wisp = data.pet.includes("Parrot") ? 2_520 : 1_800;
+  wisp = data.pet.includes("Parrot") ? 2_520 : 1_800; // 42 min with parrot, else 30min as seconds
 }).setChatCriteria("BUFF! You ${*} with Wisp's Ice-Flavored Water I! Press TAB or type /effects to view your active effects!"), () => settings.blaze);
 
-registerWhen(register("step", (elapsed) => {
-  gummy && (gummy--)
-  wisp && (wisp--)
+registerWhen(register("step", () => {
+  if (gummy) gummy--
+  if (wisp) wisp--
   
   blazeOverlay.setMessage(`&aGummy: &f${ timeFormat(gummy) }\n&7Wisp: &f${ timeFormat(wisp) }`);
-}).setDelay(1), () => settings.blaze && getGame() == "SKYBLOCK");
+}).setDelay(1), () => settings.blaze && WorldUtil.isSkyblock());
 
 
 import { onWorldJoin, onWorldLeave } from "../../utils/functions";

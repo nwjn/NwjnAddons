@@ -1,8 +1,8 @@
 import settings from "../../config"
+import WorldUtil from "../../utils/world"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
 import { registerWhen } from "../../utils/functions";
-import { getWorld } from "../../utils/world";
 import { comma } from "../../utils/constants";
 
 const champExample = `&6Champion XP: &e0 (+0)`
@@ -20,9 +20,4 @@ registerWhen(register("entityDeath", (entity) => {
   lastChamp = champion;
   if (!gainedChamp) return
   champOverlay.setMessage(`&6Champion XP: &e${ comma(champion.toFixed(0)) } (${ gainedChamp > 0 ? "+" : "" }${ comma(gainedChamp.toFixed(1)) })`)
-}), () => getWorld() == "Crimson Isle" && settings.champ);
-
-/*
-TODO (ADD): add xp/pet xp tracker
-TODO (TEST): test possible error of it not working on first load
-*/
+}), () => WorldUtil.worldIs("Crimson Isle") && settings.champ);

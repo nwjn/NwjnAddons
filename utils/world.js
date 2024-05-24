@@ -1,55 +1,84 @@
+import { onWorldJoin, onWorldLeave, delay, setRegisters } from "./functions";
 
-// Credit: Volcaronitee
+class WorldUtil {
+  constructor() {
+    onWorldJoin(() => {
+      this.findWorld()
+    })
 
-/**
- * Variables used to store world data.
-*/
-let world = undefined;
-export function getWorld() { return world; };
-let game = undefined
-export function getGame() { return game }
-let noFind = 0;
+    onWorldLeave(() => {
+      this.reset()
+    })
+  }
+  
+  reset() {
+    this.world = undefined
+    this.server = undefined
+    this.spawn = undefined
+  }
+  
+  findWorld(tries = 10) {
+    if (!tries) return;
+    tries--;
 
-import { delay, setRegisters } from "./functions";
+    const TABLIST = TabList.getNames()
+    const areaIdx = TABLIST.findIndex(e => e.match(/(Area|Dungeon):/g));
 
-/**
- * Identifies the current world the player is in based on the tab list.
- */
-function findWorld() {
-    if (!World.isLoaded()) return;
+    if (~areaIdx) {
+      this.world = TABLIST[areaIdx].removeFormatting().split(": ").slice(-1).toString()
+      this.server = TABLIST[areaIdx + 1].removeFormatting().split(": ").slice(-1).toString()
+      
+      const spawn = World.spawn
+      this.spawn = [spawn.getX(), spawn.getY(), spawn.getZ()]
 
-    // Infinite loop prevention
-    if (noFind === 10) return;
-    noFind++;
+      delay(() => setRegisters(), 500);
+    }
+    else {
+      delay(() => this.findWorld(tries), 1000);
+    }
+  }
 
-    // Get world from tab list
-  world = TabList.getNames().find(tab => tab.match(/(Area|Dungeon):/g));
-  game = Scoreboard.getTitle()
+  /**
+   * Resets variables and looks for the world again
+   */
+  resetWorld() {
+    this.reset()
+    this.findWorld()
+  }
 
-  if (world === undefined) {
-    // If the world is not found, try again after a delay
-    delay(() => findWorld(), 1000);
+  /**
+   * Checks if the player is in Skyblock
+   * @returns {Boolean}
+   */
+  isSkyblock() {
+    return Boolean(this.world)
+  }
 
-  } else {
-    // Get world formatted
-    world = world.removeFormatting().split(": ").slice(-1).toString();
-    game = game.removeFormatting()
+  /**
+   * Tests if current world name matches test world name
+   * @param {String} world - test world name
+   * @returns {Boolean}
+   */
+  worldIs(world) {
+    return (world === this.world)
+  }
 
-    delay(() => setRegisters(), 500);
+  /**
+   * Overload tests if current world name matches test world names
+   * @param {String[]} world - test world names
+   * @returns {Boolean}
+   */
+  worldIs(world) {
+    return world.includes(this.world)
+  }
+
+  /**
+   * A string representation of the current World and Server
+   * @returns {String}
+   */
+  toString() {
+    return `${ this.world } | ${ this.server }`
   }
 }
 
-import { onWorldJoin, onWorldLeave } from "./functions";
-/**
- * Set and reset world on world change.
- */
-onWorldJoin(() => {
-  noFind = 0;
-  findWorld();
-})
-
-onWorldLeave(() => {
-  world = undefined;
-  game = undefined;
-  setRegisters();
-});
+export default new WorldUtil;

@@ -1,16 +1,17 @@
-import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, @SliderProperty, @ColorProperty, @PercentSliderProperty, @DecimalSliderProperty, Color} from "../Vigilance/index"
+import { @Vigilant, @SwitchProperty, @TextProperty, @CheckboxProperty, @ButtonProperty, @SelectorProperty, @SliderProperty, @ColorProperty, @PercentSliderProperty, @DecimalSliderProperty, @ParagraphProperty, Color} from  "../Vigilance/index"
+import kuudraConfig from "./features/Kuudra/KuudraConfig"
 import { version } from "./utils/constants"
 
 @Vigilant("NwjnAddons", "§d§lNwjnAddons", {
   getCategoryComparator: () => (a, b) => {
-    const categories = ["General", "Bestiary", "Crimson Isle", "HUD", "Kuudra", "QOL", "Beta (WIP)"]
+    const categories = ["General", "Bestiary", "Crimson Isle", "HUD", "Kuudra", "Mining", "QOL", "Beta (WIP)", "Utilities"]
     return categories.indexOf(a.name) - categories.indexOf(b.name);
   }
 })
 class Settings {    
   @SliderProperty({
     name: "Draw Chat Waypoints",
-    description: "Creates waypoints taken from chat messages in patcher sendcoords format and how long they should stay (in seconds)",
+    description: "Creates waypoints taken from chat messages in patcher sendcoords format and how long they should stay (in seconds)\n&cTurned off at 0",
     min: 0,
     max: 160,
     category: "General"
@@ -43,14 +44,14 @@ class Settings {
     
   @SwitchProperty({
     name: "Party Commands",
-    description: "Enables party commands (full list at /nwjn party)",
+    description: "Enables party commands, universally triggers on [.!?] commands",
     category: "General"
   })
   party = false
   
   @SwitchProperty({
-    name: "Confirm Leader Commands",
-    description: "Adds a confirm button when a party member sends a leader command or press up arrow while in chat",
+    name: "➤ Leader Commands",
+    description: "     Toggle for commands such as .t5, .dropper, .transfer",
     category: "General"
   })
   leader = false
@@ -90,51 +91,50 @@ class Settings {
   })
   treecap = false   
     
-  // TODO: Remove unnecessary symbols using negated set like [^'"!?:;\/]
-  @TextProperty({
-    name: "Mob ESP",
-    description: "Draws hitboxes around inputted mob entity\n&cA mob from net.minecraft.entity.monster or net.minecraft.entity.passive\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
+  @ParagraphProperty({
+    name: "Mob Highlight",
+    description: "Draws hitboxes around inputted mob entity\n&3@see &cnet.minecraft.entity.(monster|passive|boss)&r\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
     category: "Bestiary"
   })
   rawMobList = "" 
     
   @ColorProperty({
-    name: 'Mob ESP Color',
+    name: 'Mob Highlight Color',
     description: `Sets the color for monster hitboxes`,
     category: 'Bestiary'
   })
-  espColor = Color.YELLOW
+  mobHighlightColor = Color.YELLOW
   
-  @TextProperty({
-    name: "Armor Stand Names ESP",
+  @ParagraphProperty({
+    name: "Armor Stand Names Highlight",
     description: "Draws hitboxes around armor stands that include the inputted name",
     category: "Bestiary"
   })
   stand = "" 
     
   @ColorProperty({
-    name: 'Armor Stand ESP Color',
+    name: 'Armor Stand Highlight Color',
     description: `Sets the color for armor stand hitboxes`,
     category: 'Bestiary'
   })
   standColor = Color.GREEN
 
-  @TextProperty({
-    name: "Player Names ESP",
-    description: "Draws hitboxes around players that include the inputted name\n'Any' draws all player entites\n'Player' draws all real players",
+  @ParagraphProperty({
+    name: "Player Highlight",
+    description: "Draws hitboxes around players that include the inputted name\n'Player' draws all real players",
     category: "Bestiary"
   })
   player = "" 
     
   @ColorProperty({
-    name: 'Player ESP Color',
+    name: 'Player Highlight Color',
     description: `Sets the color for player hitboxes`,
     category: 'Bestiary'
   })
   playerColor = Color.MAGENTA
 
   @SwitchProperty({
-    name: "Matcho!",
+    name: "Matcho",
     description: `Matcho box and text`,
     category: "Bestiary"
   })
@@ -165,30 +165,6 @@ class Settings {
   textShadow = false
 
   @SwitchProperty({
-    name: "Highlight Players in Align Radius",
-    description: "Highlights players when they are in align radius",
-    category: "HUD",
-    subcategory: "Align"
-  })
-  alignHighlight = false  
-    
-  @SwitchProperty({
-    name: "Align Display",
-    description: "Shows how long you are under alignment for -> /moveAlign",
-    category: "HUD",
-    subcategory: "Align"
-  })
-  align = false
-
-  @SwitchProperty({
-    name: "Mob Highlight Counter",
-    description: "Shows the number of each mob highlighted by mob esp -> /moveMob",
-    category: "HUD",
-    subcategory: "Bestiary"
-  })
-  mobEspCount = false
-
-  @SwitchProperty({
     name: "Blaze Display",
     description: "Shows how much time left on gummy and wisp pot -> /moveBlaze",
     category: "HUD",
@@ -196,7 +172,6 @@ class Settings {
   })
   blaze = false 
   
-  // TODO: rename Flare Display
   @SwitchProperty({
     name: "Champion Display",
     description: `Champion gained on killing a flare -> /moveChamp`,
@@ -241,7 +216,7 @@ class Settings {
 
     @CheckboxProperty({
       name: "➤ Fatal Tempo Show Percent",
-      description: "     Toggle showing `0-200` percent",
+      description: "     Toggle showing `0-200％` percentage",
       category: "HUD",
       subcategory: "Fatal Tempo"
     })
@@ -459,7 +434,6 @@ class Settings {
   })
   fish = false
     
-  // TODO: allow for public chat
   @SwitchProperty({
     name: "Announce Vanquishers",
     description: `Announces Vanquisher coords to party`,
@@ -490,94 +464,34 @@ class Settings {
 
   @SwitchProperty({
     name: "Better Magma Boss Message",
-    description: "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35 &7(100)",
+    description: "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35％ &7(100％)",
     category: "Crimson Isle"
   })
   magma = false
   
-  @SwitchProperty({
-    name: "Highlight Teammates in kuudra",
-    description: "title",
-    category: "Kuudra"
+  @ButtonProperty({
+    name: "Kuudra Settings",
+    description: "Click here for the kuudra settings page",
+    category: "Kuudra",
+    placeholder: "Click!"
   })
-  teammates = false
-  
-  @ColorProperty({
-    name: 'Teammate Color',
-    description: `Sets the color for teammates`,
-    category: 'Kuudra'
-  })
-  teammateColor = Color.MAGENTA;
+  kuudra() {
+    kuudraConfig.openGUI()
+  }
 
   @SwitchProperty({
-    name: "Stop Rendering Useless Perks",
-    description: "Stops the useless perks rendering in the gui and stops you from clicking them",
-    category: "Kuudra"
+    name: "Mineshaft Waypoints",
+    description: "Shows guesses of corpses and exit in mineshafts, walk within 3 blocks of a guess waypoint to remove it",
+    category: "Mining"
   })
-  renderPerk = false
+  mineshaftWaypoints = false
 
   @SwitchProperty({
-    name: "No Pre! No Second!",
-    description: "Tells party if you dont have a pre or second\n&csometimes breaks on certain spots on x",
-    category: "Kuudra"
+    name: "Mineshaft Pity",
+    description: "Displays your chance of spawning a mineshaft adjusted with pity on your HUD -> /movePity\n&cSound needs to be on!\n&cBug: Currently works with efficient miner even though skyblock pity doesn't",
+    category: "Mining"
   })
-  noPre = false  
-    
-  @SwitchProperty({
-    name: "Custom Supply Drop Message",
-    description: "Shows a message including time when a supply is dropped:\n&r&6[MVP&r&9++&r&6] nwjn&r&f &a&lrecovered a supply at 18s! &r&8(1/6)&r",
-    category: "Kuudra"
-  })
-  customSupply = false  
-    
-  @SwitchProperty({
-    name: "Accurate Supply Waypoints",
-    description: "Draws accurate waypoints where supplies are",
-    category: "Kuudra"
-  })
-  supplyWaypoints = false  
-
-  @SwitchProperty({
-    name: "Supply Drop Waypoints",
-    description: "Shows where to drop supplies",
-    category: "Kuudra"
-  })
-  supply = false
-
-  @SwitchProperty({
-    name: "Supply Pearl Lineup",
-    description: "Shows you a box to where to pearl for instant supply drop",
-    category: "Kuudra"
-  })
-  pearl = false
-    
-  @SwitchProperty({
-    name: "Build Helper",
-    description: `Progress text on each pile shows through walls, beacons to unfinished piles, big percentage over ballista for amount complete, fresh timer over ballista if u fresh`,
-    category: "Kuudra"
-  })
-  inBuild = false;
-
-  @SwitchProperty({
-    name: "Notify Party On Fresh",
-    description: "Auto say `FRESH!` in party chat when you get fresh tools",
-    category: "Kuudra"
-  })
-  fresh = false
-
-  @SwitchProperty({
-    name: "Draw Hitboxes Around Freshers",
-    description: "Draw hitboxes around party members who have freshed",
-    category: "Kuudra"
-  })
-  freshHitbox = false
-  
-  @SwitchProperty({
-    name: "Shows Kuudra",
-    description: "Draw a hitbox around kuudra to help various parts of the run",
-    category: "Kuudra"
-  })
-  kuudraHitbox = false
+  mineshaftPity = false
 
   @SwitchProperty({
     name: 'Toggle Block Highlight',
@@ -591,7 +505,7 @@ class Settings {
     description: `Sets the color for block highlight`,
     category: 'QOL'
   })
-  highlightColor = Color.GREEN;
+  highlightColor = Color.MAGENTA;
 
   @SwitchProperty({
     name: "Remove Boss Dialouge",
@@ -613,21 +527,15 @@ class Settings {
     category: "QOL"
   })
   discord = false
-    
-  @SwitchProperty({
-    name: "Mineshaft Helper",
-    description: "Shows location of corpses and exit in mineshafts",
-    category: "Beta (WIP)"
-  })
-  mineshaft = false
 
   @SwitchProperty({
-    name: "Lapis Only",
-    description: "Shows location of only lapis corpses",
+    name: "Tracks Damage Armor Stands",
+    description: "Spams ur chat with damage tags",
     category: "Beta (WIP)"
   })
-  lapis = false
-
+  damageTracker = false
+  
+  
   @SwitchProperty({
     name: "Tracks Damage Armor Stands",
     description: "Spams ur chat with damage tags",
@@ -706,9 +614,23 @@ class Settings {
   })
   totemOptions = 0;
 
+  @SwitchProperty({
+    name: "Damage Tracker",
+    description: "Shows damage tags in chat",
+    category: "Utilities"
+  })
+  damageTracker = false
+
+  @SwitchProperty({
+    name: "Dev Commands",
+    description: "Super duper secret settings",
+    category: "Utilities"
+  })
+  devTools = false
+
   constructor() {
     this.initialize(this);
-    this.setCategoryDescription("General", `&d&l[NwjnAddons-v${version}]&r by nwjn\n&cSome features in this module require game language on English (US)`);
+    this.setCategoryDescription("General", `&d&l[NwjnAddons-v${version}]&r by nwjn`);
     this.setCategoryDescription("Bestiary", "bestiary")
     this.setCategoryDescription("Crimson Isle", "endgame island fr");
     this.setCategoryDescription("Kuudra", "1b/h")
@@ -730,7 +652,7 @@ class Settings {
     this.addDependency("Custom Widget", "Widget Display")
     this.addDependency("Custom Widget Text", "Custom Widget")
 
-    this.addDependency("Confirm Leader Commands", "Party Commands")
+    this.addDependency("➤ Leader Commands", "Party Commands")
 
     // Fatal Tempo
       this.addDependency("➤ Fatal Tempo Settings", "Fatal Tempo Display")
