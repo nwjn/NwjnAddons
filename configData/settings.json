@@ -3,133 +3,49 @@
         "category": "General",
         "settings": [
             {
+                "type": 6,
                 "name": "waypoint",
-                "text": "Draw Chat Waypoints",
-                "description": "Creates waypoints taken from chat messages in patcher sendcoords format and how long they should stay (in seconds)\n&cTurned off at 0",
-                "type": 1,
-                "defaultValue": [
-                    0,
-                    160
-                ],
-                "value": 0,
-                "placeHolder": [
-                    0,
-                    160
-                ]
+                "value": true
             },
             {
-                "name": "waypointColor",
-                "text": "Waypoint Color",
-                "description": "Sets the color for waypoints",
+                "type": 1,
+                "name": "wpTime",
+                "value": 60
+            },
+            {
                 "type": 5,
-                "defaultValue": [
-                    255,
-                    255,
-                    255
-                ],
+                "name": "wpColor",
                 "value": [
-                    255,
-                    255,
-                    255
-                ],
-                "placeHolder": [
-                    255,
-                    255,
-                    255
+                    238,
+                    68,
+                    227,
+                    226
                 ]
             },
             {
-                "name": "waypointFrom",
-                "text": "Chat Type Waypoint Rendering",
-                "description": "Select where to look for chat waypoints",
-                "type": 3,
-                "defaultValue": [
-                    "All",
-                    "Party Only"
-                ],
-                "value": 0,
-                "placeHolder": [
-                    "All",
-                    "Party Only"
-                ]
-            },
-            {
-                "name": "waypointHeight",
-                "text": "Waypoint Beacon Height",
-                "description": "Changes how high the beacons in the waypoints are (less height = better performance)",
-                "type": 1,
-                "defaultValue": [
-                    0,
-                    300
-                ],
-                "value": 0,
-                "placeHolder": [
-                    0,
-                    300
-                ]
-            },
-            {
+                "type": 6,
                 "name": "party",
-                "text": "Party Commands",
-                "description": "Enables party commands, universally triggers on [.!?] commands",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "value": true
             },
             {
+                "type": 6,
                 "name": "leader",
-                "text": "➤ Leader Commands",
-                "description": "     Toggle for commands such as .t5, .dropper, .transfer",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "value": true
             },
             {
-                "name": "rendArrows",
-                "text": "Rend Arrows",
-                "description": "Shows the number of rend arrows that are pulled",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
+                "type": 6,
                 "name": "reaper",
-                "text": "Detect Reaper Armor",
-                "description": "Shows time left for reaper armor under crosshair",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "value": true
             },
             {
+                "type": 6,
                 "name": "dead",
-                "text": "Stops Entity Death Animation",
-                "description": "Stops entity death animation and removes armor stands that show 0 hp",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "value": true
             },
             {
+                "type": 6,
                 "name": "sbxp",
-                "text": "Skyblock XP Gain Message",
-                "description": "Takes action bar skyblock xp gained message and pastes them in chat",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "treecap",
-                "text": "Treecap Timer",
-                "description": "Renders a timer above crosshair for when u can use treecap ability again",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "value": true
             }
         ]
     },
@@ -137,112 +53,49 @@
         "category": "Bestiary",
         "settings": [
             {
+                "type": 4,
                 "name": "rawMobList",
-                "text": "Mob Highlight",
-                "description": "Draws hitboxes around inputted mob entity\n&3@see &cnet.minecraft.entity.(monster|passive|boss)&r\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
-                "type": 4,
-                "defaultValue": "",
-                "value": "",
-                "placeHolder": ""
+                "value": ""
             },
             {
+                "type": 5,
                 "name": "mobHighlightColor",
-                "text": "Mob Highlight Color",
-                "description": "Sets the color for monster hitboxes",
-                "type": 5,
-                "defaultValue": [
-                    255,
-                    255,
-                    255
-                ],
                 "value": [
                     255,
-                    255,
-                    255
-                ],
-                "placeHolder": [
                     255,
                     255,
                     255
                 ]
             },
             {
+                "type": 4,
                 "name": "stand",
-                "text": "Armor Stand Names Highlight",
-                "description": "Draws hitboxes around armor stands that include the inputted name",
-                "type": 4,
-                "defaultValue": "",
-                "value": "",
-                "placeHolder": ""
+                "value": ""
             },
             {
+                "type": 5,
                 "name": "standColor",
-                "text": "Armor Stand Highlight Color",
-                "description": "Sets the color for armor stand hitboxes",
-                "type": 5,
-                "defaultValue": [
-                    255,
-                    255,
-                    255
-                ],
                 "value": [
                     255,
-                    255,
-                    255
-                ],
-                "placeHolder": [
                     255,
                     255,
                     255
                 ]
             },
             {
-                "name": "player",
-                "text": "Player Highlight",
-                "description": "Draws hitboxes around players that include the inputted name\n'Player' draws all real players",
                 "type": 4,
-                "defaultValue": "",
-                "value": "",
-                "placeHolder": ""
+                "name": "player",
+                "value": ""
             },
             {
-                "name": "playerColor",
-                "text": "Player Highlight Color",
-                "description": "Sets the color for player hitboxes",
                 "type": 5,
-                "defaultValue": [
-                    255,
-                    255,
-                    255
-                ],
+                "name": "playerColor",
                 "value": [
                     255,
-                    255,
-                    255
-                ],
-                "placeHolder": [
                     255,
                     255,
                     255
                 ]
-            },
-            {
-                "name": "matcho",
-                "text": "Matcho",
-                "description": "Matcho box and text",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "keeper",
-                "text": "Arachnes Keeper",
-                "description": "Keeper box and text",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
             }
         ]
     },
@@ -250,609 +103,106 @@
         "category": "HUD",
         "settings": [
             {
-                "name": "textShadow",
-                "text": "Draw with Shadow",
-                "description": "Option for rendering HUDS with text shadow",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "blaze",
-                "text": "Blaze Display",
-                "description": "Shows how much time left on gummy and wisp pot -> /moveBlaze",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "champ",
-                "text": "Champion Display",
-                "description": "Champion gained on killing a flare -> /moveChamp",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "clock",
-                "text": "Clock Display",
-                "description": "Shows your current time -> /moveClock",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "ft",
-                "text": "Fatal Tempo Display",
-                "description": "Approximate ft percent -> /moveFT\n&cSOUND MUST BE ON",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "ftShowWhen",
-                "text": "➤ Fatal Tempo Settings",
-                "description": "     Select when to show Fatal Tempo Display",
-                "type": 3,
-                "defaultValue": [
-                    "Always",
-                    "Over 0 Percent",
-                    "At 200 Percent"
-                ],
-                "value": 0,
-                "placeHolder": [
-                    "Always",
-                    "Over 0 Percent",
-                    "At 200 Percent"
-                ]
-            },
-            {
-                "name": "ftShowTitle",
-                "text": "➤ Fatal Tempo Show Title",
-                "description": "     Toggle showing `Fatal Tempo: ` prefix",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "ftShowPercent",
-                "text": "➤ Fatal Tempo Show Percent",
-                "description": "     Toggle showing `0-200％` percentage",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "ftShowTime",
-                "text": "➤ Fatal Tempo Show Time Left",
-                "description": "     Toggle showing `0-3s`",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "mageCD",
-                "text": "Mage Gyro",
-                "description": "Looks for mage cooldown reduction chat message to change gyrocd",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "gravityStorm",
-                "text": "Gyro Display",
-                "description": "Shows how long your gyro cd is -> /moveGyro",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "endstone",
-                "text": "Endstone Sword Mana Drain Range",
-                "description": "Highlights players in mana drain range",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "endstoneNoti",
-                "text": "Endstone Sword Party Notify",
-                "description": "Tells your team when you are extremely focused",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "manaEnchant",
-                "text": "Mana Enchant Calc",
-                "description": "Approximate buff of your mana enchants -> /moveMana",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "feroMana",
-                "text": "Cumulative Fero Mana",
-                "description": "Set the amount of fero mana levels you have",
-                "type": 1,
-                "defaultValue": [
-                    0,
-                    40
-                ],
-                "value": 0,
-                "placeHolder": [
-                    0,
-                    40
-                ]
-            },
-            {
-                "name": "strongMana",
-                "text": "Cumulative Strong Mana",
-                "description": "Set the amount of strong mana levels you have",
-                "type": 1,
-                "defaultValue": [
-                    0,
-                    40
-                ],
-                "value": 0,
-                "placeHolder": [
-                    0,
-                    40
-                ]
-            },
-            {
-                "name": "legion",
-                "text": "Legion Display",
-                "description": "Shows the number of players in your legion radius -> /moveLegion",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "poison",
-                "text": "Poison Display",
-                "description": "Displays the amount of poisons in your inventory -> /movePoison",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "mini",
-                "text": "Miniboss Display",
-                "description": "Shows your recent CI miniboss kills -> /moveMini",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "widget",
-                "text": "Widget Display",
-                "description": "Renders tab widgets on screen",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "stats",
-                "text": "Stats Widget",
-                "description": "Show stats widget on HUD -> /moveStats",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "pet",
-                "text": "Pet Widget",
-                "description": "Show pet widget on HUD -> /movePet",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "bestiary",
-                "text": "Bestiary Widget",
-                "description": "Show bestidary widget on HUD -> /moveBestiary",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "crop",
-                "text": "Crop Milestone Widget",
-                "description": "Show crop milestone widget on HUD -> /moveCrop",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "pest",
-                "text": "Pest Widget",
-                "description": "Show pest widget on HUD -> /movePest",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "visitor",
-                "text": "Visitor Widget",
-                "description": "Show visitor widget on HUD -> /moveVisitor",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "contest",
-                "text": "Jacob Widget",
-                "description": "Show jacob contest widget on HUD -> /moveContest",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "comm",
-                "text": "Commission Widget",
-                "description": "Show commission widget on HUD -> /moveComm",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "powder",
-                "text": "Powder Widget",
-                "description": "Show powder widget on HUD -> /movePowder",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "corpse",
-                "text": "Frozen Corpse Widget",
-                "description": "Show frozen corpse widget on HUD -> /moveCorpse",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "trophy",
-                "text": "Trophy Fish Widget",
-                "description": "Show trophy fish widget on HUD -> /moveTrophy",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "custom",
-                "text": "Custom Widget",
-                "description": "Enter widget title from tablist (i.e. 'Fire Sales:' or 'Timers:' -> /moveCustom",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "widgetText",
-                "text": "Custom Widget Text",
-                "description": "Enter widget text from tablist (i.e. 'Fire Sales:' or 'Timers:')",
-                "type": 4,
-                "defaultValue": "",
-                "value": "",
-                "placeHolder": ""
-            },
-            {
-                "name": "gui",
-                "text": "Move GUI Elements",
-                "description": "Click to edit gui locations",
                 "type": 2,
-                "defaultValue": 0,
-                "value": 0,
-                "placeHolder": 0
-            }
-        ]
-    },
-    {
-        "category": "Crimson Isle",
-        "settings": [
-            {
-                "name": "fish",
-                "text": "Trophy Fish Session Counter",
-                "description": "Changes trophy fish catch messages to show count in that session",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "name": "gui"
             },
             {
-                "name": "announceVanqs",
-                "text": "Announce Vanquishers",
-                "description": "Announces Vanquisher coords to party",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "type": 6,
+                "name": "blaze",
+                "value": false
             },
             {
-                "name": "jawbus",
-                "text": "Announce Jawbus",
-                "description": "Announces Jawbus coords to party",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "type": 6,
+                "name": "clock",
+                "value": true
             },
             {
-                "name": "thunder",
-                "text": "Announce Thunder",
-                "description": "Announces Thunder coords to party",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "type": 7,
+                "name": "fatalTempo",
+                "value": 0
             },
             {
-                "name": "plhlegblast",
-                "text": "Announce Plhlegblasts",
-                "description": "Announces Plhlegblast coords to party",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "magma",
-                "text": "Better Magma Boss Message",
-                "description": "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35％ &7(100％)",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            }
-        ]
-    },
-    {
-        "category": "Mining",
-        "settings": [
-            {
-                "name": "mineshaftWaypoints",
-                "text": "Mineshaft Waypoints",
-                "description": "Shows guesses of corpses and exit in mineshafts, walk within 3 blocks of a guess waypoint to remove it",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "mineshaftPity",
-                "text": "Mineshaft Pity",
-                "description": "Displays your chance of spawning a mineshaft adjusted with pity on your HUD -> /movePity\n&cSound needs to be on!\n&cBug: Currently works with efficient miner even though skyblock pity doesn't",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            }
-        ]
-    },
-    {
-        "category": "QOL",
-        "settings": [
-            {
-                "name": "highlight",
-                "text": "Toggle Block Highlight",
-                "description": "Toggles block highlight",
-                "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            },
-            {
-                "name": "highlightColor",
-                "text": "Highlight Color",
-                "description": "Sets the color for block highlight",
-                "type": 5,
-                "defaultValue": [
-                    255,
-                    255,
-                    255
-                ],
-                "value": [
-                    255,
-                    255,
-                    255
-                ],
-                "placeHolder": [
-                    255,
-                    255,
-                    255
+                "type": 8,
+                "name": "ftParts",
+                "options": [
+                    {
+                        "name": "ftPrefix",
+                        "value": true
+                    },
+                    {
+                        "name": "ftPercent",
+                        "value": true
+                    },
+                    {
+                        "name": "ftTime",
+                        "value": true
+                    }
                 ]
             },
             {
-                "name": "boss",
-                "text": "Remove Boss Dialouge",
-                "description": "Cancels messages that begin with [BOSS]",
+                "type": 6,
+                "name": "poison",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "mini",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "widget",
+                "value": true
+            },
+            {
                 "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "name": "stats",
+                "value": true
             },
             {
-                "name": "visitorCleaner",
-                "text": "Remove NPC Dialouge on Garden",
-                "description": "Cancels messages that begin with [NPC]",
                 "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "name": "pet",
+                "value": true
             },
             {
-                "name": "discord",
-                "text": "Remove Discord Warnings",
-                "description": "Removes:\n&cPlease be mindful of Discord links in chat as they may pose a security risk",
                 "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            }
-        ]
-    },
-    {
-        "category": "Utilities",
-        "settings": [
+                "name": "bestiary",
+                "value": false
+            },
             {
-                "name": "damageTracker",
-                "text": "Damage Tracker",
-                "description": "Shows damage tags in chat",
                 "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "name": "crop",
+                "value": true
             },
             {
-                "name": "devTools",
-                "text": "Dev Commands",
-                "description": "Super duper secret settings",
                 "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
-            }
-        ]
-    },
-    {
-        "category": "Beta (WIP)",
-        "settings": [
+                "name": "visitor",
+                "value": true
+            },
             {
-                "name": "gyro",
-                "text": "Gyro Range",
-                "description": "Shows the area that the gyro will take effect when holding",
                 "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "name": "comm",
+                "value": false
             },
             {
-                "name": "gyroColor",
-                "text": "Gyro Range Color",
-                "description": "Sets the color for gyro range",
-                "type": 5,
-                "defaultValue": [
-                    255,
-                    255,
-                    255
-                ],
-                "value": [
-                    255,
-                    255,
-                    255
-                ],
-                "placeHolder": [
-                    255,
-                    255,
-                    255
-                ]
-            },
-            {
-                "name": "agro",
-                "text": "Agro Range",
-                "description": "Shows the area that the agro will take effect when enrager or jingle bells held",
                 "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "name": "powder",
+                "value": false
             },
             {
-                "name": "agroColor",
-                "text": "Agro Range Color",
-                "description": "Sets the color for agro range",
-                "type": 5,
-                "defaultValue": [
-                    255,
-                    255,
-                    255
-                ],
-                "value": [
-                    255,
-                    255,
-                    255
-                ],
-                "placeHolder": [
-                    255,
-                    255,
-                    255
-                ]
-            },
-            {
-                "name": "totem",
-                "text": "Totem Range",
-                "description": "Shows the area that the totem will take effect when totem placed or held",
                 "type": 0,
-                "defaultValue": false,
-                "value": false,
-                "placeHolder": false
+                "name": "corpse",
+                "value": false
             },
             {
-                "name": "totemColor",
-                "text": "Totem Range Color",
-                "description": "Sets the color for totem range",
-                "type": 5,
-                "defaultValue": [
-                    255,
-                    255,
-                    255
-                ],
-                "value": [
-                    255,
-                    255,
-                    255
-                ],
-                "placeHolder": [
-                    255,
-                    255,
-                    255
-                ]
+                "type": 0,
+                "name": "custom",
+                "value": true
             },
             {
-                "name": "totemOptions",
-                "text": "Totem Range Options",
-                "description": "Select when the range will show",
-                "type": 3,
-                "defaultValue": [
-                    "Only When Held",
-                    "Only Placed",
-                    "Both"
-                ],
-                "value": 0,
-                "placeHolder": [
-                    "Only When Held",
-                    "Only Placed",
-                    "Both"
-                ]
+                "type": 4,
+                "name": "widgetText",
+                "value": "Pests:"
             }
         ]
     },
@@ -860,13 +210,164 @@
         "category": "Kuudra",
         "settings": [
             {
-                "name": "kuudra",
-                "text": "Kuudra Settings",
-                "description": "Click here for the kuudra settings page",
-                "type": 2,
-                "defaultValue": 0,
-                "value": 0,
-                "placeHolder": 0
+                "type": 6,
+                "name": "kuudraHP",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "teamHighlight",
+                "value": false
+            },
+            {
+                "type": 5,
+                "name": "teammateColor",
+                "value": [
+                    255,
+                    255,
+                    255,
+                    255
+                ]
+            },
+            {
+                "type": 6,
+                "name": "unrenderPerks",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "supplyBeacons",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "supplyPiles",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "pearl",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "noSupply",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "customSupply",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "buildPiles",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "buildPercent",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "buildFresh",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "buildBuilders",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "progressWithPhase",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "fresh",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "kuudraHitbox",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "endstoneRange",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "partyDrain",
+                "value": false
+            },
+            {
+                "type": 6,
+                "name": "drainDisplay",
+                "value": false
+            }
+        ]
+    },
+    {
+        "category": "Crimson Isle",
+        "settings": [
+            {
+                "type": 6,
+                "name": "announceVanqs",
+                "value": true
+            },
+            {
+                "type": 6,
+                "name": "magma",
+                "value": true
+            }
+        ]
+    },
+    {
+        "category": "Mining",
+        "settings": [
+            {
+                "type": 6,
+                "name": "mineshaftWaypoints",
+                "value": true
+            }
+        ]
+    },
+    {
+        "category": "QOL",
+        "settings": [
+            {
+                "type": 6,
+                "name": "highlight",
+                "value": true
+            },
+            {
+                "type": 5,
+                "name": "highlightColor",
+                "value": [
+                    230,
+                    108,
+                    200,
+                    255
+                ]
+            },
+            {
+                "type": 6,
+                "name": "discord",
+                "value": true
+            }
+        ]
+    },
+    {
+        "category": "Utilities",
+        "settings": [
+            {
+                "type": 6,
+                "name": "damageTracker",
+                "value": false
             }
         ]
     }

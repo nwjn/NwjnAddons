@@ -1,17 +1,17 @@
-import settings from "../../config"
+import settings from "../../settings"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
 
-// let a = 0
-function widget(find, overlay) {
+function widget(find, overlay, tab) {
   overlay.setMessage("")
-  if (!settings[`${overlay.setting}`] || !settings.widget) return
-  let tab = TabList.getNames()
-  if (!tab) return;
+
+  if (!settings()[`${ overlay.setting }`] || !settings().widget) return
+
   const start = tab.findIndex(e => e.includes(find))
   tab = tab.slice(start)
-  const end = tab.findIndex((e, i) => ((!e.removeFormatting().startsWith(" ") && !e.match(/(ACTIVE|○|☘|Ends in)/g))|| e.removeFormatting().startsWith("               ")) && i)
+  const end = tab.findIndex((e, i) => (!e.removeFormatting().startsWith(" ") || e.removeFormatting().startsWith("               ")) && i)
   tab = tab.slice(0, end)
+
   overlay.setMessage(tab.join("\n"))
 }
 
@@ -52,14 +52,6 @@ const cropExample =
  Nether Wart 32: &a93.2%`;
 const cropOverlay = new Overlay("crop", ["Garden"], () => true, data.cropL, "moveCrop", cropExample);
 
-const pestExample =
-`&4&lPests:
- Alive: &42
- Infested Plots: &b11&f, &b20
- Spray: &7None
- Bonus: &c&lINACTIVE`;
-const pestOverlay = new Overlay("pest", ["Garden"], () => true, data.pestL, "movePest", pestExample);
-
 const visitorExample =
 `&b&lVisitors: &f(5)
  &aDuke &fNether Wart
@@ -70,21 +62,12 @@ const visitorExample =
  Next Visitor: &c&lQueue Full!`;
 const visitorOverlay = new Overlay("visitor", ["Garden"], () => true, data.visitorL, "moveVisitor", visitorExample);
 
-const contestExample =
-`&e&lJacob's Contest:
- Starts In: &e3m 36s
- &e○ &fNether Wart
- &6☘ &fPumpkin
- &e○ &fWheat`;
-const contestOverlay = new Overlay("contest", ["Garden"], () => true, data.contestL, "moveContest", contestExample);
-
 const commExample =
 `&9&lCommissions:
  &fSludge Slayer: &a88%
  &fJade Crystal Hunter: &c0%
  &fHard Stone Miner: &aDONE
  &fAmethyst Crystal Hunter: &c0%`;
- // TODO: ADD NEW MINING ISLAND TO SET
 const commOverlay = new Overlay("comm", ["Crystal Hollows", "Dwarven Mines", "Mineshaft"], () => true, data.commL, "moveComm", commExample);
 
 const powderExample =
@@ -93,14 +76,6 @@ const powderExample =
  Gemstone Powder: &d32,365,321`;
 const powderOverlay = new Overlay("powder", ["Crystal Hollows", "Dwarven Mines", "Mineshaft"], () => true, data.powderL, "movePowder", powderExample);
 
-const trophyExample =
-`&6&lTrophy Fish:
- &8●&7●&6●&b○ &aSlugfish &7(197)
- &8●&7●&6●&b○ &9Vanille &7(330)
- &8●&7●&6●&b○ &9Obfuscated 3 &7(197)
- &8●&7●&6●&b○ &5Karate Fish &7(69)
- &8●&7●&6●&b○ &5Soul Fish &7(164)`;
-const trophyOverlay = new Overlay("trophy", ["Crimson Isle"], () => true, data.trophyL, "moveTrophy", trophyExample);
 
 const corpseExample =
 `&b&lFrozen Corpses:
@@ -116,19 +91,18 @@ const customOverlay = new Overlay("custom", ["all"], () => true, data.customL, "
 
 register("step", () => {
   if (!World.isLoaded()) return;
+  const tab = TabList.getNames()
+  if (!tab) return;
   try {
-    widget("Stats:", statsOverlay);
-    widget("Pet:", petOverlay);
-    widget("Bestiary:", bestiaryOverlay);
-    widget("Crop Milestones:", cropOverlay);
-    widget("Pests:", pestOverlay);
-    widget("Visitors:", visitorOverlay);
-    widget("Jacob's Contest:", contestOverlay);
-    widget("Commissions:", commOverlay);
-    widget("Powders:", powderOverlay);
-    widget("Frozen Corpses:", corpseOverlay);
-    widget("Trophy Fish:", trophyOverlay);
+    widget("Stats:", statsOverlay, tab);
+    widget("Pet:", petOverlay, tab);
+    widget("Bestiary:", bestiaryOverlay, tab);
+    widget("Crop Milestones:", cropOverlay, tab);
+    widget("Visitors:", visitorOverlay, tab);
+    widget("Commissions:", commOverlay, tab);
+    widget("Powders:", powderOverlay, tab);
+    widget("Frozen Corpses:", corpseOverlay, tab);
 
-    widget(settings.widgetText, customOverlay);
+    widget(settings().widgetText, customOverlay, tab);
   } catch (err) {}
 }).setFps(2)

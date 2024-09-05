@@ -1,4 +1,4 @@
-import settings from "../../config"
+import settings from "../../settings"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
 import { registerWhen } from "../../utils/functions";
@@ -25,4 +25,4 @@ registerWhen(register("step", () => {
   text += `\n${ (!items["Flint Arrow"] ? "&c" : "&d") + items["Flint Arrow"] }&8x &rFlint Arrows`
   text += `\n${ (!items["Toxic Arrow Poison"] ? "&c" : "&d") + items["Toxic Arrow Poison"] }&8x &aToxic Arrow Poison`
   poisonOverlay.setMessage(text)
-}).setDelay(1), () => settings.poison)
+}).setDelay(1), () => settings().poison)

@@ -1,4 +1,4 @@
-import kuudraConfig from "../KuudraConfig";
+import settings from "../../../settings";
 import KuudraUtil from "../KuudraUtil"
 import { extractIGN } from "../../../utils/functions";
 
@@ -12,4 +12,4 @@ KuudraUtil.registerWhen(register("chat", (player) => {
   setTimeout(() =>
     KuudraUtil.freshers.delete(disectedName),
   10000);
-}).setCriteria("Party > ${player}: FRESH").setStart(), () => KuudraUtil.isPhase(2) && kuudraConfig.teamHighlight);
+}).setCriteria("Party > ${player}: FRESH").setStart(), () => KuudraUtil.isPhase(2) && settings.teamHighlight);

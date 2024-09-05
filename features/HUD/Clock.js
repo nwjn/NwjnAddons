@@ -1,4 +1,4 @@
-import settings from "../../config"
+import settings from "../../settings"
 import { data } from "../../utils/data";
 import { Overlay } from "../../utils/overlay";
 import { registerWhen } from "../../utils/functions";
@@ -8,4 +8,4 @@ const clockOverlay = new Overlay("clock", ["all"], () => true, data.clockL, "mov
 
 registerWhen(register("step", () => {
   clockOverlay.setMessage(`&d${ new Date().toLocaleTimeString() }`);
-}).setDelay(1), () => settings.clock);
+}).setDelay(1), () => settings().clock);

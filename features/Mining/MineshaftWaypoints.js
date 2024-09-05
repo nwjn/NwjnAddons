@@ -1,9 +1,9 @@
-import settings from "../../config"
+import settings from "../../settings"
 import { registerWhen, getDistance, onWorldLeave } from "../../utils/functions";
 import renderBeaconBeam from "BeaconBeam"
 import RenderLib from "RenderLib"
 import { PREFIX } from "../../utils/constants";
-import WorldUtil from "../../utils/world"
+import WorldUtil from "../../utils/WorldUtil"
 
 const data = JSON.parse(FileLib.read("NwjnAddons/features/Mining", "MineshaftWaypointsData.json"))
 let checkedCorpses = []
@@ -35,7 +35,7 @@ function findRoomType() {
 
 registerWhen(register("step", () => {
   if (!currentRoom) findRoomType()
-}).setDelay(1), () => WorldUtil.worldIs("Mineshaft") && settings.mineshaftWaypoints)
+}).setDelay(1), () => WorldUtil.isWorld("Mineshaft") && settings().mineshaftWaypoints)
 
 registerWhen(register("renderWorld", () => {
   if (!currentRoom) return;
@@ -48,7 +48,7 @@ registerWhen(register("renderWorld", () => {
     renderWaypoint("Guess", corpse, 0xff5555, [1, 0, 0]);
   }
   renderWaypoint("Exit", currentRoom.exit, 0x55ffff, [1, 0, 0])
-}), () => WorldUtil.worldIs("Mineshaft") && settings.mineshaftWaypoints);
+}), () => WorldUtil.isWorld("Mineshaft") && settings().mineshaftWaypoints);
 
 onWorldLeave(() => {
   currentRoom = undefined

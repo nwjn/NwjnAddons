@@ -3,35 +3,40 @@ export function fixLength(x) {
 }
 
 // Creidt: My father, Volcaronitee
-
-const Threading = Java.type("gg.essential.api.utils.Multithreading");
-export function delay(func, time) {
-  if (time) {
-    Threading.schedule(() => { func() }, time, java.util.concurrent.TimeUnit.MILLISECONDS);
-  } else {
-    Threading.runAsync(() => { func() });
-  }
-}
-
-let registers = [];
-export function registerWhen(trigger, dependency) {
-  registers.push([trigger.unregister(), dependency, false]);
-}
-
-export function setRegisters() {
-  registers.forEach(trigger => {
-    if (trigger[1]() && !trigger[2]) {
-      trigger[0].register();
-      trigger[2] = true;
-    } else if (!trigger[1]() && trigger[2]) {
-      trigger[0].unregister();
-      trigger[2] = false;
+  const Threading = Java.type("gg.essential.api.utils.Multithreading");
+  export function delay(func, time) {
+    if (time) {
+      Threading.schedule(() => { func() }, time, java.util.concurrent.TimeUnit.MILLISECONDS);
+    } else {
+      Threading.runAsync(() => { func() });
     }
-  });
-}
+  }
 
-export function getRGB1(setting) {
-  return [setting.getRed() / 255, setting.getGreen() / 255, setting.getBlue() / 255]
+  let registers = [];
+  export function registerWhen(trigger, dependency) {
+    registers.push([trigger.unregister(), dependency, false]);
+  }
+
+  export function setRegisters() {
+    let i = registers.length
+    while (i--) {
+      let trigger = registers[i]
+      if (trigger[1]() && !trigger[2]) {
+        trigger[0].register();
+        trigger[2] = true;
+      } else if (!trigger[1]() && trigger[2]) {
+        trigger[0].unregister();
+        trigger[2] = false;
+      }
+    }
+}
+//
+
+export function getOldRGB(setting) {
+    return [setting.getRed() / 255, setting.getGreen() / 255, setting.getBlue() / 255]
+}
+export function getRGB(setting) {
+  return setting.map(val => val / 255)
 }
 
 const SMA = Java.type('net.minecraft.entity.SharedMonsterAttributes');
@@ -63,21 +68,10 @@ export function clamp(number, min, max) {
   return Math.max(min, Math.min(number, max));
 }
 
-let worldJoin = []
 let worldLeave = []
-export function onWorldJoin(func) { worldJoin.push(func); }
-
 export function onWorldLeave(func) { worldLeave.push(func); }
 
 import { data } from "./data";
-
-register("worldLoad", () => {
-  let i = worldJoin.length;
-  while (i--) {
-    worldJoin[i]();
-  }
-  data.save()
-})
 
 register("worldUnload", () => {
   let i = worldLeave.length;
@@ -93,4 +87,8 @@ register("serverDisconnect", () => {
     worldLeave[i]()
   }
   data.save()
-})
+});
+
+export function makeModMessage(type, message) {
+  return (`§d§l[NwjnAddons-${type}]§r: ${message}`)
+}

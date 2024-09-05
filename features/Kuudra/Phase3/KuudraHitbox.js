@@ -1,14 +1,10 @@
-import kuudraConfig from "../KuudraConfig";
+import settings from "../../../settings";
 import RenderLib from "../../../../RenderLib"
 import KuudraUtil from "../KuudraUtil";
-import { EntityMagmaCube } from "../../../utils/constants";
-import { getMaxHP } from "../../../utils/functions";
 
 KuudraUtil.registerWhen(register("renderWorld", () => {
   // Kuudra's hp is 100k
-  const boss = World.getAllEntitiesOfType(EntityMagmaCube.class).find(e =>
-    getMaxHP(e) === 100_000
-  )
+  const boss = KuudraUtil.getKuudra()
   if (!boss) return;
 
   // hitbox
@@ -18,4 +14,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
     1, 1, 0, 0.5,
     false
   );
-}), () => KuudraUtil.isPhase(3) && kuudraConfig.kuudraHitbox);
+}), () => KuudraUtil.isPhase(3) && settings.kuudraHitbox);

@@ -1,4 +1,4 @@
-import settings from "../../config"
+import settings from "../../settings"
 import { registerWhen } from "../../utils/functions";
 import { EntityArmorStand } from "../../utils/constants";
 
@@ -8,14 +8,14 @@ registerWhen(register("tick", () => {
   
   let i = DMGS.length;
   while (i--) {
-    const dmg = DMGS[i]
+    let dmg = DMGS[i]
     ChatLib.chat(dmg.getName())
     dmgIds.push(dmg.getUUID())
   }
-}), () => settings.damageTracker)
+}), () => settings().damageTracker)
 
 import { onWorldLeave } from "../../utils/functions";
 onWorldLeave(() => {
-  if (!settings.damageTracker) return
+  if (!settings().damageTracker) return
   dmgIds = []
 });

@@ -1,8 +1,9 @@
-import kuudraConfig from "../KuudraConfig";
+import settings from "../../../settings"
 import renderBeaconBeam from "../../../../BeaconBeam"
 import KuudraUtil from "../KuudraUtil"
 
 KuudraUtil.registerWhen(register("renderWorld", () => {
+  // Array.forEach
   let i = KuudraUtil.buildPiles.length
   while (i--) {
     let stand = KuudraUtil.buildPiles[i]
@@ -14,4 +15,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
       100
     );
   }
-}), () => KuudraUtil.isPhase(2) && kuudraConfig.buildPiles)
+}), () => KuudraUtil.isPhase(2) && settings.buildPiles)

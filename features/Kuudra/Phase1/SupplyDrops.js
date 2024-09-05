@@ -1,18 +1,19 @@
-import kuudraConfig from "../KuudraConfig";
+import settings from "../../../settings";
 import renderBeaconBeam from "../../../../BeaconBeam"
 import { EntityArmorStand } from "../../../utils/constants";
 import KuudraUtil from "../KuudraUtil"
 
 // ! cancer
 KuudraUtil.registerWhen(register("step", () => {
-  const piles = World.getAllEntitiesOfType(EntityArmorStand.class).filter(e =>
-    e.getName().includes("SUPPLIES RECEIVED")
-  )
+  const piles = World.getAllEntitiesOfType(EntityArmorStand.class)
 
+  // Array.filter.forEach
   let i = piles.length
   while (i--) {
-    const pile = piles[i]
-    const [x, z] = [~~pile.getX(), ~~pile.getZ()]
+    let pile = piles[i]
+    if (!pile.getName().includes("SUPPLIES RECEIVED")) continue
+
+    let [x, z] = [~~pile.getX(), ~~pile.getZ()]
 
     if (x == -98 && z == -112) KuudraUtil.supplies[0] = false
     else if (x == -98 && z == -99) KuudraUtil.supplies[1] = false
@@ -21,7 +22,7 @@ KuudraUtil.registerWhen(register("step", () => {
     else if (x == -94 && z == -106) KuudraUtil.supplies[4] = false
     else if (x == -106 && z == -99) KuudraUtil.supplies[5] = false
   }
-}).setFps(2), () => KuudraUtil.isPhase(1) && kuudraConfig.supplyPiles);
+}).setFps(2), () => KuudraUtil.isPhase(1) && settings.supplyPiles);
 
 KuudraUtil.registerWhen(register("renderWorld", () => {
   const missing = KuudraUtil.missing
@@ -50,4 +51,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
     const color = missing == "Slash" ? [1, 0, 0] : [1, 1, 1]
     renderBeaconBeam(-106, 79, -99, ...color, 0.8, true, 100); // slash
   }
-}), () => KuudraUtil.isPhase(1) && kuudraConfig.supplyPiles)
+}), () => KuudraUtil.isPhase(1) && settings.supplyPiles)

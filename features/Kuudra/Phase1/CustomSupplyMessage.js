@@ -1,10 +1,19 @@
-import kuudraConfig from "../KuudraConfig";
+import settings from "../../../settings";
 import KuudraUtil from "../KuudraUtil";
 
 KuudraUtil.registerWhen(register("chat", (player, supply, event) => {
-  const score = Scoreboard.getLines().find(e => e.toString().includes("Time Elapsed"))
-  const time = score ? score.toString().removeFormatting().split(": ").slice(-1) : NaN
+  // Array.find
+  const scoreboard = Scoreboard.getLines()
+  let time;
+  let i = scoreboard.length
+  while (i--) {
+    let line = scoreboard[i].getName()
+    if (!line.includes("Time Elapsed")) continue
+
+    time = line.removeFormatting().split(": ").slice(-1)
+    break
+  }
 
   cancel(event);
   ChatLib.chat(`${ player }&a&lrecovered a supply at ${ time }!${supply}`)
-}).setCriteria("${player}&a&lrecovered one of Elle's supplies!${supply}"), () => KuudraUtil.isPhase(1) && kuudraConfig.customSupply)
+}).setCriteria("${player}&a&lrecovered one of Elle's supplies!${supply}"), () => KuudraUtil.isPhase(1) && settings.customSupply)

@@ -1,4 +1,6 @@
-import { onWorldLeave } from "../../utils/functions"
+import { onWorldLeave, getMaxHP } from "../../utils/functions"
+import RenderUtil from "../../utils/RenderUtil";
+import { EntityGiant, EntityArmorStand, EntityMagmaCube } from "../../utils/constants";
 
 class KuudraUtil {
   constructor() {
@@ -35,9 +37,9 @@ class KuudraUtil {
       this.reset();
     });
 
-    this.registerWhen(register("guiClosed", (event) => {
+    register("guiClosed", (event) => {
       if (event?.toString()?.includes("vigilance")) this.setRegisters()
-    }), () => this.inKuudra());
+    });
     
     // render stuff
     this.fontRenderer = Renderer.getFontRenderer()
@@ -48,10 +50,11 @@ class KuudraUtil {
    * Resets all variables
    */
   reset() {
-    this.supplies = [true, true, true, true, true, true]
     this.phase = false
+    this.supplies = [true, true, true, true, true, true]
+    this.pres = undefined;
     this.preSpot = ""
-    this.preLoc = [0, 0, 0]
+    this.preLoc = []
     this.missing = ""
     this.freshers = new Set()
     this.freshTime = 0
@@ -104,10 +107,57 @@ class KuudraUtil {
     });
   }
 
-  /**
-   * Same as Tesselator.drawString() but with depth check and slightly more customized
-   */
-  drawKuudraHP(text, x, y, z, w, h, color = 0x00ffffff, lScale = 0.2) {
+  getKuudra() {
+    // Array.find
+    const cubes = World.getAllEntitiesOfType(EntityMagmaCube.class)
+    let boss;
+    let i = cubes.length
+    while (i--) {
+      let cube = cubes[i]
+      // Kuudra's hp is 100k
+      if (getMaxHP(cube) !== 100_000) continue;
+      
+      boss = cube
+      break;
+    }
+    return boss
+  }
+
+  getSupplies() {
+    const giants = World.getAllEntitiesOfType(EntityGiant.class)
+    let supplies = []
+
+    // Array.filter.map
+    let i = giants.length
+    while (i--) {
+      let giant = giants[i]
+      if (giant.getEntity()?.func_70694_bm()?.toString() !== "1xitem.skull@3") continue;
+
+      let yaw = giant.getYaw()
+      supplies.push(
+        [
+          giant.getX() + (3.7 * Math.cos((yaw + 130) * (Math.PI / 180))),
+          72,
+          giant.getZ() + (3.7 * Math.sin((yaw + 130) * (Math.PI / 180)))
+        ]
+      )
+    }
+    return supplies
+  }
+
+  getBuild() {
+    const stands = World.getAllEntitiesOfType(EntityArmorStand.class)
+    let buildText = []
+    
+    let i = stands.length
+    while (i--) {
+      let stand = stands[i]
+      if (stand.getName()?.match(/progress/gi)) buildText.push(stand)
+    }
+    return buildText
+  }
+
+  drawKuudraHP(text, x, y, z, w, h) {
     const yaw = Player.getYaw()
     const wShift = w * 0.8
     const hShift = h / 2
@@ -116,31 +166,13 @@ class KuudraUtil {
     const yShift = y + hShift
     const zShift = z + (wShift * Math.sin((yaw - 90) * (Math.PI / 180)))
     
-    const renderPos = Tessellator.getRenderPos(xShift, yShift, zShift)
-
-    const xMultiplier = Client.getMinecraft().field_71474_y.field_74320_O == 2 ? -1 : 1
-
-    Tessellator.colorize(1, 1, 1, 0.5)
-    Tessellator.pushMatrix()
-
-    Tessellator.translate(renderPos.x, renderPos.y, renderPos.z)
-    Tessellator.rotate(-this.renderManager.field_78735_i, 0, 1, 0)
-    Tessellator.rotate(this.renderManager.field_78732_j * xMultiplier, 1, 0, 0)
-
-    Tessellator.scale(-lScale, -lScale, lScale)
-    Tessellator.disableLighting
-    Tessellator.depthMask(false)
-
-    Tessellator.enableBlend()
-    Tessellator.blendFunc(770, 771)
-
-    const textWidth = this.fontRenderer.func_78256_a(text)
-    this.fontRenderer.func_78276_b(text, -textWidth / 2, 0, color)
-
-    Tessellator.colorize(1, 1, 1, 1)
-    Tessellator.depthMask(true)
-    Tessellator.enableDepth()
-    Tessellator.popMatrix()
+    RenderUtil.drawString({
+      text,
+      x: xShift,
+      y: yShift,
+      z: zShift,
+      scale: 0.2
+    })
   }
 }
 

@@ -1,11 +1,10 @@
-import kuudraConfig from "../KuudraConfig";
+import settings from "../../../settings";
 import KuudraUtil from "../KuudraUtil";
 
 const unrenderThese = [
   "Steady Hands",
   "Bomberman",
   "Auto Revive",
-  "Human Cannonball",
   "Elle's Lava Rod",
   "Elle's Pickaxe"
 ];
@@ -17,4 +16,4 @@ KuudraUtil.registerWhen(register("renderSlot", (slot, _, event) => {
   const name = slot.getItem()?.getName()?.removeFormatting()
   
   if (name && regex.test(name)) cancel(event)
-}), () => KuudraUtil.inKuudra() && kuudraConfig.cancelUselessPerk);
+}), () => KuudraUtil.inKuudra() && settings().unrenderPerks);

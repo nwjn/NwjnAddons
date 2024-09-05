@@ -1,4 +1,4 @@
-import kuudraConfig from "../KuudraConfig";
+import settings from "../../../settings";
 import KuudraUtil from "../KuudraUtil"
 
 KuudraUtil.registerWhen(register("renderWorld", () => {
@@ -8,4 +8,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
     0xffffff, false, 0.5, false
   );
 
-}), () => KuudraUtil.isPhase(2) && kuudraConfig.buildPercent)
+}), () => KuudraUtil.isPhase(2) && settings.buildPercent)

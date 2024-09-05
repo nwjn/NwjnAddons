@@ -1,82 +1,74 @@
-import settings from "../../config"
+import settings from "../../settings"
 import RenderLib from "RenderLib"
 import { data } from "../../utils/data";
-import { registerWhen, getRGB1, getMaxHP } from "../../utils/functions";
+import { registerWhen, getRGB, getMaxHP } from "../../utils/functions";
 import { PREFIX } from "../../utils/constants";
+import { shortNum } from "../../utils/Enums";
 
+/**
+ * @see https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries
+ */
 export function setMobHighlight() {
-  data.mobsHighlight = {};
-  if (!settings.rawMobList) return;
-  /*
-     * Raw entry in form:
-     * `<Mob>(-\d[kKmMbB]?(|\d[kKmMbB]?)+)?`
-     *    ^   ^            ^ Delimiter between each health value
-     *    |   |- Delimiter between monster & health value(s)
-     *    |- A monster from net.minecraft.entity.monster or net.minecraft.entity.passive
-  */
-  const mobList = settings.rawMobList.split(", ")
-  let i = mobList.length
-  while (i--) {
-    const [entryMob, hpsRaw] = mobList[i].split("-")
+  data.mobsHighlight = [];
+  if (!settings().rawMobList) {
+    data.save()
+    return;
+  }
+
+  settings().rawMobList.split(", ").forEach(entry => {
+    const [mob, param] = entry.split("-")
 
     // Check if entry is valid
-    const mob = getClassOfEntity(entryMob)
-    if (!mob) return
+    if (!mob) return;
+    const clazz = Java.type(getClassOfEntity(mob)).class
 
-    const hps = hpsRaw ? 
-      hpsRaw?.split("|")?.map(hpRaw => {
-      
-      // replace character number symbols with actual numbers
-      let hp = parseFloat(hpRaw.match(/[\d\.]+/g))
+    const hps = param?.split("|")?.map(hp => {
+      hp = hp.toLowerCase().match(/([\d\.]+)([kmb])?/)
+      return (parseFloat(hp[1]) * shortNum[hp[2]])
+    })
 
-      if (hpRaw.match(/k/gi)) hp *= 1_000
-      if (hpRaw.match(/m/gi)) hp *= 1_000_000
-      if (hpRaw.match(/b/gi)) hp *= 1_000_000_000
-
-      return hp;
-    }) : false
-
-    // add and save to the list to highlight
-    data.mobsHighlight = {
-      ...data.mobsHighlight,
-      [mob]: hps
-    }
-  }
+    data.mobsHighlight.push([
+      clazz,
+      hps
+    ])
+  })
   data.save()
 }
 
-// types to test
-const MOB_TYPES = ["monster", "passive", "boss", "item"];
+// types to test @Volcaronitee
+const MOB_TYPES = ["monster", "passive", "boss"];
 function getClassOfEntity(entity, index = 0) {
   try {
-    const packageName = `net.minecraft.entity.${ MOB_TYPES[index] }.Entity${ entity }`
-    const mobClass = Java.type(packageName).class;
+    const path = `net.minecraft.entity.${ MOB_TYPES[index] }.Entity${ entity }`
+    const clazz = Java.type(path).class;
 
-    // recurses if mobClass.toString() throws error
-    const testClass = mobClass.toString()
-    // return with underscores so it can be called later
-    return packageName.replace(/\./g, "_");
+    // recurses if #toString() throws error
+    clazz.toString()
+
+    return path;
   } catch(err) {
     if (index < MOB_TYPES.length) return getClassOfEntity(entity, index + 1)
 
-    ChatLib.chat(`${PREFIX}: &cEntity called &e'${entity}' &cdoesn't exist.`)
+    ChatLib.chat(`${PREFIX}: &cEntity class called &e'${entity}'&r &cdoesn't exist. Make sure to use Mob Class Name not SkyBlock name. &3@see https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`)
     return false;
   }
 }
 
-registerWhen(register("renderWorld", () => {
-  const entries = Object.entries(data.mobsHighlight)
-  let i = entries.length
-  while (i--) {
-    const entityClass = entries[i][0].replace(/_/g, ".") //reformats the classname
-    const hps = entries[i][1]
+let renderThese = []
+registerWhen(register("step", () => {
+  renderThese = []
+  data.mobsHighlight.forEach(it => {
+    World.getAllEntitiesOfType(Java.type(it[0]).class).forEach(e => {
+      if (!e.isInvisible() && Player.asPlayerMP().canSeeEntity(e) && !e.isDead() && (!hps || hps.includes(getMaxHP(e)))) {
+        renderThese.push(e)
+      }
+    })
+  })
+}).setDelay(1), () => settings().rawMobList !== "")
 
-    // Filters out invisible, non LOS, dead, and non-includeded hps of entities
-    const entities = World.getAllEntitiesOfType(Java.type(entityClass).class).filter(e => !e.isInvisible() && Player.asPlayerMP().canSeeEntity(e) && !e.isDead() && (!hps || hps.includes(getMaxHP(e))))
-    let ii = entities.length
-    while (ii--) {
-      const entity = entities[ii];
-      RenderLib.drawEspBox(entity.getRenderX(), entity.getRenderY(), entity.getRenderZ(), entity.getWidth(), entity.getHeight(), ...getRGB1(settings.mobHighlightColor), 1, false)
-    }
-  }
-}), () => settings.rawMobList !== "" && data.mobsHighlight !== "");
+registerWhen(register("renderWorld", () => {
+  const color = getRGB(settings().mobHighlightColor)
+  renderThese.forEach(it => 
+    RenderLib.drawEspBox(it.getRenderX(), it.getRenderY(), it.getRenderZ(), it.getWidth(), it.getHeight(), ...color, false)
+  )
+}), () => settings().rawMobList !== "");
