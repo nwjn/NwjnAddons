@@ -1,15 +1,13 @@
-import settings from "../../../settings";
+import Settings from "../../../utils/Settings";
 import KuudraUtil from "../KuudraUtil"
-import { extractIGN } from "../../../utils/functions";
+import { getPlayerName } from "../../../utils/functions/player";
 
 KuudraUtil.registerWhen(register("chat", (player) => {
-  const disectedName = extractIGN(player)
+  const name = getPlayerName(player)
 
-  if (!disectedName || !KuudraUtil.freshers) return;
-
-  KuudraUtil.freshers.add(disectedName)
+  KuudraUtil.freshers.add(name)
 
   setTimeout(() =>
-    KuudraUtil.freshers.delete(disectedName),
+    KuudraUtil.freshers.delete(name),
   10000);
-}).setCriteria("Party > ${player}: FRESH").setStart(), () => KuudraUtil.isPhase(2) && settings.teamHighlight);
+}).setCriteria("Party > ${player}: FRESH").setStart(), () => KuudraUtil.isPhase(2) && Settings.teamHighlight);

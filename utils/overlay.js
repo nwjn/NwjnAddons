@@ -1,6 +1,6 @@
-import settings from "../settings"
-import WorldUtil from "./WorldUtil"
-import { registerWhen } from "./functions";
+import Settings from "./Settings.js"
+import Loc from "./Location.js"
+import { registerWhen } from "./functions.js";
 import { PREFIX } from "./constants";
 
 // Credit: My father, Volcaronitee
@@ -37,7 +37,7 @@ let worldView = false;
 const moving = register("renderOverlay", () => {
 
     overlays.forEach(overlay => {
-        if (!settings()[overlay.setting]) return;
+        if (!Settings()[overlay.setting]) return;
         // Draw example text and box
         const scale = overlay.loc[2];
         const x = overlay.loc[0];
@@ -107,13 +107,13 @@ const keying = register("guiKey", (_, keyCode) => {
         worldView = !worldView;
         if (worldView) {
             overlays = overlays.filter(overlay => {
-                if (!overlay.requires.has(WorldUtil.getWorld()) && !overlay.requires.has("all")) {
+                if (!overlay.requires.has(Loc.getWorld()) && !overlay.requires.has("all")) {
                     overlaid.push(overlay);
                     return false;
                 }
                 return true;
             });
-            Client.showTitle(`Changed to &e${ WorldUtil.getWorld()}&r view!`, PREFIX, 0, 30, 0);
+            Client.showTitle(`Changed to &e${ Loc.getWorld()}&r view!`, PREFIX, 0, 30, 0);
         } else {
             overlays.push(...overlaid);
             overlaid.length = 0;
@@ -227,7 +227,7 @@ export class Overlay {
                     );
                 renderScale(this.loc[2], this.message, this.X, this.Y);
             }
-        }), () => settings()[this.setting] && (this.requires.has(WorldUtil.getWorld()) || this.requires.has("all")));
+        }), () => Settings()[this.setting] && (this.requires.has(Loc.getWorld()) || this.requires.has("all")));
 
         // Register editing stuff
         this.dragging = register("dragged", (dx, dy, x, y) => {

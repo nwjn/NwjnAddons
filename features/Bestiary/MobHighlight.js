@@ -1,74 +1,69 @@
-import settings from "../../settings"
+import Settings from "../../utils/Settings.js"
 import RenderLib from "RenderLib"
-import { data } from "../../utils/data";
-import { registerWhen, getRGB, getMaxHP } from "../../utils/functions";
+import { registerWhen, getRGB, getMaxHP } from "../../utils/functions.js";
 import { PREFIX } from "../../utils/constants";
 import { shortNum } from "../../utils/Enums";
 
+let mobsHighlight = []
 /**
  * @see https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries
  */
 export function setMobHighlight() {
-  data.mobsHighlight = [];
-  if (!settings().rawMobList) {
-    data.save()
-    return;
-  }
+  mobsHighlight = []
+  if (!Settings().mobList) return
 
-  settings().rawMobList.split(", ").forEach(entry => {
-    const [mob, param] = entry.split("-")
+  Settings().mobList.split(/,\s?/g).forEach(entry => {
+    const [mob, hpParam] = entry.split("-")
 
     // Check if entry is valid
-    if (!mob) return;
-    const clazz = Java.type(getClassOfEntity(mob)).class
+    if (!mob) return
+    const clazz = getClassOfEntity(mob)
+    if (!clazz) return
 
-    const hps = param?.split("|")?.map(hp => {
+    const hps = hpParam?.split("|")?.map(hp => {
       hp = hp.toLowerCase().match(/([\d\.]+)([kmb])?/)
       return (parseFloat(hp[1]) * shortNum[hp[2]])
     })
 
-    data.mobsHighlight.push([
+    mobsHighlight.push([
       clazz,
       hps
     ])
   })
-  data.save()
 }
 
-// types to test @Volcaronitee
 const MOB_TYPES = ["monster", "passive", "boss"];
-function getClassOfEntity(entity, index = 0) {
+export function getClassOfEntity(name, index = 0) {
   try {
-    const path = `net.minecraft.entity.${ MOB_TYPES[index] }.Entity${ entity }`
-    const clazz = Java.type(path).class;
+    const clazz = Java.type(`net.minecraft.entity.${ MOB_TYPES[index] }.Entity${ name }`).class;
 
     // recurses if #toString() throws error
     clazz.toString()
 
-    return path;
+    return clazz;
   } catch(err) {
-    if (index < MOB_TYPES.length) return getClassOfEntity(entity, index + 1)
+    if (index < MOB_TYPES.length) return getClassOfEntity(name, index + 1)
 
-    ChatLib.chat(`${PREFIX}: &cEntity class called &e'${entity}'&r &cdoesn't exist. Make sure to use Mob Class Name not SkyBlock name. &3@see https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`)
-    return false;
+    ChatLib.chat(`${PREFIX}: &cEntity class called &e'${name}'&r &cdoesn't exist. Make sure to use Mob Class Name not SkyBlock name. &3@see https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`)
+    return null;
   }
 }
 
 let renderThese = []
 registerWhen(register("step", () => {
   renderThese = []
-  data.mobsHighlight.forEach(it => {
-    World.getAllEntitiesOfType(Java.type(it[0]).class).forEach(e => {
-      if (!e.isInvisible() && Player.asPlayerMP().canSeeEntity(e) && !e.isDead() && (!hps || hps.includes(getMaxHP(e)))) {
-        renderThese.push(e)
-      }
-    })
+  mobsHighlight.forEach(it => {
+    renderThese.push(
+      ...World.getAllEntitiesOfType(it[0]).filter(e => 
+      !e.isInvisible() && Player.asPlayerMP().canSeeEntity(e) && !e.isDead() && (!it[1] || it[1].includes(getMaxHP(e)))
+      )
+    )
   })
-}).setDelay(1), () => settings().rawMobList !== "")
+}).setDelay(1), () => Settings().mobList)
 
 registerWhen(register("renderWorld", () => {
-  const color = getRGB(settings().mobHighlightColor)
+  const color = getRGB(Settings().mobHighlightColor)
   renderThese.forEach(it => 
     RenderLib.drawEspBox(it.getRenderX(), it.getRenderY(), it.getRenderZ(), it.getWidth(), it.getHeight(), ...color, false)
   )
-}), () => settings().rawMobList !== "");
+}), () => Settings().mobList);

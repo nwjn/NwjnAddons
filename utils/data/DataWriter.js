@@ -1,18 +1,38 @@
-import PogObject from "PogData"
+// @PogData
+class DataWriter {
+  constructor(module, path, defaultObj = {}, errMsg = `&l${ module }-${ fileName } &cData reset.`) {
+    let data = {}
+    try {
+      data = JSON.parse(FileLib.read(module, path))
+    } catch (err) {
+      console.error(err)
+      ChatLib.chat(errMsg)
+    }
+    register("gameUnload", () => {
+      FileLib.write(
+        module,
+        path,
+        JSON.stringify(this, null, 4),
+        true
+      )
+    })
 
-export let data = new PogObject("NwjnAddons", {
-  "first_time": true,
-  "version": "0.11.6",
+    Object.assign(this, defaultObj, data)
+  }
+}
+
+import { PREFIX } from "../constants.js"
+export let data = new DataWriter("NwjnAddons", "/utils/data/User.json", {
+  "newUser": true,
+  "newMsg": "",
+
   "power": "Unknown",
   "tuning": "Unknown",
   "enrich": "Unknown",
   "mp": "Unknown",
-  "pet": "Unknown",
   "gummy": 0,
   "wisp": 0,
-  "mobsHighlight": [],
-  "standList": [],
-  "playerList": [],
+  
   "lastMini": [],
   "ftL": [80, 250, 1],
   "poisonL": [300, 300, 1],
@@ -32,17 +52,15 @@ export let data = new PogObject("NwjnAddons", {
   "corpseL": [15, 250, 1],
 
   "customL": [15, 250, 1]
-}, "data.json");
+}, `${PREFIX} &cReset user data due to error. Sorry for the inconvenience.`);
 
-
+// [Player Stat Data]
 register("chat", (power) => {
   data.power = power
-  data.save()
 }).setCriteria("You selected the ${power} power for your Accessory Bag!")
 
 register("chat", (num, enrich) => {
   data.enrich = `${ num } on ${ enrich }`
-  data.save()
 }).setCriteria("Swapped ${num} enrichments to ${enrich}!")
 
 register("guiMouseRelease", () => {
@@ -50,10 +68,10 @@ register("guiMouseRelease", () => {
   if (container?.getName() !== "Stats Tuning") return
 
   const itemLore = container.getStackInSlot(4)?.getLore()
-  let tunings = []
-  let mp;
-
-  let i = itemLore?.length ?? 0
+    
+  const tunings = itemLore?.forEach(l => {
+    l.removeFormatting().match();
+  })
   while (i--) {
     let line = itemLore[i].removeFormatting()
     if (line.startsWith("+")) {
@@ -68,28 +86,19 @@ register("guiMouseRelease", () => {
 
   data.tuning = tunings ? tunings.join(" ") : "Unknown"
   data.mp = mp ?? "Unknown"
-  data.save()
 });
 
-import { setRegisters } from "./functions";
-import { meinConf } from "../settings";
-import { setMobHighlight } from "../features/Bestiary/MobHighlight";
-import { setPlayerHighlight } from "../features/Bestiary/PlayerHighlight";
-import { setStandHighlight } from "../features/Bestiary/StandHighlight";
-import { delay } from "./functions";
-
-const setData = () => {
+import { setRegisters, delay } from "../functions.js";
+import { setMobHighlight } from "../../features/Bestiary/MobHighlight";
+import { setPlayerHighlight } from "../../features/Bestiary/PlayerHighlight";
+import { setStandHighlight } from "../../features/Bestiary/StandHighlight";
+import { meinConf } from "../Settings.js"
+// sets data when settings is closed and after init
+function setData() {
   setRegisters()
   setMobHighlight()
   setPlayerHighlight()
   setStandHighlight()
-
-  data.save()
 }
-
-meinConf.onCloseGui(setData)
-
-delay(setData, 3000);
-
-import { onWorldLeave } from "./functions";
-onWorldLeave(() => data.save())
+delay(() => setData(), 3000);
+meinConf.onCloseGui(() => setData())

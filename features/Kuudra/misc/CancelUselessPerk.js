@@ -1,4 +1,4 @@
-import settings from "../../../settings";
+import Settings from "../../../utils/Settings";
 import KuudraUtil from "../KuudraUtil";
 
 const unrenderThese = [
@@ -16,4 +16,4 @@ KuudraUtil.registerWhen(register("renderSlot", (slot, _, event) => {
   const name = slot.getItem()?.getName()?.removeFormatting()
   
   if (name && regex.test(name)) cancel(event)
-}), () => KuudraUtil.inKuudra() && settings().unrenderPerks);
+}), () => KuudraUtil.inKuudra() && Settings().unrenderPerks);

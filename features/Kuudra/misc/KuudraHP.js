@@ -1,6 +1,6 @@
-import settings from "../../../settings";
+import Settings from "../../../utils/Settings";
 import KuudraUtil from "../KuudraUtil";
-import { comma } from "../../../utils/constants";
+import { comma } from "../../../utils/functions/format";
 
 function calcString(hp) {
   const scaledHP = KuudraUtil.isPhase(4) ? hp * 3.5 : hp
@@ -30,4 +30,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
     // todo: change all these vals to constants
     boss.getWidth(), boss.getHeight()
   )
-}), () => KuudraUtil.isFight() && settings().kuudraHP);
+}), () => KuudraUtil.isFight() && Settings().kuudraHP);

@@ -1,6 +1,6 @@
-import settings from "../../../settings";
+import Settings from "../../../utils/Settings";
 import KuudraUtil from "../KuudraUtil";
-import { getDistance } from "../../../utils/functions";
+import { getDistance } from "../../../utils/functions.js";
 import { EntityGiant } from "../../../utils/constants";
 
 // ! cancer
@@ -21,7 +21,7 @@ KuudraUtil.registerWhen(register("chat", () => {
     KuudraUtil.preSpot = "Slash";
     KuudraUtil.preLoc = [-113.5, 77, -68.5]
   }
-}).setCriteria("[NPC] Elle: Head over to the main platform, I will join you when I get a bite!"), () => KuudraUtil.isPhase(1) && settings.noSupply)
+}).setCriteria("[NPC] Elle: Head over to the main platform, I will join you when I get a bite!"), () => KuudraUtil.isPhase(1) && Settings.noSupply)
 
 const shop = [-81, 76, -143]
 const xCannon = [-143, 76, -125]
@@ -70,8 +70,8 @@ KuudraUtil.registerWhen(register("chat", () => {
     }
     ChatLib.say(`/pc No ${ second }!`);
   }
-}).setCriteria("[NPC] Elle: Not again!"), () => KuudraUtil.isPhase(1) && settings.noSupply)
+}).setCriteria("[NPC] Elle: Not again!"), () => KuudraUtil.isPhase(1) && Settings.noSupply)
 
 KuudraUtil.registerWhen(register("chat", (supply) => {
   KuudraUtil.missing = supply
-}).setCriteria("Party > ${*}: No ${supply}!"), () => KuudraUtil.isPhase(1) && settings.noSupply)
+}).setCriteria("Party > ${*}: No ${supply}!"), () => KuudraUtil.isPhase(1) && Settings.noSupply)

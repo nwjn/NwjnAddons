@@ -1,9 +1,9 @@
 - §aAdded a new settings GUI
+- §aAdded more rend utils
 
 - §eChanged mana enchant calc to be more efficient
-- §eMoved features into categories that are closer to its purpose
-- §eReinstated some party commands
+- §eOrganized and refactored code
+- §eReinstated some party commands and features
 - §eFixed player highlight
-- §eTrying out some js classes
 
-- §cRemoved a lot of features that took up unncessary space
+- §cRemoved some features that took up unncessary space

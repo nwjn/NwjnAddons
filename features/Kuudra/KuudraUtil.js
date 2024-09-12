@@ -1,4 +1,4 @@
-import { onWorldLeave, getMaxHP } from "../../utils/functions"
+import { getMaxHP } from "../../utils/functions.js"
 import RenderUtil from "../../utils/RenderUtil";
 import { EntityGiant, EntityArmorStand, EntityMagmaCube } from "../../utils/constants";
 
@@ -33,7 +33,7 @@ class KuudraUtil {
       this.setRegisters();
     }).setCriteria("[NPC] Elle: POW! SURELY THAT'S IT! I don't think he has any more in him!")
 
-    onWorldLeave(() => {
+    register("worldUnload", () => {
       this.reset();
     });
 

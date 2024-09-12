@@ -1,7 +1,7 @@
-import settings from "../../settings"
-import { data } from "../../utils/data";
+import Settings from "../../utils/Settings"
+import { data } from "../../utils/data/DataWriter.js";
 import { Overlay } from "../../utils/overlay";
-import { registerWhen } from "../../utils/functions";
+import { registerWhen } from "../../utils/functions.js";
 
 const poisonExample =
 `&c0&8x &5Twilight Arrow Poison
@@ -25,4 +25,4 @@ registerWhen(register("step", () => {
   text += `\n${ (!items["Flint Arrow"] ? "&c" : "&d") + items["Flint Arrow"] }&8x &rFlint Arrows`
   text += `\n${ (!items["Toxic Arrow Poison"] ? "&c" : "&d") + items["Toxic Arrow Poison"] }&8x &aToxic Arrow Poison`
   poisonOverlay.setMessage(text)
-}).setDelay(1), () => settings().poison)
+}).setDelay(1), () => Settings().poison)

@@ -1,7 +1,7 @@
-import settings from "../settings"
-import WorldUtil from "../utils/WorldUtil"
-import { delay, registerWhen, getRGB } from "../utils/functions"
-import { data } from "../utils/data";
+import Settings from "../utils/Settings"
+import Loc from "../utils/Location.js"
+import { delay, registerWhen, getRGB } from "../utils/functions.js"
+import { data } from "../utils/data/DataWriter.js"
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
 import { EntityArmorStand, version } from "../utils/constants";
@@ -32,7 +32,7 @@ registerWhen(register("step", () => {
 
     return wp
   })
-}).setFps(2), () => settings().waypoint)
+}).setFps(2), () => Settings().waypoint)
 
 registerWhen(register("renderWorld", () => {
   let i = formatted.length
@@ -40,14 +40,14 @@ registerWhen(register("renderWorld", () => {
     let waypoint = formatted[i]
     let box = waypoint[0];
     let beam = waypoint[1];
-    let rgb = getRGB(settings().wpColor);
+    let rgb = getRGB(Settings().wpColor);
 
     RenderLib.drawEspBox(box[1], box[2], box[3], 1, 1, rgb[0], rgb[1], rgb[2], 1, true);
     RenderLib.drawInnerEspBox(box[1], box[2], box[3], 1, 1, rgb[0], rgb[1], rgb[2], 0.25, true);
     Tessellator.drawString(box[0], box[1], box[2] + 1.5, box[3], 0xffffff, true);
     renderBeaconBeam(beam[0], beam[1], beam[2], rgb[0], rgb[1], rgb[2], 0.5, false, 150);
   }
-}), () => settings().waypoint)
+}), () => Settings().waypoint)
 
 registerWhen(register("chat", (player, _, x, y, z) => {
   // Gets colors and titles in name
@@ -59,10 +59,10 @@ registerWhen(register("chat", (player, _, x, y, z) => {
   chatWaypoints.push([player, parseInt(x), parseInt(y), parseInt(z)]);
 
   // Delete waypoint after 'X' seconds
-  delay(() => { chatWaypoints.shift(); }, settings().wpTime * 1000);
+  delay(() => { chatWaypoints.shift(); }, Settings().wpTime * 1000);
   
   // &r&9Party &8> &6[MVP&8++&6] nwjn&f: &rx: -363, y: 63, z: -846 &r
-}).setCriteria("${player}:${spacing}x: ${x}, y: ${y}, z: ${z}&r"), () => settings().waypoint != 0);
+}).setCriteria("${player}:${spacing}x: ${x}, y: ${y}, z: ${z}&r"), () => Settings().waypoint != 0);
 
 registerWhen(register("chat", (player, command) => {
   player = player.removeFormatting().substring(player.indexOf(" ") + 1).replace(/[^A-Za-z0-9_]/g, "");
@@ -81,7 +81,7 @@ registerWhen(register("chat", (player, command) => {
       case "server":
       case "area":
       case "world":
-        ChatLib.command(`pc ${ WorldUtil.toString() }`); break;
+        ChatLib.command(`pc ${ Loc.toString() }`); break;
       case "pow":
       case "power":
         ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
@@ -108,14 +108,14 @@ registerWhen(register("chat", (player, command) => {
       case "allinv":
       case "invite":
       case "inv":
-        CommandMsg = `p settings allinvite`; break;
+        CommandMsg = `p Settings allinvite`; break;
       default: return;
     }
-    if (settings().leader && CommandMsg) {
+    if (Settings().leader && CommandMsg) {
       ChatLib.command(CommandMsg);
     }
   }, 300)
-}).setCriteria(/Party > (.+): [,.?!](.+)/), () => settings().party)
+}).setCriteria(/Party > (.+): [,.?!](.+)/), () => Settings().party)
 
 registerWhen(register("entityDeath", (entity) => {
   const mcEntity = entity.getEntity()
@@ -125,18 +125,18 @@ registerWhen(register("entityDeath", (entity) => {
     const stands = World.getWorld().func_72872_a(EntityArmorStand.class, mcEntity.func_174813_aQ().func_72314_b(3, 3, 3)).filter(e => e.toString().match(/§r §[^a]0§f\//g))
     stands.forEach(stand => stand.func_70106_y())
   })
-}), () => settings().dead)
+}), () => Settings().dead)
 
 let reaperUsed = 0
 registerWhen(register("soundPlay", () => {
   const armor = Player.armor.getChestplate()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
   if (armor == "REAPER_CHESTPLATE") reaperUsed = Date.now()
-}).setCriteria("mob.zombie.remedy"), () => settings().reaper);
+}).setCriteria("mob.zombie.remedy"), () => Settings().reaper);
 
 registerWhen(register("renderOverlay", () => {
   const reaperTime = 6 - (Date.now() - reaperUsed) / 1000
   if (reaperTime >= 0) Renderer.drawString(`${ reaperTime.toFixed(3) }`, Renderer.screen.getWidth() / 2 - 13, Renderer.screen.getHeight() / 2 + 10)
-}), () => settings().reaper);
+}), () => Settings().reaper);
 
 let lastBar = "";
   registerWhen(register("actionBar", (event) => {
@@ -145,4 +145,4 @@ let lastBar = "";
   if (lastBar == chat) return
   ChatLib.chat(chat)
   lastBar = chat
-}).setCriteria("+${*} SkyBlock XP").setContains(), () => settings().sbxp);
+}).setCriteria("+${*} SkyBlock XP").setContains(), () => Settings().sbxp);

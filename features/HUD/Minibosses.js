@@ -1,7 +1,7 @@
-import WorldUtil from "../../utils/WorldUtil"
-import { data } from "../../utils/data";
+import Loc from "../../utils/Location.js"
+import { data } from "../../utils/data/DataWriter.js";
 import { Overlay } from "../../utils/overlay";
-import { registerWhen } from "../../utils/functions";
+import { registerWhen } from "../../utils/functions.js";
 
 const miniExample = `&6Last Minibosses:\n`
 const miniOverlay = new Overlay("mini", ["Crimson Isle"], () => true, data.miniL, "moveMini", miniExample)
@@ -20,9 +20,8 @@ registerWhen(register("chat", (mini) => {
   data.lastMini.push(mini)
   
   if (data.lastMini.length > 4) data.lastMini.shift()
-  data.save()
   
   miniOverlay.setMessage(miniExample + data.lastMini.join("\n"))
-}).setCriteria("${mini} DOWN!"), () => WorldUtil.isWorld("Crimson Isle"));
+}).setCriteria("${mini} DOWN!"), () => Loc.isWorld("Crimson Isle"));
 
 miniOverlay.setMessage(miniExample + data.lastMini.join("\n"))

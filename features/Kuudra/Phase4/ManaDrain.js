@@ -1,8 +1,9 @@
-import { delay, clamp } from "../../../utils/functions";
+import { delay } from "../../../utils/functions.js";
 import { Overlay } from "../../../utils/overlay";
-import { data } from "../../../utils/data";
+import { data } from "../../../utils/data/DataWriter.js";
+import { clamp } from "../../../utils/functions/format.js";
 
-import settings from "../../../settings";
+import Settings from "../../../utils/Settings";
 import KuudraUtil from "../KuudraUtil";
 
 const drainExample =
@@ -50,4 +51,4 @@ KuudraUtil.registerWhen(register("chat", (num, names) => {
     totalDrain -= mana
     setManaBuff(totalDrain, fero, strong)
   }, 10000);
-}).setCriteria("Party > ${*}: Drained ${num} mana for: [${names}]"), () => KuudraUtil.isPhase(4) && settings().drainDisplay)
+}).setCriteria("Party > ${*}: Drained ${num} mana for: [${names}]"), () => KuudraUtil.isPhase(4) && Settings().drainDisplay)

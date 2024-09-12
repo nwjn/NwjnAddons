@@ -1,4 +1,4 @@
-import { meinConf } from "./settings"
+import { meinConf } from "./utils/Settings.js"
 
 import "./features/CrimsonIsle(Move)"
 import "./features/General(Move)"
@@ -58,11 +58,13 @@ import "./features/Mining/MineshaftWaypoints"
 import "./features/Utilities/DamageTracker"
 import "./features/Utilities/Commands"
 
-import { version, PREFIX } from "./utils/constants";
-import "./utils/data"
-import { data } from "./utils/data";
+import { PREFIX } from "./utils/constants";
+import "./utils/data/DataWriter.js"
+import { data } from "./utils/data/DataWriter.js"
 import { openGUI } from "./utils/overlay"
-import WorldUtil from "./utils/WorldUtil"
+import Loc from "./utils/Location"
+import "./utils/functions.js"
+import "./utils/Broadcasting.js"
 
 register("command", (...args) => {
   switch (args[0]?.toLowerCase()) {
@@ -83,7 +85,7 @@ register("command", (...args) => {
       ChatLib.chat(`${ PREFIX } &eCommand List:&r\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/calc <equation> => calculates\n/deal => trades player in front of you without needing to type name`);
       break;
     case "reload":
-      WorldUtil.resetWorld();
+      Loc.resetWorld();
       ChatLib.chat(`${ PREFIX } &aReloading all triggers...`);
       break;
     default:
@@ -91,32 +93,12 @@ register("command", (...args) => {
   }
 }).setCommandName(`nwjn`, true).setAliases("nwjnaddons").setTabCompletions("changes", "party", "help", "gui")
 
-if (data.first_time) {
-  data.first_time = false; 
-  data.save();
+if (data.newUser) {
+  data.newUser = false;
 
-  ChatLib.chat("");
   ChatLib.chat(`&r&d--------------&r${ PREFIX }&r&d--------------`)
   ChatLib.chat(`&aUse '/nwjn' For settings!`)
   ChatLib.chat(`&aUse '/nwjn commands' For commands!`);
-  new TextComponent(`&aClick &3here&a for discord link!`)
-    .setClickAction("run_command")
-    .setClickValue(`/ct copy https://discord.gg/3S3wXpC4gE`)
-    .chat()
+  ChatLib.chat(`&aFor help, join: https://discord.gg/3S3wXpC4gE`)
   ChatLib.chat("");
 }
-
-register("chat", (pet) => {
-  data.pet = pet
-  data.save()
-}).setCriteria("&cAutopet &eequipped your &7[${*}] ${pet}&e! &a&lVIEW RULE&r");
-
-register("chat", (pet) => {
-  data.pet = pet
-  data.save()
-}).setCriteria("&r&aYou summoned your &r${pet}&r&a!&r");
-
-register("chat", () => {
-  data.pet = "None"
-  data.save()
-}).setCriteria("You despawned your ${*}!");

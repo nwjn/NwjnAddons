@@ -1,6 +1,6 @@
-import Settings from "../Amaterasu/core/Settings"
-import DefaultConfig from "../Amaterasu/core/DefaultConfig"
-const conf = new DefaultConfig("NwjnAddons", "configData/settings.json")
+import Settings from "../../Amaterasu/core/Settings"
+import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
+const conf = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
 
 conf
 .addSwitch({
@@ -70,7 +70,7 @@ conf
 })
 .addTextInput({
     category: "Bestiary",
-    configName: "rawMobList",
+    configName: "mobList",
     title: "Mob Highlight",
     description: "Draws hitboxes around inputted mob entity\n&3@see &cnet.minecraft.entity.(monster|passive|boss)&r\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
     value: "",
@@ -86,7 +86,7 @@ conf
 })
 .addTextInput({
     category: "Bestiary",
-    configName: "stand",
+    configName: "standList",
     title: "Armor Stand Names Highlight",
     description: "Draws hitboxes around armor stands that include the inputted name, seperate with '|' character",
     value: "",
@@ -102,7 +102,7 @@ conf
 })
 .addTextInput({
     category: "Bestiary",
-    configName: "player",
+    configName: "playerList",
     title: "Player Highlight",
     description: "Draws hitboxes around players that include the inputted name, seperate with '|' character\nInput `Player` to show all real players",
     value: "",
@@ -443,7 +443,7 @@ conf
     category: "QOL",
     configName: "discord",
     title: "Remove Discord Warnings",
-    description: "Removes:\n&cPlease be mindful of Discord links in chat as they may pose a security risk",
+    description: "Removes:\n'&cPlease be mindful of Discord links in chat as they may pose a security risk&r'",
     subcategory: ""
 })
 .addSwitch({
@@ -454,11 +454,11 @@ conf
     subcategory: ""
 })
 
-import { PREFIX, version } from "./utils/constants"
+import { PREFIX, version } from "./constants"
 
 const changelog = `# §b${version}§r\n` + FileLib.read("NwjnAddons", "changelog.md")
 
-export const meinConf = new Settings("NwjnAddons", conf, "configData/scheme.json", `${PREFIX}: by §6nwjn`)
+export const meinConf = new Settings("NwjnAddons", conf, "utils/data/Scheme.json", `${PREFIX}: by §6nwjn`)
     .addMarkdown("Changelog", changelog)
 
     .setPos(15, 15)

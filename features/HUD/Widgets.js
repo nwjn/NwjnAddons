@@ -1,11 +1,11 @@
-import settings from "../../settings"
-import { data } from "../../utils/data";
+import Settings from "../../utils/Settings"
+import { data } from "../../utils/data/DataWriter.js";
 import { Overlay } from "../../utils/overlay";
 
 function widget(find, overlay, tab) {
   overlay.setMessage("")
 
-  if (!settings()[`${ overlay.setting }`] || !settings().widget) return
+  if (!Settings()[`${ overlay.setting }`] || !Settings().widget) return
 
   const start = tab.findIndex(e => e.includes(find))
   tab = tab.slice(start)
@@ -103,6 +103,6 @@ register("step", () => {
     widget("Powders:", powderOverlay, tab);
     widget("Frozen Corpses:", corpseOverlay, tab);
 
-    widget(settings().widgetText, customOverlay, tab);
+    widget(Settings().widgetText, customOverlay, tab);
   } catch (err) {}
 }).setFps(2)

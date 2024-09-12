@@ -1,5 +1,5 @@
-import settings from "../../settings"
-import { registerWhen } from "../../utils/functions";
+import Settings from "../../utils/Settings.js"
+import { registerWhen } from "../../utils/functions.js";
 import { EntityArmorStand } from "../../utils/constants";
 
 let dmgIds = []
@@ -12,10 +12,9 @@ registerWhen(register("tick", () => {
     ChatLib.chat(dmg.getName())
     dmgIds.push(dmg.getUUID())
   }
-}), () => settings().damageTracker)
+}), () => Settings().damageTracker)
 
-import { onWorldLeave } from "../../utils/functions";
-onWorldLeave(() => {
-  if (!settings().damageTracker) return
+register("worldUnload", () => {
+  if (!Settings().damageTracker) return
   dmgIds = []
 });

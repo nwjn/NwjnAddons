@@ -1,9 +1,9 @@
-import settings from "../../../settings";
+import Settings from "../../../utils/Settings";
 import RenderLib from "../../../../RenderLib"
 import KuudraUtil from "../KuudraUtil";
 import RenderUtil from "../../../utils/RenderUtil";
 import PlayerUtil from "../../../utils/PlayerUtil";
-import { getRGB } from "../../../utils/functions";
+import { getRGB } from "../../../utils/functions.js";
 
 let teammates = new Set()
 KuudraUtil.registerWhen(register("step", () => {
@@ -12,12 +12,12 @@ KuudraUtil.registerWhen(register("step", () => {
     if (!PlayerUtil.realPlayer(player)) return
 
     const [ign, x, y, z] = [player.getName(), player.getRenderX(), player.getRenderY(), player.getRenderZ()]
-    const [r, g, b, a, hex] = KuudraUtil.freshers.has(ign) ? [0, 1, 0, 1, 0x00ff00] : [...getRGB(settings().teammateColor), 0x00ffff]
+    const [r, g, b, a, hex] = KuudraUtil.freshers.has(ign) ? [0, 1, 0, 1, 0x00ff00] : [...getRGB(Settings().teammateColor), 0x00ffff]
 
     if (!KuudraUtil.freshers.has(ign) && ign === PlayerUtil.myIGN) return
     teammates.add([ign, x, y, z, r, g, b, a, hex])
   });
-}).setFps(2), () => KuudraUtil.inKuudra() && settings().teamHighlight);
+}).setFps(2), () => KuudraUtil.inKuudra() && Settings().teamHighlight);
 
 KuudraUtil.registerWhen(register("renderWorld", () => {
   // * lf admins to add players to "team" for kuudra so this can be true esp
@@ -35,4 +35,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
       increase: true
     })
   })
-}), () => KuudraUtil.inKuudra() && settings().teamHighlight);
+}), () => KuudraUtil.inKuudra() && Settings().teamHighlight);

@@ -1,5 +1,6 @@
-import { comma, PREFIX, version } from "../../utils/constants";
-import { getNowHP, getMaxHP } from "../../utils/functions"
+import { PREFIX, version } from "../../utils/constants";
+import { getNowHP, getMaxHP } from "../../utils/functions.js"
+import { comma } from "../../utils/functions/format.js";
 
 register("command", () => {
   ChatLib.clearChat()
@@ -51,7 +52,6 @@ register("command", () => {
 
 import { version } from "../../utils/constants";
 register("command", (arg) => {
-  if (arg === "ver") {
     ChatLib.chat(ChatLib.getChatBreak("-"))
     ChatLib.chat(`${ PREFIX } &bYou are currently on version &e${ version }`);
     ChatLib.chat(`Libraries:`)
@@ -60,5 +60,4 @@ register("command", (arg) => {
       ChatLib.chat(`  &b${lib}&r: &e${JSON.parse(FileLib.read(lib, "metadata.json")).version}`)
     })
     ChatLib.chat(ChatLib.getChatBreak("-"))
-  }
 }).setName("debug")

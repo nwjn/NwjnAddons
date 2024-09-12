@@ -1,8 +1,9 @@
-import settings from "../../settings"
-import { data } from "../../utils/data";
+import Settings from "../../utils/Settings"
+import { data } from "../../utils/data/DataWriter.js";
 import { Overlay } from "../../utils/overlay";
-import { registerWhen, clamp } from "../../utils/functions";
-import WorldUtil from "../../utils/WorldUtil"
+import { registerWhen } from "../../utils/functions.js";
+import { clamp } from "../../utils/functions/format.js";
+import Loc from "../../utils/Location.js"
 
 const ftExample = `Fatal Tempo:&c   0% | 0.00s`;
 const ftOverlay = new Overlay("fatalTempo", ["all"], () => true, data.ftL, "moveFt", ftExample);
@@ -23,37 +24,37 @@ const addHits = () => {
   hits++
 }
 
-registerWhen(register("soundPlay", addHits).setCriteria("tile.piston.out"), () => settings().fatalTempo && WorldUtil.isWorld("Kuudra"));
-registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => settings().fatalTempo && !WorldUtil.isWorld("Kuudra"));
+registerWhen(register("soundPlay", addHits).setCriteria("tile.piston.out"), () => Settings().fatalTempo && Loc.isWorld("Kuudra"));
+registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => Settings().fatalTempo && !Loc.isWorld("Kuudra"));
 
 const calcString = (countdown = 0, percent = 0) => {
   countdown = clamp(countdown, 0, 3)
   percent = clamp(percent, 0, 200)
-  let displayText = settings().ftPrefix ? `Fatal Tempo: ` : ""
+  let displayText = Settings().ftPrefix ? `Fatal Tempo: ` : ""
 
-  displayText += settings().ftPercent ? 
+  displayText += Settings().ftPercent ? 
     ((percent === 200) ? "&a" :
     (percent > 0) ? "&e" :
     "&c")
   : ""
 
   const percentString = percent >= 100 ? percent : `  ${percent}`
-  displayText += settings().ftPercent ? `${percentString}%` : ""
+  displayText += Settings().ftPercent ? `${percentString}%` : ""
 
-  displayText += (settings().ftPercent && settings().ftTime) ? " &r| " : ""
+  displayText += (Settings().ftPercent && Settings().ftTime) ? " &r| " : ""
 
-  displayText += settings().ftTime ?
+  displayText += Settings().ftTime ?
     ((countdown > 1.25) ? "&a" :
     (countdown > 0) ? "&e" :
     "&c")
   : ""
 
-  displayText += settings().ftTime ? `${ countdown.toFixed(2) }s` : ""
+  displayText += Settings().ftTime ? `${ countdown.toFixed(2) }s` : ""
 
   return (
-    (settings().fatalTempo === 1) ||
-    (settings().fatalTempo === 2 && percent > 0) ||
-    (settings().fatalTempo === 3 && percent === 200)
+    (Settings().fatalTempo === 1) ||
+    (Settings().fatalTempo === 2 && percent > 0) ||
+    (Settings().fatalTempo === 3 && percent === 200)
   )
   ? displayText : "";
 }
@@ -68,8 +69,8 @@ registerWhen(register("tick", () => {
   }
 
   ftOverlay.setMessage(calcString(countdown, percent))
-}), () => settings().fatalTempo !== 0);
+}), () => Settings().fatalTempo !== 0);
 
 ftOverlay.setMessage(
-  settings().fatalTempo == 1 ? ftExample : ""
+  Settings().fatalTempo == 1 ? ftExample : ""
 )

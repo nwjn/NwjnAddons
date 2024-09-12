@@ -1,4 +1,4 @@
-import settings from "../../../settings"
+import Settings from "../../../utils/Settings"
 import renderBeaconBeam from "../../../../BeaconBeam"
 import KuudraUtil from "../KuudraUtil"
 
@@ -15,4 +15,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
       100
     );
   }
-}), () => KuudraUtil.isPhase(2) && settings.buildPiles)
+}), () => KuudraUtil.isPhase(2) && Settings.buildPiles)

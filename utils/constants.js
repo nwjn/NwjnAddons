@@ -1,12 +1,3 @@
-export const comma = (num) => {
-  num = num.toString()
-  if (num.includes(".")) {
-    num = num.split(".")
-    return `${comma(num[0])}.${num[1]}`
-  }
-  return num.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-}
-
 export const version = (JSON.parse(FileLib.read("NwjnAddons", "metadata.json"))).version
 
 export const PREFIX = "§r§d§l[NwjnAddons]§r"
