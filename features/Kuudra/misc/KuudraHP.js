@@ -1,6 +1,7 @@
 import Settings from "../../../utils/Settings";
 import KuudraUtil from "../KuudraUtil";
 import { comma } from "../../../utils/functions/format";
+import { tessellateStringWithDepth } from "../../../utils/functions/hotfixes";
 
 function calcString(hp) {
   const scaledHP = KuudraUtil.isPhase(4) ? hp * 3.5 : hp
@@ -19,6 +20,24 @@ function calcString(hp) {
   return `${ color }${ displayHP }`
 }
 
+function drawKuudraHP(text, x, y, z, w, h) {
+  const yaw = Player.getYaw()
+  const wShift = w * 0.8
+  const hShift = h / 2
+
+  const xShift = x + (wShift * Math.cos((yaw - 90) * (Math.PI / 180)))
+  const yShift = y + hShift
+  const zShift = z + (wShift * Math.sin((yaw - 90) * (Math.PI / 180)))
+  
+  tessellateStringWithDepth(
+    text,
+    xShift,
+    yShift,
+    zShift,
+    0.2
+  );
+}
+  
 KuudraUtil.registerWhen(register("renderWorld", () => {
   const boss = KuudraUtil.getKuudra()
   if (!boss) return;

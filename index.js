@@ -60,11 +60,12 @@ import "./features/Utilities/Commands"
 
 import { PREFIX } from "./utils/constants";
 import "./utils/data/DataWriter.js"
-import { data } from "./utils/data/DataWriter.js"
 import { openGUI } from "./utils/overlay"
 import Loc from "./utils/Location"
 import "./utils/functions.js"
 import "./utils/Broadcasting.js"
+import "./features/Utilities/Dev.js"
+import "./utils/functions/hotfixes.js"
 
 register("command", (...args) => {
   switch (args[0]?.toLowerCase()) {
@@ -73,10 +74,6 @@ register("command", (...args) => {
       break
     case "gui":
       openGUI();
-      break;
-    case "changes":
-    case "changelog":
-      ChatLib.chat(`${ PREFIX } &eChangelog:\n&r${ changes }`);
       break;
     case "party":
       ChatLib.chat(`${ PREFIX } &eParty Command List:\n&r.time => shows the players current time\n.coords => sends the coords of the player\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.t5 => puts party into infernal kuudra\n.dropper => puts party into dropper game`);
@@ -89,16 +86,6 @@ register("command", (...args) => {
       ChatLib.chat(`${ PREFIX } &aReloading all triggers...`);
       break;
     default:
-      ChatLib.chat(`${PREFIX} &r\n/nwjn => opens settings\n/nwjn gui => opens gui mover\n/nwjn version => gets the current nwjnaddons version\n/nwjn changes => see the latest changes\n/nwjn party => see all party commands\n/nwjn commands => see all commands\n/nwjn reload => reloads all registers in case they aren't working`)
+      ChatLib.chat(`${PREFIX} &r\n/nwjn => opens settings\n/nwjn gui => opens gui editor\n/nwjn party => see all party commands\n/nwjn commands => see all commands\n/nwjn reload => reloads all registers in case they aren't working`)
   }
-}).setCommandName(`nwjn`, true).setAliases("nwjnaddons").setTabCompletions("changes", "party", "help", "gui")
-
-if (data.newUser) {
-  data.newUser = false;
-
-  ChatLib.chat(`&r&d--------------&r${ PREFIX }&r&d--------------`)
-  ChatLib.chat(`&aUse '/nwjn' For settings!`)
-  ChatLib.chat(`&aUse '/nwjn commands' For commands!`);
-  ChatLib.chat(`&aFor help, join: https://discord.gg/3S3wXpC4gE`)
-  ChatLib.chat("");
-}
+}).setCommandName(`nwjn`, true).setAliases("nwjnaddons").setTabCompletions("party", "help", "gui")

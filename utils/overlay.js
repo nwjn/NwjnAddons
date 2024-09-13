@@ -107,13 +107,13 @@ const keying = register("guiKey", (_, keyCode) => {
         worldView = !worldView;
         if (worldView) {
             overlays = overlays.filter(overlay => {
-                if (!overlay.requires.has(Loc.getWorld()) && !overlay.requires.has("all")) {
+                if (!overlay.requires.has(Loc.World) && !overlay.requires.has("all")) {
                     overlaid.push(overlay);
                     return false;
                 }
                 return true;
             });
-            Client.showTitle(`Changed to &e${ Loc.getWorld()}&r view!`, PREFIX, 0, 30, 0);
+            Client.showTitle(`Changed to &e${ Loc.World}&r view!`, PREFIX, 0, 30, 0);
         } else {
             overlays.push(...overlaid);
             overlaid.length = 0;
@@ -227,7 +227,7 @@ export class Overlay {
                     );
                 renderScale(this.loc[2], this.message, this.X, this.Y);
             }
-        }), () => Settings()[this.setting] && (this.requires.has(Loc.getWorld()) || this.requires.has("all")));
+        }), () => Settings()[this.setting] && (this.requires.has(Loc.World) || this.requires.has("all")));
 
         // Register editing stuff
         this.dragging = register("dragged", (dx, dy, x, y) => {

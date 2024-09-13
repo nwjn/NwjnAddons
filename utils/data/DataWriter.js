@@ -69,23 +69,16 @@ register("guiMouseRelease", () => {
 
   const itemLore = container.getStackInSlot(4)?.getLore()
     
-  const tunings = itemLore?.forEach(l => {
-    l.removeFormatting().match();
-  })
-  while (i--) {
-    let line = itemLore[i].removeFormatting()
-    if (line.startsWith("+")) {
-      tunings.push(
-        line.substring(1, line.indexOf(" "))
-      )
-    }
-    else if (line.startsWith("Magical Power: ")) {
-      mp = line.split(": ").slice(-1).toString()
-    }
-  }
+  const tunings = itemLore?.reduce((acum, val) => {
+    acum + (val.removeFormatting().match(/\+ (.+)/)?.[2] ?? "")
+  }, "")
 
-  data.tuning = tunings ? tunings.join(" ") : "Unknown"
-  data.mp = mp ?? "Unknown"
+  const mp = itemLore?.reduce((acum, val) => {
+    acum || val.removeFormatting().match(/Magical Power: (.+)/)?.[2]
+  }, "")
+
+  data.tuning = tunings || "Unknown"
+  data.mp = mp || "Unknown"
 });
 
 import { setRegisters, delay } from "../functions.js";

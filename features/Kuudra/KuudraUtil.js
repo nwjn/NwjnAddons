@@ -1,5 +1,4 @@
 import { getMaxHP } from "../../utils/functions.js"
-import RenderUtil from "../../utils/RenderUtil";
 import { EntityGiant, EntityArmorStand, EntityMagmaCube } from "../../utils/constants";
 
 class KuudraUtil {
@@ -155,24 +154,6 @@ class KuudraUtil {
       if (stand.getName()?.match(/progress/gi)) buildText.push(stand)
     }
     return buildText
-  }
-
-  drawKuudraHP(text, x, y, z, w, h) {
-    const yaw = Player.getYaw()
-    const wShift = w * 0.8
-    const hShift = h / 2
-
-    const xShift = x + (wShift * Math.cos((yaw - 90) * (Math.PI / 180)))
-    const yShift = y + hShift
-    const zShift = z + (wShift * Math.sin((yaw - 90) * (Math.PI / 180)))
-    
-    RenderUtil.drawString({
-      text,
-      x: xShift,
-      y: yShift,
-      z: zShift,
-      scale: 0.2
-    })
   }
 }
 
