@@ -84,7 +84,7 @@ registerWhen(register("chat", (player, command) => {
         ChatLib.command(`pc ${ Loc.toString() }`); break;
       case "pow":
       case "power":
-        ChatLib.command(`pc Stone: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
+        ChatLib.command(`pc Power: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
       case "pet":
         ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
       case "build":

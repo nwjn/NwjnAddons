@@ -15,6 +15,7 @@ const welcome = register("gameLoad", () => {
 
 // [Broadcast Message]
 const messenger = register("worldLoad", () => {
+  messenger.unregister()
   axios.get("https://chattriggers.com/api/modules/NwjnAddons").then(res => {
     const desc = res.data.description
     const msg = desc.substring(
@@ -23,8 +24,8 @@ const messenger = register("worldLoad", () => {
     )
 
     if (msg !== "Nothing" && msg !== data.newMsg) {
+      data.newMsg = msg
       ChatLib.chat(`${ PREFIX } &dFrom: &6nwjn: &7${ msg }`)
-      messenger.unregister()
     }
   })
 })

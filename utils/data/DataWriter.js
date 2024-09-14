@@ -59,26 +59,32 @@ register("chat", (power) => {
   data.power = power
 }).setCriteria("You selected the ${power} power for your Accessory Bag!")
 
-register("chat", (num, enrich) => {
-  data.enrich = `${ num } on ${ enrich }`
-}).setCriteria("Swapped ${num} enrichments to ${enrich}!")
+register("chat", (num, stat) => {
+  data.enrich = `${ num } ${ stat }`
+}).setCriteria("Swapped ${num} enrichments to ${stat}!")
 
 register("guiMouseRelease", () => {
   const container = Player.getContainer()
   if (container?.getName() !== "Stats Tuning") return
 
-  const itemLore = container.getStackInSlot(4)?.getLore()
-    
-  const tunings = itemLore?.reduce((acum, val) => {
-    acum + (val.removeFormatting().match(/\+ (.+)/)?.[2] ?? "")
-  }, "")
-
-  const mp = itemLore?.reduce((acum, val) => {
-    acum || val.removeFormatting().match(/Magical Power: (.+)/)?.[2]
-  }, "")
-
-  data.tuning = tunings || "Unknown"
-  data.mp = mp || "Unknown"
+  Client.scheduleTask(1, () => {
+    const itemLore = container.getStackInSlot(4)?.getLore()
+      
+    const tunings = itemLore?.reduce(
+      (acum, val) => 
+        acum + (val.removeFormatting().match(/^\+(\d+.)/)?.[1] ?? ""),
+      "",
+    )
+  
+    const mp = itemLore?.reduce(
+      (acum, val) => 
+        acum || val.removeFormatting().match(/^Magical Power: (.+)$/)?.[1],
+      "",
+    )
+  
+    data.tuning = tunings || "Unknown"
+    data.mp = mp || "Unknown"
+  })
 });
 
 import { setRegisters, delay } from "../functions.js";

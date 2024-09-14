@@ -4,7 +4,7 @@ import { delay, setRegisters } from "./functions.js";
 class Loc {
   #world;
   #zone;
-  #instance
+  #instance;
 
   constructor() {
     register("step", () => this._findZone()).setDelay(3)
@@ -16,12 +16,13 @@ class Loc {
   _reset() {
     this.#zone = undefined
     this.#world = undefined
+    this.#instance = undefined
   }
   
   _findWorld(recurse = 10) {
     if (!recurse) return;
 
-    const tab = TabList?.getNames()?.find(tab => tab.match(/^§r§b§l[AreaDungeon]:/))
+    const tab = TabList?.getNames()?.find(tab => tab.match(/^§r§b§l(Area|Dungeon):/))
     this.#world = tab?.removeFormatting()?.match(/: (.+)$/)?.[1]
 
     if (this.#world) return delay(() => setRegisters(), 500)
@@ -32,7 +33,7 @@ class Loc {
     const line = Scoreboard?.getLines()?.find(line => line.getName().match(/^ §[57][⏣ф]/))
     this.#zone = line?.getName()?.removeFormatting()?.match(/ [⏣ф] (.+)/)?.[1]?.replace(/[^\x0-\xFF]/g, "")?.trim()
 
-    this.#instance = this.#zone?.match(/\(([FMT][1-7])\)$/)?.[1]
+    this.#instance = this.#zone?.match(/\([FMT][1-7]\)$/)?.[1]
   }
   /**
    * Resets variables and looks for the world again
@@ -69,6 +70,15 @@ class Loc {
     return zone.includes(this.#zone)
   }
 
+  /**
+   * Checks if input is current instance
+   * @param {String|String[]} instance - test instance name
+   * @returns {Boolean} Whether or not in this instance
+   */
+  isInstance(instance) {
+    return instance.includes(this.#instance)
+  }
+
   get World() {
     return this.#world ?? "None"
   }
@@ -82,7 +92,7 @@ class Loc {
   }
 
   get Data() {
-    return `World: ${this.World} | Zone: ${this.Zone}`
+    return `World: ${this.World} | Zone: ${this.Zone} | Instance: ${this.Instance}`
   }
 }
 
