@@ -13,10 +13,10 @@ import "./features/HUD/Widgets"
 // Kuudra {
   import "./features/Kuudra/KuudraUtil"
   
-  // misc
-    import "./features/Kuudra/misc/CancelUselessPerk"
-    import "./features/Kuudra/misc/KuudraHP"
-    import "./features/Kuudra/misc/TeamHighlight"
+  // General
+    import "./features/Kuudra/General/CancelUselessPerk"
+    import "./features/Kuudra/General/Kuudra"
+    import "./features/Kuudra/General/TeamHighlight"
     
   // P1
     import "./features/Kuudra/Phase1/CustomSupplyMessage"
@@ -37,7 +37,6 @@ import "./features/HUD/Widgets"
     import "./features/Kuudra/Phase2/FreshMessage"
     
   // P3
-    import "./features/Kuudra/Phase3/KuudraHitbox"
     
   // P4
     import "./features/Kuudra/Phase4/DrainRange"
@@ -65,6 +64,7 @@ import Loc from "./utils/Location"
 import "./utils/functions.js"
 import "./utils/Broadcasting.js"
 import "./features/Utilities/Dev.js"
+import "./utils/Party.js"
 import "./utils/functions/hotfixes.js"
 
 register("command", (...args) => {

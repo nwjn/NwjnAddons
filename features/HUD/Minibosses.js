@@ -22,6 +22,6 @@ registerWhen(register("chat", (mini) => {
   if (data.lastMini.length > 4) data.lastMini.shift()
   
   miniOverlay.setMessage(miniExample + data.lastMini.join("\n"))
-}).setCriteria("${mini} DOWN!"), () => Loc.isWorld("Crimson Isle"));
+}).setCriteria("${mini} DOWN!"), () => Loc.inWorld("Crimson Isle"));
 
 miniOverlay.setMessage(miniExample + data.lastMini.join("\n"))

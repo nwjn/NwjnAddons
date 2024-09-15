@@ -5,6 +5,8 @@ import { data } from "../utils/data/DataWriter.js"
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
 import { EntityArmorStand, version } from "../utils/constants";
+import { getPlayerName } from "../utils/functions/player.js";
+import Party from "../utils/Party.js"
 
 // Credit: My father, Volcaronitee
 
@@ -65,12 +67,12 @@ registerWhen(register("chat", (player, _, x, y, z) => {
 }).setCriteria("${player}:${spacing}x: ${x}, y: ${y}, z: ${z}&r"), () => Settings().waypoint != 0);
 
 registerWhen(register("chat", (player, command) => {
-  player = player.removeFormatting().substring(player.indexOf(" ") + 1).replace(/[^A-Za-z0-9_]/g, "");
-  let CommandMsg;
-
-  command = command.toLowerCase()
-  setTimeout(() => {
-    switch (command) {
+  player = getPlayerName(player)
+  
+  Party._getParty()
+  const leader = Settings().leader && Party.amILeader()
+  delay(() => {
+    switch (command.toLowerCase()) {
       case "time":
         ChatLib.command(`pc ${ new Date().toLocaleTimeString() }`); break;
       case "coord":
@@ -81,12 +83,10 @@ registerWhen(register("chat", (player, command) => {
       case "server":
       case "area":
       case "world":
-        ChatLib.command(`pc ${ Loc.toString() }`); break;
+        ChatLib.command(`pc ${ Loc.Data }`); break;
       case "pow":
       case "power":
         ChatLib.command(`pc Power: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`); break;
-      case "pet":
-        ChatLib.command(`pc ${ data.pet.removeFormatting() }`); break;
       case "build":
         ChatLib.command(`pc https://i.imgur.com/tsg6tx5.jpg`); break;
       case "ver":
@@ -94,28 +94,25 @@ registerWhen(register("chat", (player, command) => {
         ChatLib.command(`pc ${version}`)
       case "t5":
       case "raider":
-        CommandMsg = `joininstance kuudra_infernal`; break;
+        if (leader) ChatLib.command(`joininstance kuudra_infernal`); break;
       case "dropper":
-        CommandMsg = `play arcade_dropper`; break;
+        if (leader) ChatLib.command(`play arcade_dropper`); break;
       case "pw":
       case "warp":
-        CommandMsg = `p warp`; break;
+        if (leader) ChatLib.command(`p warp`); break;
       case "transfer":
       case "pt":
       case "ptme":
-        CommandMsg = `party transfer ${ player }`; break;
+        if (leader) ChatLib.command(`party transfer ${ player }`); break;
       case "allinvite":
       case "allinv":
       case "invite":
       case "inv":
-        CommandMsg = `p Settings allinvite`; break;
+        if (leader) ChatLib.command(`p Settings allinvite`); break;
       default: return;
     }
-    if (Settings().leader && CommandMsg) {
-      ChatLib.command(CommandMsg);
-    }
-  }, 300)
-}).setCriteria(/Party > (.+): [,.?!](.+)/), () => Settings().party)
+  })
+}).setCriteria(/Party > (.+): [,.?!](\w+)/), () => Settings().party)
 
 registerWhen(register("entityDeath", (entity) => {
   const mcEntity = entity.getEntity()

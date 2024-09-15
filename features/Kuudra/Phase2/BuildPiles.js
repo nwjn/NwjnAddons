@@ -15,4 +15,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
       100
     );
   }
-}), () => KuudraUtil.isPhase(2) && Settings.buildPiles)
+}), () => KuudraUtil.inPhase(2) && Settings().buildPiles)

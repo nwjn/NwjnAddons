@@ -1,160 +1,96 @@
-import { getMaxHP } from "../../utils/functions.js"
-import { EntityGiant, EntityArmorStand, EntityMagmaCube } from "../../utils/constants";
+import { EntityGiant, EntityArmorStand } from "../../utils/constants";
+import { meinConf } from "../../utils/Settings.js";
+
+const PHASE = {
+  "Talk with me to begin!": 0,
+  "Okay adventurers, I will go and fish up Kuudra!": 1,
+  "OMG! Great work collecting my supplies!": 2,
+  "Phew! The Ballista is finally ready! It should be strong enough to tank Kuudra's blows now!": 3,
+  "POW! SURELY THAT'S IT! I don't think he has any more in him!": 4
+}
 
 class KuudraUtil {
+  #registers = []
+  #phase = undefined
+
   constructor() {
-    this.registers = [];
-    this.reset();
+    // [Register Checks]
+    this._setRegisters()
+    meinConf.onCloseGui(() => this._setRegisters())
 
-    register("chat", () => {
-      this.phase = -1
-      this.setRegisters()
-    }).setCriteria("[NPC] Elle: Talk with me to begin!")
+    // [Reset Variables]
+    this._reset()
+    register("worldUnload", () => this._reset())
 
-    register("chat", () => {
-      this.phase = 1;
-      this.setRegisters();
-    }).setCriteria("[NPC] Elle: Okay adventurers, I will go and fish up Kuudra!");
+    // [Phase Listener]
+    register("chat", (msg) => {
+      this.#phase = PHASE?.[msg]
+      this._setRegisters()
+    }).setCriteria("[NPC] Elle: ${msg}")
 
-    register("chat", () => {
-      this.phase = 2;
-      this.setRegisters();
-    }).setCriteria("[NPC] Elle: OMG! Great work collecting my supplies!");
+    // // [Crate Entities]
+    // this.registerWhen(register("step", () => {
+    //   this.#crates =
+    //     World.getAllEntitiesOfType(EntityGiant.class)
+    //       .filter(it => it.entity?.func_70694_bm()?.toString() === "1xitem.skull@3")
+    // }).setDelay(2), () => this.inPhase(1))
 
-    register("chat", () => {
-      this.phase = 3;
-      this.freshers.clear()
-      this.setRegisters();
-    }).setCriteria("[NPC] Elle: Phew! The Ballista is finally ready! It should be strong enough to tank Kuudra's blows now!");
-
-    register("chat", () => {
-      this.phase = 4;
-      this.setRegisters();
-    }).setCriteria("[NPC] Elle: POW! SURELY THAT'S IT! I don't think he has any more in him!")
-
-    register("worldUnload", () => {
-      this.reset();
-    });
-
-    register("guiClosed", (event) => {
-      if (event?.toString()?.includes("vigilance")) this.setRegisters()
-    });
-    
-    // render stuff
-    this.fontRenderer = Renderer.getFontRenderer()
-    this.renderManager = Renderer.getRenderManager()
+    // // [Pile Entities]
+    // this.registerWhen(register("step", () => {
+    //   this.#piles =
+    //     World.getAllEntitiesOfType(EntityArmorStand.class)
+    //       .filter(it => /PROGRESS: \d{1,3}%/.test(it.getName()?.removeFormatting()))
+    // }).setDelay(2), () => this.inPhase(2))
   }
-
-  /**
-   * Resets all variables
-   */
-  reset() {
-    this.phase = false
-    this.supplies = [true, true, true, true, true, true]
-    this.pres = undefined;
-    this.preSpot = ""
-    this.preLoc = []
-    this.missing = ""
-    this.freshers = new Set()
-    this.freshTime = 0
-    this.freshLeft = 0
-    this.build = 0
-    this.builders = 0
-    this.buildPiles = []
-
-    this.setRegisters(false)
-  }
-
-  /**
-   * True -> When in a real phase
-   * @returns {Boolean}
-   */
-  inKuudra() {
-    return Boolean(this.phase)
-  }
-
-  /**
-   * True -> When in pahse 1-4
-   * @returns {Boolean}
-   */
-  isFight() {
-    return (this.phase > 0)
-  }
-
-  /**
-   * True -> Phase in param is current phase
-   * @param {Number} phase 
-   * @returns {Boolean}
-   */
-  isPhase(phase) {
-    return (this.phase == phase)
-  }
-
+  
   registerWhen(trigger, dependency, active = false) {
-    (this.registers).push([trigger.unregister(), dependency, active]);
+    this.#registers.push([trigger.unregister(), dependency, active]);
   }
 
-  setRegisters(on = true) {
-    (this.registers).forEach(trigger => {
+  _setRegisters(on = true) {
+    this.#registers.forEach(trigger => {
+
       if (trigger[1]() && !trigger[2]) {
         trigger[0].register();
         trigger[2] = true;
-      } else if ((!trigger[1]() && trigger[2]) || !on) {
+      }
+
+      else if ((!trigger[1]() && trigger[2]) || !on) {
         trigger[0].unregister();
         trigger[2] = false;
       }
     });
   }
-
-  getKuudra() {
-    // Array.find
-    const cubes = World.getAllEntitiesOfType(EntityMagmaCube.class)
-    let boss;
-    let i = cubes.length
-    while (i--) {
-      let cube = cubes[i]
-      // Kuudra's hp is 100k
-      if (getMaxHP(cube) !== 100_000) continue;
-      
-      boss = cube
-      break;
-    }
-    return boss
+  
+  _reset() {
+    this._setRegisters(false)
+    this.#phase = undefined
+  }
+  
+  /**
+   * Checks if player is in kuudra
+   * @returns {Boolean} 
+   */
+  inKuudra() {
+    return this.#phase !== undefined
   }
 
-  getSupplies() {
-    const giants = World.getAllEntitiesOfType(EntityGiant.class)
-    let supplies = []
-
-    // Array.filter.map
-    let i = giants.length
-    while (i--) {
-      let giant = giants[i]
-      if (giant.getEntity()?.func_70694_bm()?.toString() !== "1xitem.skull@3") continue;
-
-      let yaw = giant.getYaw()
-      supplies.push(
-        [
-          giant.getX() + (3.7 * Math.cos((yaw + 130) * (Math.PI / 180))),
-          72,
-          giant.getZ() + (3.7 * Math.sin((yaw + 130) * (Math.PI / 180)))
-        ]
-      )
-    }
-    return supplies
+  /**
+   * Checks if the fight has started
+   * @returns {Boolean}
+   */
+  hasStarted() {
+    return Boolean(this.#phase)
   }
 
-  getBuild() {
-    const stands = World.getAllEntitiesOfType(EntityArmorStand.class)
-    let buildText = []
-    
-    let i = stands.length
-    while (i--) {
-      let stand = stands[i]
-      if (stand.getName()?.match(/progress/gi)) buildText.push(stand)
-    }
-    return buildText
+  /**
+   * Checks if input is current phase
+   * @param {Number} phase - test phase number
+   * @returns {Boolean} Whether or not in this phase
+   */
+  inPhase(phase) {
+    return this.#phase === phase
   }
 }
 
-export default new KuudraUtil;
+export default new KuudraUtil();

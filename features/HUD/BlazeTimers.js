@@ -26,4 +26,4 @@ registerWhen(register("step", () => {
   data.wisp--
   
   blazeOverlay.setMessage(`&aGummy: &f${ timeFormat(data.gummy) }\n&7Wisp: &f${ timeFormat(data.wisp) }`);
-}).setDelay(1), () => Settings().blaze && Loc.isSkyblock())
+}).setDelay(1), () => Settings().blaze && Loc.inSkyblock())

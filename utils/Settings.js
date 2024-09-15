@@ -300,6 +300,13 @@ conf
 })
 .addSwitch({
     category: "Kuudra",
+    configName: "kuudraHitbox",
+    title: "Draws Kuudra's Hitbox",
+    description: "Draws a box around Kuudra's hitbox",
+    subcategory: "General"
+})
+.addSwitch({
+    category: "Kuudra",
     configName: "supplyBeacons",
     title: "Supply Beacons",
     description: "Draws beacons where supplies are",
@@ -377,13 +384,6 @@ conf
 })
 .addSwitch({
     category: "Kuudra",
-    configName: "kuudraHitbox",
-    title: "Draws Kuudra's Hitbox",
-    description: "Draws a box around Kuudra's hitbox",
-    subcategory: "Phase 3"
-})
-.addSwitch({
-    category: "Kuudra",
     configName: "endstoneRange",
     title: "Endstone Mana Drain Range",
     description: "Highlights players in mana drain range",
@@ -402,6 +402,23 @@ conf
     title: "Mana Drain Display",
     description: "Shows buffs received from mana drain",
     subcategory: "Phase 4"
+})
+.addSwitch({
+    category: "Kuudra",
+    configName: "rendArrowsPulled",
+    title: "Rend Arrows",
+    description: "Shows how many arrows were pulled while rending",
+    subcategory: "Phase 4"
+})
+.addSwitch({
+    category: "Kuudra",
+    configName: "inLava",
+    title: "In Lava",
+    description: "Shows if Kuudra is in Lava for botv users",
+    subcategory: "Phase 4",
+    shouldShow(data) {
+        return data.kuudraHitbox
+    }
 })
 .addSwitch({
     category: "Crimson Isle",

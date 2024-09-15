@@ -8,4 +8,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
     0xffffff, false, 0.5, false
   );
 
-}), () => KuudraUtil.isPhase(2) && Settings.buildPercent)
+}), () => KuudraUtil.inPhase(2) && Settings().buildPercent)

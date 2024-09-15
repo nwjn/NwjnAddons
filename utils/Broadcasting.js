@@ -16,16 +16,15 @@ const welcome = register("gameLoad", () => {
 // [Broadcast Message]
 const messenger = register("worldLoad", () => {
   messenger.unregister()
-  axios.get("https://chattriggers.com/api/modules/NwjnAddons").then(res => {
-    const desc = res.data.description
-    const msg = desc.substring(
-      desc.lastIndexOf("[") + 1,
-      desc.lastIndexOf("]")
-    )
+  const desc = JSON.parse(FileLib.getUrlContent("https://chattriggers.com/api/modules/NwjnAddons")).description
 
-    if (msg !== "Nothing" && msg !== data.newMsg) {
-      data.newMsg = msg
-      ChatLib.chat(`${ PREFIX } &dFrom: &6nwjn: &7${ msg }`)
-    }
-  })
+  const msg = desc.substring(
+    desc.lastIndexOf("[") + 1,
+    desc.lastIndexOf("]")
+  )
+
+  if (msg !== "Nothing" && msg !== data.newMsg) {
+    data.newMsg = msg
+    ChatLib.chat(`${ PREFIX } &dFrom: &6nwjn: &7${ msg }`)
+  }
 })

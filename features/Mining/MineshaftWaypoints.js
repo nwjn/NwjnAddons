@@ -1,5 +1,6 @@
 import Settings from "../../utils/Settings"
-import { registerWhen, getDistance } from "../../utils/functions.js";
+import { registerWhen } from "../../utils/functions.js";
+import { getDistance } from "../../utils/functions/format.js";
 import renderBeaconBeam from "BeaconBeam"
 import RenderLib from "RenderLib"
 import { PREFIX } from "../../utils/constants";
@@ -35,7 +36,7 @@ function findRoomType() {
 
 registerWhen(register("step", () => {
   if (!currentRoom) findRoomType()
-}).setDelay(1), () => Loc.isWorld("Mineshaft") && Settings().mineshaftWaypoints)
+}).setDelay(1), () => Loc.inWorld("Mineshaft") && Settings().mineshaftWaypoints)
 
 registerWhen(register("renderWorld", () => {
   if (!currentRoom) return;
@@ -48,7 +49,7 @@ registerWhen(register("renderWorld", () => {
     renderWaypoint("Guess", corpse, 0xff5555, [1, 0, 0]);
   }
   renderWaypoint("Exit", currentRoom.exit, 0x55ffff, [1, 0, 0])
-}), () => Loc.isWorld("Mineshaft") && Settings().mineshaftWaypoints);
+}), () => Loc.inWorld("Mineshaft") && Settings().mineshaftWaypoints);
 
 register("worldUnload", () => {
   currentRoom = undefined

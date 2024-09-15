@@ -2,18 +2,9 @@ import Settings from "../../../utils/Settings";
 import KuudraUtil from "../KuudraUtil";
 
 KuudraUtil.registerWhen(register("chat", (player, supply, event) => {
-  // Array.find
-  const scoreboard = Scoreboard.getLines()
-  let time;
-  let i = scoreboard.length
-  while (i--) {
-    let line = scoreboard[i].getName()
-    if (!line.includes("Time Elapsed")) continue
-
-    time = line.removeFormatting().split(": ").slice(-1)
-    break
-  }
+  const timeLine = Scoreboard.getLines().find(l => l.getName().includes("Time Elapsed"))
+  const time = timeLine?.removeFormatting()?.match(/Time Elapsed: 🐍([0-9ms ]+)/)?.[1]
 
   cancel(event);
   ChatLib.chat(`${ player }&a&lrecovered a supply at ${ time }!${supply}`)
-}).setCriteria("${player}&a&lrecovered one of Elle's supplies!${supply}"), () => KuudraUtil.isPhase(1) && Settings.customSupply)
+}).setCriteria("${player}&a&lrecovered one of Elle's supplies!${supply}"), () => KuudraUtil.inPhase(1) && Settings().customSupply)

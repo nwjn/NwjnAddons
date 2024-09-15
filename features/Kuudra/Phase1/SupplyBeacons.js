@@ -8,7 +8,7 @@ KuudraUtil.registerWhen(register("tick", (elapsed) => {
   if (elapsed % 2 !== 0) return;
 
   supplies = KuudraUtil.getSupplies()
-}), () => KuudraUtil.isPhase(1) && Settings.supplyBeacons);
+}), () => KuudraUtil.inPhase(1) && Settings().supplyBeacons);
 
 KuudraUtil.registerWhen(register("renderWorld", () => {
   // Array.forEach
@@ -23,4 +23,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
       100
     );
   }
-}), () => KuudraUtil.isPhase(1) && Settings.supplyBeacons);
+}), () => KuudraUtil.inPhase(1) && Settings().supplyBeacons);

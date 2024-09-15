@@ -51,4 +51,4 @@ KuudraUtil.registerWhen(register("chat", (num, names) => {
     totalDrain -= mana
     setManaBuff(totalDrain, fero, strong)
   }, 10000);
-}).setCriteria("Party > ${*}: Drained ${num} mana for: [${names}]"), () => KuudraUtil.isPhase(4) && Settings().drainDisplay)
+}).setCriteria("Party > ${*}: Drained ${num} mana for: [${names}]"), () => KuudraUtil.inPhase(4) && Settings().drainDisplay)

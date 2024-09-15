@@ -1,14 +1,13 @@
 import { delay, setRegisters } from "./functions.js";
 
-// @Volcaronitee
+// @https://github.com/zhenga8533/VolcAddons/blob/main/utils/Location.js
 class Loc {
   #world;
   #zone;
   #instance;
+  #spawn;
 
   constructor() {
-    register("step", () => this._findZone()).setDelay(3)
-
     register("worldLoad", () => this._findWorld()).setPriority(Priority.LOWEST)
     register("worldUnload", () => this._reset()).setPriority(Priority.LOWEST)
   }
@@ -17,6 +16,7 @@ class Loc {
     this.#zone = undefined
     this.#world = undefined
     this.#instance = undefined
+    this.#spawn = undefined
   }
   
   _findWorld(recurse = 10) {
@@ -25,22 +25,28 @@ class Loc {
     const tab = TabList?.getNames()?.find(tab => tab.match(/^§r§b§l(Area|Dungeon):/))
     this.#world = tab?.removeFormatting()?.match(/: (.+)$/)?.[1]
 
-    if (this.#world) return delay(() => setRegisters(), 500)
-    delay(() => this._findWorld(recurse - 1), 1000)
+    if (!this.#world) return delay(() => this._findWorld(recurse - 1), 1000)
+
+    this.#spawn = [World.spawn.getX(), World.spawn.getY(), World.spawn.getZ()]
+    delay(() => setRegisters(), 500)
+    this._findZone()
   };
 
   _findZone() {
     const line = Scoreboard?.getLines()?.find(line => line.getName().match(/^ §[57][⏣ф]/))
     this.#zone = line?.getName()?.removeFormatting()?.match(/ [⏣ф] (.+)/)?.[1]?.replace(/[^\x0-\xFF]/g, "")?.trim()
 
-    this.#instance = this.#zone?.match(/\([FMT][1-7]\)$/)?.[1]
+    if (this.#zone) this.#instance = this.#zone?.match(/\([FMT][1-7]\)$/)?.[1]
+
+    delay(() => {
+      if (this.#world) this._findZone()
+    }, 3000)
   }
   /**
    * Resets variables and looks for the world again
    */
   resetWorld() {
     this._reset()
-    this._findZone()
     this._findWorld()
   }
 
@@ -48,7 +54,7 @@ class Loc {
    * Checks if the player is in Skyblock
    * @returns {Boolean} true if world exists
    */
-  isSkyblock() {
+  inSkyblock() {
     return Boolean(this.#world)
   }
 
@@ -57,7 +63,7 @@ class Loc {
    * @param {String|String[]} world - test world name
    * @returns {Boolean} Whether or not in this world
    */
-  isWorld(world) {
+  inWorld(world) {
     return world.includes(this.#world)
   }
 
@@ -66,7 +72,7 @@ class Loc {
    * @param {String|String[]} zone - test zone name
    * @returns {Boolean} Whether or not in this zone
    */
-  isZone(zone) {
+  inZone(zone) {
     return zone.includes(this.#zone)
   }
 
@@ -75,7 +81,7 @@ class Loc {
    * @param {String|String[]} instance - test instance name
    * @returns {Boolean} Whether or not in this instance
    */
-  isInstance(instance) {
+  inInstance(instance) {
     return instance.includes(this.#instance)
   }
 
@@ -89,6 +95,10 @@ class Loc {
 
   get Instance() {
     return this.#instance ?? "None"
+  }
+
+  get Spawn() {
+    return this.#spawn ?? "None"
   }
 
   get Data() {

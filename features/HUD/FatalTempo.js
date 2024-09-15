@@ -24,8 +24,8 @@ const addHits = () => {
   hits++
 }
 
-registerWhen(register("soundPlay", addHits).setCriteria("tile.piston.out"), () => Settings().fatalTempo && Loc.isWorld("Kuudra"));
-registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => Settings().fatalTempo && !Loc.isWorld("Kuudra"));
+registerWhen(register("soundPlay", addHits).setCriteria("tile.piston.out"), () => Settings().fatalTempo && Loc.inWorld("Kuudra"));
+registerWhen(register("soundPlay", addHits).setCriteria("random.successful_hit"), () => Settings().fatalTempo && !Loc.inWorld("Kuudra"));
 
 const calcString = (countdown = 0, percent = 0) => {
   countdown = clamp(countdown, 0, 3)

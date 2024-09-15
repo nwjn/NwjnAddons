@@ -10,4 +10,4 @@ KuudraUtil.registerWhen(register("chat", (player) => {
   setTimeout(() =>
     KuudraUtil.freshers.delete(name),
   10000);
-}).setCriteria("Party > ${player}: FRESH").setStart(), () => KuudraUtil.isPhase(2) && Settings.teamHighlight);
+}).setCriteria("Party > ${player}: FRESH").setStart(), () => KuudraUtil.inPhase(2) && Settings().teamHighlight);

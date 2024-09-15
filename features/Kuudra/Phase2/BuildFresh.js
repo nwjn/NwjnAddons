@@ -2,7 +2,7 @@ import Settings from "../../../utils/Settings";
 import KuudraUtil from "../KuudraUtil"
 
 KuudraUtil.registerWhen(register("renderWorld", () => {
-  const freshLeft = KuudraUtil.freshLeft
+  const freshLeft = 10 - (Date.now() - KuudraUtil.freshTime) / 1000
   if (freshLeft <= 0) return;
 
   Tessellator.drawString(
@@ -11,4 +11,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
     0x55ff55, false, 0.5, false
   );
 
-}), () => KuudraUtil.isPhase(2) && Settings.buildFresh)
+}), () => KuudraUtil.inPhase(2) && Settings().buildFresh)

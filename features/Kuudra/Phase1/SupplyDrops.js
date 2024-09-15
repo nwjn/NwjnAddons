@@ -22,7 +22,7 @@ KuudraUtil.registerWhen(register("step", () => {
     else if (x == -94 && z == -106) KuudraUtil.supplies[4] = false
     else if (x == -106 && z == -99) KuudraUtil.supplies[5] = false
   }
-}).setFps(2), () => KuudraUtil.isPhase(1) && Settings.supplyPiles);
+}).setFps(2), () => KuudraUtil.inPhase(1) && Settings().supplyPiles);
 
 KuudraUtil.registerWhen(register("renderWorld", () => {
   const missing = KuudraUtil.missing
@@ -51,4 +51,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
     const color = missing == "Slash" ? [1, 0, 0] : [1, 1, 1]
     renderBeaconBeam(-106, 79, -99, ...color, 0.8, true, 100); // slash
   }
-}), () => KuudraUtil.isPhase(1) && Settings.supplyPiles)
+}), () => KuudraUtil.inPhase(1) && Settings().supplyPiles)

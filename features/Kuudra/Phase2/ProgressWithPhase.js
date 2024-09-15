@@ -14,4 +14,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
       0x00ffffff, false, 0.02665, false
     )
   }
-}), () => KuudraUtil.isPhase(2) && Settings.progressWithPhase)
+}), () => KuudraUtil.inPhase(2) && Settings().progressWithPhase)

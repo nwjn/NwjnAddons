@@ -26,4 +26,4 @@ KuudraUtil.registerWhen(register("renderWorld", () => {
   // /
   RenderLib.drawInnerEspBox(-105, 157, -98, 1, 1, 0, 0, 1, 1, true);
   RenderLib.drawEspBox(-112.5, 76.5, -68.5, 1, 1, 0, 0, 1, 1, false);
-}), () => KuudraUtil.isPhase(1) && Settings.pearl)
+}), () => KuudraUtil.inPhase(1) && Settings().pearl)

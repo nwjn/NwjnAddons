@@ -15,17 +15,6 @@ KuudraUtil.registerWhen(register("tick", (elapsed) => {
     KuudraUtil.build = name.substring(0, name.indexOf("%")).replace(/\D/g, "")
     KuudraUtil.builders = name.substring(name.indexOf("(") + 1, name.indexOf("(") + 2)
     
-    KuudraUtil.freshLeft = 10 - (Date.now() - KuudraUtil.freshTime) / 1000;
     break;
   }
-  
-  let buildPiles = []
-  let j = buildText.length
-  while (j--) {
-    let stand = buildText[j]
-    let name = stand.getName()
-
-    if (name.includes("PROGRESS: ") && name.includes("%")) buildPiles.push(stand)
-  }
-  KuudraUtil.buildPiles = buildPiles
-}), () => KuudraUtil.isPhase(2))
+}), () => KuudraUtil.inPhase(2))
