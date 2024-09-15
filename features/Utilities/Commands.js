@@ -49,15 +49,3 @@ register("command", () => {
   ChatLib.command(`trade ${ name }`);
   ChatLib.addToSentMessageHistory(-1, `/trade ${ name }`)
 }).setName("deal", true);
-
-import { version } from "../../utils/constants";
-register("command", (arg) => {
-    ChatLib.chat(ChatLib.getChatBreak("-"))
-    ChatLib.chat(`${ PREFIX } &bYou are currently on version &e${ version }`);
-    ChatLib.chat(`Libraries:`)
-    const libraries = JSON.parse(FileLib.read("NwjnAddons", "metadata.json")).requires
-    libraries.forEach(lib => {
-      ChatLib.chat(`  &b${lib}&r: &e${JSON.parse(FileLib.read(lib, "metadata.json")).version}`)
-    })
-    ChatLib.chat(ChatLib.getChatBreak("-"))
-}).setName("debug")

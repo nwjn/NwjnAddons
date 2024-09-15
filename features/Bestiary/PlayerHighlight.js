@@ -7,7 +7,7 @@ import { realPlayer } from "../../utils/functions/player.js";
 let playerHighlight = []
 export function setPlayerHighlight() {
   playerHighlight = []
-  if (!Settings().playerList)
+  if (!Settings().playerList) return
 
   Settings().playerList.split(/,\s?/g).forEach(entry => {
     const [name, hpParam] = entry.split("-")

@@ -7,7 +7,7 @@ import { getClassOfEntity } from "./MobHighlight.js";
 let standList = []
 export function setStandHighlight() {
   standList = []
-  if (!Settings().playerList)
+  if (!Settings().standList) return
 
   Settings().standList.split(/,\s?/g).forEach(entry => {
     const [name, mob] = entry.split("-")

@@ -1,20 +1,16 @@
 import Settings from "../../utils/Settings.js"
 import { registerWhen } from "../../utils/functions.js";
-import { EntityArmorStand } from "../../utils/constants";
 
-let dmgIds = []
-registerWhen(register("tick", () => {
-  const DMGS = World.getAllEntitiesOfType(EntityArmorStand.class).filter(stand => dmgIds.indexOf(stand.getUUID()) == -1 && !/[A-Za-z:-_.#]/.test(stand.getName().removeFormatting()))
-  
-  let i = DMGS.length;
-  while (i--) {
-    let dmg = DMGS[i]
-    ChatLib.chat(dmg.getName())
-    dmgIds.push(dmg.getUUID())
-  }
-}), () => Settings().damageTracker)
+const S0FPacketSpawnMob = Java.type("net.minecraft.network.play.server.S0FPacketSpawnMob")
+const EntityArmorStand = Java.type("net.minecraft.entity.item.EntityArmorStand")
 
-register("worldUnload", () => {
-  if (!Settings().damageTracker) return
-  dmgIds = []
-});
+registerWhen(register("packetReceived", (packet) => {
+  Client.scheduleTask(1, () => {
+    const entity = World.getWorld().func_73045_a(packet.func_149024_d())
+
+    if (entity instanceof EntityArmorStand) {
+      const name = entity.func_95999_t()
+      if (/[^A-Za-z:-_.#]/.test(name?.removeFormatting())) ChatLib.chat(name)
+    }
+  })
+}).setFilteredClass(S0FPacketSpawnMob.class), () => Settings().damageTracker)
