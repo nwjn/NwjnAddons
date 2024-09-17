@@ -1,8 +1,8 @@
 import Settings from "../../utils/Settings.js"
 import RenderLib from "RenderLib"
 import { registerWhen, getRGB } from "../../utils/functions.js";
-import { shortNum } from "../../utils/Enums.js";
 import { realPlayer } from "../../utils/functions/player.js";
+import { shortNum } from "../../utils/Constants.js";
 
 let playerHighlight = []
 export function setPlayerHighlight() {

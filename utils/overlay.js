@@ -1,7 +1,7 @@
 import Settings from "./Settings.js"
 import Loc from "./Location.js"
 import { registerWhen } from "./functions.js";
-import { PREFIX } from "./constants";
+import { PREFIX } from "./Constants.js";
 
 // Credit: My father, Volcaronitee
 

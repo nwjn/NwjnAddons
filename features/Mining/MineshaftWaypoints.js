@@ -3,7 +3,7 @@ import { registerWhen } from "../../utils/functions.js";
 import { getDistance } from "../../utils/functions/format.js";
 import renderBeaconBeam from "BeaconBeam"
 import RenderLib from "RenderLib"
-import { PREFIX } from "../../utils/constants";
+import { PREFIX } from "../../utils/Constants.js";
 import Loc from "../../utils/Location.js"
 
 const data = JSON.parse(FileLib.read("NwjnAddons/features/Mining", "MineshaftWaypointsData.json"))

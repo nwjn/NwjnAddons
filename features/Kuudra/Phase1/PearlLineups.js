@@ -2,6 +2,7 @@ import Settings from "../../../utils/Settings";
 import RenderLib from "../../../../RenderLib"
 import KuudraUtil from "../KuudraUtil"
 
+// AHH MY EYES
 KuudraUtil.registerWhen(register("renderWorld", () => {
   // Triangle
   RenderLib.drawInnerEspBox(-97, 157, -112, 1, 1, 1, 0, 0, 1, true);

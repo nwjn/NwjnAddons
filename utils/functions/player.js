@@ -5,7 +5,7 @@
  * @returns {String} Player base ign
  */
 export function getPlayerName(player) {
-  return player.split("] ").slice(-1).toString().replace(/[^A-Za-z0-9_]/g, "")
+  return player.split("] ").slice(-1).toString().replace(/[^\w_]/g, "")
 }
 
   /**

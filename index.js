@@ -1,5 +1,3 @@
-import { meinConf } from "./utils/Settings.js"
-
 import "./features/CrimsonIsle(Move)"
 import "./features/General(Move)"
 
@@ -14,58 +12,55 @@ import "./features/HUD/Widgets"
   import "./features/Kuudra/KuudraUtil"
   
   // General
-    import "./features/Kuudra/General/CancelUselessPerk"
-    import "./features/Kuudra/General/Kuudra"
-    import "./features/Kuudra/General/TeamHighlight"
-    
+  import "./features/Kuudra/General/CancelUselessPerk"
+  import "./features/Kuudra/General/Kuudra"
+  import "./features/Kuudra/General/TeamHighlight"
+  
   // P1
-    import "./features/Kuudra/Phase1/CustomSupplyMessage"
-    import "./features/Kuudra/Phase1/NoSupply"
-    import "./features/Kuudra/Phase1/PearlLineups"
-    import "./features/Kuudra/Phase1/SupplyDrops"
-    import "./features/Kuudra/Phase1/SupplyBeacons"
-    
+  import "./features/Kuudra/Phase1/CustomSupplyMessage"
+  import "./features/Kuudra/Phase1/NoSupply"
+  import "./features/Kuudra/Phase1/PearlLineups"
+  import "./features/Kuudra/Phase1/SupplyDrops"
+  import "./features/Kuudra/Phase1/SupplyBeacons"
+  
   // P2
-    import "./features/Kuudra/Phase2/BuildBuilders"
-    import "./features/Kuudra/Phase2/BuildFresh"
-    import "./features/Kuudra/Phase2/BuildPercent"
-    import "./features/Kuudra/Phase2/BuildPiles"
-    import "./features/Kuudra/Phase2/BuildStands"
-    import "./features/Kuudra/Phase2/ProgressWithPhase"
-    
-    import "./features/Kuudra/Phase2/FreshBoxes"
-    import "./features/Kuudra/Phase2/FreshMessage"
-    
+  import "./features/Kuudra/Phase2/BuildFresh"
+  import "./features/Kuudra/Phase2/BuildPercent"
+  import "./features/Kuudra/Phase2/BuildPiles"
+  
   // P3
-    
+  
   // P4
-    import "./features/Kuudra/Phase4/DrainRange"
-    import "./features/Kuudra/Phase4/ManaDrain"
-// Kuudra }
+  import "./features/Kuudra/Phase4/DrainDisplay"
+  import "./features/Kuudra/Phase4/ManaDrain"
+  // Kuudra }
+  
+  // Bestiary {
+    import "./features/Bestiary/MobHighlight"
+    import "./features/Bestiary/PlayerHighlight"
+    import "./features/Bestiary/StandHighlight"
+    // Bestiary }
+    
+    import "./features/Mining/MineshaftWaypoints"
+    
+    import "./features/QOL/BlockHighlight"
+    import "./features/QOL/DiscordCleaner"
+    import "./features/QOL/FallingBlocks.js"
+    
+    import "./features/Utilities/Commands"
+    import "./features/Utilities/DamageTracker"
+    import "./features/Utilities/Dev.js"
+    import "./features/Utilities/RendArrows.js"
 
-// Bestiary {
-  import "./features/Bestiary/MobHighlight"
-  import "./features/Bestiary/PlayerHighlight"
-  import "./features/Bestiary/StandHighlight"
-// Bestiary }
-
-import "./features/QOL/BlockHighlight"
-import "./features/QOL/DiscordCleaner"
-
-import "./features/Mining/MineshaftWaypoints"
-
-import "./features/Utilities/DamageTracker"
-import "./features/Utilities/Commands"
-
-import { PREFIX } from "./utils/constants";
 import "./utils/data/DataWriter.js"
-import { openGUI } from "./utils/overlay"
-import Loc from "./utils/Location"
-import "./utils/functions.js"
 import "./utils/Broadcasting.js"
-import "./features/Utilities/Dev.js"
-import "./utils/Party.js"
 import "./utils/functions/hotfixes.js"
+import { PREFIX } from "./utils/Constants.js";
+import "./utils/functions.js"
+import Loc from "./utils/Location"
+import { openGUI } from "./utils/overlay"
+import "./utils/Party.js"
+import { meinConf } from "./utils/Settings.js"
 
 register("command", (...args) => {
   switch (args[0]?.toLowerCase()) {

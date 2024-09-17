@@ -38,93 +38,78 @@ conf
     configName: "party",
     title: "Party Commands",
     description: "Enables party commands, universally triggers on [.!?] commands",
-    subcategory: ""
-})
-.addSwitch({
-    category: "General",
-    configName: "leader",
-    title: "➤ Leader Commands",
-    description: "     Toggle for commands such as .t5, .dropper, .transfer",
-    subcategory: ""
+    value: false
 })
 .addSwitch({
     category: "General",
     configName: "reaper",
     title: "Detect Reaper Armor",
     description: "Shows time left for reaper armor under crosshair",
-    subcategory: ""
+    value: false
 })
 .addSwitch({
     category: "General",
     configName: "dead",
     title: "Stops Entity Death Animation",
     description: "Stops entity death animation and removes armor stands that show 0 hp",
-    subcategory: ""
+    value: false
 })
 .addSwitch({
     category: "General",
     configName: "sbxp",
     title: "Skyblock XP Gain Message",
     description: "Takes action bar skyblock xp gained message and pastes them in chat",
-    subcategory: ""
+    value: false
 })
 .addTextInput({
     category: "Bestiary",
     configName: "mobList",
     title: "Mob Highlight",
     description: "Draws hitboxes around inputted mob entity\n&3@see &cnet.minecraft.entity.(monster|passive|boss)&r\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
-    value: "",
-    subcategory: ""
+    value: ""
 })
 .addColorPicker({
     category: "Bestiary",
     configName: "mobHighlightColor",
     title: "Mob Highlight Color",
     description: "Sets the color for monster hitboxes",
-    value: [255, 255, 255, 255],
-    subcategory: ""
+    value: [255, 255, 255, 255]
 })
 .addTextInput({
     category: "Bestiary",
     configName: "standList",
     title: "Armor Stand Names Highlight",
     description: "Draws hitboxes around armor stands that include the inputted name, seperate with '|' character",
-    value: "",
-    subcategory: ""
+    value: ""
 })
 .addColorPicker({
     category: "Bestiary",
     configName: "standColor",
     title: "Armor Stand Highlight Color",
     description: "Sets the color for armor stand hitboxes",
-    value: [255, 255, 255, 255],
-    subcategory: ""
+    value: [255, 255, 255, 255]
 })
 .addTextInput({
     category: "Bestiary",
     configName: "playerList",
     title: "Player Highlight",
     description: "Draws hitboxes around players that include the inputted name, seperate with '|' character\nInput `Player` to show all real players",
-    value: "",
-    subcategory: ""
+    value: ""
 })
 .addColorPicker({
     category: "Bestiary",
     configName: "playerColor",
     title: "Player Highlight Color",
     description: "Sets the color for player hitboxes",
-    value: [255, 255, 255, 255],
-    subcategory: ""
+    value: [255, 255, 255, 255]
 })
 .addButton({
     category: "HUD",
     configName: "gui",
     title: "Move GUI Elements",
     description: "Click to edit gui locations",
-    subcategory: "",
     onClick() {
         ChatLib.command("nwjn gui", true)
-        // openGUI()
     }
 })
 .addSwitch({
@@ -132,14 +117,16 @@ conf
     configName: "blaze",
     title: "Blaze Display",
     description: "Shows how much time left on gummy and wisp pot -> /moveBlaze",
-    subcategory: "Blaze"
+    subcategory: "Blaze",
+    value: false
 })
 .addSwitch({
     category: "HUD",
     configName: "clock",
     title: "Clock Display",
     description: "Shows your current time -> /moveClock",
-    subcategory: "Clock"
+    subcategory: "Clock",
+    value: false
 })
 .addDropDown({
     category: "HUD",
@@ -182,84 +169,96 @@ conf
     configName: "poison",
     title: "Poison Display",
     description: "Displays the amount of poisons in your inventory -> /movePoison",
-    subcategory: "Poison"
+    subcategory: "Poison",
+    value: false
 })
 .addSwitch({
     category: "HUD",
     configName: "mini",
     title: "Miniboss Display",
     description: "Shows your recent CI miniboss kills -> /moveMini",
-    subcategory: "Miniboss"
+    subcategory: "Miniboss",
+    value: false
 })
 .addSwitch({
     category: "HUD",
     configName: "widget",
     title: "Widget Display",
     description: "Renders tab widgets on screen",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addToggle({
     category: "HUD",
     configName: "stats",
     title: "Stats Widget",
     description: "Show stats widget on HUD -> /moveStats",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addToggle({
     category: "HUD",
     configName: "pet",
     title: "Pet Widget",
     description: "Show pet widget on HUD -> /movePet",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addToggle({
     category: "HUD",
     configName: "bestiary",
     title: "Bestiary Widget",
     description: "Show bestidary widget on HUD -> /moveBestiary",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addToggle({
     category: "HUD",
     configName: "crop",
     title: "Crop Milestone Widget",
     description: "Show crop milestone widget on HUD -> /moveCrop",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addToggle({
     category: "HUD",
     configName: "visitor",
     title: "Visitor Widget",
     description: "Show visitor widget on HUD -> /moveVisitor",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addToggle({
     category: "HUD",
     configName: "comm",
     title: "Commission Widget",
     description: "Show commission widget on HUD -> /moveComm",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addToggle({
     category: "HUD",
     configName: "powder",
     title: "Powder Widget",
     description: "Show powder widget on HUD -> /movePowder",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addToggle({
     category: "HUD",
     configName: "corpse",
     title: "Frozen Corpse Widget",
     description: "Show frozen corpse widget on HUD -> /moveCorpse",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addToggle({
     category: "HUD",
     configName: "custom",
     title: "Custom Widget",
     description: "Enter widget title from tablist (i.e. 'Fire Sales:' or 'Timers:' -> /moveCustom",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addTextInput({
     category: "HUD",
@@ -267,21 +266,24 @@ conf
     title: "Custom Widget Text",
     description: "Enter widget text from tablist (i.e. 'Fire Sales:' or 'Timers:')",
     value: "",
-    subcategory: "Widget"
+    subcategory: "Widget",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "kuudraHP",
     title: "Draws Kuudra's HP",
     description: "Displays text of Kuudra's hp on kuudra",
-    subcategory: "General"
+    subcategory: "General",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "teamHighlight",
     title: "Team Highlight",
     description: "Draws a box of the selected color on teammates, changes to green if that player gets fresh tools",
-    subcategory: "General"
+    subcategory: "General",
+    value: false
 })
 .addColorPicker({
     category: "Kuudra",
@@ -296,157 +298,140 @@ conf
     configName: "unrenderPerks",
     title: "Unrender Perks",
     description: "Declutters the shop gui by unrendering unused perks",
-    subcategory: "General"
+    subcategory: "General",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "kuudraHitbox",
     title: "Draws Kuudra's Hitbox",
     description: "Draws a box around Kuudra's hitbox",
-    subcategory: "General"
+    subcategory: "General",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "supplyBeacons",
     title: "Supply Beacons",
     description: "Draws beacons where supplies are",
-    subcategory: "Phase 1"
+    subcategory: "Phase 1",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "supplyPiles",
     title: "Supply Drop Beacons",
     description: "Draws beacons on piles where supplies are needed",
-    subcategory: "Phase 1"
+    subcategory: "Phase 1",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "pearl",
     title: "Pearl Lineups",
     description: "Draws target boxes of where to pearl to insta place supply\n&eBoxes on the ceiling: pearl at ~38%\n&eBoxes on the sides: pearl at ~76%",
-    subcategory: "Phase 1"
+    subcategory: "Phase 1",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "noSupply",
     title: "No Supply Chat",
     description: "Tells party if your pre or second doesn't spawn",
-    subcategory: "Phase 1"
+    subcategory: "Phase 1",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "customSupply",
     title: "Custom Supply Drop Message",
     description: "Changes supply message to include time when a supply is dropped:\n&r&6[MVP&r&9++&r&6] nwjn&r&f &a&lrecovered a supply at 18s! &r&8(1/6)&r",
-    subcategory: "Kuudra"
+    subcategory: "Kuudra",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "buildPiles",
     title: "Unfinished Pile Beacons",
     description: "Draws beacons on build piles that are incomplete",
-    subcategory: "Phase 2"
+    subcategory: "Phase 2",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "buildPercent",
     title: "Cumulative Build Percentage",
     description: "Draws the overall build percentage over the ballista",
-    subcategory: "Phase 2"
+    subcategory: "Phase 2",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "buildFresh",
     title: "Fresh Timer",
     description: "Draws the seconds of fresh you have left on the ballista",
-    subcategory: "Phase 2"
-})
-.addSwitch({
-    category: "Kuudra",
-    configName: "buildBuilders",
-    title: "Ballista Builders",
-    description: "Draws the number of players actually building under the ballista",
-    subcategory: "Phase 2"
+    subcategory: "Phase 2",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "progressWithPhase",
     title: "Show Pile Progress Through Mobs",
     description: "Draws the 'Progress: 77%' text on a pile through mobs",
-    subcategory: "Phase 2"
+    subcategory: "Phase 2",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "fresh",
     title: "Notify Party On Fresh",
     description: "Say `FRESH!` in party chat when you get fresh tools",
-    subcategory: "Phase 2"
-})
-.addSwitch({
-    category: "Kuudra",
-    configName: "endstoneRange",
-    title: "Endstone Mana Drain Range",
-    description: "Highlights players in mana drain range",
-    subcategory: "Phase 4"
+    subcategory: "Phase 2",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "partyDrain",
     title: "Party Drain",
     description: "Tells your party who you mana drained\n&9Party &8> &6[MVP&8++&6] nwjn&f: Drained 2431 mana for: [LucDJ, raidermc, LhxSeven]",
-    subcategory: "Phase 4"
+    subcategory: "Phase 4",
+    value: false
 })
 .addSwitch({
     category: "Kuudra",
     configName: "drainDisplay",
     title: "Mana Drain Display",
     description: "Shows buffs received from mana drain",
-    subcategory: "Phase 4"
-})
-.addSwitch({
-    category: "Kuudra",
-    configName: "rendArrowsPulled",
-    title: "Rend Arrows",
-    description: "Shows how many arrows were pulled while rending",
-    subcategory: "Phase 4"
-})
-.addSwitch({
-    category: "Kuudra",
-    configName: "inLava",
-    title: "In Lava",
-    description: "Shows if Kuudra is in Lava for botv users",
     subcategory: "Phase 4",
-    shouldShow(data) {
-        return data.kuudraHitbox
-    }
+    value: false
 })
 .addSwitch({
     category: "Crimson Isle",
     configName: "announceVanqs",
     title: "Announce Vanquishers",
     description: "Announces Vanquisher coords to party",
-    subcategory: ""
+    value: false
 })
 .addSwitch({
     category: "Crimson Isle",
     configName: "magma",
     title: "Better Magma Boss Message",
     description: "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35% &7(100%)",
-    subcategory: ""
+    value: false
 })
 .addSwitch({
     category: "Mining",
     configName: "mineshaftWaypoints",
     title: "Mineshaft Waypoints",
     description: "Shows guesses of corpses and exit in mineshafts, walk within 3 blocks of a guess waypoint to remove it",
-    subcategory: ""
+    value: false
 })
 .addSwitch({
     category: "QOL",
     configName: "highlight",
     title: "Toggle Block Highlight",
     description: "Toggles block highlight",
-    subcategory: ""
+    value: false
 })
 .addColorPicker({
     category: "QOL",
@@ -454,24 +439,37 @@ conf
     title: "Highlight Color",
     description: "Sets the color for block highlight",
     value: [255, 255, 255, 255],
-    subcategory: ""
+})
+.addSwitch({
+    category: "QOL",
+    configName: "fallingBlocks",
+    title: "Remove Falling Blocks",
+    description: "Cancels the EntityJoinWorld event of falling blocks",
+    value: false
 })
 .addSwitch({
     category: "QOL",
     configName: "discord",
     title: "Remove Discord Warnings",
     description: "Removes:\n'&cPlease be mindful of Discord links in chat as they may pose a security risk&r'",
-    subcategory: ""
+    value: false
 })
 .addSwitch({
     category: "Utilities",
     configName: "damageTracker",
     title: "Damage Tracker",
     description: "Shows damage tags in chat",
-    subcategory: ""
+    value: false
+})
+.addSwitch({
+    category: "Utilities",
+    configName: "rendArrows",
+    title: "Rend Arrows",
+    description: "Shows the amount or arrows pulled on rend",
+    value: false
 })
 
-import { PREFIX, version } from "./constants"
+import { PREFIX, version } from "./Constants"
 
 const changelog = `# §b${version}§r\n` + FileLib.read("NwjnAddons", "changelog.md")
 
@@ -481,11 +479,5 @@ export const meinConf = new Settings("NwjnAddons", conf, "utils/data/Scheme.json
     .setPos(15, 15)
     .setSize(70, 70)
     .apply()
-
-// * dev
-register("command", () => {
-  meinConf.setScheme("configData/scheme.json").apply()
-}).setName("apply", true);
-// */
 
 export default () => meinConf.settings;

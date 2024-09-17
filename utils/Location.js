@@ -5,7 +5,6 @@ class Loc {
   #world;
   #zone;
   #instance;
-  #spawn;
 
   constructor() {
     register("worldLoad", () => this._findWorld()).setPriority(Priority.LOWEST)
@@ -16,18 +15,15 @@ class Loc {
     this.#zone = undefined
     this.#world = undefined
     this.#instance = undefined
-    this.#spawn = undefined
   }
   
   _findWorld(recurse = 10) {
     if (!recurse) return;
 
-    const tab = TabList?.getNames()?.find(tab => tab.match(/^§r§b§l(Area|Dungeon):/))
-    this.#world = tab?.removeFormatting()?.match(/: (.+)$/)?.[1]
+    this.#world = TabList?.getNames()?.find(tab => /^§r§b§l(Area|Dungeon):/.test(tab))?.removeFormatting()?.match(/: (.+)$/)?.[1]
 
     if (!this.#world) return delay(() => this._findWorld(recurse - 1), 1000)
 
-    this.#spawn = [World.spawn.getX(), World.spawn.getY(), World.spawn.getZ()]
     delay(() => setRegisters(), 500)
     this._findZone()
   };
@@ -36,7 +32,7 @@ class Loc {
     const line = Scoreboard?.getLines()?.find(line => line.getName().match(/^ §[57][⏣ф]/))
     this.#zone = line?.getName()?.removeFormatting()?.match(/ [⏣ф] (.+)/)?.[1]?.replace(/[^\x0-\xFF]/g, "")?.trim()
 
-    if (this.#zone) this.#instance = this.#zone?.match(/\([FMT][1-7]\)$/)?.[1]
+    if (this.#zone) this.#instance = this.#zone?.match(/([FMT][1-7])$/)?.[1]
 
     delay(() => {
       if (this.#world) this._findZone()
@@ -95,10 +91,6 @@ class Loc {
 
   get Instance() {
     return this.#instance ?? "None"
-  }
-
-  get Spawn() {
-    return this.#spawn ?? "None"
   }
 
   get Data() {

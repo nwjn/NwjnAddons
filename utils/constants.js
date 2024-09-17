@@ -2,8 +2,29 @@ export const version = (JSON.parse(FileLib.read("NwjnAddons", "metadata.json")))
 
 export const PREFIX = "§r§d§l[NwjnAddons]§r"
 
-export const EntityArmorStand = Java.type("net.minecraft.entity.item.EntityArmorStand")
-export const EntityPlayer = Java.type("net.minecraft.client.entity.EntityOtherPlayerMP")
-export const EntityMagmaCube = Java.type(`net.minecraft.entity.monster.EntityMagmaCube`)
-export const EntityGiant = Java.type("net.minecraft.entity.monster.EntityGiantZombie");
-export const SMA = Java.type('net.minecraft.entity.SharedMonsterAttributes');
+export const chatType = {
+  0: "pc", // party
+  1: "ac", // all
+  2: "gc" // guild
+};
+
+export const shortNum = {
+  undefined: 1,
+  "k": 1_000,
+  "m": 1_000_000,
+  "b": 1_000_000_000
+};
+
+export const ENTITY = {
+  "ArmorStand": Java.type("net.minecraft.entity.item.EntityArmorStand"),
+  "FallingBlock": Java.type("net.minecraft.entity.item.EntityFallingBlock"),
+  "Player": Java.type("net.minecraft.client.entity.EntityOtherPlayerMP"),
+  "MagmaCube": Java.type(`net.minecraft.entity.monster.EntityMagmaCube`),
+  "Giant": Java.type("net.minecraft.entity.monster.EntityGiantZombie"),
+  "SMA": Java.type('net.minecraft.entity.SharedMonsterAttributes'),
+  "JoinWorld": Java.type("net.minecraftforge.event.entity.EntityJoinWorldEvent")
+};
+
+export const PACKET = {
+  "S0FPacketSpawnMob": Java.type("net.minecraft.network.play.server.S0FPacketSpawnMob")
+}

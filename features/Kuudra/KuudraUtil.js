@@ -1,5 +1,5 @@
-import { EntityGiant, EntityArmorStand } from "../../utils/constants";
 import { meinConf } from "../../utils/Settings.js";
+import Party from "../../utils/Party.js";
 
 const PHASE = {
   "Talk with me to begin!": 0,
@@ -14,7 +14,7 @@ class KuudraUtil {
   #phase = undefined
 
   constructor() {
-    // [Register Checks]
+    // [Register Checks][NPC] Elle: Talk with me to begin!
     this._setRegisters()
     meinConf.onCloseGui(() => this._setRegisters())
 
@@ -24,23 +24,12 @@ class KuudraUtil {
 
     // [Phase Listener]
     register("chat", (msg) => {
-      this.#phase = PHASE?.[msg]
+      const phase = PHASE?.[msg]
+      if (!phase) return
+
+      this.#phase = phase
       this._setRegisters()
     }).setCriteria("[NPC] Elle: ${msg}")
-
-    // // [Crate Entities]
-    // this.registerWhen(register("step", () => {
-    //   this.#crates =
-    //     World.getAllEntitiesOfType(EntityGiant.class)
-    //       .filter(it => it.entity?.func_70694_bm()?.toString() === "1xitem.skull@3")
-    // }).setDelay(2), () => this.inPhase(1))
-
-    // // [Pile Entities]
-    // this.registerWhen(register("step", () => {
-    //   this.#piles =
-    //     World.getAllEntitiesOfType(EntityArmorStand.class)
-    //       .filter(it => /PROGRESS: \d{1,3}%/.test(it.getName()?.removeFormatting()))
-    // }).setDelay(2), () => this.inPhase(2))
   }
   
   registerWhen(trigger, dependency, active = false) {
@@ -65,6 +54,18 @@ class KuudraUtil {
   _reset() {
     this._setRegisters(false)
     this.#phase = undefined
+    this.kuudra = undefined
+    this.party = Party.Members
+    this.teammates = []
+    this.preName = ""
+    this.preLoc = undefined
+    this.supplies = [true, true, true, true, true, true]
+    this.missing = ""
+    this.crates = []
+    this.freshers = new Set()
+    this.freshTime = 0
+    this.build = 0
+    this.piles = []
   }
   
   /**

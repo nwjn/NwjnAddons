@@ -1,6 +1,7 @@
-- §aAdded the new settings GUI, Amaterasu
-- §aAdded more functionallity to kuudra features while improving performance
-- §aAdded HypixelModAPI for better party features
+- §aAmaterasu Settings GUI
+- §aBetter Kuudra
+- §aPerformance
+- §aHypixelModAPI for party packets
 
 - §eChanged mana enchant calc to be more efficient
 - §eOrganized and refactored code

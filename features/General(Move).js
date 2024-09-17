@@ -4,7 +4,7 @@ import { delay, registerWhen, getRGB } from "../utils/functions.js"
 import { data } from "../utils/data/DataWriter.js"
 import RenderLib from "RenderLib"
 import renderBeaconBeam from "BeaconBeam";
-import { EntityArmorStand, version } from "../utils/constants";
+import { version, ENTITY } from "../utils/Constants.js";
 import { getPlayerName } from "../utils/functions/player.js";
 import Party from "../utils/Party.js"
 
@@ -34,7 +34,7 @@ registerWhen(register("step", () => {
 
     return wp
   })
-}).setFps(2), () => Settings().waypoint)
+}).setDelay(1), () => Settings().waypoint)
 
 registerWhen(register("renderWorld", () => {
   let i = formatted.length
@@ -69,8 +69,7 @@ registerWhen(register("chat", (player, _, x, y, z) => {
 registerWhen(register("chat", (player, command) => {
   player = getPlayerName(player)
   
-  Party._getParty()
-  const leader = Settings().leader && Party.amILeader()
+  const leader = Party.amILeader()
   delay(() => {
     switch (command.toLowerCase()) {
       case "time":
@@ -114,12 +113,13 @@ registerWhen(register("chat", (player, command) => {
   })
 }).setCriteria(/Party > (.+): [,.?!](\w+)/), () => Settings().party)
 
+const ARMOR_STAND_CLASS = ENTITY.ArmorStand.class
 registerWhen(register("entityDeath", (entity) => {
   const mcEntity = entity.getEntity()
   mcEntity.func_70106_y()
 
   Client.scheduleTask(1, () => {
-    const stands = World.getWorld().func_72872_a(EntityArmorStand.class, mcEntity.func_174813_aQ().func_72314_b(3, 3, 3)).filter(e => e.toString().match(/§r §[^a]0§f\//g))
+    const stands = World.getWorld().func_72872_a(ARMOR_STAND_CLASS, mcEntity.func_174813_aQ().func_72314_b(3, 3, 3)).filter(e => e.toString().match(/§r §[^a]0§f\//g))
     stands.forEach(stand => stand.func_70106_y())
   })
 }), () => Settings().dead)

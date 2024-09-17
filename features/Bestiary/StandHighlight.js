@@ -1,9 +1,10 @@
 import Settings from "../../utils/Settings.js"
 import RenderLib from "RenderLib"
 import { registerWhen, getRGB } from "../../utils/functions.js";
-import { EntityArmorStand } from "../../utils/constants";
 import { getClassOfEntity } from "./MobHighlight.js";
+import { ENTITY } from "../../utils/Constants.js";
 
+const ARMOR_STAND_CLASS = ENTITY.ArmorStand.class
 let standList = []
 export function setStandHighlight() {
   standList = []
@@ -27,7 +28,7 @@ export function setStandHighlight() {
 let renderThese = []
 registerWhen(register("step", () => {
   renderThese = []
-  World.getAllEntitiesOfType(EntityArmorStand.class).forEach(stand => {
+  World.getAllEntitiesOfType(ARMOR_STAND_CLASS).forEach(stand => {
     standList.forEach(entry => {
       if (stand.getName().includes(entry)) {
         renderThese.push(stand)

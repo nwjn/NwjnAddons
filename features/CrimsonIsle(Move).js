@@ -23,7 +23,7 @@ registerWhen(register("chat", () => {
 
 let totalDamage = 0
 registerWhen(register("step", () => {
-  const line = Scoreboard?.getLines()?.find(l => l.toString().removeFormatting().includes("Boss: "))
+  const line = Scoreboard.getLines()?.find(l => l.getName().removeFormatting().includes("Boss: "))
   if (line) totalDamage = parseInt(line.toString().removeFormatting().replace(/[^0-9]/g, ""))
 }).setDelay(5), () => Settings().magma && Loc.inWorld("Crimson Isle"))
 
@@ -32,6 +32,4 @@ registerWhen(register('chat', (damage, event) => {
 
   cancel(event)
   ChatLib.chat(`&4&lMagma Boss&r &8> &c+${ damage }% &7(${ totalDamage }%)`)
-  
-  if (totalDamage === 100) totalDamage = 0
 }).setCriteria("The Magma Boss angers! (+${damage}% Damage)"), () => Settings().magma && Loc.inWorld("Crimson Isle"))

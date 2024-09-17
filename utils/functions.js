@@ -32,18 +32,16 @@ export function fixLength(x) {
 }
 //
 
-export function getOldRGB(setting) {
-    return [setting.getRed() / 255, setting.getGreen() / 255, setting.getBlue() / 255]
-}
-export function getRGB(setting) {
-  return setting.map(val => val / 255)
+export function getRGB([r, g, b, a]) {
+  return [r/255, g/255, b/255, a/255]
 }
 
-const SMA = Java.type('net.minecraft.entity.SharedMonsterAttributes');
+import { ENTITY } from "./Constants";
+const SMA = ENTITY.SMA
 export function getMaxHP(entity) {
-  return entity.getEntity().func_110148_a(SMA.field_111267_a).func_111125_b()
+  return entity.entity.func_110148_a(SMA.field_111267_a).func_111125_b()
 }
 
 export function getNowHP(entity) {
-  return entity.getEntity().func_110143_aJ()
+  return entity.entity.func_110143_aJ()
 }

@@ -1,22 +1,22 @@
 import { HypixelModAPI } from "../../HypixelModAPI";
-import { delay } from "./functions.js";
 
 class Party {
-  #allMemebers = []
+  #members = []
   #leader = ""
+  #me = Player.getName()
+
   constructor() {
     HypixelModAPI.on("partyInfo", (partyInfo) => {
-      this.#allMemebers = []
+      this.#members = []
       this.#leader = ""
       Object.entries(partyInfo).forEach(([uuid, role]) => {
-        delay(() => {
-          if (role === "LEADER") this.#leader = this._uuidToIGN(uuid)
-          else this.#allMemebers.push(this._uuidToIGN(uuid))
-        }, 50)
+        const ign = this._uuidToIGN(uuid)
+        if (role === "LEADER") this.#leader = ign
+        else if (ign !== this.#me) this.#members.push(ign)
       })
     })
 
-    register("step", () => this._getParty()).setDelay(60)
+    register("step", () => this._getParty()).setDelay(30)
   }
 
   _uuidToIGN(uuid) {
@@ -28,15 +28,15 @@ class Party {
   }
 
   inParty() {
-    return () => this.#allMemebers != {}
+    return this.#members.length && this.#leader
   }
 
   amILeader() {
-    return this.#leader === Player.getName()
+    return this.#leader === this.#me
   }
 
   get Members() {
-    return () => this.#allMemebers
+    return this.#members
   }
 }
 

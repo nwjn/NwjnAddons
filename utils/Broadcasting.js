@@ -1,4 +1,4 @@
-import { PREFIX } from "./constants"
+import { PREFIX } from "./Constants"
 import { data } from "./data/DataWriter"
 
 // [Welcome Message]

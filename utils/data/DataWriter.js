@@ -1,12 +1,11 @@
 // @PogData
 class DataWriter {
-  constructor(module, path, defaultObj = {}, errMsg = `&l${ module }-${ fileName } &cData reset.`) {
+  constructor(module, path, defaultObj = {}) {
     let data = {}
     try {
       data = JSON.parse(FileLib.read(module, path))
     } catch (err) {
       console.error(err)
-      ChatLib.chat(errMsg)
     }
     register("gameUnload", () => {
       FileLib.write(
@@ -21,7 +20,6 @@ class DataWriter {
   }
 }
 
-import { PREFIX } from "../constants.js"
 export let data = new DataWriter("NwjnAddons", "/utils/data/User.json", {
   "newUser": true,
   "newMsg": "",
@@ -52,7 +50,7 @@ export let data = new DataWriter("NwjnAddons", "/utils/data/User.json", {
   "corpseL": [15, 250, 1],
 
   "customL": [15, 250, 1]
-}, `${PREFIX} &cReset user data due to error. Sorry for the inconvenience.`);
+});
 
 // [Player Stat Data]
 register("chat", (power) => {
@@ -70,20 +68,17 @@ register("guiMouseRelease", () => {
   Client.scheduleTask(1, () => {
     const itemLore = container.getStackInSlot(4)?.getLore()
       
-    const tunings = itemLore?.reduce(
+    data.tuning = itemLore?.reduce(
       (acum, val) => 
         acum + (val.removeFormatting().match(/^\+(\d+.)/)?.[1] ?? ""),
       "",
-    )
+    ) || "Unknown"
   
-    const mp = itemLore?.reduce(
+    data.mp = itemLore?.reduce(
       (acum, val) => 
         acum || val.removeFormatting().match(/^Magical Power: (.+)$/)?.[1],
       "",
-    )
-  
-    data.tuning = tunings || "Unknown"
-    data.mp = mp || "Unknown"
+    ) || "Unknown"
   })
 });
 
@@ -100,4 +95,4 @@ function setData() {
   setStandHighlight()
 }
 delay(() => setData(), 3000);
-meinConf.onCloseGui(() => setData())
+meinConf.onCloseGui(() => setData());

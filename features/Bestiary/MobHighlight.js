@@ -1,8 +1,7 @@
 import Settings from "../../utils/Settings.js"
 import RenderLib from "RenderLib"
 import { registerWhen, getRGB, getMaxHP } from "../../utils/functions.js";
-import { PREFIX } from "../../utils/constants";
-import { shortNum } from "../../utils/Enums";
+import { PREFIX, shortNum } from "../../utils/Constants.js";
 
 let mobsHighlight = []
 /**
