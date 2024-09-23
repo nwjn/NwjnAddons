@@ -1,13 +1,13 @@
 import Settings from "../../utils/Settings"
 import { data } from "../../utils/data/DataWriter.js";
-import { Overlay } from "../../utils/overlay";
+import { Overlay } from "../../utils/Overlay.js";
 import { registerWhen, fixLength } from "../../utils/functions.js";
 import Loc from "../../utils/Location.js"
 
 const blazeExample = 
 `&aGummy: &cInactive
 &7Wisp: &cInactive`
-const blazeOverlay = new Overlay("blaze", ["Crimson Isle"], () => true, data.blazeL, "moveBlaze", blazeExample)
+const blazeOverlay = new Overlay("blaze", ["Crimson Isle"], data.blazeL, "moveBlaze", blazeExample)
 
 function timeFormat (seconds) {
   return seconds ? `${fixLength(~~(seconds / 60))}:${fixLength(seconds % 60)}` : "&cInactive"

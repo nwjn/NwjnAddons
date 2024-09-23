@@ -1,10 +1,10 @@
 import Loc from "../../utils/Location.js"
 import { data } from "../../utils/data/DataWriter.js";
-import { Overlay } from "../../utils/overlay";
+import { Overlay } from "../../utils/Overlay.js";
 import { registerWhen } from "../../utils/functions.js";
 
 const miniExample = `&6Last Minibosses:\n`
-const miniOverlay = new Overlay("mini", ["Crimson Isle"], () => true, data.miniL, "moveMini", miniExample)
+const miniOverlay = new Overlay("mini", ["Crimson Isle"], data.miniL, "moveMini", miniExample)
 
 registerWhen(register("chat", (mini) => {
   mini = mini.trim()

@@ -32,24 +32,24 @@ export let data = new DataWriter("NwjnAddons", "/utils/data/User.json", {
   "wisp": 0,
   
   "lastMini": [],
-  "ftL": [80, 250, 1],
-  "poisonL": [300, 300, 1],
-  "blazeL": [90, 300, 1],
-  "clockL": [10, 350, 1],
-  "miniL": [125, 125, 1],
-  "manaL": [100, 100, 1],
-  "pityL": [220, 120, 1],
+  "ftL": [80, 250, 1, false],
+  "poisonL": [300, 300, 1, false],
+  "blazeL": [90, 300, 1, false],
+  "clockL": [10, 350, 1, false],
+  "miniL": [125, 125, 1, false],
+  "manaL": [100, 100, 1, false],
+  "pityL": [220, 120, 1, false],
 
-  "statsL": [15, 250, 1],
-  "petL": [15, 250, 1],
-  "bestiaryL": [15, 250, 1],
-  "cropL": [15, 250, 1],
-  "visitorL": [15, 250, 1],
-  "commL": [15, 250, 1],
-  "powderL": [15, 250, 1],
-  "corpseL": [15, 250, 1],
+  "statsL": [15, 250, 1, false],
+  "petL": [15, 250, 1, false],
+  "bestiaryL": [15, 250, 1, false],
+  "cropL": [15, 250, 1, false],
+  "visitorL": [15, 250, 1, false],
+  "commL": [15, 250, 1, false],
+  "powderL": [15, 250, 1, false],
+  "corpseL": [15, 250, 1, false],
 
-  "customL": [15, 250, 1]
+  "customL": [15, 250, 1, false]
 });
 
 // [Player Stat Data]

@@ -1,5 +1,5 @@
 import { delay } from "../../../utils/functions.js";
-import { Overlay } from "../../../utils/overlay.js";
+import { Overlay } from "../../../utils/Overlay.js";
 import { data } from "../../../utils/data/DataWriter.js";
 import { clamp } from "../../../utils/functions/format.js";
 
@@ -9,7 +9,7 @@ import KuudraUtil from "../KuudraUtil.js";
 const drainExample =
 `&6Fero: &c0%
 &6Strong: &c0%`;
-const drainOverlay = new Overlay("drainDisplay", ["Kuudra"], () => true, data.manaL, "moveDrain", drainExample);
+const drainOverlay = new Overlay("drainDisplay", ["Kuudra"], data.manaL, "moveDrain", drainExample);
 
 const calcPercent = (title, mana, lvl) => {
   const percent = clamp(

@@ -1,13 +1,13 @@
 import Settings from "../../utils/Settings"
 import { data } from "../../utils/data/DataWriter.js";
-import { Overlay } from "../../utils/overlay";
+import { Overlay } from "../../utils/Overlay.js";
 import { registerWhen } from "../../utils/functions.js";
 
 const poisonExample =
 `&c0&8x &5Twilight Arrow Poison
 &c0&8x &rFlint Arrows
 &c0&8x &aToxic Arrow Poison`;
-const poisonOverlay = new Overlay("poison", ["all"], () => true, data.poisonL, "movePoison", poisonExample);
+const poisonOverlay = new Overlay("poison", ["all"], data.poisonL, "movePoison", poisonExample);
 
 // TODO (ADD): 9th slot arrows left
 registerWhen(register("step", () => {

@@ -44,8 +44,8 @@ import "./features/HUD/Widgets"
     import "./features/Mining/MineshaftWaypoints"
     
     import "./features/QOL/BlockHighlight"
-    import "./features/QOL/DiscordCleaner"
-    import "./features/QOL/FallingBlocks.js"
+    import "./features/QOL/ChatCleanup"
+    import "./features/QOL/EntitySpawn"
     
     import "./features/Utilities/Commands"
     import "./features/Utilities/DamageTracker"
@@ -58,7 +58,7 @@ import "./utils/functions/hotfixes.js"
 import { PREFIX } from "./utils/Constants.js";
 import "./utils/functions.js"
 import Loc from "./utils/Location"
-import { openGUI } from "./utils/overlay"
+import { openGUI } from "./utils/Overlay.js"
 import "./utils/Party.js"
 import { meinConf } from "./utils/Settings.js"
 

@@ -17,7 +17,6 @@ export const shortNum = {
 
 export const ENTITY = {
   "ArmorStand": Java.type("net.minecraft.entity.item.EntityArmorStand"),
-  "FallingBlock": Java.type("net.minecraft.entity.item.EntityFallingBlock"),
   "Player": Java.type("net.minecraft.client.entity.EntityOtherPlayerMP"),
   "MagmaCube": Java.type(`net.minecraft.entity.monster.EntityMagmaCube`),
   "Giant": Java.type("net.minecraft.entity.monster.EntityGiantZombie"),

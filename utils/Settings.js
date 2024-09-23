@@ -1,8 +1,7 @@
 import Settings from "../../Amaterasu/core/Settings"
 import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
-const conf = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
-
-conf
+import { openGUI } from "./Overlay"
+const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
 .addSwitch({
     category: "General",
     configName: "waypoint",
@@ -109,7 +108,7 @@ conf
     title: "Move GUI Elements",
     description: "Click to edit gui locations",
     onClick() {
-        ChatLib.command("nwjn gui", true)
+        openGUI()
     }
 })
 .addSwitch({
@@ -447,12 +446,58 @@ conf
     description: "Cancels the EntityJoinWorld event of falling blocks",
     value: false
 })
-.addSwitch({
+.addMultiCheckbox({
     category: "QOL",
-    configName: "discord",
-    title: "Remove Discord Warnings",
-    description: "Removes:\n'&cPlease be mindful of Discord links in chat as they may pose a security risk&r'",
-    value: false
+    configName: "entitySpawns",
+    title: "Remove Entity",
+    description: "Cancels spawn events of these common clutter options",
+    placeHolder: "Click",
+    options: [
+        {
+            title: "Falling Blocks",
+            configName: "fallingBlocks",
+            value: false
+        },
+        {
+            title: "XP Orbs",
+            configName: "xpOrbs",
+            value: false
+        },
+        {
+            title: "Arrows",
+            configName: "arrows",
+            value: false
+        },
+        {
+            title: "Wither Skulls",
+            configName: "witherSkulls",
+            value: false
+        }
+    ]
+})
+.addMultiCheckbox({
+    category: "QOL",
+    configName: "chatCleanup",
+    title: "Cleanup Chat",
+    description: "Cancels message events of these options",
+    placeHolder: "Click",
+    options: [
+        {
+            title: "Boss Messages",
+            configName: "bossCleaner",
+            value: false
+        },
+        {
+            title: "Discord Warnings",
+            configName: "discordCleaner",
+            value: false
+        },
+        {
+            title: "Visitor Dialouge",
+            configName: "visitorCleaner",
+            value: false
+        }
+    ]
 })
 .addSwitch({
     category: "Utilities",
@@ -473,7 +518,7 @@ import { PREFIX, version } from "./Constants"
 
 const changelog = `# §b${version}§r\n` + FileLib.read("NwjnAddons", "changelog.md")
 
-export const meinConf = new Settings("NwjnAddons", conf, "utils/data/Scheme.json", `${PREFIX}: by §6nwjn`)
+export const meinConf = new Settings("NwjnAddons", defCon1, "utils/data/Scheme.json", `${PREFIX}: by §6nwjn`)
     .addMarkdown("Changelog", changelog)
 
     .setPos(15, 15)

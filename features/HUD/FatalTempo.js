@@ -1,12 +1,12 @@
 import Settings from "../../utils/Settings"
 import { data } from "../../utils/data/DataWriter.js";
-import { Overlay } from "../../utils/overlay";
+import { Overlay } from "../../utils/Overlay.js";
 import { registerWhen } from "../../utils/functions.js";
 import { clamp } from "../../utils/functions/format.js";
 import Loc from "../../utils/Location.js"
 
 const ftExample = `Fatal Tempo:&c   0% | 0.00s`;
-const ftOverlay = new Overlay("fatalTempo", ["all"], () => true, data.ftL, "moveFt", ftExample);
+const ftOverlay = new Overlay("fatalTempo", ["all"], data.ftL, "moveFt", ftExample);
 
 let prevHit = 0
 let hits = 0
