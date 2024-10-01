@@ -48,7 +48,7 @@ const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
 })
 .addSwitch({
     category: "General",
-    configName: "dead",
+    configName: "deathAnimation",
     title: "Stops Entity Death Animation",
     description: "Stops entity death animation and removes armor stands that show 0 hp",
     value: false

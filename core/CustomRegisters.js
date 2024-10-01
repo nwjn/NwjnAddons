@@ -66,7 +66,7 @@ createCustomEvent(EventEnums.ENTITY.SPAWNMOB, (fn, clazz) =>
 
 createCustomEvent(EventEnums.ENTITY.DEATH, (fn, clazz) =>
     register("entityDeath", (entity) => {
-        if (!(entity.entity instanceof clazz)) return
+        if (clazz && !(entity.entity instanceof clazz)) return
 
         fn(entity)
     }).unregister()

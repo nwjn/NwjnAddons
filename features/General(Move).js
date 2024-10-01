@@ -2,17 +2,6 @@
 // import { registerWhen } from "../utils/functions.js"
 
 
-// const ARMOR_STAND_CLASS = net.minecraft.entity.item.EntityArmorStand
-// registerWhen(register("entityDeath", (entity) => {
-//   const mcEntity = entity.getEntity()
-//   mcEntity.func_70106_y()
-
-//   Client.scheduleTask(1, () => {
-//     const stands = World.getWorld().func_72872_a(ARMOR_STAND_CLASS, mcEntity.func_174813_aQ().func_72314_b(3, 3, 3)).filter(e => e.toString().match(/§r §[^a]0§f\//g))
-//     stands.forEach(stand => stand.func_70106_y())
-//   })
-// }), () => Settings().dead)
-
 // let reaperUsed = 0
 // registerWhen(register("soundPlay", () => {
 //   const armor = Player.armor.getChestplate()?.getNBT()?.getCompoundTag("tag")?.getCompoundTag("ExtraAttributes")?.getString("id")
