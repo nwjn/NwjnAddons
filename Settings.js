@@ -48,13 +48,6 @@ const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
 })
 .addSwitch({
     category: "General",
-    configName: "deathAnimation",
-    title: "Stops Entity Death Animation",
-    description: "Stops entity death animation and removes armor stands that show 0 hp",
-    value: false
-})
-.addSwitch({
-    category: "General",
     configName: "sbxp",
     title: "Skyblock XP Gain Message",
     description: "Takes action bar skyblock xp gained message and pastes them in chat",
@@ -438,6 +431,13 @@ const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
     title: "Highlight Color",
     description: "Sets the color for block highlight",
     value: [255, 88, 213, 255]
+})
+.addSwitch({
+    category: "QOL",
+    configName: "deathAnimation",
+    title: "Stops Entity Death Animation",
+    description: "Stops entity death animation and removes its armorstand tag",
+    value: false
 })
 .addMultiCheckbox({
     category: "QOL",
