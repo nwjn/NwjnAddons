@@ -8,7 +8,7 @@ import { scheduleTask } from "../core/CustomRegisters";
 let hidingPartySpam = false
 const feat = new Feature()
   .addSubEvent(
-    new Event(EventEnums.CHAT, (event) => {
+    new Event(EventEnums.SERVER.CHAT, (event) => {
       cancel(event)
     }, /(Party [Members|Leader:|Members:]+.+|-----------------------------------------------------)/),
     () => hidingPartySpam

@@ -25,4 +25,4 @@ register("command", (arg) => {
       Settings().getConfig().setScheme("utils/data/Scheme.json").apply();
       break;
   }
-}).setName("nwjndev");
+}).setName("nwjndebug");

@@ -71,7 +71,7 @@ const help =
 
 new Feature("party")
   .addEvent(
-    new Event(EventEnums.CHAT, (player, cmd) => {
+    new Event(EventEnums.CLIENT.CHAT, (player, cmd) => {
       player = getPlayerName(player).toLowerCase()
       ChatLib.chat(data.blacklist.toString())
       if (data.blacklist.includes(player)) return scheduleTask(() => ChatLib.chat(`${ TextHelper.PREFIX } &4Blacklisted command from &c${ player }`))
@@ -85,7 +85,7 @@ new Feature("party")
       if (response) return scheduleTask(() => ChatLib.chat(`pc ${ response }`), 5) 
       if (!Party.amILeader()) return
       
-      leader.find(([keys, fn]) => { if (~keys.indexOf(cmd)) return response = fn(player, cmd); })
+      leader.find(([keys, fn]) => { if (~keys.indexOf(cmd)) return response = fn(player, cmd) })
       
       if (/[fmt][1-7]/.test(cmd)) {
         const match = cmd.match(/([fmt])([1-7])/)

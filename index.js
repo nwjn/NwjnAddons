@@ -4,8 +4,8 @@ import "./utils/Party"
 import "./utils/functions"
 import "./utils/Command"
 
-import "./features/CrimsonIsle(Move)";
-import "./features/General(Move)"
+// import "./features/CrimsonIsle(Move)";
+// import "./features/General(Move)"
 import "./features/General/ChatWaypoints"
 import "./features/General/PartyCommands"
 
@@ -17,41 +17,41 @@ import "./features/General/PartyCommands"
 // import "./features/HUD/Widgets"
 
 // Kuudra {
-  import "./features/Kuudra/KuudraUtil"
+  // import "./features/Kuudra/KuudraUtil"
   
   // General
-  import "./features/Kuudra/General/CancelUselessPerk"
-  import "./features/Kuudra/General/TeamHighlight"
-  import "./features/Kuudra/General/KuudraBox"
-  import "./features/Kuudra/General/KuudraHP"
+  // import "./features/Kuudra/General/CancelUselessPerk"
+  // import "./features/Kuudra/General/TeamHighlight"
+  // import "./features/Kuudra/General/KuudraBox"
+  // import "./features/Kuudra/General/KuudraHP"
   
   // P1
-  import "./features/Kuudra/Phase1/CustomSupplyMessage"
-  import "./features/Kuudra/Phase1/NoSupply"
-  import "./features/Kuudra/Phase1/PearlLineups"
-  import "./features/Kuudra/Phase1/SupplyDrops"
-  import "./features/Kuudra/Phase1/SupplyBeacons"
+  // import "./features/Kuudra/Phase1/CustomSupplyMessage"
+  // import "./features/Kuudra/Phase1/NoSupply"
+  // import "./features/Kuudra/Phase1/PearlLineups"
+  // import "./features/Kuudra/Phase1/SupplyDrops"
+  // import "./features/Kuudra/Phase1/SupplyBeacons"
   
   // P2
-  import "./features/Kuudra/Phase2/BuildFresh"
-  import "./features/Kuudra/Phase2/BuildPercent"
-  import "./features/Kuudra/Phase2/BuildPiles"
-  import "./features/Kuudra/Phase2/FreshBox"
+  // import "./features/Kuudra/Phase2/BuildFresh"
+  // import "./features/Kuudra/Phase2/BuildPercent"
+  // import "./features/Kuudra/Phase2/BuildPiles"
+  // import "./features/Kuudra/Phase2/FreshBox"
   
   // P3
   
   // P4
-  import "./features/Kuudra/Phase4/DrainDisplay"
-  import "./features/Kuudra/Phase4/ManaDrain"
+  // import "./features/Kuudra/Phase4/DrainDisplay"
+  // import "./features/Kuudra/Phase4/ManaDrain"
   // Kuudra }
   
   // Bestiary {
-    import "./features/Bestiary/MobHighlight"
-    import "./features/Bestiary/PlayerHighlight"
-    import "./features/Bestiary/StandHighlight"
+    // import "./features/Bestiary/MobHighlight"
+    // import "./features/Bestiary/PlayerHighlight"
+    // import "./features/Bestiary/StandHighlight"
     // Bestiary }
     
-    import "./features/Mining/MineshaftWaypoints"
+    // import "./features/Mining/MineshaftWaypoints"
     
     import "./features/QOL/BlockHighlight"
     import "./features/QOL/ChatCleanup"
@@ -62,22 +62,20 @@ import "./features/General/PartyCommands"
     import "./features/Utilities/Dev"
     import "./features/Utilities/RendArrows"
 
-// register("command", (...args) => {
-//   switch (args[0]?.toLowerCase()) {
-//     case undefined:
-//       meinConf.openGui()
-//       break
-//     case "party":
-//       ChatLib.chat(`${ TextHelper.PREFIX } &eParty Command List:\n&r.time => shows the players current time\n.coords => sends the coords of the player\n.power => sends the players current Accessory Bag power\n.warp => warps party\n.transfer => transfers to sender\n.allinv => sets allinvite\n.pet => sends current pet\n.version => shows current nwjnaddons version\n.t5 => puts party into infernal kuudra\n.dropper => puts party into dropper game`);
-//       break;
-//     case "commands":
-//       ChatLib.chat(`${ TextHelper.PREFIX } &eCommand List:&r\n/clearchat => clears the chat\n/item => sends info about held item\n/entity => sends info about entity ur looking at\n/rocket => flys you to the moon!\n/calc <equation> => calculates\n/deal => trades player in front of you without needing to type name`);
-//       break;
-//     case "reload":
-//       Loc.resetWorld();
-//       ChatLib.chat(`${ TextHelper.PREFIX } &aReloading all triggers...`);
-//       break;
-//     default:
-//       ChatLib.chat(`${TextHelper.PREFIX} &r\n/nwjn => opens settings\n/nwjn gui => opens gui editor\n/nwjn party => see all party commands\n/nwjn commands => see all commands\n/nwjn reload => reloads all registers in case they aren't working`)
-//   }
-// }).setCommandName(`nwjn`, true).setAliases("nwjnaddons").setTabCompletions("party", "help")
+const rightClickMethod = Client.getMinecraft().getClass().getDeclaredMethod("func_147121_ag")
+rightClickMethod.setAccessible(true)
+function rightClick() {
+  rightClickMethod.invoke(Client.getMinecraft())
+}
+
+register("soundPlay", () => {
+  if (Player.getHeldItem()?.getRegistryName() !== "minecraft:fishing_rod") return
+  const caught = World.getAllEntitiesOfType(net.minecraft.entity.item.EntityArmorStand).find(stand => stand.getName().includes("!!!"))
+
+  if (caught) {
+    rightClick()
+    setTimeout(() => {
+      rightClick()
+    }, 250);
+  }
+}).setCriteria("note.pling")

@@ -9,8 +9,7 @@
     "DocGuiLib",
     "Elementa", 
     "RenderLib", 
-    "BeaconBeam", 
-    "HypixelModAPI",
+    "BeaconBeam",
     "PogData"
   ]
 }

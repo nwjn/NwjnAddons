@@ -8,7 +8,7 @@ let arrows = 0
 
 new Feature("rendArrows")
   .addEvent(
-    new Event(EventEnums.SOUNDPLAY, () => {
+    new Event(EventEnums.CLIENT.SOUNDPLAY, () => {
       if (!TextHelper.getExtraAttribute(Player.getHeldItem())?.enchantments?.ultimate_rend) return
       arrows++;
       if (arrows === 1) 

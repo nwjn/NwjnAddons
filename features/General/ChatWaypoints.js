@@ -11,7 +11,7 @@ import { data } from "../../utils/data/Data";
 const waypoints = new Map()
 const feat = new Feature("waypoint")
   .addEvent(
-    new Event(EventEnums.CHAT, (prefix, x, y, z) => {
+    new Event(EventEnums.CLIENT.CHAT, (prefix, x, y, z) => {
       prefix = prefix.addColor()
       const ign = getPlayerName(prefix.removeFormatting()).toLowerCase()
       
