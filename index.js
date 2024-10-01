@@ -61,21 +61,3 @@ import "./features/General/PartyCommands"
     import "./features/Utilities/DamageTracker"
     import "./features/Utilities/Dev"
     import "./features/Utilities/RendArrows"
-
-const rightClickMethod = Client.getMinecraft().getClass().getDeclaredMethod("func_147121_ag")
-rightClickMethod.setAccessible(true)
-function rightClick() {
-  rightClickMethod.invoke(Client.getMinecraft())
-}
-
-register("soundPlay", () => {
-  if (Player.getHeldItem()?.getRegistryName() !== "minecraft:fishing_rod") return
-  const caught = World.getAllEntitiesOfType(net.minecraft.entity.item.EntityArmorStand).find(stand => stand.getName().includes("!!!"))
-
-  if (caught) {
-    rightClick()
-    setTimeout(() => {
-      rightClick()
-    }, 250);
-  }
-}).setCriteria("note.pling")
