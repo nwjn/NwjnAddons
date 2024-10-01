@@ -1,15 +1,15 @@
-import { PREFIX } from "./Constants"
-import { data } from "./data/DataWriter"
+import { TextHelper } from "./TextHelper"
+import { data } from "./data/Data"
 
 // [Welcome Message]
 // very useful trigger
-const welcome = register("gameLoad", () => {
-  if (data.newUser) {
-    data.newUser = false
-
-    ChatLib.chat(`${ PREFIX } &dFrom: &6nwjn: &7Welcome! Open settings with '/nwjn'. Official Discord: https://discord.gg/3S3wXpC4gE`)
-  }
+const welcome = register("worldLoad", () => {
   welcome.unregister()
+  if (!data.newUser) return
+
+  data.newUser = false
+
+  ChatLib.chat(`${ TextHelper.PREFIX } &dFrom: &6nwjn: &7Welcome! Open settings with '/nwjn'. Official Discord: https://discord.gg/3S3wXpC4gE`)
 })
 
 // [Broadcast Message]
@@ -24,6 +24,14 @@ const messenger = register("worldLoad", () => {
 
   if (msg !== "Nothing" && msg !== data.newMsg) {
     data.newMsg = msg
-    ChatLib.chat(`${ PREFIX } &dFrom: &6nwjn: &7${ msg }`)
+    ChatLib.chat(`${ TextHelper.PREFIX } &dFrom: &6nwjn: &7${ msg }`)
   }
+});
+
+// [CT Update Message]
+const version = register("worldLoad", () => {
+  version.unregister()
+  const latest = JSON.parse(FileLib.getUrlContent("https://api.github.com/repos/Chattriggers/chattriggers/releases"))[0].name
+  if (ChatTriggers.MODVERSION === latest) return
+  ChatLib.chat(`${TextHelper.PREFIX} Please use Chattriggers-v${latest} to run this module most efficiently. https://github.com/ChatTriggers/ChatTriggers/releases/tag/${latest}`)
 })

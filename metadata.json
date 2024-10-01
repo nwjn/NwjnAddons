@@ -4,5 +4,13 @@
   "description": "if it works, it works, so dont judge the coding",
   "version": "0.11.6",
   "entry": "index.js",
-  "requires": ["Amaterasu", "RenderLib", "BeaconBeam", "HypixelModAPI"]
+  "requires": [
+    "Amaterasu",
+    "DocGuiLib",
+    "Elementa", 
+    "RenderLib", 
+    "BeaconBeam", 
+    "HypixelModAPI",
+    "PogData"
+  ]
 }

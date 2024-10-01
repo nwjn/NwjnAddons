@@ -1,28 +1,28 @@
-import Settings from "../../utils/Settings"
-import { data } from "../../utils/data/DataWriter.js";
-import { Overlay } from "../../utils/Overlay.js";
-import { registerWhen } from "../../utils/functions.js";
+// import Settings from "../../Settings"
+// import { data } from "../../utils/data/DataWriter.js";
+// import { Overlay } from "../../utils/Overlay.js";
+// import { registerWhen } from "../../utils/functions.js";
 
-const poisonExample =
-`&c0&8x &5Twilight Arrow Poison
-&c0&8x &rFlint Arrows
-&c0&8x &aToxic Arrow Poison`;
-const poisonOverlay = new Overlay("poison", ["all"], data.poisonL, "movePoison", poisonExample);
+// const poisonExample =
+// `&c0&8x &5Twilight Arrow Poison
+// &c0&8x &rFlint Arrows
+// &c0&8x &aToxic Arrow Poison`;
+// const poisonOverlay = new Overlay("poison", ["all"], data.poisonL, "movePoison", poisonExample);
 
-// TODO (ADD): 9th slot arrows left
-registerWhen(register("step", () => {
-  if (!World.isLoaded()) return;
+// // TODO (ADD): 9th slot arrows left
+// registerWhen(register("step", () => {
+//   if (!World.isLoaded()) return;
 
-  let items = {"Twilight Arrow Poison": 0, "Flint Arrow": 0, "Toxic Arrow Poison": 0}
-  const inv = Player.getInventory()?.getItems()?.filter(item => /(dyePowder|arrow)/g.test(item?.toString()))
-  if (!inv) return;
+//   let items = {"Twilight Arrow Poison": 0, "Flint Arrow": 0, "Toxic Arrow Poison": 0}
+//   const inv = Player.getInventory()?.getItems()?.filter(item => /(dyePowder|arrow)/g.test(item?.toString()))
+//   if (!inv) return;
 
-  let i = inv.length; while (i--) {
-    items[inv[i].getName().removeFormatting()] += inv[i].getStackSize();
-  }
+//   let i = inv.length; while (i--) {
+//     items[inv[i].getName().removeFormatting()] += inv[i].getStackSize();
+//   }
 
-  let text = `${ (!items["Twilight Arrow Poison"] ? "&c" : "&d") + items["Twilight Arrow Poison"] }&8x &5Twilight Arrow Poison`
-  text += `\n${ (!items["Flint Arrow"] ? "&c" : "&d") + items["Flint Arrow"] }&8x &rFlint Arrows`
-  text += `\n${ (!items["Toxic Arrow Poison"] ? "&c" : "&d") + items["Toxic Arrow Poison"] }&8x &aToxic Arrow Poison`
-  poisonOverlay.setMessage(text)
-}).setDelay(1), () => Settings().poison)
+//   let text = `${ (!items["Twilight Arrow Poison"] ? "&c" : "&d") + items["Twilight Arrow Poison"] }&8x &5Twilight Arrow Poison`
+//   text += `\n${ (!items["Flint Arrow"] ? "&c" : "&d") + items["Flint Arrow"] }&8x &rFlint Arrows`
+//   text += `\n${ (!items["Toxic Arrow Poison"] ? "&c" : "&d") + items["Toxic Arrow Poison"] }&8x &aToxic Arrow Poison`
+//   poisonOverlay.setMessage(text)
+// }).setDelay(1), () => Settings().poison)

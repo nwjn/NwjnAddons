@@ -1,19 +1,19 @@
-import Loc from "../../utils/Location";
-import { PREFIX, version } from "../../utils/Constants"
 import Party from "../../utils/Party";
-import { meinConf } from "../../utils/Settings";
+import Settings from "../../Settings";
+import { TextHelper } from "../../utils/TextHelper";
+import Location from "../../utils/Location";
 
 register("command", (arg) => {
   switch (arg) {
     case "world":
-      ChatLib.chat(`${ PREFIX } WorldData: ${ Loc.Data }`);
+      ChatLib.chat(`${ TextHelper.PREFIX } WorldData: ${ Location.area } | ${Location.subarea}`);
       break;
     case "party":
-      ChatLib.chat(`${ PREFIX } Party: ${ Party.Members }`)
+      ChatLib.chat(`${ TextHelper.PREFIX } Party: ${ Party.getMembers().toString() }`)
       break;
     case "version":
       ChatLib.chat(ChatLib.getChatBreak("-"));
-      ChatLib.chat(`${ PREFIX } &bYou are currently on version &e${ version }`);
+      ChatLib.chat(`${ TextHelper.PREFIX } &bYou are currently on version ${ TextHelper.VERSION }`);
       ChatLib.chat(`Libraries:`);
       const libraries = JSON.parse(FileLib.read("NwjnAddons", "metadata.json")).requires;
       libraries.forEach(lib => {
@@ -22,7 +22,7 @@ register("command", (arg) => {
       ChatLib.chat(ChatLib.getChatBreak("-"));
       break;
     case "apply":
-      meinConf.setScheme("utils/data/Scheme.json").apply();
+      Settings().getConfig().setScheme("utils/data/Scheme.json").apply();
       break;
   }
 }).setName("nwjndev");

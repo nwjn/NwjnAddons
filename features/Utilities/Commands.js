@@ -1,6 +1,5 @@
-import { PREFIX, version } from "../../utils/Constants.js";
 import { getNowHP, getMaxHP } from "../../utils/functions.js"
-import { comma } from "../../utils/functions/format.js";
+import { TextHelper } from "../../utils/TextHelper.js";
 
 register("command", () => {
   ChatLib.clearChat()
@@ -13,8 +12,8 @@ register("command", () => {
   ChatLib.chat(ChatLib.getChatBreak("-"))
   ChatLib.chat(`Name: ${ looking?.getName() }`)
   ChatLib.chat(`EntityClass: ${ looking?.getClassName() }`)
-  ChatLib.chat(`Current HP: ${ comma(getNowHP(looking)) }`)
-  ChatLib.chat(`Max HP: ${ comma(getMaxHP(looking)) }`)
+  ChatLib.chat(`Current HP: ${ TextHelper.addCommas(~~getNowHP(looking)) }`)
+  ChatLib.chat(`Max HP: ${ TextHelper.addCommas(~~getMaxHP(looking)) }`)
   ChatLib.chat(ChatLib.getChatBreak("-"))
 }).setName("entityInfo", true).setAliases("entity");
 
@@ -35,8 +34,8 @@ register("command", () => {
 register("command", (...args) => {
   try {
     const equat = args.join(" ").replace(/,/g, "")
-    ChatLib.chat(`${PREFIX}&r: ${comma(equat)} = ${comma(eval(equat))}`)
-  } catch (err) {ChatLib.chat(`${PREFIX}&r: ${err}`)}
+    ChatLib.chat(`${TextHelper.PREFIX}&r: ${TextHelper.addCommas(equat)} = ${TextHelper.addCommas(eval(equat))}`)
+  } catch (err) {ChatLib.chat(`${TextHelper.PREFIX}&r: ${err}`)}
 }).setName("calc", true)
 
 
@@ -45,7 +44,7 @@ register("command", () => {
   if (looking?.getClassName() != "EntityOtherPlayerMP") return;
 
   const name = looking.getName()
-  ChatLib.chat(`${PREFIX}: Trading with &e${name}`)
+  ChatLib.chat(`${TextHelper.PREFIX}: Trading with &e${name}`)
   ChatLib.command(`trade ${ name }`);
   ChatLib.addToSentMessageHistory(-1, `/trade ${ name }`)
 }).setName("deal", true);

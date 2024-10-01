@@ -1,16 +1,20 @@
-import Settings from "../../utils/Settings.js"
-import { registerWhen } from "../../utils/functions.js";
+import Feature from "../../core/Feature";
+import { Event } from "../../core/Event";
+import EventEnums from "../../core/EventEnums";
+import { scheduleTask } from "../../core/CustomRegisters";
 
-const criteria = new Map([
+const options = [
   ["fallingBlocks", net.minecraft.entity.item.EntityFallingBlock],
   ["xpOrbs", net.minecraft.entity.item.EntityXPOrb],
   ["arrows", net.minecraft.entity.projectile.EntityArrow],
   ["witherSkulls", net.minecraft.entity.projectile.EntityWitherSkull]
-])
+]
 
-criteria.forEach((type, setting) => {
-  registerWhen(register(EntityJoinWorldEvent, (event) => {
-    if (event.entity instanceof type) cancel(event)
-  }), () => Settings()[setting])
+options.forEach(([setting, clazz]) => {
+  new Feature(setting)
+    .addEvent(
+      new Event(EventEnums.FORGE.ENTITYJOIN, (entity) => {
+        scheduleTask(() => entity.func_70106_y())
+      }, clazz)
+    )
 })
-

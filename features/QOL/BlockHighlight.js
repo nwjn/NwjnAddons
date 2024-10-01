@@ -1,10 +1,35 @@
-import RenderLib from "../../../RenderLib";
-import Settings from "../../utils/Settings.js"
-import { registerWhen, getRGB } from "../../utils/functions.js";
+// https://github.com/DocilElm/Doc/blob/main/features/misc/BlockOverlay.js
 
-registerWhen(register("drawBlockHighlight", (pos, event) => {
-  cancel(event)
-  if (Player.lookingAt() instanceof Block) {
-    RenderLib.drawEspBox(pos.x + 0.5, pos.y, pos.z + 0.5, 1, 1, ...getRGB(Settings().highlightColor), false)
-  }
-}), () => Settings().highlight)
+import Feature from "../../core/Feature";
+import { Event } from "../../core/Event";
+import Settings from "../../Settings";
+import { RenderHelper } from "../../utils/RenderHelper.js";
+
+const Blocks = net.minecraft.init.Blocks
+const BlockFlowingLava = Blocks.field_150356_k
+const BlockLava = Blocks.field_150353_l
+const BlockFlowingWater = Blocks.field_150358_i
+const BlockWater = Blocks.field_150355_j
+const BlockAir = Blocks.field_150350_a
+
+new Feature("blockHighlight")
+  .addEvent(
+    new Event("drawBlockHighlight", ({x, y, z}, event) => {
+      const ctBlock = World.getBlockAt(x, y, z)
+      const mcBlock = ctBlock.type.mcBlock
+
+      if (mcBlock == BlockAir ||
+        mcBlock == BlockFlowingLava ||
+        mcBlock == BlockFlowingWater ||
+        mcBlock == BlockLava ||
+        mcBlock == BlockWater) return
+
+      const pticks = event.partialTicks
+
+      const [ r, g, b, a ] = Settings().highlightColor
+
+      cancel(event)
+
+      RenderHelper.outlineBlock(ctBlock, r, g, b, a, false, 3, true, pticks)
+    })
+  );

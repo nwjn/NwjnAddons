@@ -1,13 +1,20 @@
-import Settings from "../../utils/Settings.js"
-import { registerWhen, delay } from "../../utils/functions.js";
+import { Event } from "../../core/Event";
+import EventEnums from "../../core/EventEnums";
+import Feature from "../../core/Feature";
+import { TextHelper } from "../../utils/TextHelper";
+import { scheduleTask } from "../../core/CustomRegisters";
 
-let rendArrows = 0;
-registerWhen(register("soundPlay", () => {
-  if (!["minecraft:bone", "minecraft:bow"].includes(Player.getHeldItem()?.getRegistryName())) return
-  rendArrows++;
-  if (rendArrows > 1) return;
-  delay(() => {
-    ChatLib.chat(`Rend Arrows: ${ rendArrows - 1 }`);
-    rendArrows = 0;
-  }, 300);
-}).setCriteria("game.neutral.hurt"), () => Settings().rendArrows)
+let arrows = 0
+
+new Feature("rendArrows")
+  .addEvent(
+    new Event(EventEnums.SOUNDPLAY, () => {
+      if (!TextHelper.getExtraAttribute(Player.getHeldItem())?.enchantments?.ultimate_rend) return
+      arrows++;
+      if (arrows === 1) 
+        scheduleTask(() => {
+          ChatLib.chat(`Rend Arrows: ${ arrows - 1 }`);
+          arrows = 0
+        }, 5);
+    }, "game.neutral.hurt")
+  )

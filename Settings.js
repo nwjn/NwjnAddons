@@ -1,6 +1,6 @@
-import Settings from "../../Amaterasu/core/Settings"
-import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
-import { openGUI } from "./Overlay"
+import Settings from "../Amaterasu/core/Settings"
+import DefaultConfig from "../Amaterasu/core/DefaultConfig"
+
 const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
 .addSwitch({
     category: "General",
@@ -26,7 +26,7 @@ const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
     configName: "wpColor",
     title: "➤ Waypoint Color",
     description: "     Sets the color for waypoints",
-    value: [255, 255, 255, 255],
+    value: [255, 88, 213, 127],
 
     shouldShow(data) {
         return (data.waypoint)
@@ -108,7 +108,7 @@ const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
     title: "Move GUI Elements",
     description: "Click to edit gui locations",
     onClick() {
-        openGUI()
+        ChatLib.command("gui", true)
     }
 })
 .addSwitch({
@@ -427,7 +427,7 @@ const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
 })
 .addSwitch({
     category: "QOL",
-    configName: "highlight",
+    configName: "blockHighlight",
     title: "Toggle Block Highlight",
     description: "Toggles block highlight",
     value: false
@@ -437,14 +437,7 @@ const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
     configName: "highlightColor",
     title: "Highlight Color",
     description: "Sets the color for block highlight",
-    value: [255, 255, 255, 255],
-})
-.addSwitch({
-    category: "QOL",
-    configName: "fallingBlocks",
-    title: "Remove Falling Blocks",
-    description: "Cancels the EntityJoinWorld event of falling blocks",
-    value: false
+    value: [255, 88, 213, 255]
 })
 .addMultiCheckbox({
     category: "QOL",
@@ -514,15 +507,12 @@ const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
     value: false
 })
 
-import { PREFIX, version } from "./Constants"
-
-const changelog = `# §b${version}§r\n` + FileLib.read("NwjnAddons", "changelog.md")
-
-export const meinConf = new Settings("NwjnAddons", defCon1, "utils/data/Scheme.json", `${PREFIX}: by §6nwjn`)
-    .addMarkdown("Changelog", changelog)
+import { TextHelper } from "./utils/TextHelper"
+const meinConf = new Settings("NwjnAddons", defCon1, "utils/data/Scheme.json", `${TextHelper.NAME} by &6nwjn`)
+    .addMarkdown("Changelog", FileLib.getUrlContent("https://raw.githubusercontent.com/wiki/nwjn/NwjnAddons/Latest-Changelog.md"))
 
     .setPos(15, 15)
     .setSize(70, 70)
     .apply()
-
-export default () => meinConf.settings;
+    
+export default () => meinConf.settings
