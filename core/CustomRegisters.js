@@ -109,7 +109,7 @@ createCustomEvent(EventEnums.CLIENT.HELDITEMCHANGE, (fn, ids = []) =>
 //     }).setFilteredClass(net.minecraft.network.play.client.C08PacketPlayerBlockPlacement).unregister()
 // )
 
-createCustomEvent(EventEnums.PACKET.SERVER.PLAYERPOSLOOK, (fn) =>
+createCustomEvent(EventEnums.CLIENT.PLAYERPOSLOOK, (fn) =>
     register("packetReceived", (packet) => {
         const [ x, y, z ] = [ packet.func_148932_c(), packet.func_148928_d(), packet.func_148933_e() ]
         const [ yaw, pitch ] = [ packet.func_148931_f(), packet.func_148930_g() ]
@@ -169,7 +169,7 @@ createCustomEvent(EventEnums.SERVER.SCOREBOARD, (fn, criteria) =>
     }).setFilteredClass(net.minecraft.network.play.server.S3EPacketTeams).unregister()
 )
 
-createCustomEvent(EventEnums.PACKET.SERVER.TABUPDATE, (fn, criteria) => 
+createCustomEvent(EventEnums.SERVER.TABUPDATE, (fn, criteria) => 
     register("packetReceived", (packet, event) => {
         const players = packet.func_179767_a() // .getPlayers()
         const action = packet.func_179768_b() // .getAction()
@@ -191,7 +191,7 @@ createCustomEvent(EventEnums.PACKET.SERVER.TABUPDATE, (fn, criteria) =>
     }).setFilteredClass(S38PacketPlayerListItem).unregister()
 )
 
-createCustomEvent(EventEnums.PACKET.SERVER.TABADD, (fn, criteria) => 
+createCustomEvent(EventEnums.SERVER.TABADD, (fn, criteria) => 
     register("packetReceived", (packet, event) => {
         const players = packet.func_179767_a() // .getPlayers()
         const action = packet.func_179768_b() // .getAction()

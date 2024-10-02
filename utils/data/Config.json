@@ -29,18 +29,18 @@
             },
             {
                 "type": 6,
-                "name": "reaper",
-                "value": true
-            },
-            {
-                "type": 6,
-                "name": "dead",
-                "value": true
-            },
-            {
-                "type": 6,
                 "name": "sbxp",
                 "value": true
+            }
+        ]
+    },
+    {
+        "category": "Combat",
+        "settings": [
+            {
+                "type": 6,
+                "name": "reaperTimer",
+                "value": false
             }
         ]
     },
@@ -338,6 +338,11 @@
                     213,
                     255
                 ]
+            },
+            {
+                "type": 6,
+                "name": "deathAnimation",
+                "value": true
             },
             {
                 "type": 8,

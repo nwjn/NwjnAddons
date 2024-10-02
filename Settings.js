@@ -41,16 +41,16 @@ const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
 })
 .addSwitch({
     category: "General",
-    configName: "reaper",
-    title: "Detect Reaper Armor",
-    description: "Shows time left for reaper armor under crosshair",
-    value: false
-})
-.addSwitch({
-    category: "General",
     configName: "sbxp",
     title: "Skyblock XP Gain Message",
     description: "Takes action bar skyblock xp gained message and pastes them in chat",
+    value: false
+})
+.addSwitch({
+    category: "Combat",
+    configName: "reaperTimer",
+    title: "Reaper Armor Buff Timer",
+    description: "Displays the time left on your reaper armor buff",
     value: false
 })
 .addTextInput({

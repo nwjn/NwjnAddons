@@ -9,7 +9,8 @@ let arrows = 0
 new Feature("rendArrows")
   .addEvent(
     new Event(EventEnums.CLIENT.SOUNDPLAY, () => {
-      if (!TextHelper.getExtraAttribute(Player.getHeldItem())?.enchantments?.ultimate_rend) return
+      const held = Player.getHeldItem()
+      if (held && !TextHelper.getExtraAttribute(Player.getHeldItem())?.enchantments?.ultimate_rend) return
       arrows++;
       if (arrows === 1) 
         scheduleTask(() => {

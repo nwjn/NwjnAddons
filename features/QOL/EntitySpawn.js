@@ -13,7 +13,7 @@ const options = [
 options.forEach(([setting, clazz]) => {
   new Feature(setting)
     .addEvent(
-      new Event(EventEnums.FORGE.ENTITYJOIN, (entity) => {
+      new Event(EventEnums.ENTITY.JOINWORLD, (entity) => {
         scheduleTask(() => entity.func_70106_y())
       }, clazz)
     )

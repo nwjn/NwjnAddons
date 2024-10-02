@@ -56,6 +56,7 @@ import "./features/General/PartyCommands"
     import "./features/QOL/BlockHighlight"
     import "./features/QOL/ChatCleanup"
     import "./features/QOL/EntitySpawn"
+    import "./features/QOL/DeathAnimation"
     
     import "./features/Utilities/Commands"
     import "./features/Utilities/DamageTracker"

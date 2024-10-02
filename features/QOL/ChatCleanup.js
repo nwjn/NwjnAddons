@@ -4,14 +4,14 @@ import EventEnums from "../../core/EventEnums";
 
 new Feature("bossCleaner")
   .addEvent(
-    new Event(EventEnums.CHAT, (event) => {
+    new Event(EventEnums.CLIENT.CHAT, (event) => {
       cancel(event)
     }, "[BOSS] ${*}")
 )
   
 new Feature("discordCleaner")
   .addEvent(
-    new Event(EventEnums.CHAT, (msg, event) => {
+    new Event(EventEnums.CLIENT.CHAT, (msg, event) => {
       cancel(event);
       ChatLib.chat(msg)
     }, "${msg}\n&r&cPlease be mindful of Discord links in chat as they may pose a security risk&r")
@@ -19,7 +19,7 @@ new Feature("discordCleaner")
   
 new Feature("visitorCleaner", "garden")
   .addEvent(
-    new Event(EventEnums.CHAT, (event) => {
+    new Event(EventEnums.CLIENT.CHAT, (event) => {
       cancel(event)
     }, "[NPC] ${*}")
   )
