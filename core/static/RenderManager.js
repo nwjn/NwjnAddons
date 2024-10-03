@@ -1,5 +1,4 @@
-// Credit DocilElm
-export class DGlStateManager {
+export default class RenderManager {
     static pushMatrix() {
         GlStateManager.func_179094_E()
 
@@ -35,8 +34,9 @@ export class DGlStateManager {
         return this
     }
 
-    static scale(x, y) {
-        GlStateManager.func_179152_a(x, y || x, 1)
+    static scale(x, y = x, z = x) {
+        GlStateManager.func_179152_a(x, y, z)
+
         return this
     }
 
@@ -54,6 +54,12 @@ export class DGlStateManager {
 
     static enableTexture2D() {
         GlStateManager.func_179098_w()
+
+        return this
+    }
+
+    static depthMask(flagIn) {
+        GlStateManager.func_179132_a(flagIn)
 
         return this
     }
@@ -116,5 +122,25 @@ export class DGlStateManager {
         GlStateManager.func_179117_G()
 
         return this
+    }
+
+    static rotate(Θ, x, y, z) {
+        GlStateManager.func_179114_b(Θ, x, y, z)
+
+        return this
+    }
+
+    static blendFunc(sourceFactor, destFactor) {
+        GlStateManager.func_179112_b(sourceFactor, destFactor)
+
+        return this
+    }
+
+    static getRenderPos(x, y, z) {
+        return [
+            x - Player.getRenderX(),
+            y - Player.getRenderY(),
+            z - Player.getRenderZ()
+        ]
     }
 }

@@ -1,7 +1,7 @@
-import Settings from "../Amaterasu/core/Settings"
-import DefaultConfig from "../Amaterasu/core/DefaultConfig"
+import Settings from "../../Amaterasu/core/Settings"
+import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
 
-const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
+const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
 .addSwitch({
     category: "General",
     configName: "waypoint",
@@ -507,8 +507,8 @@ const defCon1 = new DefaultConfig("NwjnAddons", "utils/data/Config.json")
     value: false
 })
 
-import { TextHelper } from "./utils/TextHelper"
-const meinConf = new Settings("NwjnAddons", defCon1, "utils/data/Scheme.json", `${TextHelper.NAME} by &6nwjn`)
+import TextUtil from "../core/static/TextUtil"
+const meinConf = new Settings("NwjnAddons", defCon1, "/data/Scheme.json", `${TextUtil.NWJNADDONS} by &6nwjn`)
     .addMarkdown("Changelog", FileLib.getUrlContent("https://raw.githubusercontent.com/wiki/nwjn/NwjnAddons/Latest-Changelog.md"))
 
     .setPos(15, 15)

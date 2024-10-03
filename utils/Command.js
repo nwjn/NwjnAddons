@@ -1,6 +1,6 @@
 // Credit: DocilElm's Doc Module https://github.com/DocilElm/Doc/blob/main/shared/Command.js
-import Settings from "../Settings"
-import { TextHelper } from "./TextHelper"
+import Settings from "../data/Settings"
+import TextUtil from "../core/static/TextUtil"
 
 const commands = {}
 
@@ -26,7 +26,7 @@ register("command", (...args) => {
   if (!args?.[0]) return Settings().getConfig().openGui()
 
   if (args[0].toLowerCase() === "help") {
-    ChatLib.chat(`${TextHelper.NAME} &aCommand List`)
+    ChatLib.chat(`${TextUtil.NWJNADDONS} &aCommand List`)
     Object.keys(commands).forEach(k => {
       commands[k].chat()
     })
@@ -35,7 +35,7 @@ register("command", (...args) => {
   }
 
   const cmd = commands[args[0]]
-  if (!cmd) return ChatLib.chat(`${TextHelper.NAME} &cInvalid command.`)
+  if (!cmd) return ChatLib.chat(`${TextUtil.NWJNADDONS} &cInvalid command.`)
 
   cmd.fn?.(...args.slice(1))
 })

@@ -2,8 +2,8 @@
 
 import Feature from "../../core/Feature";
 import { Event } from "../../core/Event";
-import Settings from "../../Settings";
-import { RenderHelper } from "../../utils/RenderHelper.js";
+import Settings from "../../data/Settings";
+import RenderUtil from "../../core/static/RenderUtil";
 
 const Blocks = net.minecraft.init.Blocks
 const BlockFlowingLava = Blocks.field_150356_k
@@ -30,6 +30,6 @@ new Feature("blockHighlight")
 
       cancel(event)
 
-      RenderHelper.outlineBlock(ctBlock, r, g, b, a, false, 3, true, pticks)
+      RenderUtil.outlineBlock(ctBlock, r, g, b, a, false, 3, true, pticks)
     })
   );

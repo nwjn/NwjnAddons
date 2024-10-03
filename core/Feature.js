@@ -1,5 +1,5 @@
 // Credit: DocilElm
-import Settings from "../Settings";
+import Settings from "../data/Settings";
 import Location from "../utils/Location"
 
 export default class Feature {

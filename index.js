@@ -1,7 +1,6 @@
-import "./utils/data/Data"
+import "./data/Data"
 import "./utils/Broadcasting"
 import "./utils/Party"
-import "./utils/functions"
 import "./utils/Command"
 
 // import "./features/CrimsonIsle(Move)";

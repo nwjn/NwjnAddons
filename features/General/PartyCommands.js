@@ -2,11 +2,13 @@ import Feature from "../../core/Feature";
 import { Event } from "../../core/Event";
 import EventEnums from "../../core/EventEnums";
 import Party from "../../utils/Party";
-import { getPlayerName } from "../../utils/functions";
-import { data } from "../../utils/data/Data";
-import { TextHelper } from "../../utils/TextHelper";
+import PlayerUtil from "../../core/static/PlayerUtil";
+import { data } from "../../data/Data";
+import TextUtil from "../../core/static/TextUtil";
+import MathUtil from "../../core/static/MathUtil";
 import { scheduleTask } from "../../core/CustomRegisters";
-import Settings from "../../Settings";
+// todo for individual settings
+import Settings from "../../data/Settings";
 
 const member = [
   [
@@ -14,7 +16,7 @@ const member = [
     () => {
       const date = new Date()
       const [h, m, s] = [date.getHours(), date.getMinutes(), date.getSeconds()]
-      return `${h%12}:${m}:${s} ${h<12?"AM":"PM"}`
+      return `${(h%12) || 12}:${MathUtil.timeFormat(m)}:${MathUtil.timeFormat(s)} ${h<12?"AM":"PM"}`
     }
   ],
   [
@@ -52,15 +54,10 @@ const leader = [
     () => "play arcade_dropper"
   ]
 ]
-const instance = {
-  f: TextHelper.floors(),
-  m: TextHelper.floors(),
-  t: TextHelper.tiers(),
-  cmd: {
-    f: "catacombs_floor_",
-    m: "master_catacombs_floor_",
-    t: "kuudra_"
-  }
+const joinInstance = {
+  f: "catacombs_floor_",
+  m: "master_catacombs_floor_",
+  t: "kuudra_"
 }
 const help =
   "NwjnAddons Cmds > "
@@ -72,26 +69,29 @@ const help =
 new Feature("party")
   .addEvent(
     new Event(EventEnums.CLIENT.CHAT, (player, cmd) => {
-      player = getPlayerName(player).toLowerCase()
-      ChatLib.chat(data.blacklist.toString())
-      if (data.blacklist.includes(player)) return scheduleTask(() => ChatLib.chat(`${ TextHelper.PREFIX } &4Blacklisted command from &c${ player }`))
+      player = PlayerUtil.getPlayerName(player).toLowerCase()
+
+      if (data.blacklist.includes(player)) return scheduleTask(() => ChatLib.chat(`${ TextUtil.NWJNADDONS } &4Blacklisted command from &c${ player }`))
       
       cmd = cmd.toLowerCase()
-      if (cmd === "help") return scheduleTask(() => ChatLib.chat(`pc ${ help }`), 5) 
+      if (cmd === "help") return scheduleTask(() => ChatLib.command(`pc ${ help }`), 5) 
       
       let response = null
       member.find(([keys, fn]) => { if (~keys.indexOf(cmd)) return response = fn(player, cmd) })
       
-      if (response) return scheduleTask(() => ChatLib.chat(`pc ${ response }`), 5) 
+      if (response) return scheduleTask(() => ChatLib.command(`pc ${ response }`), 5) 
       if (!Party.amILeader()) return
       
       leader.find(([keys, fn]) => { if (~keys.indexOf(cmd)) return response = fn(player, cmd) })
       
       if (/[fmt][1-7]/.test(cmd)) {
         const match = cmd.match(/([fmt])([1-7])/)
-        response = `joininstance ${ instance.cmd[match[1]] }${ instance[match[1]][match[2]] }`
+        const command = joinInstance[match[1]]
+        const number = match[2]
+        const word = ["f", "m"].includes(match[1]) ? TextUtil.getFloorWord(number) : TextUtil.getTierWord(number)
+        response = `joininstance ${ command }${ word }`
       }
       
-      if (response) scheduleTask(() => ChatLib.chat(response), 5)
+      if (response) scheduleTask(() => ChatLib.command(response), 5)
     }, /Party > (.+): [,.?!](.+)/)
   )

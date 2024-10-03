@@ -1,5 +1,5 @@
-// Adaptation of Doc
-import { TextHelper } from "../utils/TextHelper";
+import TextUtil from "./static/TextUtil"
+import ItemUtil from "./static/ItemUtil"
 import EventEnums from "./EventEnums"
 
 export const customTriggers = new Map()
@@ -81,7 +81,7 @@ createCustomEvent(EventEnums.CLIENT.SOUNDPLAY, (fn, criteria) => register("sound
 
 createCustomEvent(EventEnums.CLIENT.HELDITEMCHANGE, (fn, ids = []) => 
     register("packetSent", (packet) => {
-        const sbID = TextHelper.getSkyblockItemID(Player.getHeldItem())
+        const sbID = ItemUtil.getSkyblockItemID(Player.getHeldItem())
         if (!ids.includes(sbID)) return
         
         fn(packet.func_149614_c());
@@ -119,7 +119,7 @@ createCustomEvent(EventEnums.CLIENT.PLAYERPOSLOOK, (fn) =>
 )
 
 // [Server]
-createCustomEvent(EventEnums.SERVER.CHAT, (fn, criteria) => 
+createCustomEvent(EventEnums.SERVER.CHAT, (fn, criteria = "") => 
     register("packetReceived", (packet, event) => {
         // Check if the packet is for the actionbar
         if (packet.func_148916_d()) return
@@ -130,7 +130,7 @@ createCustomEvent(EventEnums.SERVER.CHAT, (fn, criteria) =>
     
         if (!unformatted) return
         
-        TextHelper.matchesCriteria(fn, criteria, unformatted, event, formatted)
+        TextUtil.matchesCriteria(fn, criteria, unformatted, event, formatted)
     }).setFilteredClass(net.minecraft.network.play.server.S02PacketChat).unregister()
 )
 
@@ -145,7 +145,7 @@ createCustomEvent(EventEnums.SERVER.ACTIONBAR, (fn, criteria) =>
         
         if (!unformatted) return
         
-        TextHelper.matchesCriteria(fn, criteria, unformatted, event, formatted)
+        TextUtil.matchesCriteria(fn, criteria, unformatted, event, formatted)
     }).setFilteredClass(net.minecraft.network.play.server.S02PacketChat).unregister()
 )
 
@@ -165,7 +165,7 @@ createCustomEvent(EventEnums.SERVER.SCOREBOARD, (fn, criteria) =>
 
         if (!unformatted) return
         
-        TextHelper.matchesCriteria(fn, criteria, unformatted, event, formatted)
+        TextUtil.matchesCriteria(fn, criteria, unformatted, event, formatted)
     }).setFilteredClass(net.minecraft.network.play.server.S3EPacketTeams).unregister()
 )
 
@@ -186,7 +186,7 @@ createCustomEvent(EventEnums.SERVER.TABUPDATE, (fn, criteria) =>
         
             if (action !== S38PacketPlayerListItem.Action.UPDATE_DISPLAY_NAME) return
 
-            TextHelper.matchesCriteria(fn, criteria, unformatted, event, formatted)
+            TextUtil.matchesCriteria(fn, criteria, unformatted, event, formatted)
         })
     }).setFilteredClass(S38PacketPlayerListItem).unregister()
 )
@@ -207,7 +207,7 @@ createCustomEvent(EventEnums.SERVER.TABADD, (fn, criteria) =>
         
             if (action !== S38PacketPlayerListItem.Action.ADD_PLAYER) return
 
-            TextHelper.matchesCriteria(fn, criteria, unformatted, event, formatted)
+            TextUtil.matchesCriteria(fn, criteria, unformatted, event, formatted)
         })
     }).setFilteredClass(S38PacketPlayerListItem).unregister()
 )

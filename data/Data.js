@@ -1,4 +1,4 @@
-import PogOject from "../../../PogData";
+import PogOject from "../../PogData/index.js";
 
 export let data = new PogOject("NwjnAddons", {
   "newUser": true,
@@ -13,7 +13,7 @@ export let data = new PogOject("NwjnAddons", {
   "wisp": 0,
   "lastMini": [],
   "blacklist": []
-}, "/utils/data/User.json");
+}, "/data/User.json");
 data.autosave(3)
 
 // [Player Stat Data]
@@ -46,9 +46,10 @@ register("guiMouseRelease", () => {
   })
 });
 
-import { addCommand } from "../Command.js"
-import { TextHelper } from "../TextHelper.js";
-const INVALID = () => ChatLib.chat(`${ TextHelper.NAME } &cInvalid. &aAdd and remove need name entry. List and clear do not.`)
+import { addCommand } from "../utils/Command.js"
+import TextUtil from "../core/static/TextUtil.js";
+const INVALID = () => ChatLib.chat(`${ TextUtil.NWJNADDONS } &cInvalid. &aAdd and remove need name entry. List and clear do not.`)
+
 addCommand("bl", "Blacklist <add, remove, list, clear> <name?>", (type, name) => {
   if (!type) return INVALID()
   if (name) name = name.toLowerCase()
@@ -58,7 +59,7 @@ addCommand("bl", "Blacklist <add, remove, list, clear> <name?>", (type, name) =>
       if (!name) return INVALID()
       data.blacklist.push(name)
 
-      ChatLib.chat(`${ TextHelper.NAME } &aAdded &c${name} &ato your blacklist`)
+      ChatLib.chat(`${ TextUtil.NWJNADDONS } &aAdded &c${name} &ato your blacklist`)
       break
       
     case "remove": {
@@ -68,19 +69,19 @@ addCommand("bl", "Blacklist <add, remove, list, clear> <name?>", (type, name) =>
         1
       )
 
-      ChatLib.chat(`${ TextHelper.NAME } &aRemoved &c${name} &afrom your blacklist.`)
+      ChatLib.chat(`${ TextUtil.NWJNADDONS } &aRemoved &c${name} &afrom your blacklist.`)
       break
     }
       
     case "list": {
-      ChatLib.chat(`${ TextHelper.NAME } &aBlacklist:`)
+      ChatLib.chat(`${ TextUtil.NWJNADDONS } &aBlacklist:`)
       data.blacklist.forEach((ign, idx) => ChatLib.chat(` ${ idx+1 }: ${ ign }`))
       break
     }  
       
     case "clear": {
       data.blacklist = []
-      ChatLib.chat(`${ TextHelper.NAME } &aCleared your blacklist.`)
+      ChatLib.chat(`${ TextUtil.NWJNADDONS } &aCleared your blacklist.`)
       break
     }
       

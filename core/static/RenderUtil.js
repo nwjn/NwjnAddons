@@ -1,21 +1,20 @@
-// Credit DocilElm
-import { DGlStateManager } from "./DGLStateManager"
+import RenderManager from "./RenderManager"
 
-const AxisAlignedBB = Java.type("net.minecraft.util.AxisAlignedBB")
-const GuiUtils = Java.type("net.minecraftforge.fml.client.config.GuiUtils")
-const RenderGlobal = Java.type("net.minecraft.client.renderer.RenderGlobal")
-const MCTessellator = Java.type("net.minecraft.client.renderer.Tessellator").func_178181_a()
-const DefaultVertexFormats = Java.type("net.minecraft.client.renderer.vertex.DefaultVertexFormats")
+const AxisAlignedBB = net.minecraft.util.AxisAlignedBB
+const GuiUtils = net.minecraftforge.fml.client.config.GuiUtils
+const RenderGlobal = net.minecraft.client.renderer.RenderGlobal
+const MCTessellator = net.minecraft.client.renderer.Tessellator.func_178181_a()
+const DefaultVertexFormats = net.minecraft.client.renderer.vertex.DefaultVertexFormats
 const WorldRenderer = MCTessellator.func_178180_c()
 const IBlockStateAir = new BlockType("minecraft:air").getDefaultState()
 
 // From BeaconBeam module
-const ResourceLocation = Java.type("net.minecraft.util.ResourceLocation")
-const MathHelper = Java.type("net.minecraft.util.MathHelper")
+const ResourceLocation = net.minecraft.util.ResourceLocation
+const MathHelper = net.minecraft.util.MathHelper
 const beaconBeam = new ResourceLocation("textures/entity/beacon_beam.png")
 
 // From BloomCore
-const GuiContainer = Java.type("net.minecraft.client.gui.inventory.GuiContainer")
+const GuiContainer = net.minecraft.client.gui.inventory.GuiContainer
 const guiContainerLeftField = GuiContainer.class.getDeclaredField("field_147003_i")
 const guiContainerTopField = GuiContainer.class.getDeclaredField("field_147009_r")
 guiContainerLeftField.setAccessible(true)
@@ -88,7 +87,7 @@ register("renderOverlay", () => {
     _drawTitle(currentTitle.title, currentTitle.subtitle)
 })
 
-export class RenderHelper {
+export default class RenderUtil {
     /**
      * - Gets the gui's X and Y values
      * @param {GuiContainer?} mcGuiContainer The GuiContainer. if null it'll try to assign the current GuiContainer
@@ -164,7 +163,7 @@ export class RenderHelper {
         const [ realX, realY, realZ ] = this.getInterp()
 
         GL11.glLineWidth(lineWidth)
-        DGlStateManager
+        RenderManager
             .pushMatrix()
             .disableCull()
             .disableLighting()
@@ -172,10 +171,10 @@ export class RenderHelper {
             .enableBlend()
             .tryBlendFuncSeparate(770, 771, 1, 0)
 
-        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
-        if (phase) DGlStateManager.disableDepth()
+        if (translate) RenderManager.translate(-realX, -realY, -realZ)
+        if (phase) RenderManager.disableDepth()
 
-        DGlStateManager.color(r / 255, g / 255, b / 255, a / 255)
+        RenderManager.color(r / 255, g / 255, b / 255, a / 255)
 
         WorldRenderer.func_181668_a(3, DefaultVertexFormats.field_181705_e)
         for (let idx = 0; idx < points.length; idx++) {
@@ -184,10 +183,10 @@ export class RenderHelper {
         }
         MCTessellator.func_78381_a()
 
-        if (translate) DGlStateManager.translate(realX, realY, realZ)
-        if (phase) DGlStateManager.enableDepth()
+        if (translate) RenderManager.translate(realX, realY, realZ)
+        if (phase) RenderManager.enableDepth()
 
-        DGlStateManager
+        RenderManager
             .color(1, 1, 1, 1)
             .enableCull()
             .enableLighting()
@@ -215,7 +214,7 @@ export class RenderHelper {
     static drawOutlinedBox(aabb, r, g, b, a, phase = true, lineWidth = 3, translate = true, customTicks) {
         const [ realX, realY, realZ ] = this.getInterp(customTicks)
 
-        DGlStateManager
+        RenderManager
             .pushMatrix()
             .disableTexture2D()
             .enableBlend()
@@ -225,15 +224,15 @@ export class RenderHelper {
 
         GL11.glLineWidth(lineWidth)
 
-        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
-        if (phase) DGlStateManager.disableDepth()
+        if (translate) RenderManager.translate(-realX, -realY, -realZ)
+        if (phase) RenderManager.disableDepth()
 
         RenderGlobal.func_181563_a(aabb, r, g, b, a)
 
-        if (translate) DGlStateManager.translate(realX, realY, realZ)
-        if (phase) DGlStateManager.enableDepth()
+        if (translate) RenderManager.translate(realX, realY, realZ)
+        if (phase) RenderManager.enableDepth()
 
-        DGlStateManager
+        RenderManager
             .disableBlend()
             .enableAlpha()
             .enableTexture2D()
@@ -248,7 +247,7 @@ export class RenderHelper {
         const [ x0, y0, z0, x1, y1, z1 ] = getAxisValues(aabb)
         const [ realX, realY, realZ ] = this.getInterp(customTicks)
 
-        DGlStateManager
+        RenderManager
             .pushMatrix()
             .disableCull()
             .disableTexture2D()
@@ -257,10 +256,10 @@ export class RenderHelper {
             .disableAlpha()
             .tryBlendFuncSeparate(770, 771, 1, 0)
 
-        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
-        if (phase) DGlStateManager.disableDepth()
+        if (translate) RenderManager.translate(-realX, -realY, -realZ)
+        if (phase) RenderManager.disableDepth()
 
-        DGlStateManager.color(r / 255, g / 255, b / 255, a / 255)
+        RenderManager.color(r / 255, g / 255, b / 255, a / 255)
 
         WorldRenderer.func_181668_a(5, DefaultVertexFormats.field_181705_e)
         WorldRenderer.func_181662_b(x0, y0, z0).func_181675_d()
@@ -286,10 +285,10 @@ export class RenderHelper {
         WorldRenderer.func_181662_b(x1, y1, z0).func_181675_d()
         MCTessellator.func_78381_a()
 
-        if (translate) DGlStateManager.translate(realX, realY, realZ)
-        if (phase) DGlStateManager.enableDepth()
+        if (translate) RenderManager.translate(realX, realY, realZ)
+        if (phase) RenderManager.enableDepth()
 
-        DGlStateManager
+        RenderManager
             .disableBlend()
             .enableAlpha()
             .enableTexture2D()
@@ -449,10 +448,10 @@ export class RenderHelper {
     static renderBeaconBeam(x, y, z, r, g, b, a, phase = false, height = 300, translate = true) {
         const [ realX, realY, realZ ] = this.getInterp()
 
-        DGlStateManager.pushMatrix()
+        RenderManager.pushMatrix()
 
-        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
-        if (phase) DGlStateManager.disableDepth()
+        if (translate) RenderManager.translate(-realX, -realY, -realZ)
+        if (phase) RenderManager.disableDepth()
 
         r = r / 255
         g = g / 255
@@ -464,7 +463,7 @@ export class RenderHelper {
         GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT)
         GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT)
 
-        DGlStateManager
+        RenderManager
             .disableLighting()
             .enableCull()
             .enableTexture2D()
@@ -505,7 +504,7 @@ export class RenderHelper {
         WorldRenderer.func_181662_b(x + d4, y + height, z + d5).func_181673_a(0, d15).func_181666_a(r, g, b, a).func_181675_d()
         MCTessellator.func_78381_a()
 
-        DGlStateManager.disableCull()
+        RenderManager.disableCull()
 
         const d12 = -1 + d1
         const d13 = height + d12
@@ -529,10 +528,10 @@ export class RenderHelper {
         WorldRenderer.func_181662_b(x + 0.2, y + height, z + 0.2).func_181673_a(0, d13).func_181666_a(r, g, b, 0.25 * a).func_181675_d()
         MCTessellator.func_78381_a()
 
-        if (translate) DGlStateManager.translate(realX, realY, realZ)
-        if (phase) DGlStateManager.enableDepth()
+        if (translate) RenderManager.translate(realX, realY, realZ)
+        if (phase) RenderManager.enableDepth()
 
-        DGlStateManager
+        RenderManager
             .enableLighting()
             .enableTexture2D()
             .popMatrix()
@@ -572,5 +571,63 @@ export class RenderHelper {
         WorldRenderer.func_181662_b(x + width, y, 0).func_181673_a(1, 0).func_181675_d()
         WorldRenderer.func_181662_b(x, y, 0).func_181673_a(0, 0).func_181675_d()
         MCTessellator.func_78381_a()
+    }
+
+    /**
+     * - Just Tesselator#drawString with depth check
+     * - Renders floating lines of text in the 3D world at a specific position.
+     *
+     * @param {String} text The string array of text to render
+     * @param {Number} x X coordinate in the game world
+     * @param {Number} y Y coordinate in the game world
+     * @param {Number} z Z coordinate in the game world
+     * @param {Number} scale the scale of the text
+     * @param {Number} color the color of the text
+     * @param {Boolean} increase whether to scale the text up as the player moves away
+     * @param {Boolean} depth whether to show through walls
+     */
+    static depthString(
+        text,
+        x,
+        y,
+        z,
+        scale = 1,
+        color = 0xffffff,
+        increase = false,
+        depth = false
+    ) {
+        const lText = text.addColor()
+        const renderPos = RenderManager.getRenderPos(x, y, z)
+        
+        const lScale = increase 
+            ? scale * 0.45 * Math.abs(Math.sqrt(renderPos.reduce((prev, val) => prev + (val**2)))) / 120 //mobs only render ~120 blocks away
+            : scale
+        const xMulti = Client.getMinecraft().field_71474_y.field_74320_O == 2 ? -1 : 1
+
+        RenderManager
+            .color(1, 1, 1, 0.5)
+            .pushMatrix()
+
+            .translate(...renderPos)
+            .rotate(-Renderer.getRenderManager().field_78735_i, 0, 1, 0)
+            .rotate(Renderer.getRenderManager().field_78732_j * xMulti, 1, 0, 0)
+
+            .scale(-lScale, -lScale, lScale)
+            .disableLighting()
+            .depthMask(false)
+            
+        if (depth) RenderManager.disableDepth()
+
+        RenderManager
+            .enableBlend()
+            .blendFunc(770, 771)
+
+        Renderer.getFontRenderer().func_78276_b(lText, -Renderer.getStringWidth(lText) / 2, 0, color)
+
+        RenderManager
+            .color(1, 1, 1, 1)
+            .depthMask(true)
+            .enableDepth()
+            .popMatrix()
     }
 }

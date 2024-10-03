@@ -2,15 +2,14 @@
 // import Feature from "../../../core/Feature.js";
 // import { Event } from "../../../core/Event.js";
 // import KuudraUtil from "../KuudraUtil";
-// import { tessellateStringWithDepth } from "../../../utils/functions/hotfixes";
-// import Loc from "../../../utils/Location";
-// import { TextHelper } from "../../../utils/TextHelper.js";
+// import RenderUtil from "../../../core/static/RenderUtil.js";
+// import MathUtil from "../../../core/static/MathUtil.js";
 
-// const calcHpString = (hp, y) => {
-//   const check = KuudraUtil.inPhase(4) && y < 67
-//   const scaledHP = check ? hp * 3.5 : hp
+// const hpText = (hp, y) => {
+//   const isLair = KuudraUtil.inPhase(4) && y < 67
+//   const scaledHP = hp * (isLair?3.5:1)
 //   const displayHP =
-//     check ? `${ ~~(hp * 0.012) }M §c❤` : `${ TextHelper.addCommas(~~(hp - 25_000)) } §c✳`
+//     isLair ? `${ ~~MathLib.map(hp, 0, 100_000, 0, 300) }M §c❤` : `${ MathUtil.addCommas(hp - 25_000) } §c✳`
 
 //   const color =
 //     scaledHP > 83_333 ? "§2" :
@@ -36,14 +35,14 @@
 //   )
 //   .addSubEvent(
 //     new Event(EventEnums.PACKET.CUSTOM.TICK, () => {
-//       hpString = calcHpString(kuudra.entity.func_110143_aJ(), kuudra.getY())
+//       hpString = hpText(kuudra.entity.func_110143_aJ(), kuudra.getY())
 //       θrad = (Player.getYaw() - 90) * TextHelper.RADIAN
 //     }),
 //     () => kuudra
 //   )
 //   .addSubEvent(
 //     new Event("renderWorld", () => {
-//       tessellateStringWithDepth(
+//       RenderUtil.depthString(
 //         hpString,
 //         kuudra.getRenderX() + (12.24 * Math.cos(θrad)),
 //         kuudra.getRenderY() + 7.65,

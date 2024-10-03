@@ -1,7 +1,7 @@
 import { Event } from "../../core/Event";
 import EventEnums from "../../core/EventEnums";
 import Feature from "../../core/Feature";
-import { TextHelper } from "../../utils/TextHelper";
+import ItemUtil from "../../core/static/ItemUtil";
 import { scheduleTask } from "../../core/CustomRegisters";
 
 let arrows = 0
@@ -10,7 +10,7 @@ new Feature("rendArrows")
   .addEvent(
     new Event(EventEnums.CLIENT.SOUNDPLAY, () => {
       const held = Player.getHeldItem()
-      if (held && !TextHelper.getExtraAttribute(Player.getHeldItem())?.enchantments?.ultimate_rend) return
+      if (held && !ItemUtil.getExtraAttribute(Player.getHeldItem())?.enchantments?.ultimate_rend) return
       arrows++;
       if (arrows === 1) 
         scheduleTask(() => {

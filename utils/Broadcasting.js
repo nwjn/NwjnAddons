@@ -1,5 +1,5 @@
-import { TextHelper } from "./TextHelper"
-import { data } from "./data/Data"
+import TextUtil from "../core/static/TextUtil"
+import { data } from "../data/Data"
 
 // [Welcome Message]
 // very useful trigger
@@ -9,29 +9,29 @@ const welcome = register("worldLoad", () => {
 
   data.newUser = false
 
-  ChatLib.chat(`${ TextHelper.PREFIX } &dFrom: &6nwjn: &7Welcome! Open settings with '/nwjn'. Official Discord: https://discord.gg/3S3wXpC4gE`)
+  ChatLib.chat(`${ TextUtil.NWJNADDONS } &dFrom: &6nwjn: &7Welcome! Open settings with '/nwjn'. Official Discord: https://discord.gg/3S3wXpC4gE`)
 })
 
+const moduleApi = JSON.parse(FileLib.getUrlContent("https://chattriggers.com/api/modules/NwjnAddons"))
 // [Broadcast Message]
 const messenger = register("worldLoad", () => {
   messenger.unregister()
-  const desc = JSON.parse(FileLib.getUrlContent("https://chattriggers.com/api/modules/NwjnAddons")).description
+  const desc = moduleApi.description
 
-  const msg = desc.substring(
-    desc.lastIndexOf("[") + 1,
-    desc.lastIndexOf("]")
-  )
+  const msg = desc.match(/\[(.+)\]: # $/)?.[1]
 
   if (msg !== "Nothing" && msg !== data.newMsg) {
     data.newMsg = msg
-    ChatLib.chat(`${ TextHelper.PREFIX } &dFrom: &6nwjn: &7${ msg }`)
+    ChatLib.chat(`${ TextUtil.NWJNADDONS } &dFrom: &6nwjn: &7${ msg }`)
   }
 });
 
-// [CT Update Message]
+// [CT ModVersion Message]
 const version = register("worldLoad", () => {
   version.unregister()
-  const latest = JSON.parse(FileLib.getUrlContent("https://api.github.com/repos/Chattriggers/chattriggers/releases"))[0].name
-  if (ChatTriggers.MODVERSION === latest) return
-  ChatLib.chat(`${TextHelper.PREFIX} Please use Chattriggers-v${latest} to run this module most efficiently. https://github.com/ChatTriggers/ChatTriggers/releases/tag/${latest}`)
+  const release = moduleApi.releases[0]
+  const [modVer, moduleVer] = [release.modVersion, release.releaseVersion]
+
+  if (TextUtil.VERSION !== moduleVer || ChatTriggers.MODVERSION === modVer) return
+  ChatLib.chat(`${TextUtil.NWJNADDONS} Please use Chattriggers-v${modVer} to run this module most efficiently. https://github.com/ChatTriggers/ChatTriggers/releases/tag/${modVer}`)
 })
