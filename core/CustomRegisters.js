@@ -1,4 +1,6 @@
-import TextUtil from "./static/TextUtil"
+// Credit: https://github.com/DocilElm/Doc/blob/main/core/CustomRegisters.js
+
+import TextUtil from "./static/TextUtil";
 import ItemUtil from "./static/ItemUtil"
 import EventEnums from "./EventEnums"
 

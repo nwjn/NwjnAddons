@@ -1,4 +1,5 @@
-import RenderManager from "./RenderManager"
+// Credit: https://github.com/DocilElm/Doc/blob/main/shared/Render.js
+import DGlStateManager from "../wrapper/DGlStateManager"
 
 const AxisAlignedBB = net.minecraft.util.AxisAlignedBB
 const GuiUtils = net.minecraftforge.fml.client.config.GuiUtils
@@ -163,7 +164,7 @@ export default class RenderUtil {
         const [ realX, realY, realZ ] = this.getInterp()
 
         GL11.glLineWidth(lineWidth)
-        RenderManager
+        DGlStateManager
             .pushMatrix()
             .disableCull()
             .disableLighting()
@@ -171,10 +172,10 @@ export default class RenderUtil {
             .enableBlend()
             .tryBlendFuncSeparate(770, 771, 1, 0)
 
-        if (translate) RenderManager.translate(-realX, -realY, -realZ)
-        if (phase) RenderManager.disableDepth()
+        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
+        if (phase) DGlStateManager.disableDepth()
 
-        RenderManager.color(r / 255, g / 255, b / 255, a / 255)
+        DGlStateManager.color(r / 255, g / 255, b / 255, a / 255)
 
         WorldRenderer.func_181668_a(3, DefaultVertexFormats.field_181705_e)
         for (let idx = 0; idx < points.length; idx++) {
@@ -183,10 +184,10 @@ export default class RenderUtil {
         }
         MCTessellator.func_78381_a()
 
-        if (translate) RenderManager.translate(realX, realY, realZ)
-        if (phase) RenderManager.enableDepth()
+        if (translate) DGlStateManager.translate(realX, realY, realZ)
+        if (phase) DGlStateManager.enableDepth()
 
-        RenderManager
+        DGlStateManager
             .color(1, 1, 1, 1)
             .enableCull()
             .enableLighting()
@@ -214,7 +215,7 @@ export default class RenderUtil {
     static drawOutlinedBox(aabb, r, g, b, a, phase = true, lineWidth = 3, translate = true, customTicks) {
         const [ realX, realY, realZ ] = this.getInterp(customTicks)
 
-        RenderManager
+        DGlStateManager
             .pushMatrix()
             .disableTexture2D()
             .enableBlend()
@@ -224,15 +225,15 @@ export default class RenderUtil {
 
         GL11.glLineWidth(lineWidth)
 
-        if (translate) RenderManager.translate(-realX, -realY, -realZ)
-        if (phase) RenderManager.disableDepth()
+        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
+        if (phase) DGlStateManager.disableDepth()
 
         RenderGlobal.func_181563_a(aabb, r, g, b, a)
 
-        if (translate) RenderManager.translate(realX, realY, realZ)
-        if (phase) RenderManager.enableDepth()
+        if (translate) DGlStateManager.translate(realX, realY, realZ)
+        if (phase) DGlStateManager.enableDepth()
 
-        RenderManager
+        DGlStateManager
             .disableBlend()
             .enableAlpha()
             .enableTexture2D()
@@ -247,7 +248,7 @@ export default class RenderUtil {
         const [ x0, y0, z0, x1, y1, z1 ] = getAxisValues(aabb)
         const [ realX, realY, realZ ] = this.getInterp(customTicks)
 
-        RenderManager
+        DGlStateManager
             .pushMatrix()
             .disableCull()
             .disableTexture2D()
@@ -256,10 +257,10 @@ export default class RenderUtil {
             .disableAlpha()
             .tryBlendFuncSeparate(770, 771, 1, 0)
 
-        if (translate) RenderManager.translate(-realX, -realY, -realZ)
-        if (phase) RenderManager.disableDepth()
+        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
+        if (phase) DGlStateManager.disableDepth()
 
-        RenderManager.color(r / 255, g / 255, b / 255, a / 255)
+        DGlStateManager.color(r / 255, g / 255, b / 255, a / 255)
 
         WorldRenderer.func_181668_a(5, DefaultVertexFormats.field_181705_e)
         WorldRenderer.func_181662_b(x0, y0, z0).func_181675_d()
@@ -285,10 +286,10 @@ export default class RenderUtil {
         WorldRenderer.func_181662_b(x1, y1, z0).func_181675_d()
         MCTessellator.func_78381_a()
 
-        if (translate) RenderManager.translate(realX, realY, realZ)
-        if (phase) RenderManager.enableDepth()
+        if (translate) DGlStateManager.translate(realX, realY, realZ)
+        if (phase) DGlStateManager.enableDepth()
 
-        RenderManager
+        DGlStateManager
             .disableBlend()
             .enableAlpha()
             .enableTexture2D()
@@ -448,10 +449,10 @@ export default class RenderUtil {
     static renderBeaconBeam(x, y, z, r, g, b, a, phase = false, height = 300, translate = true) {
         const [ realX, realY, realZ ] = this.getInterp()
 
-        RenderManager.pushMatrix()
+        DGlStateManager.pushMatrix()
 
-        if (translate) RenderManager.translate(-realX, -realY, -realZ)
-        if (phase) RenderManager.disableDepth()
+        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
+        if (phase) DGlStateManager.disableDepth()
 
         r = r / 255
         g = g / 255
@@ -463,7 +464,7 @@ export default class RenderUtil {
         GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT)
         GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT)
 
-        RenderManager
+        DGlStateManager
             .disableLighting()
             .enableCull()
             .enableTexture2D()
@@ -504,7 +505,7 @@ export default class RenderUtil {
         WorldRenderer.func_181662_b(x + d4, y + height, z + d5).func_181673_a(0, d15).func_181666_a(r, g, b, a).func_181675_d()
         MCTessellator.func_78381_a()
 
-        RenderManager.disableCull()
+        DGlStateManager.disableCull()
 
         const d12 = -1 + d1
         const d13 = height + d12
@@ -528,10 +529,10 @@ export default class RenderUtil {
         WorldRenderer.func_181662_b(x + 0.2, y + height, z + 0.2).func_181673_a(0, d13).func_181666_a(r, g, b, 0.25 * a).func_181675_d()
         MCTessellator.func_78381_a()
 
-        if (translate) RenderManager.translate(realX, realY, realZ)
-        if (phase) RenderManager.enableDepth()
+        if (translate) DGlStateManager.translate(realX, realY, realZ)
+        if (phase) DGlStateManager.enableDepth()
 
-        RenderManager
+        DGlStateManager
             .enableLighting()
             .enableTexture2D()
             .popMatrix()
@@ -542,7 +543,7 @@ export default class RenderUtil {
 
         this.outlineBlock(block, r, g, b, a, phase)
         this.filledBlock(block, r, g, b, 50, phase)
-        Tessellator.drawString(text, x + 0.5, y + 3, z + 0.5, Renderer.WHITE, true)
+        this.drawString(text, x + 0.5, y + 3, z + 0.5)
         this.renderBeaconBeam(x, y, z, r, g, b, a, phase)
     }
 
@@ -574,41 +575,43 @@ export default class RenderUtil {
     }
 
     /**
-     * - Just Tesselator#drawString with depth check
+     * - Chattrigger's Tessellator.drawString() with depth check and multiline
      * - Renders floating lines of text in the 3D world at a specific position.
      *
-     * @param {String} text The string array of text to render
-     * @param {Number} x X coordinate in the game world
-     * @param {Number} y Y coordinate in the game world
-     * @param {Number} z Z coordinate in the game world
-     * @param {Number} scale the scale of the text
+     * @param {String} text The text to render
+     * @param {Number} ix X coordinate in the game world
+     * @param {Number} iy Y coordinate in the game world
+     * @param {Number} iz Z coordinate in the game world
      * @param {Number} color the color of the text
+     * @param {Boolean} renderBlackBox
+     * @param {Number} scale the scale of the text
      * @param {Boolean} increase whether to scale the text up as the player moves away
-     * @param {Boolean} depth whether to show through walls
+     * @param {Boolean} depth whether to render through walls
      */
-    static depthString(
+    static drawString(
         text,
-        x,
-        y,
-        z,
-        scale = 1,
+        ix,
+        iy,
+        iz,
         color = 0xffffff,
-        increase = false,
-        depth = false
+        renderBlackBox = true,
+        scale = 1,
+        increase = true,
+        depth = true
     ) {
         const lText = text.addColor()
-        const renderPos = RenderManager.getRenderPos(x, y, z)
+        const {x, y, z} = Tessellator.getRenderPos(ix, iy, iz)
         
         const lScale = increase 
-            ? scale * 0.45 * Math.abs(Math.sqrt(renderPos.reduce((prev, val) => prev + (val**2)))) / 120 //mobs only render ~120 blocks away
+            ? scale * 0.45 * (Math.sqrt(x**2 + y**2 + z**2) / 120) //increase up to 120 blocks away
             : scale
-        const xMulti = Client.getMinecraft().field_71474_y.field_74320_O == 2 ? -1 : 1
-
-        RenderManager
+        const xMulti = Client.getMinecraft().field_71474_y.field_74320_O == 2 ? -1 : 1; //perspective
+        
+        DGlStateManager
             .color(1, 1, 1, 0.5)
             .pushMatrix()
 
-            .translate(...renderPos)
+            .translate(x, y, z)
             .rotate(-Renderer.getRenderManager().field_78735_i, 0, 1, 0)
             .rotate(Renderer.getRenderManager().field_78732_j * xMulti, 1, 0, 0)
 
@@ -616,15 +619,32 @@ export default class RenderUtil {
             .disableLighting()
             .depthMask(false)
             
-        if (depth) RenderManager.disableDepth()
+        if (depth) DGlStateManager.disableDepth()
 
-        RenderManager
+        DGlStateManager
             .enableBlend()
             .blendFunc(770, 771)
+            
+        const lines = lText.split("\n")
+        const l = lines.length
+        const maxWidth = Math.max(...lines.map(it => Renderer.getStringWidth(it))) / 2
 
-        Renderer.getFontRenderer().func_78276_b(lText, -Renderer.getStringWidth(lText) / 2, 0, color)
+        if (renderBlackBox) {
+            DGlStateManager.disableTexture2D()
+            WorldRenderer.func_181668_a(7, DefaultVertexFormats.field_181706_f)
+            WorldRenderer.func_181662_b(-maxWidth - 1, -1 * l, 0).func_181666_a(0, 0, 0, 0.25).func_181675_d()
+            WorldRenderer.func_181662_b(-maxWidth - 1, 9 * l, 0).func_181666_a(0, 0, 0, 0.25).func_181675_d()
+            WorldRenderer.func_181662_b(maxWidth + 1, 9 * l, 0).func_181666_a(0, 0, 0, 0.25).func_181675_d()
+            WorldRenderer.func_181662_b(maxWidth + 1, -1 * l, 0).func_181666_a(0, 0, 0, 0.25).func_181675_d()
+            MCTessellator.func_78381_a()
+            DGlStateManager.enableTexture2D()
+        }
 
-        RenderManager
+        lines.forEach((it, idx) => {
+            Renderer.getFontRenderer().func_175065_a(it, -Renderer.getStringWidth(it) / 2, idx * 9, color, true)
+        })
+
+        DGlStateManager
             .color(1, 1, 1, 1)
             .depthMask(true)
             .enableDepth()

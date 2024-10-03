@@ -1,4 +1,5 @@
-// Credit: DocilElm
+// Credit: https://github.com/DocilElm/Doc/blob/main/core/Event.js
+
 import { customTriggers } from "./CustomRegisters"
 
 export class Event {

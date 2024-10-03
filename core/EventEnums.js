@@ -1,4 +1,4 @@
-// Credit: DocilElm
+// Credit: https://github.com/DocilElm/Doc/blob/main/core/EventEnums.js
 let idx = 0
 
 export default {

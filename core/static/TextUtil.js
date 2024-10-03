@@ -1,3 +1,4 @@
+// Credit: https://github.com/DocilElm/Doc/blob/main/shared/TextHelper.js
 const dungeonFloorWords = {
     1: "one",
     2: "two",

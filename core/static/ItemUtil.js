@@ -1,3 +1,4 @@
+// Credit: https://github.com/DocilElm/Doc/blob/main/shared/TextHelper.js
 export default class ItemUtil {
     /**
      * - Gets the extra attributes of the Item

@@ -1,4 +1,5 @@
-export default class RenderManager {
+//Credit: https://github.com/DocilElm/Doc/blob/main/shared/DGlStateManager.js
+export default class DGlStateManager {
     static pushMatrix() {
         GlStateManager.func_179094_E()
 
@@ -134,13 +135,5 @@ export default class RenderManager {
         GlStateManager.func_179112_b(sourceFactor, destFactor)
 
         return this
-    }
-
-    static getRenderPos(x, y, z) {
-        return [
-            x - Player.getRenderX(),
-            y - Player.getRenderY(),
-            z - Player.getRenderZ()
-        ]
     }
 }

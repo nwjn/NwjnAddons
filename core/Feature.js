@@ -1,4 +1,4 @@
-// Credit: DocilElm
+// Credit: https://github.com/DocilElm/Doc/blob/main/core/Feature.js
 import Settings from "../data/Settings";
 import Location from "../utils/Location"
 

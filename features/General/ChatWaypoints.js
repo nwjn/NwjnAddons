@@ -8,32 +8,36 @@ import PlayerUtil from "../../core/static/PlayerUtil";
 import TextUtil from "../../core/static/TextUtil";
 import { data } from "../../data/Data";
 
+// Improvements from https://github.com/DocilElm/Doc/blob/main/features/misc/ChatWaypoint.js
 const waypoints = new Map()
 const feat = new Feature("waypoint")
   .addEvent(
-    new Event(EventEnums.CLIENT.CHAT, (prefix, x, y, z) => {
-      prefix = prefix.addColor()
-      const ign = PlayerUtil.getPlayerName(prefix.removeFormatting()).toLowerCase()
+    new Event(EventEnums.SERVER.CHAT, (prefix, x, y, z, text, event, msg) => {
+      const ign = PlayerUtil.getPlayerName(prefix).toLowerCase()
       
       if (data.blacklist.includes(ign)) return scheduleTask(() => ChatLib.chat(`${TextUtil.NWJNADDONS} &4Blacklisted waypoint from &c${ign}`))
 
-      const coords = [parseInt(x), parseInt(y), parseInt(z)]
-      waypoints.set(prefix, coords)
+      const id = Date.now()
+      const title = msg.substring(0, msg.indexOf(":"))
+      text = text ? `\n${text}` : ""
+
+      const wp = [title, parseInt(x), parseInt(y), parseInt(z), text]
+      waypoints.set(id, wp)
 
       feat.update()
 
       scheduleTask(() => {
-        waypoints.delete(prefix)
+        waypoints.delete(id)
         feat.update()
       }, Settings().wpTime * 20)
-    }, /^(.+):.+x: ([\-\d\.]+), y: ([\-\d\.]+), z: ([\-\d\.]+)(?: .+)?&r$/)
+    }, /^(?:[\w\-]{5})?(?: > )?(?:\[\d+\] .? ?)?(?:\[[^\]]+\] )?(\w{1,16}): x: ([\d\-\.]+), y: ([\d\-\.]+), z: ([\d\-\.]+) ?(.+)?$/)
   )
   .addSubEvent(
     new Event("renderWorld", () => {
-      waypoints.forEach(([x, y, z], prefix) => {
+      waypoints.forEach(([title, x, y, z, text]) => {
         const distance = ~~Player.asPlayerMP().distanceTo(x, y, z)
 
-        RenderUtil.renderWaypoint(`${prefix} §b[${distance}m]`, x, y, z, ...Settings().wpColor, true)
+        RenderUtil.renderWaypoint(`${ title } §b[${ distance }m]${text}`, x, y, z, ...Settings().wpColor, true)
       })
     }),
     () => waypoints.size

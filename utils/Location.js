@@ -1,4 +1,4 @@
-// Credit: DocilElm's Doc Module https://github.com/DocilElm/Doc/blob/main/shared/Location.js
+// Credit: https://github.com/DocilElm/Doc/blob/main/shared/Location.js
 
 const S38PacketPlayerListItem = net.minecraft.network.play.server.S38PacketPlayerListItem
 

@@ -1,4 +1,5 @@
-const numberFormat = { undefined: 1, "k": 1_000, "m": 1_000_000, "b": 1_000_000_000 }
+// Credit: https://github.com/DocilElm/Doc/blob/main/shared/TextHelper.js
+const numberFormat = { undefined: 1, "k": 1_000, "m": 1_000_000, "b": 1_000_000_000 };
 export default class MathUtil {
     static toRadian = (num) => num * (Math.PI / 180)
 

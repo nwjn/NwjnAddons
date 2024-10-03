@@ -1,4 +1,4 @@
-// Credit: DocilElm's Doc Module https://github.com/DocilElm/Doc/blob/main/shared/DraggableGui.js
+// Credit: https://github.com/DocilElm/Doc/blob/main/shared/DraggableGui.js
 
 import ElementUtils from "../../DocGuiLib/core/Element"
 import HandleGui from "../../DocGuiLib/core/Gui"

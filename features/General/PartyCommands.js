@@ -76,7 +76,7 @@ new Feature("party")
       cmd = cmd.toLowerCase()
       if (cmd === "help") return scheduleTask(() => ChatLib.command(`pc ${ help }`), 5) 
       
-      let response = null
+      let response
       member.find(([keys, fn]) => { if (~keys.indexOf(cmd)) return response = fn(player, cmd) })
       
       if (response) return scheduleTask(() => ChatLib.command(`pc ${ response }`), 5) 
