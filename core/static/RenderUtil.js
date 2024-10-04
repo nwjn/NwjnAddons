@@ -579,28 +579,31 @@ export default class RenderUtil {
      * - Renders floating lines of text in the 3D world at a specific position.
      *
      * @param {String} text The text to render
-     * @param {Number} ix X coordinate in the game world
-     * @param {Number} iy Y coordinate in the game world
-     * @param {Number} iz Z coordinate in the game world
+     * @param {Number} x X coordinate in the game world
+     * @param {Number} y Y coordinate in the game world
+     * @param {Number} z Z coordinate in the game world
      * @param {Number} color the color of the text
      * @param {Boolean} renderBlackBox
      * @param {Number} scale the scale of the text
      * @param {Boolean} increase whether to scale the text up as the player moves away
+     * @param {Boolean} shadow whether to render shadow
      * @param {Boolean} depth whether to render through walls
      */
     static drawString(
         text,
-        ix,
-        iy,
-        iz,
+        x,
+        y,
+        z,
         color = 0xffffff,
         renderBlackBox = true,
         scale = 1,
         increase = true,
+        shadow = true,
         depth = true
     ) {
+        ({ x, y, z } = Tessellator.getRenderPos(x, y, z))
+        
         const lText = text.addColor()
-        const {x, y, z} = Tessellator.getRenderPos(ix, iy, iz)
         
         const lScale = increase 
             ? scale * 0.45 * (Math.sqrt(x**2 + y**2 + z**2) / 120) //increase up to 120 blocks away
@@ -641,7 +644,7 @@ export default class RenderUtil {
         }
 
         lines.forEach((it, idx) => {
-            Renderer.getFontRenderer().func_175065_a(it, -Renderer.getStringWidth(it) / 2, idx * 9, color, true)
+            Renderer.getFontRenderer().func_175065_a(it, -Renderer.getStringWidth(it) / 2, idx * 9, color, shadow)
         })
 
         DGlStateManager
