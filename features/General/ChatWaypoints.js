@@ -8,7 +8,7 @@ import PlayerUtil from "../../core/static/PlayerUtil";
 import TextUtil from "../../core/static/TextUtil";
 import { data } from "../../data/Data";
 
-// Improvements from https://github.com/DocilElm/Doc/blob/main/features/misc/ChatWaypoint.js
+// With improvements from https://github.com/DocilElm/Doc/blob/main/features/misc/ChatWaypoint.js
 const waypoints = new Map()
 const feat = new Feature("waypoint")
   .addEvent(

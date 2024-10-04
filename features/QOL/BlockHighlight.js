@@ -1,4 +1,4 @@
-// https://github.com/DocilElm/Doc/blob/main/features/misc/BlockOverlay.js
+// Credit: https://github.com/DocilElm/Doc/blob/main/features/misc/BlockOverlay.js
 
 import Feature from "../../core/Feature";
 import { Event } from "../../core/Event";

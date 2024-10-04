@@ -1,8 +1,5 @@
 // Credit: https://github.com/DocilElm/Doc/blob/main/shared/Render.js
-import DGlStateManager from "../wrapper/DGlStateManager"
-
 const AxisAlignedBB = net.minecraft.util.AxisAlignedBB
-const GuiUtils = net.minecraftforge.fml.client.config.GuiUtils
 const RenderGlobal = net.minecraft.client.renderer.RenderGlobal
 const MCTessellator = net.minecraft.client.renderer.Tessellator.func_178181_a()
 const DefaultVertexFormats = net.minecraft.client.renderer.vertex.DefaultVertexFormats
@@ -13,13 +10,6 @@ const IBlockStateAir = new BlockType("minecraft:air").getDefaultState()
 const ResourceLocation = net.minecraft.util.ResourceLocation
 const MathHelper = net.minecraft.util.MathHelper
 const beaconBeam = new ResourceLocation("textures/entity/beacon_beam.png")
-
-// From BloomCore
-const GuiContainer = net.minecraft.client.gui.inventory.GuiContainer
-const guiContainerLeftField = GuiContainer.class.getDeclaredField("field_147003_i")
-const guiContainerTopField = GuiContainer.class.getDeclaredField("field_147009_r")
-guiContainerLeftField.setAccessible(true)
-guiContainerTopField.setAccessible(true)
 
 /**
  * - Gets the given [AxisAlignedBB] [Min] and [Max] positions
@@ -35,167 +25,11 @@ const getAxisValues = (axis, filled = false) => [
         axis.field_72334_f + (filled ? .01 : 0) // Max Z
     ]
 
-const currentTitle = {
-    title: null,
-    subtitle: null,
-    time: null
-}
-let started = null
-
-const _drawTitle = (title, subtitle) => {
-    const [ x, y ] = [
-        Renderer.screen.getWidth() / 2,
-        Renderer.screen.getHeight() / 2
-    ]
-
-    Renderer.translate(x, y)
-    Renderer.scale(4, 4)
-    Renderer.drawStringWithShadow(title, -(Renderer.getStringWidth(title) / 2), -10)
-
-    Renderer.translate(x, y)
-    Renderer.scale(2, 2)
-    Renderer.drawStringWithShadow(subtitle, -(Renderer.getStringWidth(subtitle) / 2), 5)
-}
-
-/**
- * - Draws a title with subtitle in the middle of the screen
- * @param {string} title The title
- * @param {string} subtitle The subtitle for this Title
- * @param {number} ms The amount of ms this title should be displayed for
- */
-export const showTitle = (title, subtitle, ms) => {
-    currentTitle.title = title
-    currentTitle.subtitle = subtitle
-    currentTitle.time = ms
-}
-
-register("renderOverlay", () => {
-    if (!currentTitle.time) return
-    if (!started) started = Date.now()
-
-    const remainingTime = currentTitle.time - (Date.now() - started)
-
-    if (remainingTime <= 0) {
-        currentTitle.title = null
-        currentTitle.subtitle = null
-        currentTitle.time = null
-
-        started = null
-
-        return
-    }
-
-    _drawTitle(currentTitle.title, currentTitle.subtitle)
-})
-
 export default class RenderUtil {
-    /**
-     * - Gets the gui's X and Y values
-     * @param {GuiContainer?} mcGuiContainer The GuiContainer. if null it'll try to assign the current GuiContainer
-     * @returns {[number, number]?}
-     */
-    static getGuiRenderPositions(mcGuiContainer) {
-        if (!Client.isInGui()) return
-
-        // Assign the current gui incase this is null
-        if (!mcGuiContainer) mcGuiContainer = Client.currentGui.get()
-
-        return [
-            guiContainerLeftField.get(mcGuiContainer),
-            guiContainerTopField.get(mcGuiContainer)
-        ]
-    }
-
-    /**
-     * - Gets the given slotNumber's render position [x, y]
-     * @param {number} slotNumber 
-     * @param {GuiContainer?} mcGuiContainer
-     * @returns {[number, number]}
-     */
-    static getSlotRenderPosition(slotNumber, mcGuiContainer) {
-        if (!Client.isInGui() || slotNumber == null) return
-
-        if (!mcGuiContainer) mcGuiContainer = Client.currentGui.get()
-
-        const [ x, y ] = this.getGuiRenderPositions(mcGuiContainer)
-
-        const slot = mcGuiContainer.field_147002_h.func_75139_a(slotNumber)
-
-        return [x + slot.field_75223_e, y + slot.field_75221_f]
-    }
-
-    /**
-     * - Gets the GuiContainer [x1, y1, x2, y2] bounds using the last slot [44]
-     * @param {GuiContainer} mcGuiContainer 
-     * @returns {[number, number, number, number]}
-     */
-    static getGuiRenderBoundings(mcGuiContainer) {
-        if (!Client.isInGui()) return
-
-        if (!mcGuiContainer) mcGuiContainer = Client.currentGui.get()
-
-        const [ x, y ] = [ guiContainerLeftField.get(mcGuiContainer), guiContainerTopField.get(mcGuiContainer) ]
-        const [ slotX, slotY ] = this.getSlotRenderPosition(44, mcGuiContainer)
-
-        return [
-            x,
-            y,
-            slotX,
-            slotY
-        ]
-    }
-
     static interpolate(cr, lv, mult) {
         return lv + (cr - lv) * mult
     }
 
-    /**
-     * - Draws a line through the given points
-     * @param {number[][]} points The points in an array of arrays
-     * @param {number} r Red (`0` - `255`)
-     * @param {number} g Green (`0` - `255`)
-     * @param {number} b Blue (`0` - `255`)
-     * @param {number} a Alpha (`0` - `255`)
-     * @param {boolean} phase Whether to render the lines through walls or not (`true` by default)
-     * @param {number} lineWidth The width of the line
-     * @param {boolean} translate Whether to translate the rendering coords to the [RenderViewEntity] coords (`true` by default)
-     */
-    static drawLineThroughPoints(points, r, g, b, a, phase = true, lineWidth = 3, translate = true) {
-        const [ realX, realY, realZ ] = this.getInterp()
-
-        GL11.glLineWidth(lineWidth)
-        DGlStateManager
-            .pushMatrix()
-            .disableCull()
-            .disableLighting()
-            .disableTexture2D()
-            .enableBlend()
-            .tryBlendFuncSeparate(770, 771, 1, 0)
-
-        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
-        if (phase) DGlStateManager.disableDepth()
-
-        DGlStateManager.color(r / 255, g / 255, b / 255, a / 255)
-
-        WorldRenderer.func_181668_a(3, DefaultVertexFormats.field_181705_e)
-        for (let idx = 0; idx < points.length; idx++) {
-            let [ x, y, z ] = points[idx]
-            WorldRenderer.func_181662_b(x, y, z).func_181675_d()
-        }
-        MCTessellator.func_78381_a()
-
-        if (translate) DGlStateManager.translate(realX, realY, realZ)
-        if (phase) DGlStateManager.enableDepth()
-
-        DGlStateManager
-            .color(1, 1, 1, 1)
-            .enableCull()
-            .enableLighting()
-            .enableTexture2D()
-            .enableBlend()
-            .popMatrix()
-        GL11.glLineWidth(2)
-    }
 
     static getRenderViewEntity() {
         return Client.getMinecraft().func_175606_aa() // getRenderViewEntity
@@ -215,7 +49,7 @@ export default class RenderUtil {
     static drawOutlinedBox(aabb, r, g, b, a, phase = true, lineWidth = 3, translate = true, customTicks) {
         const [ realX, realY, realZ ] = this.getInterp(customTicks)
 
-        DGlStateManager
+        Tessellator
             .pushMatrix()
             .disableTexture2D()
             .enableBlend()
@@ -225,19 +59,19 @@ export default class RenderUtil {
 
         GL11.glLineWidth(lineWidth)
 
-        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
-        if (phase) DGlStateManager.disableDepth()
+        if (translate) Tessellator.translate(-realX, -realY, -realZ)
+        if (phase) Tessellator.disableDepth()
 
         RenderGlobal.func_181563_a(aabb, r, g, b, a)
 
-        if (translate) DGlStateManager.translate(realX, realY, realZ)
-        if (phase) DGlStateManager.enableDepth()
+        if (translate) Tessellator.translate(realX, realY, realZ)
+        if (phase) Tessellator.enableDepth()
 
-        DGlStateManager
+        Tessellator
             .disableBlend()
             .enableAlpha()
             .enableTexture2D()
-            .color(1, 1, 1, 1)
+            .colorize(1, 1, 1, 1)
             .enableLighting()
             .popMatrix()
 
@@ -248,19 +82,19 @@ export default class RenderUtil {
         const [ x0, y0, z0, x1, y1, z1 ] = getAxisValues(aabb)
         const [ realX, realY, realZ ] = this.getInterp(customTicks)
 
-        DGlStateManager
-            .pushMatrix()
-            .disableCull()
+        Tessellator.pushMatrix()
+        GlStateManager.func_179129_p()
+        Tessellator
             .disableTexture2D()
             .enableBlend()
             .disableLighting()
             .disableAlpha()
             .tryBlendFuncSeparate(770, 771, 1, 0)
 
-        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
-        if (phase) DGlStateManager.disableDepth()
+        if (translate) Tessellator.translate(-realX, -realY, -realZ)
+        if (phase) Tessellator.disableDepth()
 
-        DGlStateManager.color(r / 255, g / 255, b / 255, a / 255)
+        Tessellator.colorize(r / 255, g / 255, b / 255, a / 255)
 
         WorldRenderer.func_181668_a(5, DefaultVertexFormats.field_181705_e)
         WorldRenderer.func_181662_b(x0, y0, z0).func_181675_d()
@@ -286,15 +120,17 @@ export default class RenderUtil {
         WorldRenderer.func_181662_b(x1, y1, z0).func_181675_d()
         MCTessellator.func_78381_a()
 
-        if (translate) DGlStateManager.translate(realX, realY, realZ)
-        if (phase) DGlStateManager.enableDepth()
+        if (translate) Tessellator.translate(realX, realY, realZ)
+        if (phase) Tessellator.enableDepth()
 
-        DGlStateManager
+        Tessellator
             .disableBlend()
             .enableAlpha()
             .enableTexture2D()
-            .color(1, 1, 1, 1)
-            .enableCull()
+            .colorize(1, 1, 1, 1)
+
+        GlStateManager.func_179089_o()
+        Tessellator
             .enableLighting()
             .popMatrix()
     }
@@ -327,56 +163,6 @@ export default class RenderUtil {
         )
 
         this.drawOutlinedBox(axis, r, g, b, a, phase, lineWidth, translate)
-    }
-
-    /**
-     * - Draws an entity filled box with the given [x, y, z, w, h] values
-     * @param {number} x X axis
-     * @param {number} y Y axis
-     * @param {number} z Z axis
-     * @param {number} w Width
-     * @param {number} h Height
-     * @param {number} r Red (`0` - `255`)
-     * @param {number} g Green (`0` - `255`)
-     * @param {number} b Blue (`0` - `255`)
-     * @param {number} a Alpha (`0` - `255`)
-     * @param {boolean} phase Whether to render the filled box through walls or not (`false` by default)
-     * @param {boolean} translate Whether to translate the rendering coords to the [RenderViewEntity] coords (`true` by default)
-     */
-    static drawEntityBoxFilled(x, y, z, w, h, r, g, b, a, phase = false, translate = true) {
-        if (x == null) return
-
-        const axis = new AxisAlignedBB(
-            x - w / 2,
-            y,
-            z - w / 2,
-            x + w / 2,
-            y + h,
-            z + w / 2
-        )
-
-        this.drawFilledBox(axis, r, g, b, a, phase, translate)
-    }
-
-    // TODO: add jsdocs to this
-    static drawHoveringText(
-        list = [],
-        mx = Client.getMouseX(),
-        my = Client.getMouseY(),
-        screenWidth = Renderer.screen.getWidth(),
-        screenHeight = Renderer.screen.getHeight(),
-        maxLength = -1,
-        fontRenderer = Renderer.getFontRenderer()
-        ) {
-        GuiUtils.drawHoveringText(
-            list,
-            mx,
-            my,
-            screenWidth,
-            screenHeight,
-            maxLength,
-            fontRenderer
-        )
     }
 
     /**
@@ -449,10 +235,10 @@ export default class RenderUtil {
     static renderBeaconBeam(x, y, z, r, g, b, a, phase = false, height = 300, translate = true) {
         const [ realX, realY, realZ ] = this.getInterp()
 
-        DGlStateManager.pushMatrix()
+        Tessellator.pushMatrix()
 
-        if (translate) DGlStateManager.translate(-realX, -realY, -realZ)
-        if (phase) DGlStateManager.disableDepth()
+        if (translate) Tessellator.translate(-realX, -realY, -realZ)
+        if (phase) Tessellator.disableDepth()
 
         r = r / 255
         g = g / 255
@@ -464,9 +250,10 @@ export default class RenderUtil {
         GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT)
         GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT)
 
-        DGlStateManager
-            .disableLighting()
-            .enableCull()
+        Tessellator.disableLighting()
+        GlStateManager.func_179089_o()
+            
+        Tessellator
             .enableTexture2D()
             .tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO)
             .enableBlend()
@@ -505,7 +292,7 @@ export default class RenderUtil {
         WorldRenderer.func_181662_b(x + d4, y + height, z + d5).func_181673_a(0, d15).func_181666_a(r, g, b, a).func_181675_d()
         MCTessellator.func_78381_a()
 
-        DGlStateManager.disableCull()
+        GlStateManager.func_179129_p()
 
         const d12 = -1 + d1
         const d13 = height + d12
@@ -529,10 +316,10 @@ export default class RenderUtil {
         WorldRenderer.func_181662_b(x + 0.2, y + height, z + 0.2).func_181673_a(0, d13).func_181666_a(r, g, b, 0.25 * a).func_181675_d()
         MCTessellator.func_78381_a()
 
-        if (translate) DGlStateManager.translate(realX, realY, realZ)
-        if (phase) DGlStateManager.enableDepth()
+        if (translate) Tessellator.translate(realX, realY, realZ)
+        if (phase) Tessellator.enableDepth()
 
-        DGlStateManager
+        Tessellator
             .enableLighting()
             .enableTexture2D()
             .popMatrix()
@@ -546,34 +333,7 @@ export default class RenderUtil {
         this.drawString(text, x + 0.5, y + 3, z + 0.5)
         this.renderBeaconBeam(x, y, z, r, g, b, a, phase)
     }
-
-    /**
-     * - Draws an outline filled block
-     */
-    static outlineFilledBlock(ctBlock, r, g, b, a, phase = true, translate = true, a2 = 80) {
-        if (!ctBlock) return
-
-        this.outlineBlock(ctBlock, r, g, b, a, phase, 2, translate)
-        this.filledBlock(ctBlock, r, g, b, a2, phase, translate)
-    }
-
-    /**
-     * - Internal use.
-     * - Sets up the vertices for an image and begins drawing it
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     */
-    static _beginImage(x, y, width, height) {
-        WorldRenderer.func_181668_a(7, DefaultVertexFormats.field_181707_g)
-        WorldRenderer.func_181662_b(x, y + height, 0).func_181673_a(0, 1).func_181675_d()
-        WorldRenderer.func_181662_b(x + width, y + height, 0).func_181673_a(1, 1).func_181675_d()
-        WorldRenderer.func_181662_b(x + width, y, 0).func_181673_a(1, 0).func_181675_d()
-        WorldRenderer.func_181662_b(x, y, 0).func_181673_a(0, 0).func_181675_d()
-        MCTessellator.func_78381_a()
-    }
-
+    
     /**
      * - Chattrigger's Tessellator.drawString() with depth check and multiline
      * - Renders floating lines of text in the 3D world at a specific position.
@@ -610,8 +370,8 @@ export default class RenderUtil {
             : scale
         const xMulti = Client.getMinecraft().field_71474_y.field_74320_O == 2 ? -1 : 1; //perspective
         
-        DGlStateManager
-            .color(1, 1, 1, 0.5)
+        Tessellator
+            .colorize(1, 1, 1, 0.5)
             .pushMatrix()
 
             .translate(x, y, z)
@@ -622,9 +382,9 @@ export default class RenderUtil {
             .disableLighting()
             .depthMask(false)
             
-        if (depth) DGlStateManager.disableDepth()
+        if (depth) Tessellator.disableDepth()
 
-        DGlStateManager
+        Tessellator
             .enableBlend()
             .blendFunc(770, 771)
             
@@ -633,22 +393,22 @@ export default class RenderUtil {
         const maxWidth = Math.max(...lines.map(it => Renderer.getStringWidth(it))) / 2
 
         if (renderBlackBox) {
-            DGlStateManager.disableTexture2D()
+            Tessellator.disableTexture2D()
             WorldRenderer.func_181668_a(7, DefaultVertexFormats.field_181706_f)
             WorldRenderer.func_181662_b(-maxWidth - 1, -1 * l, 0).func_181666_a(0, 0, 0, 0.25).func_181675_d()
             WorldRenderer.func_181662_b(-maxWidth - 1, 9 * l, 0).func_181666_a(0, 0, 0, 0.25).func_181675_d()
             WorldRenderer.func_181662_b(maxWidth + 1, 9 * l, 0).func_181666_a(0, 0, 0, 0.25).func_181675_d()
             WorldRenderer.func_181662_b(maxWidth + 1, -1 * l, 0).func_181666_a(0, 0, 0, 0.25).func_181675_d()
             MCTessellator.func_78381_a()
-            DGlStateManager.enableTexture2D()
+            Tessellator.enableTexture2D()
         }
 
         lines.forEach((it, idx) => {
             Renderer.getFontRenderer().func_175065_a(it, -Renderer.getStringWidth(it) / 2, idx * 9, color, shadow)
         })
 
-        DGlStateManager
-            .color(1, 1, 1, 1)
+        Tessellator
+            .colorize(1, 1, 1, 1)
             .depthMask(true)
             .enableDepth()
             .popMatrix()

@@ -50,6 +50,7 @@ import { addCommand } from "../utils/Command.js"
 import TextUtil from "../core/static/TextUtil.js";
 const INVALID = () => ChatLib.chat(`${ TextUtil.NWJNADDONS } &cInvalid. &aAdd and remove need name entry. List and clear do not.`)
 
+// Credit: DocilElm
 addCommand("bl", "Blacklist <add, remove, list, clear> <name?>", (type, name) => {
   if (!type) return INVALID()
   if (name) name = name.toLowerCase()
