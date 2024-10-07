@@ -11,21 +11,15 @@ import { scheduleTask } from "../../core/CustomRegisters";
 import Settings from "../../data/Settings";
 
 const member = [
-  [
-    ["time"],
-    () => {
-      const date = new Date()
-      const [h, m, s] = [date.getHours(), date.getMinutes(), date.getSeconds()]
-      return `${(h%12) || 12}:${MathUtil.timeFormat(m)}:${MathUtil.timeFormat(s)} ${h<12?"AM":"PM"}`
-    }
-  ],
-  [
-    ["coords", "loc", "xyz"],
-    () => `x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`
-  ],
+  [["time"], () =>
+      `pc ${MathUtil.getTime()}`
+    ],
+  [["coords", "loc", "xyz"], () =>
+      `pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() }`
+    ],
   [
     ["power", "pow"],
-    () => `Power: ${data.power} | Tuning: ${data.tuning} | Enrich: ${data.enrich} | MP: ${data.mp}`
+    () => `pc Power: ${data.power} | Tuning: ${data.tuning} | Enrich: ${data.enrich} | MP: ${data.mp}`
   ],
   [
     ["stats"],
@@ -33,7 +27,7 @@ const member = [
   ],
   [
     ["build"],
-    () => "https://i.imgur.com/tsg6tx5.jpg" //todo
+    () => "pc https://i.imgur.com/tsg6tx5.jpg" //todo
   ]
 ]
 const leader = [
@@ -47,7 +41,7 @@ const leader = [
   ],
   [
     ["transfer", "pt", "ptme"],
-    (player) => `p transfer ${player}`
+    (ign, cmd) => cmd.includes(" ") ? `p transfer ${cmd.split(" ").slice(-1)[0]}` : `p transfer ${ign}`
   ],
   [
     ["dropper"],
@@ -68,30 +62,34 @@ const help =
 
 new Feature("party")
   .addEvent(
-    new Event(EventEnums.CLIENT.CHAT, (player, cmd) => {
-      player = PlayerUtil.getPlayerName(player).toLowerCase()
-
-      if (data.blacklist.includes(player)) return scheduleTask(() => ChatLib.chat(`${ TextUtil.NWJNADDONS } &4Blacklisted command from &c${ player }`))
-      
+    new Event(EventEnums.SERVER.CHAT, (player, cmd, event) => {
+      const ign = PlayerUtil.getPlayerName(player).toLowerCase()
       cmd = cmd.toLowerCase()
+
+      if (data.blacklist.includes(ign)) return TextUtil.append(event.func_148915_c(), "&cBlacklisted")
+      
       if (cmd === "help") return scheduleTask(() => ChatLib.command(`pc ${ help }`), 5) 
       
       let response
-      member.find(([keys, fn]) => { if (~keys.indexOf(cmd)) return response = fn(player, cmd) })
-      
-      if (response) return scheduleTask(() => ChatLib.command(`pc ${ response }`), 5) 
+      member.find(([keys, fn]) => { if (~keys.indexOf(cmd)) return response = fn() })
+
+      if (response) return scheduleTask(() => ChatLib.command(response), 5) 
       if (!Party.amILeader()) return
       
-      leader.find(([keys, fn]) => { if (~keys.indexOf(cmd)) return response = fn(player, cmd) })
-      
-      if (/[fmt][1-7]/.test(cmd)) {
-        const match = cmd.match(/([fmt])([1-7])/)
-        const command = joinInstance[match[1]]
-        const number = match[2]
-        const word = ["f", "m"].includes(match[1]) ? TextUtil.getFloorWord(number) : TextUtil.getTierWord(number)
-        response = `joininstance ${ command }${ word }`
-      }
+      leader.find(([keys, fn]) => { if (~keys.indexOf(cmd.split(" ")[0])) return response = fn(ign, cmd) })
+        ||
+      TextUtil.matchesCriteria(
+        (type, number) => {
+          const word = ["f", "m"].includes(type) ? TextUtil.getFloorWord(number) : TextUtil.getTierWord(number)
+          const command = joinInstance[type]
+          response = `joininstance ${ command }${ word }`
+        }, /([fmt]) ?([1-7])/, cmd
+      )
       
       if (response) scheduleTask(() => ChatLib.command(response), 5)
-    }, /Party > (.+): [,.?!](.+)/)
-  )
+    }, /^Party > (.+): [,.?!](.+)$/)
+)
+  
+register("chat", () => {
+  ChatLib.command("lobby")
+}).setCriteria(/Party > (.+): [,.?!]lobby/);

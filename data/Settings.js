@@ -101,7 +101,7 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
     title: "Move GUI Elements",
     description: "Click to edit gui locations",
     onClick() {
-        ChatLib.command("gui", true)
+        ChatLib.command("nwjn gui", true)
     }
 })
 .addSwitch({
@@ -116,7 +116,7 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
     category: "HUD",
     configName: "clock",
     title: "Clock Display",
-    description: "Shows your current time -> /moveClock",
+    description: "Shows your current time",
     subcategory: "Clock",
     value: false
 })

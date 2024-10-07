@@ -1,7 +1,6 @@
 import "./data/Data"
 import "./utils/Broadcasting"
 import "./utils/Party"
-import "./utils/Command"
 
 // import "./features/CrimsonIsle(Move)";
 // import "./features/General(Move)"
@@ -10,6 +9,7 @@ import "./features/General/PartyCommands"
 
 // import "./features/HUD/BlazeTimers"
 // import "./features/HUD/Clock"
+import "./features/Utilities/Clock"
 // import "./features/HUD/FatalTempo"
 // import "./features/HUD/Minibosses"
 // import "./features/HUD/Poison"

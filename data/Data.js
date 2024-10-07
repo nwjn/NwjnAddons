@@ -12,7 +12,14 @@ export let data = new PogOject("NwjnAddons", {
   "gummy": 0,
   "wisp": 0,
   "lastMini": [],
-  "blacklist": []
+  "blacklist": [],
+
+  "clock": {
+      "x": 50,
+      "y": 50,
+      "scale": 1.5,
+      "bg": true
+    }
 }, "/data/User.json");
 data.autosave(3)
 
@@ -45,48 +52,3 @@ register("guiMouseRelease", () => {
     ) || "Unknown"
   })
 });
-
-import { addCommand } from "../utils/Command.js"
-import TextUtil from "../core/static/TextUtil.js";
-const INVALID = () => ChatLib.chat(`${ TextUtil.NWJNADDONS } &cInvalid. &aAdd and remove need name entry. List and clear do not.`)
-
-// Credit: DocilElm
-addCommand("bl", "Blacklist <add, remove, list, clear> <name?>", (type, name) => {
-  if (!type) return INVALID()
-  if (name) name = name.toLowerCase()
-  
-  switch (type?.toLowerCase()) {
-    case "add":
-      if (!name) return INVALID()
-      data.blacklist.push(name)
-
-      ChatLib.chat(`${ TextUtil.NWJNADDONS } &aAdded &c${name} &ato your blacklist`)
-      break
-      
-    case "remove": {
-      if (!name) return INVALID()
-      data.blacklist.splice(
-        data.blacklist.indexOf(name.toLowerCase()),
-        1
-      )
-
-      ChatLib.chat(`${ TextUtil.NWJNADDONS } &aRemoved &c${name} &afrom your blacklist.`)
-      break
-    }
-      
-    case "list": {
-      ChatLib.chat(`${ TextUtil.NWJNADDONS } &aBlacklist:`)
-      data.blacklist.forEach((ign, idx) => ChatLib.chat(` ${ idx+1 }: ${ ign }`))
-      break
-    }  
-      
-    case "clear": {
-      data.blacklist = []
-      ChatLib.chat(`${ TextUtil.NWJNADDONS } &aCleared your blacklist.`)
-      break
-    }
-      
-    default:
-      return INVALID()
-  }
-})

@@ -1,10 +1,10 @@
-// Credit: https://github.com/DocilElm/Doc/blob/main/features/misc/BlockOverlay.js
 
 import Feature from "../../core/Feature";
 import { Event } from "../../core/Event";
 import Settings from "../../data/Settings";
 import RenderUtil from "../../core/static/RenderUtil";
 
+// Credit: https://github.com/DocilElm/Doc/blob/main/features/misc/BlockOverlay.js for these fields, ended up just recoding mine to match his
 const Blocks = net.minecraft.init.Blocks
 const BlockFlowingLava = Blocks.field_150356_k
 const BlockLava = Blocks.field_150353_l

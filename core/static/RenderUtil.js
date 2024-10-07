@@ -1,4 +1,5 @@
-// Credit: https://github.com/DocilElm/Doc/blob/main/shared/Render.js
+// Based off https://github.com/DocilElm/Doc/blob/main/shared/Render.js
+
 const AxisAlignedBB = net.minecraft.util.AxisAlignedBB
 const RenderGlobal = net.minecraft.client.renderer.RenderGlobal
 const MCTessellator = net.minecraft.client.renderer.Tessellator.func_178181_a()
@@ -10,61 +11,41 @@ const IBlockStateAir = new BlockType("minecraft:air").getDefaultState()
 const ResourceLocation = net.minecraft.util.ResourceLocation
 const MathHelper = net.minecraft.util.MathHelper
 const beaconBeam = new ResourceLocation("textures/entity/beacon_beam.png")
-
-/**
- * - Gets the given [AxisAlignedBB] [Min] and [Max] positions
- * @param {AxisAlignedBB} axis 
- * @returns {[number, number, number, number, number, number]}
- */
-const getAxisValues = (axis, filled = false) => [
-        axis.field_72340_a - (filled ? .01 : 0), // Min X
-        axis.field_72338_b - (filled ? .01 : 0), // Min Y
-        axis.field_72339_c - (filled ? .01 : 0), // Min Z
-        axis.field_72336_d + (filled ? .01 : 0), // Max X
-        axis.field_72337_e + (filled ? .01 : 0), // Max Y
-        axis.field_72334_f + (filled ? .01 : 0) // Max Z
-    ]
+const rm = Renderer.getRenderManager()
 
 export default class RenderUtil {
-    static interpolate(cr, lv, mult) {
-        return lv + (cr - lv) * mult
-    }
+    static getCamRenderPos = () => [rm.field_78730_l, rm.field_78731_m, rm.field_78728_n]
 
+    static getDistanceToCam = (x, y, z) => rm.func_78714_a(x, y, z)
 
-    static getRenderViewEntity() {
-        return Client.getMinecraft().func_175606_aa() // getRenderViewEntity
-    }
-
-    static getInterp(customTicks) {
-        const render = this.getRenderViewEntity()
-        const pticks = Tessellator.getPartialTicks()
-
-        return [
-            this.interpolate(render.field_70165_t, render.field_70142_S, customTicks || pticks),
-            this.interpolate(render.field_70163_u, render.field_70137_T, customTicks || pticks),
-            this.interpolate(render.field_70161_v, render.field_70136_U, customTicks || pticks)
-        ]
-    }
-
-    static drawOutlinedBox(aabb, r, g, b, a, phase = true, lineWidth = 3, translate = true, customTicks) {
-        const [ realX, realY, realZ ] = this.getInterp(customTicks)
+    /**
+     * - Based off DocilElm
+     * @param {net.minecraft.util.AxisAlignedBB} aabb 
+     * @param {Number} r 
+     * @param {Number} g 
+     * @param {Number} b 
+     * @param {Number} a 
+     * @param {Boolean} phase 
+     * @param {Number} lineWidth 
+     */
+    static drawOutlinedBox(aabb, r, g, b, a, phase = true, lineWidth = 3) {
+        const [realX, realY, realZ] = this.getCamRenderPos()
 
         Tessellator
             .pushMatrix()
             .disableTexture2D()
             .enableBlend()
-            .disableLighting()
             .disableAlpha()
             .tryBlendFuncSeparate(770, 771, 1, 0)
 
         GL11.glLineWidth(lineWidth)
 
-        if (translate) Tessellator.translate(-realX, -realY, -realZ)
+        Tessellator.translate(-realX, -realY, -realZ)
         if (phase) Tessellator.disableDepth()
 
-        RenderGlobal.func_181563_a(aabb, r, g, b, a)
+        RenderGlobal.func_181563_a(aabb, r, g, b, a) // drawOutlinedBoundingBox
 
-        if (translate) Tessellator.translate(realX, realY, realZ)
+        Tessellator.translate(realX, realY, realZ)
         if (phase) Tessellator.enableDepth()
 
         Tessellator
@@ -72,15 +53,22 @@ export default class RenderUtil {
             .enableAlpha()
             .enableTexture2D()
             .colorize(1, 1, 1, 1)
-            .enableLighting()
             .popMatrix()
 
         GL11.glLineWidth(2)
     }
 
-    static drawFilledBox(aabb, r, g, b, a, phase = true, translate = true, customTicks) {
-        const [ x0, y0, z0, x1, y1, z1 ] = getAxisValues(aabb)
-        const [ realX, realY, realZ ] = this.getInterp(customTicks)
+    static drawFilledBox(aabb, r, g, b, a, phase = true) {
+        const [ x0, y0, z0, x1, y1, z1 ] = [
+            aabb.field_72340_a, // Min X
+            aabb.field_72338_b, // Min Y
+            aabb.field_72339_c, // Min Z
+            aabb.field_72336_d, // Max X
+            aabb.field_72337_e, // Max Y
+            aabb.field_72334_f // Max Z
+        ]
+        
+        const [ realX, realY, realZ ] = this.getCamRenderPos()
 
         Tessellator.pushMatrix()
         GlStateManager.func_179129_p()
@@ -90,8 +78,8 @@ export default class RenderUtil {
             .disableLighting()
             .disableAlpha()
             .tryBlendFuncSeparate(770, 771, 1, 0)
-
-        if (translate) Tessellator.translate(-realX, -realY, -realZ)
+            .translate(-realX, -realY, -realZ)
+        
         if (phase) Tessellator.disableDepth()
 
         Tessellator.colorize(r / 255, g / 255, b / 255, a / 255)
@@ -120,10 +108,10 @@ export default class RenderUtil {
         WorldRenderer.func_181662_b(x1, y1, z0).func_181675_d()
         MCTessellator.func_78381_a()
 
-        if (translate) Tessellator.translate(realX, realY, realZ)
         if (phase) Tessellator.enableDepth()
-
+            
         Tessellator
+            .translate(realX, realY, realZ)
             .disableBlend()
             .enableAlpha()
             .enableTexture2D()
@@ -150,7 +138,7 @@ export default class RenderUtil {
      * @param {number} lineWidth The width of the line
      * @param {boolean} translate Whether to translate the rendering coords to the [RenderViewEntity] coords (`true` by default)
      */
-    static drawEntityBox(x, y, z, w, h, r, g, b, a, lineWidth = 1, phase = false, translate = true) {
+    static drawEntityBox(x, y, z, w, h, r, g, b, a, lineWidth = 1, phase = false) {
         if (x == null) return
 
         const axis = new AxisAlignedBB(
@@ -162,7 +150,7 @@ export default class RenderUtil {
             z + w / 2
         )
 
-        this.drawOutlinedBox(axis, r, g, b, a, phase, lineWidth, translate)
+        this.drawOutlinedBox(axis, r, g, b, a, phase, lineWidth)
     }
 
     /**
@@ -194,10 +182,10 @@ export default class RenderUtil {
      * @param {boolean} translate Whether to translate the rendering coords to the [RenderViewEntity] coords (`true` by default)
      * @returns
      */
-    static outlineBlock(ctBlock, r, g, b, a, phase = true, lineWidth = 3, translate = true, customTicks) {
+    static outlineBlock(ctBlock, r, g, b, a, phase = true, lineWidth = 3) {
         if (!ctBlock) return
 
-        this.drawOutlinedBox(this.getCTBlockAxis(ctBlock), r, g, b, a, phase, lineWidth, translate, customTicks)
+        this.drawOutlinedBox(this.getCTBlockAxis(ctBlock), r, g, b, a, phase, lineWidth)
     }
 
     /**
@@ -212,10 +200,10 @@ export default class RenderUtil {
      * @link Huge thanks to [Ch1ck3nNeedsRNG](https://github.com/PerseusPotter)
      * @returns
      */
-    static filledBlock(ctBlock, r, g, b, a, phase = true, translate = true, customTicks) {
+    static filledBlock(ctBlock, r, g, b, a, phase = true) {
         if (!ctBlock) return
 
-        this.drawFilledBox(this.getCTBlockAxis(ctBlock), r, g, b, a, phase, translate, customTicks)
+        this.drawFilledBox(this.getCTBlockAxis(ctBlock), r, g, b, a, phase)
     }
 
     /**
@@ -232,12 +220,11 @@ export default class RenderUtil {
      * @param {boolean} translate Whether to translate the rendering coords to the [RenderViewEntity] coords (`true` by default)
      * @link From [NotEnoughUpdates](https://github.com/NotEnoughUpdates/NotEnoughUpdates/blob/master/src/main/java/io/github/moulberry/notenoughupdates/core/util/render/RenderUtils.java#L220)
      */
-    static renderBeaconBeam(x, y, z, r, g, b, a, phase = false, height = 300, translate = true) {
-        const [ realX, realY, realZ ] = this.getInterp()
+    static renderBeaconBeam(x, y, z, r, g, b, a, phase = false, height = 300) {
+        ({x, y, z} = Tessellator.getRenderPos(x, y, z))
 
         Tessellator.pushMatrix()
 
-        if (translate) Tessellator.translate(-realX, -realY, -realZ)
         if (phase) Tessellator.disableDepth()
 
         r = r / 255
@@ -316,7 +303,6 @@ export default class RenderUtil {
         WorldRenderer.func_181662_b(x + 0.2, y + height, z + 0.2).func_181673_a(0, d13).func_181666_a(r, g, b, 0.25 * a).func_181675_d()
         MCTessellator.func_78381_a()
 
-        if (translate) Tessellator.translate(realX, realY, realZ)
         if (phase) Tessellator.enableDepth()
 
         Tessellator

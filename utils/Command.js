@@ -49,4 +49,49 @@ register("command", (...args) => {
 
       return [curr]
   })
-  .setName("nwjn")
+  .setName("nwjn", true)
+
+import { notify } from "../core/static/TextUtil.js";
+import { data } from "../data/Data.js"
+const INVALID = () => notify("&cInvalid. &aAdd and remove need name entry. List and clear do not.")
+
+// Credit: DocilElm for blacklist
+addCommand("bl", "Blacklist <add, remove, list, clear> <name?>", (type, name) => {
+  if (!type) return INVALID()
+  if (name) name = name.toLowerCase()
+  
+  switch (type?.toLowerCase()) {
+    case "add":
+      if (!name) return INVALID()
+      data.blacklist.push(name)
+
+      notify(`&aAdded &c${name} &ato your blacklist`)
+      break
+      
+    case "remove": {
+      if (!name) return INVALID()
+      data.blacklist.splice(
+        data.blacklist.indexOf(name.toLowerCase()),
+        1
+      )
+
+      notify(`&aRemoved &c${name} &afrom your blacklist.`)
+      break
+    }
+      
+    case "list": {
+      notify("&aBlacklist:")
+      data.blacklist.forEach((ign, idx) => ChatLib.chat(` ${ idx+1 }: ${ ign }`))
+      break
+    }  
+      
+    case "clear": {
+      data.blacklist = []
+      notify("&aCleared your blacklist.")
+      break
+    }
+      
+    default:
+      return INVALID()
+  }
+})

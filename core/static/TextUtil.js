@@ -1,4 +1,5 @@
-// Credit: https://github.com/DocilElm/Doc/blob/main/shared/TextHelper.js
+// Based off https://github.com/DocilElm/Doc/blob/main/shared/TextHelper.js
+
 const dungeonFloorWords = {
     1: "one",
     2: "two",
@@ -18,31 +19,38 @@ const kuudraTierWords = {
 }
 
 export default class TextUtil {
+    static VERSION = JSON.parse(FileLib.read("NwjnAddons", "metadata.json")).version
+
+    // Credit: DocilElm {
     static NWJN = "§0§l[§c§lNwjn§0§l]§r"
     static NWJNADDONS = "§0§l[§c§lNwjnAddons§0§l]§r"
-    static VERSION = JSON.parse(FileLib.read("NwjnAddons", "metadata.json")).version
+    // }
     
     /**
-     * - Matches the given regex with the given string
+     * - Returns the matches of the regex
+     * - For assignments
      * @param {RegExp} regex 
-     * @param {String} string 
-     * @returns {RegExpMatchArray | null}
+     * @param {String} string
+     * @param {Number} vars the number of vars to be assigned 
+     * @returns {Array} matches 
      */
-    static getRegexMatch(regex, string) {
-        return regex.test(string) ? string.match(regex) : null
+    static getMatches(regex, string, vars = 1) {
+        return string.match(regex)?.slice(1) ??
+            (vars !== 1 ? Array(vars).fill(null) : null);
     }
 
    /**
     * - Check if the criteria is a regex or a string
     * - Regex is way more intensive so only use that if needed
+    * - Credit: https://github.com/DocilElm/Doc/blob/main/shared/TextHelper.js#L64
     * @param {Function} fn Callback function
     * @param {String | RegExp} criteria The criteria to match with
     * @param {String} unformatted The current unformatted text
-    * @param {Event} event The current packet event
-    * @param {String} formatted The current formatted text
+    * @param {?Event} event The current packet event
+    * @param {?String} formatted The current formatted text
     * @returns returns the callback fn with the given matches or the current msg if the criteria is null
     */
-   static matchesCriteria(fn, criteria, unformatted, event, formatted) {
+   static matchesCriteria(fn, criteria, unformatted, event = null, formatted = null) {
         if (!criteria) return fn(unformatted, event, formatted)
 
         else if (typeof criteria === "string") {
@@ -72,4 +80,24 @@ export default class TextUtil {
      * @returns {String}
      */
     static getTierWord = (number) => kuudraTierWords[number]
+
+    /**
+     * Adds a string to the end of an ichatcomponent
+     * @param {String} message 
+     * @param {net.minecraft.util.IChatComponent} ichatcomponent 
+     */
+    static append = (message, ichatcomponent) => ichatcomponent.func_150258_a(`${ this.NWJN } ${ message.addColor() }`)
 }
+
+// internal mod fns
+/**
+ * For sending data and info
+ * @param {String} message 
+ */
+export const log = (message)  => ChatLib.chat(`${TextUtil.NWJN} > ${message}`)
+
+/**
+ * For sending guides and important stuff
+ * @param {String} message 
+ */
+export const notify = (message) => ChatLib.chat(`${TextUtil.NWJNADDONS} ${message}`)

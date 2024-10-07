@@ -7,21 +7,22 @@ import RenderUtil from "../../core/static/RenderUtil";
 import PlayerUtil from "../../core/static/PlayerUtil";
 import TextUtil from "../../core/static/TextUtil";
 import { data } from "../../data/Data";
+import { addCommand } from "../../utils/Command";
 
-// With improvements from https://github.com/DocilElm/Doc/blob/main/features/misc/ChatWaypoint.js
+// Credit: https://github.com/DocilElm/Doc/blob/main/features/misc/ChatWaypoint.js for regex
 const waypoints = new Map()
 const feat = new Feature("waypoint")
   .addEvent(
     new Event(EventEnums.SERVER.CHAT, (prefix, x, y, z, text, event, msg) => {
       const ign = PlayerUtil.getPlayerName(prefix).toLowerCase()
       
-      if (data.blacklist.includes(ign)) return scheduleTask(() => ChatLib.chat(`${TextUtil.NWJNADDONS} &4Blacklisted waypoint from &c${ign}`))
+      if (data.blacklist.includes(ign)) return TextUtil.append(event.func_148915_c(), "&cBlacklisted")
 
       const id = Date.now()
       const title = msg.substring(0, msg.indexOf(":"))
       text = text ? `\n${text}` : ""
 
-      const wp = [title, parseInt(x), parseInt(y), parseInt(z), text]
+      const wp = [title, ~~x, ~~y, ~~z, text]
       waypoints.set(id, wp)
 
       feat.update()
@@ -45,3 +46,5 @@ const feat = new Feature("waypoint")
   .onUnregister(() => {
     waypoints.clear()
   })
+
+addCommand("clearwaypoints", "Stops rendering current waypoints", () => feat._unregister())

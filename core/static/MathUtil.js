@@ -18,16 +18,19 @@ export default class MathUtil {
     }
 
     /**
-     * - Gets the time since old date from current date
-     * @param {Date} oldDate 
+     * @param {Number} number 
+     * @returns {String}
+     */
+    static timeFormat = (number) => number < 10 ? `0${number}` : number
+
+    /**
+     * - Gets the current system time
      * @returns {String} hrs:mins:secs
      */
-    static getTime(oldDate) {
-        const seconds = Math.round((Date.now() - oldDate) / 1000 % 60)
-        const mins = Math.floor((Date.now() - oldDate) / 1000 / 60 % 60)
-        const hours = Math.floor((Date.now() - oldDate) / 1000 / 60 / 60 % 24)
-
-        return `${hours}:${mins}:${seconds}`
+    static getTime() {
+        const date = new Date()
+        const [h, m, s] = [date.getHours(), date.getMinutes(), date.getSeconds()]
+        return `${(h%12) || 12}:${MathUtil.timeFormat(m)}:${MathUtil.timeFormat(s)} ${h<12?"AM":"PM"}`
     }
 
     /**
@@ -49,9 +52,4 @@ export default class MathUtil {
      */
     static addCommas = (number, seperator = ',') => ~~number.replace(/\B(?=(\d{3})+(?!\d))/g, seperator) ?? ~~number
 
-    /**
-     * @param {Number} number 
-     * @returns {String}
-     */
-    static timeFormat = (number) => number.toString().length !== 2 ? `0${number}` : number.toString()
 }
