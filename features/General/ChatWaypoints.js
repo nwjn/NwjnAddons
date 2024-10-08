@@ -4,33 +4,33 @@ import EventEnums from "../../core/EventEnums";
 import { scheduleTask } from "../../core/CustomRegisters";
 import Settings from "../../data/Settings";
 import RenderUtil from "../../core/static/RenderUtil";
-import PlayerUtil from "../../core/static/PlayerUtil";
 import TextUtil from "../../core/static/TextUtil";
 import { data } from "../../data/Data";
 import { addCommand } from "../../utils/Command";
 
-// Credit: https://github.com/DocilElm/Doc/blob/main/features/misc/ChatWaypoint.js for regex
 const waypoints = new Map()
 const feat = new Feature("waypoint")
   .addEvent(
     new Event(EventEnums.SERVER.CHAT, (prefix, x, y, z, text, event, msg) => {
-      const ign = PlayerUtil.getPlayerName(prefix).toLowerCase()
+      const ign = TextUtil.getSenderName(prefix).toLowerCase()
       
       if (data.blacklist.includes(ign)) return TextUtil.append(event.func_148915_c(), "&cBlacklisted")
-
-      const id = Date.now()
-      const title = msg.substring(0, msg.indexOf(":"))
-      text = text ? `\n${text}` : ""
-
-      const wp = [title, ~~x, ~~y, ~~z, text]
-      waypoints.set(id, wp)
-
-      feat.update()
-
-      scheduleTask(() => {
-        waypoints.delete(id)
+        
+        const id = Date.now()
+        const title = msg.substring(0, msg.indexOf(":"))
+        text = text ? `\n${text}` : ""
+        
+        const wp = [title, ~~x, ~~y, ~~z, text]
+        waypoints.set(id, wp)
+        
         feat.update()
-      }, Settings().wpTime * 20)
+        
+        scheduleTask(() => {
+          waypoints.delete(id)
+          feat.update()
+        }, Settings().wpTime * 20)
+      
+      // Credit: https://github.com/DocilElm/Doc/blob/main/features/misc/ChatWaypoint.js for regex
     }, /^(?:[\w\-]{5})?(?: > )?(?:\[\d+\] .? ?)?(?:\[[^\]]+\] )?(\w{1,16}): x: ([\d\-\.]+), y: ([\d\-\.]+), z: ([\d\-\.]+) ?(.+)?$/)
   )
   .addSubEvent(
@@ -47,4 +47,7 @@ const feat = new Feature("waypoint")
     waypoints.clear()
   })
 
-addCommand("clearwaypoints", "Stops rendering current waypoints", () => feat._unregister())
+addCommand("clearwaypoints", "Stops rendering current waypoints", () => {
+  waypoints.clear()
+  feat.update()
+})

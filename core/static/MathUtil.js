@@ -46,10 +46,9 @@ export default class MathUtil {
 
     /**
      * Adds seperator notation to bigger numbers
-     * @param {Number} number 
+     * @param {Number} num 
      * @param {String} seperator 
      * @returns {String}
      */
-    static addCommas = (number, seperator = ',') => ~~number.replace(/\B(?=(\d{3})+(?!\d))/g, seperator) ?? ~~number
-
+    static addCommas = (num, seperator = ',') => num.toFixed(1).replace(/\B(?=(\d{3})+(?!\d))/g, seperator)
 }

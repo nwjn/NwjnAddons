@@ -34,10 +34,72 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
 })
 .addSwitch({
     category: "General",
-    configName: "party",
+    configName: "partyCommands",
     title: "Party Commands",
     description: "Enables party commands, universally triggers on [.!?] commands",
     value: false
+})
+.addMultiCheckbox({
+    category: "General",
+    configName: "partyToggles",
+    title: "Party Command Toggles",
+    description: "Toggles for various party commands",
+    placeHolder: "Click",
+    options: [
+        {
+            title: "Join Instance",
+            configName: "pcInstance",
+            value: true
+        },
+        {
+            title: "Party Transfer <ign>",
+            configName: "pcTransfer",
+            value: true
+        },
+        {
+            title: "Warp",
+            configName: "pcWarp",
+            value: true
+        },
+        {
+            title: "Invite <ign>",
+            configName: "pcInvite",
+            value: true
+        },
+        {
+            title: "All Invite",
+            configName: "pcAllinvite",
+            value: true
+        },
+        {
+            title: "Build Imgur",
+            configName: "pcBuild",
+            value: true
+        },
+        {
+            title: "Tab Stats",
+            configName: "pcStats",
+            value: true
+        },
+        {
+            title: "Power, Tuning, Enrich, MP Data",
+            configName: "pcPower",
+            value: true
+        },
+        {
+            title: "Send Coords",
+            configName: "pcCoords",
+            value: true
+        },
+        {
+            title: "Your Current Time",
+            configName: "pcTime",
+            value: true
+        },
+    ],
+    shouldShow(data) {
+        return data.partyCommands
+    }
 })
 .addSwitch({
     category: "General",

@@ -32,11 +32,10 @@ export default class TextUtil {
      * @param {RegExp} regex 
      * @param {String} string
      * @param {Number} vars the number of vars to be assigned 
-     * @returns {Array} matches 
+     * @returns {RegExpMatchArray|null[]} matches 
      */
     static getMatches(regex, string, vars = 1) {
-        return string.match(regex)?.slice(1) ??
-            (vars !== 1 ? Array(vars).fill(null) : null);
+        return string.match(regex)?.slice(1) ?? Array(vars).fill(null)
     }
 
    /**
@@ -87,6 +86,26 @@ export default class TextUtil {
      * @param {net.minecraft.util.IChatComponent} ichatcomponent 
      */
     static append = (message, ichatcomponent) => ichatcomponent.func_150258_a(`${ this.NWJN } ${ message.addColor() }`)
+
+    /**
+     * @param {String[]} tab 
+     * @param {RegExp} startRegex 
+     * @param {RegExp} endRegex 
+     * @returns {?String[]}
+     */
+    static getTabBlock(tab, startRegex, endRegex = /^\s[A-Z]/) {
+        const startIndex = tab.findIndex(it => startRegex.test(it))
+        const endIndex = tab.findIndex((it, i) => ~startIndex && i > startIndex && !endRegex.test(it))
+
+        return ~startIndex && ~endIndex ? tab.slice(startIndex + 1, endIndex) : null
+    }
+
+    /**
+     * Strips rank and tags from player
+     * @param {String} string
+     * @returns {String} Player ign
+     */
+    static getSenderName = (string) => string.removeFormatting().split("] ").slice(-1).toString().replace(/\W/g, "")
 }
 
 // internal mod fns

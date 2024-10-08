@@ -42,5 +42,12 @@ export default class EntityUtil {
      * @returns {Number} hp int
      */
     static getHP = (entity) => ~~this.getEntity(entity)
-        .func_110143_aJ() // getHealth
+        .func_110143_aJ(); // getHealth
+
+    /**
+     * Checks if the player entity is a real user
+     * @param {PlayerMP} player 
+     * @returns {Boolean}
+     */
+    static isRealPlayer = (player) => player.getPing() === 1
 }
