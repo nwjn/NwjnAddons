@@ -106,6 +106,10 @@ export default class TextUtil {
      * @returns {String} Player ign
      */
     static getSenderName = (string) => string.removeFormatting().split("] ").slice(-1).toString().replace(/\W/g, "")
+
+    static getKeyFromValue(obj, value) {
+        return Object.keys(obj).find(k => obj[k] === value)
+    }
 }
 
 // internal mod fns

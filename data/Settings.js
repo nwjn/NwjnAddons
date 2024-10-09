@@ -568,6 +568,13 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
     description: "Shows the amount or arrows pulled on rend",
     value: false
 })
+.addSwitch({
+    category: "Utilities",
+    configName: "imageFix",
+    title: "&e✯&r Image Fix",
+    description: "Encodes and Decodes Image Links to allow sending and viewing for those with the mod",
+    value: true
+})
 
 import TextUtil from "../core/static/TextUtil"
 const meinConf = new Settings("NwjnAddons", defCon1, "/data/Scheme.json", `${TextUtil.NWJNADDONS} by &6nwjn`)

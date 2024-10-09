@@ -1,0 +1,80 @@
+import TextUtil from "./TextUtil";
+
+const stufRegex = /(l\$)([hH])([1-4])([0-9]+)?\|(.+)/
+const urlRegex = /(https?:\/\/)(.+\..+)(\/.+)(\..+)/
+const schemes = {
+    "h": "http://",
+    "H": "https://"
+}
+const extensions = {
+    "1": ".png",
+    "2": ".jpg",
+    "3": ".jpeg",
+    "4": ".gif"
+}
+const charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+/**
+ * - An adaption of STuF (Licensed by Stuffy)
+ * @see https://github.com/stuffyerface/STuF
+ */
+export default class STuF {
+
+    /**
+     * Decodes a string in Standardized Truncated url Format.
+     * @param {String} string - The String to Decode.
+     * @returns {String} url
+     */
+    static decode = (string) => {
+        const [valid, scheme, extension, dots, body] = TextUtil.getMatches(stufRegex, string)
+        if (!valid) return
+
+        const [host, dir] = TextUtil.getMatches(/^(\w+)(\/\w+)$/, body)
+
+        let url = STuF.translate(host + dir.replace(/\^/g, "."), -1)
+
+        dots.split("").forEach(i => url = url.slice(0, ~~i) + "." + url.slice(~~i))
+
+        const getScheme = schemes[scheme]
+        const getExtension = extensions[extension]
+        if (!getScheme || !getExtension) return
+        return getScheme + url + getExtension
+    }
+
+    /**
+     * Encodes a string in Standardized Truncated url Format.
+     * @param {String} url - The URL to Encode.
+     */
+    static encode = (url) => {
+        const [scheme, host, dir, extension] = TextUtil.getMatches(urlRegex, url)
+        if (!scheme) return
+
+        let encoded = 'l$'
+        encoded += TextUtil.getKeyFromValue(schemes, scheme)
+        encoded += TextUtil.getKeyFromValue(extensions, extension)
+
+        host.split("").forEach((val, i) => {
+            if (val === ".") encoded += i
+        })
+
+        let mappedURL = STuF.translate(host.replace(/\./g, "") + dir.replace(/\./g, "^"), 1)
+
+        return encoded + "|" + mappedURL
+    }
+
+    /**
+     * @param {String} string 
+     * @param {Number} inc Encode uses 1, Decode uses -1
+     * @returns {String}
+     */
+    static translate(string, inc) {
+        let result = ""
+        for (let i = 0; i < string.length; i++) {
+            let char = string[i];
+            let index = charSet.indexOf(char);
+
+            result += index === -1 ? char : charSet[index + inc]
+        }
+
+        return result
+    }
+}
