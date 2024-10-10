@@ -14,7 +14,7 @@ const extensions = {
 }
 const charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 /**
- * - An adaption of STuF (Licensed by Stuffy)
+ * - An adaption of STuF (Permitted by Stuffy)
  * @see https://github.com/stuffyerface/STuF
  */
 export default class STuF {
@@ -26,7 +26,7 @@ export default class STuF {
      */
     static decode = (string) => {
         const [valid, scheme, extension, dots, body] = TextUtil.getMatches(stufRegex, string)
-        if (!valid) return
+        if (!valid) return false
 
         const [host, dir] = TextUtil.getMatches(/^(\w+)(\/\w+)$/, body)
 
@@ -46,7 +46,7 @@ export default class STuF {
      */
     static encode = (url) => {
         const [scheme, host, dir, extension] = TextUtil.getMatches(urlRegex, url)
-        if (!scheme) return
+        if (!scheme) return false
 
         let encoded = 'l$'
         encoded += TextUtil.getKeyFromValue(schemes, scheme)

@@ -5,12 +5,13 @@ import HandleGui from "../../DocGuiLib/core/Gui"
 import { CenterConstraint, CramSiblingConstraint, ScrollComponent, UIRoundedRectangle, UIText, OutlineEffect } from "../../Elementa"
 import { addCommand } from "./Command"
 import { data } from "../data/Data"
+import Settings from "../data/Settings"
 
 const guisCreated = new Set()
 
 export default class DraggableGui {
-    constructor(featureName) {
-        this.featureName = featureName
+    constructor({name, example, color, command}) {
+        this.featureName = name
         const daita = data[this.featureName]
 
         if (!daita || !("x" in daita) || !("y" in daita) || !("scale" in daita)) 
@@ -20,16 +21,19 @@ export default class DraggableGui {
                 scale: 1
             }
 
-        // Listeners
-        this._onDraw = null
-
         // Gui data
         this.ctGui = new Gui()
         this.width = null
         this.height = null
-        this.commandName = null
         this.customSize = false // used later on
-        this.selected = false // used later on
+        this.selected = false; // used later on
+
+        this.commandName = command
+        register("command", () => this.ctGui.open()).setName(this.commandName, true)
+
+        this.color = color
+        this.example = example.addColor()
+        this.text = null
 
         // Add listeners to this [DraggableGui]
         this.ctGui.registerScrolled((_, __, dir) => {
@@ -44,52 +48,32 @@ export default class DraggableGui {
             data[this.featureName].y = my
         })
 
+        this.ctGui.registerDraw(() => this._draw(this.text || this.example))
+
+        register("renderOverlay", () => {
+            if (this.ctGui.isOpen()) return
+            this._draw(this.text)
+        })
+
         // Add the created [DraggableGui] to the set
         // so we can use this outside of this class internally
         guisCreated.add(this)
     }
 
-    /**
-     * - Runs the given function anytime this [DraggableGui] is being drawn
-     * - NOTE: Mostly used for editing purposes so the default string is rendered here
-     * @param {() => void} fn
-     * @returns this for method chaining
-     */
-    onDraw(fn) {
-        this._onDraw = fn
-        this.ctGui.registerDraw(this._onDraw)
-
-        return this
+    drawText(text) {
+        this.text = text.addColor()
     }
 
-    /**
-     * - Sets the [commandName] of this [DraggableGui] to be opened with
-     * @param {string} name
-     * @returns this for method chaining
-     */
-    setCommandName(name) {
-        this.commandName = name
-
-        register("command", () => {
-            this.ctGui.open()
-        }).setName(name)
-
-        return this
-    }
-
-    /**
-     * - Sets this [DraggableGui]'s width and height
-     * - NOTE: if width or height isn't passed through it won't change that part
-     * - (e.g. `setSize(10)` will only change width)
-     * @param {number?} width
-     * @param {number?} height
-     * @returns this for method chaining
-     */
-    setSize(width = null, height = null) {
-        if (width != null) this.width = width
-        if (height != null) this.height = height
-
-        return this
+    _draw(string) {
+        if (!string) return
+        Renderer.retainTransforms(true)
+        Renderer.translate(this.getX(), this.getY())
+        Renderer.scale(this.getScale())
+        const color = Settings()?.[this.color]
+        if (color) Renderer.colorize(...color)
+        Renderer.drawStringWithShadow(string, 0, 0)
+        Renderer.retainTransforms(false)
+        Renderer.finishDraw()
     }
 
     /**

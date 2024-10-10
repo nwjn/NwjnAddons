@@ -13,9 +13,9 @@ const createCustomEvent = (id, invokeFn) => customTriggers.set(id, invokeFn)
 const S38PacketPlayerListItem = net.minecraft.network.play.server.S38PacketPlayerListItem
 
 // [Interval]
-createCustomEvent(EventEnums.INTERVAL.FPS, (fn, fps) => register("step", fn).setFps(fps).unregister())
+createCustomEvent(EventEnums.INTERVAL.FPS, (fn, fps = 3) => register("step", fn).setFps(fps).unregister())
 
-createCustomEvent(EventEnums.INTERVAL.SECONDS, (fn, sec) => register("step", fn).setDelay(sec).unregister())
+createCustomEvent(EventEnums.INTERVAL.SECONDS, (fn, sec = 1) => register("step", fn).setDelay(sec).unregister())
 
 createCustomEvent(EventEnums.INTERVAL.TICK, (fn) =>
     register("packetReceived", (packet) => {

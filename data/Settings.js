@@ -174,14 +174,6 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
     subcategory: "Blaze",
     value: false
 })
-.addSwitch({
-    category: "HUD",
-    configName: "clock",
-    title: "Clock Display",
-    description: "Shows your current time",
-    subcategory: "Clock",
-    value: false
-})
 .addDropDown({
     category: "HUD",
     configName: "fatalTempo",
@@ -574,6 +566,26 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
     title: "&e✯&r Image Fix",
     description: "Encodes and Decodes Image Links to allow sending and viewing for those with the mod",
     value: true
+})
+.addSwitch({
+    category: "Utilities",
+    configName: "clock",
+    title: "Clock Display",
+    description: "Shows your current time",
+    subcategory: "Clock",
+    value: false
+})
+.addColorPicker({
+    category: "Utilities",
+    configName: "clockColor",
+    title: "➤ Clock Color",
+    description: "     Sets the color for the clock display",
+    subcategory: "Clock",
+    value: [255, 255, 255, 255],
+
+    shouldShow(data) {
+        return (data.clock)
+    }
 })
 
 import TextUtil from "../core/static/TextUtil"

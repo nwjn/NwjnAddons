@@ -1,8 +1,9 @@
 import STuF from "../../core/static/STuF";
-import TextUtil from "../../core/static/TextUtil";
+import TextUtil, { log } from "../../core/static/TextUtil";
 import Feature from "../../core/Feature";
 import EventEnums from "../../core/EventEnums";
 import { Event } from "../../core/Event";
+import { scheduleTask } from "../../core/CustomRegisters";
 
 
 new Feature("imageFix")
@@ -20,11 +21,7 @@ new Feature("imageFix")
     })
   )
   .addEvent(
-    new Event(EventEnums.SERVER.CHAT, (url, event, msg) => {
-      const decoded = STuF.decode(url)
-      if (!decoded) return
-
-      cancel(event)
-      ChatLib.chat(msg.replace(url, decoded))
+    new Event(EventEnums.SERVER.CHAT, (url) => {
+      scheduleTask(() => log(`Decoded Link: ${STuF.decode(url)}`))
     }, /(l\$[hH][1-4][0-9]*\|[\w\^\/\.\-]+)/)
   )
