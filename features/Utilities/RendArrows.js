@@ -2,7 +2,7 @@ import { Event } from "../../core/Event";
 import EventEnums from "../../core/EventEnums";
 import Feature from "../../core/Feature";
 import ItemUtil from "../../core/static/ItemUtil";
-import { scheduleTask } from "../../core/CustomRegisters";
+import { scheduleTask } from "../../utils/Ticker";
 
 let arrows = 0
 

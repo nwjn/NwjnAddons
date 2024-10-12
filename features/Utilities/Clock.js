@@ -7,6 +7,7 @@ import MathUtil from "../../core/static/MathUtil";
 const editGui = new DraggableGui({
   name: "Clock",
   example: "0:00:00",
+  setting: "clock",
   color: "clockColor",
   command: "nwjnClock"
 })

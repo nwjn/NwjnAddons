@@ -52,7 +52,7 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
             value: true
         },
         {
-            title: "Party Transfer <ign>",
+            title: "Party Transfer <?ign>",
             configName: "pcTransfer",
             value: true
         },
@@ -77,6 +77,11 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
             value: true
         },
         {
+            title: "Server TPS",
+            configName: "pcTps",
+            value: "true"
+        },
+        {
             title: "Tab Stats",
             configName: "pcStats",
             value: true
@@ -95,7 +100,7 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
             title: "Your Current Time",
             configName: "pcTime",
             value: true
-        },
+        }
     ],
     shouldShow(data) {
         return data.partyCommands

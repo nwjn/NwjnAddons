@@ -2,7 +2,7 @@
 import Feature from "../core/Feature"
 import EventEnums from "../core/EventEnums"
 import { Event } from "../core/Event"
-import { scheduleTask } from "../core/CustomRegisters"
+import { scheduleTask } from "./Ticker"
 
 const stripRank = (name) => name.replace(/(\[[A-z]+\++\] )/, "")
 

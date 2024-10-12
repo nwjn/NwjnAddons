@@ -18,7 +18,7 @@ export default class ItemUtil {
         if (item === null) return null
 
         const extraAttributes = this.getExtraAttribute(item)
-        const itemID = extraAttributes?.getString("id")
+        const itemID = extraAttributes?.id
 
         if (itemID !== "ENCHANTED_BOOK") return itemID
 

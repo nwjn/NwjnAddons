@@ -1,7 +1,7 @@
 import Feature from "../../core/Feature";
 import { Event } from "../../core/Event";
 import EventEnums from "../../core/EventEnums";
-import { scheduleTask } from "../../core/CustomRegisters";
+import { scheduleTask } from "../../utils/Ticker";
 
 const options = [
   ["fallingBlocks", net.minecraft.entity.item.EntityFallingBlock],

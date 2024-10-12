@@ -10,7 +10,7 @@ import Settings from "../data/Settings"
 const guisCreated = new Set()
 
 export default class DraggableGui {
-    constructor({name, example, color, command}) {
+    constructor({name, example, setting, color = null, command}) {
         this.featureName = name
         const daita = data[this.featureName]
 
@@ -31,6 +31,7 @@ export default class DraggableGui {
         this.commandName = command
         register("command", () => this.ctGui.open()).setName(this.commandName, true)
 
+        this.setting = setting
         this.color = color
         this.example = example.addColor()
         this.text = null
@@ -51,7 +52,7 @@ export default class DraggableGui {
         this.ctGui.registerDraw(() => this._draw(this.text || this.example))
 
         register("renderOverlay", () => {
-            if (this.ctGui.isOpen()) return
+            if (this.ctGui.isOpen() || !Settings()[this.setting]) return
             this._draw(this.text)
         })
 

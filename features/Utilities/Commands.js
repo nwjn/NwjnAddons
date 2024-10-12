@@ -19,24 +19,11 @@ register("command", () => {
   ChatLib.chat(ChatLib.getChatBreak("-"))
 }).setName("entityInfo", true).setAliases("entity");
 
-register("command", () => {
-  new Thread(() => {
-    const [x, y, z] = [~~Player.getX(), ~~Player.getY(), ~~Player.getZ()]
-    ChatLib.say(`/pc x: ${x}, y: ${y}, z: ${z}`)
-    Thread.sleep(300)
-    ChatLib.say(`/pc x: ${x + 2}, y: ${y}, z: ${z}`)
-    Thread.sleep(300)
-    ChatLib.say(`/pc x: ${x + 1}, y: ${y + 1}, z: ${z}`)
-    Thread.sleep(300)
-    ChatLib.say(`/pc x: ${x + 1}, y: ${y + 2}, z: ${z}`)
-    Thread.sleep(300)
-  }).start()
-}).setName('rocket', true);
 
 register("command", (...args) => {
   try {
     const equat = args.join(" ").replace(/,/g, "")
-    ChatLib.chat(`${TextUtil.NWJNADDONS}&r: ${MathUtil.addCommas(equat)} = ${MathUtil.addCommas(eval(equat))}`)
+    ChatLib.chat(`${TextUtil.NWJNADDONS}&r: ${equat} = ${MathUtil.addCommas(eval(equat))}`)
   } catch (err) {ChatLib.chat(`${TextUtil.NWJNADDONS}&r: ${err}`)}
 }).setName("calc", true)
 

@@ -5,7 +5,7 @@ import Party from "../../utils/Party";
 import { data } from "../../data/Data";
 import TextUtil from "../../core/static/TextUtil";
 import MathUtil from "../../core/static/MathUtil";
-import { scheduleTask } from "../../core/CustomRegisters";
+import { getTPS, scheduleTask } from "../../utils/Ticker";
 import Location from "../../utils/Location";
 import Settings from "../../data/Settings";
 
@@ -48,6 +48,13 @@ const commands = {
         ?.map(it => it.match(/: (.[\d]+)$/)?.[1])
         ?.join(" | ")
           ?? "Me no have stat widget"
+  },
+
+  "tps": {
+    matches: /^tps$/,
+    access: () => Settings().pcTps,
+    fn: () =>
+      "pc TPS: " + getTPS()
   },
 
   "build": {
@@ -108,6 +115,6 @@ new Feature("partyCommands")
       
       const response = Object.values(commands).find(obj => obj.matches.test(cmd) && obj.access())
 
-      if (response) scheduleTask(() => ChatLib.command(response.fn(ign, cmd)), 5)
+      if (response) scheduleTask(() => ChatLib.command(response.fn(ign, cmd)), 4)
     }, /^Party > (.+): [,.?!](.+)$/)
 )

@@ -14,12 +14,18 @@ export let data = new PogOject("NwjnAddons", {
   "lastMini": [],
   "blacklist": [],
 
-  "clock": {
-      "x": 50,
-      "y": 50,
-      "scale": 1.5,
-      "bg": true
-    }
+  "Clock": {
+    "x": 50,
+    "y": 50,
+    "scale": 1.5,
+    "bg": true
+  },
+  "Reaper": {
+    "x": 60,
+    "y": 60,
+    "scale": 1.5,
+    "bg": true
+  }
 }, "/data/User.json");
 data.autosave(3)
 

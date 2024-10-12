@@ -1,7 +1,7 @@
 import TextUtil from "./TextUtil";
 
 const stufRegex = /(l\$)([hH])([1-4])([0-9]+)?\|(.+)/
-const urlRegex = /(https?:\/\/)(.+\..+)(\/.+)(\..+)/
+const urlRegex = /(https?:\/\/)(.+\..+)(\/.+)(\.(?:png|jpe?g|gif))/
 const schemes = {
     "h": "http://",
     "H": "https://"
@@ -32,7 +32,7 @@ export default class STuF {
 
         let url = STuF.translate(host + dir.replace(/\^/g, "."), -1)
 
-        dots.split("").forEach(i => url = url.slice(0, ~~i) + "." + url.slice(~~i))
+        for (let i of dots) url = url.slice(0, ~~i) + "." + url.slice(~~i)
 
         const getScheme = schemes[scheme]
         const getExtension = extensions[extension]
@@ -48,15 +48,15 @@ export default class STuF {
         const [scheme, host, dir, extension] = TextUtil.getMatches(urlRegex, url)
         if (!scheme) return false
 
-        let encoded = 'l$'
-        encoded += TextUtil.getKeyFromValue(schemes, scheme)
-        encoded += TextUtil.getKeyFromValue(extensions, extension)
+        let encoded = "l$"
+            + TextUtil.getKeyFromValue(schemes, scheme)
+            + TextUtil.getKeyFromValue(extensions, extension)
 
-        host.split("").forEach((val, i) => {
-            if (val === ".") encoded += i
-        })
+        for (let i in host)
+            if (host[i] === ".")
+                encoded += i
 
-        let mappedURL = STuF.translate(host.replace(/\./g, "") + dir.replace(/\./g, "^"), 1)
+        const mappedURL = STuF.translate(host.replace(/\./g, "") + dir.replace(/\./g, "^"), 1)
 
         return encoded + "|" + mappedURL
     }

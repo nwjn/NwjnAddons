@@ -1,7 +1,7 @@
 import Feature from "../../core/Feature";
 import { Event } from "../../core/Event";
 import EventEnums from "../../core/EventEnums";
-import { scheduleTask } from "../../core/CustomRegisters";
+import { scheduleTask } from "../../utils/Ticker";
 import Settings from "../../data/Settings";
 import RenderUtil from "../../core/static/RenderUtil";
 import TextUtil from "../../core/static/TextUtil";
@@ -16,17 +16,15 @@ const feat = new Feature("waypoint")
       
       if (data.blacklist.includes(ign)) return TextUtil.append(event.func_148915_c(), "&cBlacklisted")
         
-        const id = Date.now()
         const title = msg.substring(0, msg.indexOf(":"))
         text = text ? `\n${text}` : ""
         
         const wp = [title, ~~x, ~~y, ~~z, text]
-        waypoints.set(id, wp)
-        
+        waypoints.set(ign, wp)
         feat.update()
         
         scheduleTask(() => {
-          waypoints.delete(id)
+          waypoints.delete(ign)
           feat.update()
         }, Settings().wpTime * 20)
       

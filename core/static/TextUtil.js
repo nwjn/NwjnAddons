@@ -82,10 +82,10 @@ export default class TextUtil {
 
     /**
      * Adds a string to the end of an ichatcomponent
-     * @param {String} message 
      * @param {net.minecraft.util.IChatComponent} ichatcomponent 
+     * @param {String} message
      */
-    static append = (message, ichatcomponent) => ichatcomponent.func_150258_a(`${ this.NWJN } ${ message.addColor() }`)
+    static append = (ichatcomponent, message) => ichatcomponent.func_150258_a(`${ this.NWJN } ${ message.addColor() }`)
 
     /**
      * @param {String[]} tab 
