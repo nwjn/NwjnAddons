@@ -28,6 +28,15 @@ createCustomEvent(EventEnums.ENTITY.RENDER, (fn, clazz) => register("renderEntit
 
 // createCustomEvent(EventEnums.ENTITY.POSTRENDER, (fn, clazz) => register("postRenderEntity", fn).setFilteredClass(clazz).unregister())
 
+// Pre-Join World
+// createCustomEvent(EventEnums.ENTITY.CONSTRUCTING, (fn, clazz) => {
+//     register(net.minecraftforge.event.entity.EntityEvent.EntityConstructing, (event) => {
+//         if (!(event.entity instanceof clazz)) return
+
+//         fn(event.entity)
+//     })
+// })
+
 createCustomEvent(EventEnums.ENTITY.JOINWORLD, (fn, clazz) => 
     // Credits: https://github.com/BetterMap/BetterMap/blob/main/Extra/Events/SecretTracker.js
     register(net.minecraftforge.event.entity.EntityJoinWorldEvent, (event) => {

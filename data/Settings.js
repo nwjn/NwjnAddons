@@ -34,6 +34,13 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
 })
 .addSwitch({
     category: "General",
+    configName: "imageFix",
+    title: "&e✯&r Image Fix",
+    description: "Encodes and Decodes Image Links to allow sending and viewing for those with the mod",
+    value: true
+})
+.addSwitch({
+    category: "General",
     configName: "partyCommands",
     title: "Party Commands",
     description: "Enables party commands, universally triggers on [.!?] commands",
@@ -108,9 +115,16 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
 })
 .addSwitch({
     category: "General",
-    configName: "sbxp",
+    configName: "skyblockXP",
     title: "Skyblock XP Gain Message",
     description: "Takes action bar skyblock xp gained message and pastes them in chat",
+    value: false
+})
+.addSwitch({
+    category: "Combat",
+    configName: "damageTracker",
+    title: "Damage Tracker",
+    description: "Shows damage tags in chat",
     value: false
 })
 .addSwitch({
@@ -118,6 +132,13 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
     configName: "reaperTimer",
     title: "Reaper Armor Buff Timer",
     description: "Displays the time left on your reaper armor buff",
+    value: false
+})
+.addSwitch({
+    category: "Combat",
+    configName: "rendArrows",
+    title: "Rend Arrows",
+    description: "Shows the amount or arrows pulled on rend",
     value: false
 })
 .addTextInput({
@@ -550,27 +571,6 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/Config.json")
             value: false
         }
     ]
-})
-.addSwitch({
-    category: "Utilities",
-    configName: "damageTracker",
-    title: "Damage Tracker",
-    description: "Shows damage tags in chat",
-    value: false
-})
-.addSwitch({
-    category: "Utilities",
-    configName: "rendArrows",
-    title: "Rend Arrows",
-    description: "Shows the amount or arrows pulled on rend",
-    value: false
-})
-.addSwitch({
-    category: "Utilities",
-    configName: "imageFix",
-    title: "&e✯&r Image Fix",
-    description: "Encodes and Decodes Image Links to allow sending and viewing for those with the mod",
-    value: true
 })
 .addSwitch({
     category: "Utilities",

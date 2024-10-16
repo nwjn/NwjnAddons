@@ -1,6 +1,5 @@
 import EventEnums from "../core/EventEnums";
 import { Event } from "../core/Event";
-import DraggableGui from "./DraggableGui";
 
 let _scheduleTaskList = []
 /**
@@ -11,7 +10,6 @@ let _scheduleTaskList = []
  * @author DocilElm
  */
 export const scheduleTask = (fn, delay = 1) => _scheduleTaskList.push([fn, delay])
-
 const _runTasks = () => {
   // Credit: DocilElm
   for (let idx = _scheduleTaskList.length - 1; idx >= 0; idx--) {
@@ -26,29 +24,43 @@ const _runTasks = () => {
 }
 
 
-let _timerList = []
+let _countdownList = {}
 /**
- * @param {DraggableGui} overlay 
+ * @param {Function} onTick fn to run every tick
  * @param {Number} initialTime seconds
  * @returns 
  */
-export const addTimer = (overlay, message, initialTime) => _timerList.push([overlay, message, initialTime * 20])
-const _updateTimers = () => {
-  for (let idx = _timerList.length - 1; idx >= 0; idx--) {
-    let delay = _timerList[idx][2]--
-    
-    if (delay === 0) _timerList.splice(idx, 1)
-    else _timerList[idx][0].drawText(`${ _timerList[idx][1] } ${ (_timerList[idx][2] / 20).toFixed(2) }s`)
-    
-  }
+export const addCountdown = (onTick, initialTime) => _countdownList[onTick] = [onTick, initialTime * 20]
+const _updateCountdowns = () => {
+    for (let key in _countdownList) {
+      let time = _countdownList[key][1]--
+        _countdownList[key][0](time / 20)
+        if (time <= 0) delete _countdownList[key]
+    }
 } 
+let _timerList = {}
+/**
+ * @param {Function} onTick fn to run every tick
+ * @param {Number} endTime seconds
+ * @returns 
+ */
+export const addTimer = (onTick, endTime, _currentTime = 0) => _timerList[onTick] = [onTick, endTime * 20, _currentTime * 20]
+const _updateTimers = () => {
+    for (let key in _timerList) {
+        let time = _timerList[key][2]++
+        _timerList[key][0](time / 20)
+        if (time >= _timerList[key][1]) delete _timerList[key]
+    }
+}
 
-// Credit: Volc for tps calc
 let tps = 20;
 const pastTps = [20, 20, 20];
 let pastDate = 0;
 export const getTPS = () => Math.min(...pastTps).toFixed(2)
 
+/**
+ * Credit: VolcAddons
+ */
 const _calcTPS = () => {
   const time = Date.now() - pastDate;
   tps = Math.min(20000 / time, 20);
@@ -59,6 +71,7 @@ const _calcTPS = () => {
 
 new Event(EventEnums.INTERVAL.TICK, () => {
   _runTasks()
+  _updateCountdowns()
   _updateTimers()
   _calcTPS()
 }).register()
