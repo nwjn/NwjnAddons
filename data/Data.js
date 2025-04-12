@@ -1,6 +1,6 @@
-import PogObject from "../../PogData/index.js";
+import { LocalStore } from "../../tska/storage/LocalStore"
 
-export const data = new PogObject("NwjnAddons", {
+export default new LocalStore("Nwjn", {
   "newUser": true,
   "newMsg": "",
 
@@ -13,5 +13,4 @@ export const data = new PogObject("NwjnAddons", {
   "wisp": 0,
   "lastMini": {},
   "blacklist": {}
-}, "/data/.User.json");
-register("gameUnload", () => data.save())
+}, "/data/.User.json")
