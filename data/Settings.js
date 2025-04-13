@@ -1,7 +1,7 @@
 import Settings from "../../Amaterasu/core/Settings"
 import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
 
-const defCon1 = new DefaultConfig("NwjnAddons", "/data/.Config.json")
+const defCon1 = new DefaultConfig("Nwjn", "/data/.Config.json")
 .addSwitch({
     category: "General",
     configName: "LinkFix",
@@ -85,11 +85,6 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/.Config.json")
         {
             title: "All Invite",
             configName: "PartyCommandsAllInvite",
-            value: true
-        },
-        {
-            title: "Build Imgur",
-            configName: "PartyCommandsBuild",
             value: true
         },
         {
@@ -267,13 +262,6 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/.Config.json")
     value: false
 })
 .addSwitch({
-    category: "Crimson Isle",
-    configName: "MagmaBossMessage",
-    title: "Better Magma Boss Message",
-    description: "Replaces magma boss damage messages with custom ones that also show total damage\n&r&4&lMagma Boss&r &8> &c+35% &7(100%)",
-    value: false
-})
-.addSwitch({
     category: "Mining",
     configName: "MineshaftWaypoints",
     title: "Mineshaft Waypoints",
@@ -318,8 +306,7 @@ const defCon1 = new DefaultConfig("NwjnAddons", "/data/.Config.json")
     shouldShow: data => data.SpawnClutter
 })
 
-import TextUtil from "../core/static/TextUtil"
-const meinConf = new Settings("NwjnAddons", defCon1, "/data/Scheme.json", `${TextUtil.NWJNADDONS} by &6nwjn`)
+const meinConf = new Settings("Nwjn", defCon1, "/data/Scheme.json", `${NWJN} by &6nwjn`)
     .setPos(15, 15)
     .setSize(70, 70)
     .setClickSound(() => World.playSound("gui.button.press", 0.25, 1))
