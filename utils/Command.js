@@ -7,8 +7,9 @@ const myCommands = new CommandHandler("Nwjn")
     .setName("Nwjn", (arg) => !arg && Settings.getConfig().openGui() && 1)
 
     // Add custom formatting
-    .setTitleFormat(ChatLib.getCenteredText(`&0&m&l---------${NWJN}&0&m&l---------`))
+    .setTitleFormat(ChatLib.getCenteredText("§0§m§l---------§r§0§l 【§r §c§lNwjn§0§l 】§r§0§m§l---------"))
     .setCommandFormat("  • §n§b/${name}§r§f: §7${description}")
+    .setErrorFormat("§r§0§l【§r§c§lNwjn§0§l】§r§cCommand §b§l/${arg}§r§c is unknown. Run §a§l/nwjn help§r§c.")
 
 
 export function addCommand(command, description, cb) {

@@ -1,4 +1,5 @@
-global.NWJN = "§r§0§l 【§r §c§lNwjn§0§l 】§r"
+global.NWJN = "§r§0§l【§r§c§lNwjn§0§l】§r"
+
 import "./data/Data"
 import "./utils/Broadcasting"
 import "./utils/Command"
@@ -8,7 +9,7 @@ import "./utils/Profile"
 import "./libs/Time/ServerTime"
 
 // Handles loading all Feature files because I was too lazy to type them all out
-let pathFinder = /Nwjn[\/\\]features[\/\\](.+[\/\\]\w+)\.js$/
+let pathFinder = /Nwjn[\/\\]features[\/\\](.+[\/\\]\.?\w+)\.js$/
 let fileSeparator = /\\/g
 let relativeDest = "./features/"
 
