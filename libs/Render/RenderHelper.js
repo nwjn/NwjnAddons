@@ -82,8 +82,6 @@ export default class RenderHelper {
         ]
     }
 
-    static isAir = (mcBlockState) => mcBlockState == IBlockStateAir
-
     static toAABB(x, y, z, w, h) {
         const [minX, minY, minZ, maxX, maxY, maxZ] = RenderHelper.createBounds(x, y, z, w, h)
         return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ)
