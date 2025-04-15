@@ -1,5 +1,3 @@
-// Based off https://github.com/DocilElm/Doc/blob/main/shared/TextHelper.js
-
 const dungeonFloorWords = {
     1: "one",
     2: "two",
@@ -19,13 +17,6 @@ const kuudraTierWords = {
 }
 
 export default class TextUtil {
-    static VERSION = JSON.parse(FileLib.read("NwjnAddons", "metadata.json")).version
-
-    // Credit: DocilElm {
-    static NWJN = "§0§l[§c§lNwjn§0§l]§r"
-    static NWJNADDONS = "§0§l[§c§lNwjnAddons§0§l]§r"
-    // }
-
     /**
      * - Returns the matches of the regex or an empty array
      * @param {RegExp} regex 
@@ -82,13 +73,6 @@ export default class TextUtil {
     static getTierWord = (number) => kuudraTierWords[number]
 
     /**
-     * Adds a string to the end of an ichatcomponent
-     * @param {net.minecraft.util.IChatComponent} ichatcomponent 
-     * @param {String} message
-     */
-    static append = (ichatcomponent, message) => ichatcomponent.func_150258_a(`${ this.NWJN } ${ message.addColor() }`)
-
-    /**
      * @param {String[]} tab 
      * @param {RegExp} startRegex 
      * @param {RegExp} endRegex 
@@ -111,16 +95,3 @@ export default class TextUtil {
         return string.removeFormatting().split("] ").slice(-1).toString().replace(/\W/g, "")
     }
 }
-
-// internal mod fns
-/**
- * For sending data and info
- * @param {String} message 
- */
-export const log = (message)  => ChatLib.chat(`${TextUtil.NWJN} &7>&r ${message}`)
-
-/**
- * For sending guides and important stuff
- * @param {String} message 
- */
-export const notify = (message) => ChatLib.chat(`${TextUtil.NWJNADDONS} ${message}`)
