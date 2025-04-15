@@ -1,98 +1,90 @@
 import MathUtil from "../../core/static/MathUtil"
-import EntityUtil from "../../core/static/EntityUtil"
-import RenderUtil from "../../libs/Render/RenderUtil"
+import MobUtil from "../../libs/Helper/MobUtil"
 import Feature from "../../libs/Features/Feature"
-import TextUtil from "../../core/static/TextUtil"
+import Settings from "../../data/Settings"
+import { Field } from "../../libs/Helper/Reflect"
 import Settings from "../../data/Settings"
 import RenderHelper from "../../libs/Render/RenderHelper"
-import { getFieldValue } from "../../libs/Wrappers/Field"
-import { ColorContainer } from "../../libs/Render/ColorContainer"
-import Settings from "../../data/Settings"
+import Nwjn from "../../libs/Helper/Nwjn"
+import { renderAABBOutline } from "../../../Apelles/index"
 
 new class MobHighlight extends Feature {
     constructor() {
-        super({setting: "MobHighlight"})
-
-        this.Color = ColorContainer.registerListener(Settings, "MobHighlightColor")
-
-        this.addEvent("entityRendered", ({entity}) => {
-                const shouldRender = this.RenderList?.get(entity)
-                if (!shouldRender) return
-
-                if (entity./* isInvisible */func_82150_aj()) return
-                RenderUtil.drawOutlinedAABB(entity./* getEntityBoundingBox */func_174813_aQ(), this.Color, false, 4, false)
-            })
-        
-            .addEvent(net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent, ({entity}) => 
-                RenderHelper.isEntityInFrustum(entity) && this?.validate(entity)
-            )
-                
-            .addEvent(net.minecraftforge.event.entity.living.LivingDeathEvent, (event) => this.RenderList?.remove(event.entity))
-
-        Settings.getConfig().onCloseGui(() => this?.updateWhitelist(Settings.MobHighlight))
-
-        // Weird hardcoding update because it wasn't working normally
-        // Client.scheduleTask(20, () => {
-        //     const val = this.isSettingEnabled
-        //     Settings.getConfig().setConfigValue("Bestiary", "MobHighlight", val + " ")
-        //     Settings.getConfig().setConfigValue("Bestiary", "MobHighlight", val)
-        // })
-        this.init()
-    }
-    
-    onEnabled(newValue) {
-        if ("updateWhitelist" in this) return this.updateWhitelist(newValue)
-            
-        this.Whitelist = new HashMap()
-        this.StringToClassMap = new Map()
-        
-        getFieldValue(net.minecraft.entity.EntityList, /* stringToClassMapping */"field_75625_b")
-            .forEach((k, v) => this.StringToClassMap.set(k.toLowerCase(), v))
+        super({
+            setting: this.constructor.name,
+            color: this.constructor.name + "Color"
+        })
 
         this.RenderList = new java.util.WeakHashMap()
+        this.StringToClassMap = new HashMap()
+        this.Whitelist = new HashMap()
 
-        this.validate = (entity) => {
-            const healthList = this.Whitelist.get(entity.class)
-            if (!healthList) return
-            
-            const maxHP = EntityUtil.getMaxHP(entity)
-            if (!maxHP) return
-            
-            if (typeof(healthList) === "boolean" || healthList?.includes(maxHP)) this.RenderList.put(entity, true)
-        }
+        // Make a copy of mappings with modified keys
+        Field.getFieldValue(net.minecraft.entity.EntityList, /* stringToClassMapping */"field_75625_b")
+            .forEach((str, cls) => this.StringToClassMap.put(str.toLowerCase(), cls))
 
-        this.updateWhitelist = (newValue) => {
-            this.Whitelist.clear()
-            this.RenderList.clear()
+        this.addEvent(net.minecraftforge.event.entity.EntityJoinWorldEvent, this.onEntityJoin.bind(this))
+        this.addEvent("renderWorld", this.onRender.bind(this))
+        this.addEvent(net.minecraftforge.event.entity.living.LivingDeathEvent, this.onEntityDeath.bind(this))
 
-            newValue.split(/,\s?/g).forEach((entry, index) => {
-                const [name, hpParam] = entry.split("-")
+        Settings.getConfig().onCloseGui(this.onEnabled.bind(this))
 
-                if (!name) return
-                const clazz = this.StringToClassMap.get(name.toLowerCase())
-                if (!clazz) return new Message(`${TextUtil.NWJNADDONS} &cEntity class called &e'${name}'&r &cdoesn't exist. Make sure to use Mob Class Name not SkyBlock name. &3@see https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`).setChatLineId(28500 + index).chat()
-                ChatLib.deleteChat(28500 + index)
-
-                const hps = hpParam?.split("|")?.map(MathUtil.convertToNumber)
-
-                this.Whitelist.put(
-                    clazz,
-                    hps ?? true
-                )
-            })
-        }
+        this.init()
     }
 
+    /** @Event {net.minecraftforge.event.entity.EntityJoinWorldEvent} */
+    onEntityJoin({entity}) {
+        if (this.RenderList.containsKey(entity)) return
+
+        const entClass = entity.class
+        const isWhitelisted = this.Whitelist.containsKey(entClass)
+        if (!isWhitelisted) return
+
+        const healthList = this.Whitelist.get(entClass)
+        if (typeof(healthList) === "boolean" || healthList?.includes(MobUtil.getMaxHP(entity))) this.RenderList.put(entity, true)
+    }
+
+    /** @Event {RenderWorld} */
+    onRender() {
+        this.RenderList.forEach(entity => {
+            if (entity./* isInvisible */func_82150_aj()) return
+            const [mX, mY, mZ, MX, MY, MZ] = RenderHelper.getAxisCoords(entity./* getEntityBoundingBox */func_174813_aQ())
+            renderAABBOutline(this.Color.rgba1, mX, mY, mZ, MX, MY, MZ, { lw: 1, smooth: true, cull: true })
+        })
+    }
+
+    /** @Event {net.minecraftforge.event.entity.living.LivingDeathEvent} */
+    onEntityDeath({entity}) {
+        this.RenderList.remove(entity)
+    }
+    
+    /** @override */
+    onEnabled(value = Settings.MobHighlight) {
+        this.RenderList.clear()
+    
+        value.split(/, ?/g).forEach((entry, idx) => {
+            const [name, params] = entry.split("-")
+    
+            if (!name) return
+            const clazz = this.StringToClassMap.get(name.toLowerCase())
+            if (!clazz) return Nwjn.edit(`§cEntity class called §b§l${name}§r§c is unknown. Read §a§lhttps://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`, 28500 + idx)
+            ChatLib.deleteChat(28500 + idx)
+    
+            const hps = params?.split("|")?.map(MathUtil.convertToNumber)
+    
+            this.Whitelist.put(
+                clazz,
+                hps ?? true
+            )
+        })
+    
+        // Loads pre-existing entities
+        World.getAllEntities()?.forEach(this.onEntityJoin.bind(this))
+    }
+
+    /** @override */
     onDisabled() {
-        delete this.Whitelist
-        delete this.StringToClassMap
-        delete this.RenderList
-
-        delete this.validate
-        delete this.updateWhitelist
-    }
-
-    onUnregister() {
-        this.RenderList?.clear()
+        this.Whitelist.clear()
+        this.RenderList.clear()
     }
 }
