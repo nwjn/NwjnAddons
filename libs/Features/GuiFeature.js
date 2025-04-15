@@ -6,7 +6,7 @@
  */
 
 import Feature from "./Feature"
-import { data } from "../../data/Data"
+import Data from "../../data/Data"
 import { createOverlayFor } from "./GuiEditor"
 
 export default class GuiFeature extends Feature {
@@ -24,13 +24,13 @@ export default class GuiFeature extends Feature {
         super(obj)
 
         // Get gui pos from data or create new one, then return that reference to the original data and the reference within this class
-        this.data = data[this.setting] ??= {
-            x: ~~(Renderer.screen.getWidth() * Math.random() * 0.5), 
-            y: ~~(Renderer.screen.getHeight() * Math.random() * 0.5), 
+        this.data = Data[this.setting] ??= {
+            x: Renderer.screen.getWidth() * Math.random() * 0.5 | 0, 
+            y: Renderer.screen.getHeight() * Math.random() * 0.5 | 0, 
             scale: 1.5
         }
         
-        this.Color = Renderer.WHITE
+        this.Color ??= Renderer.WHITE
         this.defaultText = defaultText
         this.lines = Array(0)
         this.maxWidth = 0

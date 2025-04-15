@@ -1,5 +1,4 @@
 import { addCommand } from "../../utils/Command"
-import RenderHelper from "../Render/RenderHelper"
 
 const FontRenderer = Renderer.getFontRenderer()
 const MCTessellator = net.minecraft.client.renderer.Tessellator./* getInstance */func_178181_a()
