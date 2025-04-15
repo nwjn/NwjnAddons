@@ -1,4 +1,4 @@
-import MathUtil from "../../core/static/MathUtil"
+import NumUtil from "../../libs/Helper/NumUtil"
 import MobUtil from "../../libs/Helper/MobUtil"
 import Feature from "../../libs/Features/Feature"
 import Settings from "../../data/Settings"
@@ -70,7 +70,7 @@ new class MobHighlight extends Feature {
             if (!clazz) return Nwjn.edit(`§cEntity class called §b§l${name}§r§c is unknown. Read §a§lhttps://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`, 28500 + idx)
             ChatLib.deleteChat(28500 + idx)
     
-            const hps = params?.split("|")?.map(MathUtil.convertToNumber)
+            const hps = params?.split("|")?.map(NumUtil.parseCompact)
     
             this.Whitelist.put(
                 clazz,
