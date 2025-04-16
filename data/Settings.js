@@ -1,3 +1,4 @@
+import Nwjn from "../libs/Helper/Nwjn"
 import Settings from "../../Amaterasu/core/Settings"
 import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
 
@@ -306,7 +307,7 @@ const defCon1 = new DefaultConfig("Nwjn", "/data/.Config.json")
     shouldShow: data => data.SpawnClutter
 })
 
-const meinConf = new Settings("Nwjn", defCon1, "/data/Scheme.json", `${NWJN} by &6nwjn`)
+const meinConf = new Settings("Nwjn", defCon1, "/data/Scheme.json", Nwjn.BANNER)
     .setPos(15, 15)
     .setSize(70, 70)
     .setClickSound(() => World.playSound("gui.button.press", 0.25, 1))

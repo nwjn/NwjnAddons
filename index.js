@@ -1,5 +1,3 @@
-global.NWJN = "§r§0§l【§r§c§lNwjn§0§l】§r"
-
 import "./data/Data"
 import "./utils/Broadcasting"
 import "./utils/Command"
@@ -24,6 +22,5 @@ void function requireFeatures(file) {
 }(new java.io.File(`${Config.modulesFolder}/Nwjn/features`))
 
 let module
-while (module = modules.pop()) {
+while (module = modules.pop())
     require(module)
-}

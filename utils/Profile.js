@@ -1,14 +1,15 @@
-import TextUtil, {notify} from "../core/static/TextUtil"
+import TextUtil from "../core/static/TextUtil"
 import Event from "../libs/Events/Event"
-import { data } from "../data/Data"
+import Data from "../data/Data"
 import { scheduleTask } from "../libs/Time/ServerTime"
 import Ticks from "../libs/Time/Units/Ticks"
 import { addCommand } from "./Command"
+import Nwjn from "../libs/Helper/Nwjn"
 
 // [Power Stone]
 new Event(
     "serverChat", 
-    (stone) => data.power = stone, 
+    (stone) => Data.power = stone, 
     /^You selected the (.+) power for your Accessory Bag!$/,
     true
 )
@@ -16,7 +17,7 @@ new Event(
 // [Enrichments]
 new Event(
     "serverChat", 
-    (volume, stat) => data.enrich = `${volume} ${stat}`, 
+    (volume, stat) => Data.enrich = `${volume} ${stat}`, 
     /^Swapped (\d{1,3}) enrichments to (.+)!$/,
     true
 )
@@ -30,15 +31,15 @@ new Event("containerClick", (window) => {
         if (!lore) return
 
         const tuning = lore.match(/\+(\d+.) /g)
-        data.tuning = tuning?.join(" ") ?? "Unknown"
+        Data.tuning = tuning?.join(" ") ?? "Unknown"
 
         const [magPow] = TextUtil.getMatches(/Magical Power: (.+)/, lore)
-        data.mp = magPow ?? "Unknown"
+        Data.mp = magPow ?? "Unknown"
     }, Ticks.of(2))
 }, null, true)
 
 // Credit: DocilElm for blacklist
-const INVALID = () => notify("&cInvalid. &aAdd and remove need name entry. List and clear do not.")
+const INVALID = () => Nwjn.chat("&cInvalid. &a[Add] and [remove] need a name entry. [List] and [clear] do not.")
 
 addCommand("bl", "Blacklist <add, remove, list, clear> <name?> <reason?>", (type, name, reason) => {
     if (!type) return INVALID()
@@ -48,20 +49,20 @@ addCommand("bl", "Blacklist <add, remove, list, clear> <name?> <reason?>", (type
         case "add": {
             if (!name) return INVALID()
 
-            data.blacklist[name] = reason ?? "No reason given."
-            return notify(`&aAdded &c${name} &ato your blacklist`)
+            Data.blacklist[name] = reason ?? "No reason given."
+            return Nwjn.chat(`&aAdded &c${name} &ato your blacklist`)
         }
             
         case "remove": {
             if (!name) return INVALID()
             
-            delete data.blacklist[name]
-            return notify(`&aRemoved &c${name} &afrom your blacklist.`)
+            delete Data.blacklist[name]
+            return Nwjn.chat(`&aRemoved &c${name} &afrom your blacklist.`)
         }
         
         case "list": {
-            notify("&cBlacklist:")
-            return Object.entries(data.blacklist).forEach(([ign, reason]) => 
+            Nwjn.chat("&cBlacklist:")
+            return Object.entries(Data.blacklist).forEach(([ign, reason]) => 
                 new TextComponent(`  - &a${ign}&f: &c${reason}`)
                     .setHover("show_text", `Click to run "/nwjn bl remove ${ign}" to remove ${ign} from the blacklist.`)
                     .setClick("run_command", `/nwjn bl remove ${ign}`)
@@ -70,8 +71,8 @@ addCommand("bl", "Blacklist <add, remove, list, clear> <name?> <reason?>", (type
         }  
     
         case "clear": {
-            data.blacklist = {}
-            return notify("&aCleared your blacklist.")
+            Data.blacklist = {}
+            return Nwjn.chat("&aCleared your blacklist.")
         }
         
         default: {
@@ -79,5 +80,3 @@ addCommand("bl", "Blacklist <add, remove, list, clear> <name?> <reason?>", (type
         }
     }
 })
-
-export const isBlacklisted = (ign) => ign && ign in data.blacklist
