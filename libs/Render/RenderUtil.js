@@ -264,7 +264,7 @@ export default class RenderUtil {
 
         const {rx, ry, rz} = RenderHelper.getRenderPos()
 
-        const [r, g, b, a] = color.getRGBA1()
+        const [r, g, b, a] = color.rgba1
 
         GlStateManager./* pushMatrix */func_179094_E()
         GlStateManager./* translate */func_179109_b(-rx, -ry, -rz)
@@ -345,17 +345,14 @@ export default class RenderUtil {
     }
     
     static renderWaypoint(text, x, y, z, color, phase, checkFrustum) {
-        const BeaconBB = RenderHelper.toAABB(x, y, z, 1, 100)
-        if (checkFrustum && !RenderHelper.inFrustum(BeaconBB)) return
-        const BeaconColor = color.getRGBA1()
-        BeaconColor[3] = 0.65
-        RenderUtil.renderBeaconBeam(x, y, z, BeaconColor, phase, 100, false)
+        const WaypointBB = RenderHelper.toAABB(x, y, z, Renderer.getStringWidth(text), 100)
+        if (checkFrustum && !RenderHelper.inFrustum(WaypointBB)) return
 
-        RenderUtil.drawString(text, x, y + 3, z, Renderer.WHITE, true, 0.8, true, true, phase, true)
+        RenderUtil.renderBeaconBeam(x, y, z, color, phase, 100, false)
+
+        RenderUtil.drawString(text, x, y + 3, z, Renderer.WHITE, true, 0.4, true, true, phase, false)
 
         const BlockBB = RenderHelper.toAABB(x, y, z, 1, 1)
-        if (checkFrustum && !RenderHelper.inFrustum(BlockBB)) return
-
         RenderUtil.drawFilledOutline(BlockBB, color, phase, 4, false)
     }
     

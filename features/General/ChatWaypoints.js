@@ -1,47 +1,73 @@
-import Feature from "../../libs/Features/Feature";
-import TextUtil from "../../core/static/TextUtil";
-import Settings from "../../data/Settings";
-import Waypoint from "../../libs/Render/TempWaypoint";
-import { isBlacklisted } from "../../utils/Profile";
-import { ColorContainer } from "../../libs/Render/ColorContainer";
+import Feature from "../../libs/Features/Feature"
+import TextUtil from "../../libs/Helper/TextUtil"
+import Settings from "../../data/Settings"
+import Waypoint from "../../libs/Render/TempWaypoint"
+import Ticks from "../../libs/Time/Units/Ticks"
+import Data from "../../data/Data"
+import Nwjn from "../../libs/Helper/Nwjn"
 
 new class ChatWaypoints extends Feature {
     constructor() {
-        super({setting: "ChatWaypoints"})
+        super({
+            setting: this.constructor.name, 
+            color: this.constructor.name + "Color"
+        })
 
-        this.Color = ColorContainer.registerListener(Settings, "ChatWaypointsColor")
-        this.addEvent("serverChat", (displayName, x, y, z, text = "", event, formatted) => {
-                const ign = TextUtil.getSenderName(displayName).toLowerCase()
-                
-                if (isBlacklisted(ign)) return TextUtil.append(event./* getChatComponent */func_148915_c(), "§cBlacklisted")
-                
-                const [mainText] = TextUtil.getMatches(/^(.+)§.:/, formatted)
-                if (!mainText) return
+        this.waypoints = new Map()
+
+        this.addEvent(
+            "serverChat", 
+            this.onWaypointSent.bind(this), 
+            /^(?:[\w\-]{5} > )?(?:\[\d{1,3}\] .? ?)?(?:\[\w+\+*\] )?(\w{1,16})(?: .? ?)?: x: (-?[\d\.]+), y: (-?[\d\.]+), z: (-?[\d\.]+) ?(.+)?$/
+        )
         
-                this.waypoints.set(ign, new Waypoint(mainText, text, x, y, z, 5, Settings.ChatWaypointsTime))
-                this.updateSubEvents()
-            }, /^(?:[\w\-]{5} > )?(?:\[\d{1,3}\] .? ?)?(?:\[\w+\+*\] )?(\w{1,16})(?: .? ?)?: x: (-?[\d\.]+), y: (-?[\d\.]+), z: (-?[\d\.]+) ?(.+)?$/)
+        this.addSubEvent(
+            "interval", 
+            this.onIntervalPassed.bind(this),
+            Ticks.of(3), 
+            () => this.waypoints.size
+        )
         
-            .addSubEvent("interval", () => 
-                this.waypoints.forEach((v, k) => 
-                    v.dirty ? this.waypoints.delete(k) && this.updateSubEvents() : v.update()
-                ), 
-            1 / 5, () => this.waypoints.size)
-        
-            .addSubEvent("renderWorld", () => {
-                this.waypoints.forEach(it => {
-                    !it.dirty && it.render(this.Color)
-            })
-            }, null, () => this.waypoints.size)
+        this.addSubEvent(
+            "renderWorld", 
+            this.onRenderWorld.bind(this),
+            null, 
+            () => this.waypoints.size
+        )
 
         this.init()
     }
 
-    onEnabled() {
-        this.waypoints = new Map()
+    onWaypointSent(displayName, x, y, z, text = "", event, formatted) {
+        const ign = TextUtil.getSenderName(displayName).toLowerCase()
+
+        if (ign in Data.blacklist) return Nwjn.append(event./* getChatComponent */func_148915_c(), "§cBlacklisted")
+        
+        const [mainText] = TextUtil.getMatches(/^(.+)§.:/, formatted)
+        if (!mainText) return
+
+        this.waypoints.set(ign, new Waypoint(mainText, text, x, y, z, 5, Settings.ChatWaypointsTime))
+        this.updateSubEvents()
+    }
+
+    onIntervalPassed() {
+        this.waypoints.forEach((waypoint, id) => {
+            waypoint.update()
+
+            if (!waypoint.dirty) return
+            
+            this.waypoints.delete(id)
+            this.updateSubEvents()
+        })
+    }
+
+    onRenderWorld() {
+        this.waypoints.forEach(waypoint => 
+            waypoint.render(this.Color)
+        )
     }
 
     onDisabled() {
-        delete this.waypoints
+        this.waypoints.clear()
     }
 }

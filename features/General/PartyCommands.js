@@ -1,123 +1,183 @@
-import Feature from "../../libs/Features/Feature";
-import Party from "../../utils/Party";
-import { data } from "../../data/Data";
-import { isBlacklisted } from "../../utils/Profile";
-import TextUtil from "../../core/static/TextUtil";
-import Location from "../../utils/Location";
-import Settings from "../../data/Settings";
-import { getTPS, scheduleTask } from "../../libs/Time/ServerTime";
+import Feature from "../../libs/Features/Feature"
+import Party from "../../utils/Party"
+import Data from "../../data/Data"
+import TextUtil from "../../libs/Helper/TextUtil"
+import Location from "../../utils/Location"
+import Settings from "../../data/Settings"
+import { getTPS, scheduleTask } from "../../libs/Time/ServerTime"
+import Nwjn from "../../libs/Helper/Nwjn"
 
-const TIME_LONG = new java.text.SimpleDateFormat("E hh:mm:ss a z", java.util.Locale.US)
+class PartyCommand {
+    constructor(pattern, access, runnable) {
+        this.pattern = pattern
+        this.access = access
+        this.runnable = runnable
+    }
 
-const commands = {
-    "help": {
-        matches: /^help$/,
-        access: () => true,
-        fn: () => "pc NwjnAddons Cmds > " + Object.keys(commands).map(key => `.${ key }`).join(" | ")
-    },
+    isAllowed(cmd) {
+        if (!this.pattern.test(cmd)) return false
+        if (!this.access()) return false
 
-    "time": {
-        matches: /^time$/,
-        access: () => Settings.PartyCommandsTime,
-        fn: () => "pc " + TIME_LONG.format(Date.now())
-    },
+        return true
+    }
 
-    "coords": {
-        matches: /^coord(s)?|loc|xyz$/,
-        access: () => Settings.PartyCommandsCoords,
-        fn: () => `pc x: ${ ~~Player.getX() }, y: ${ ~~Player.getY() }, z: ${ ~~Player.getZ() } [${Location.world} - ${Location.zone}]`
-    },
-
-    "power": {
-        matches: /^pow(er)?$/,
-        access: () => Settings.PartyCommandsPower,
-        fn: () => `pc Power: ${ data.power } | Tuning: ${ data.tuning } | Enrich: ${ data.enrich } | MP: ${ data.mp }`
-    },
-
-    "stats": {
-        matches: /^stats$/,
-        access: () => Settings.PartyCommandsStats,
-        fn: () => "pc " + (
-            TextUtil.getTabBlock(
-                TabList.getNames().map(it => it.removeFormatting()),
-                Location.inWorld("Catacombs") ? /Skills:/ : /Stats:/
-            )
-            ?.map(it => it.match(/: (.[\d]+)$/)?.[1])
-            ?.join(" | ")
-                ?? "Me no have stat widget"
-        )
-    },
-
-    "tps": {
-        matches: /^tps$/,
-        access: () => Settings.PartyCommandsTPS,
-        fn: () => "pc TPS: " + getTPS()
-    },
-
-    "build": {
-        matches: /^build$/,
-        access: () => Settings.PartyCommandsBuild,
-        fn: () => "pc https://i.imgur.com/tsg6tx5.jpg"
-    },
-
-    "allinvite": {
-        matches: /^allinv(ite)?$/,
-        access: () => Settings.PartyCommandsAllInvite && Party.amILeader(),
-        fn: () => "p settings allinvite"
-    },
-
-    "invite": {
-        matches: /^inv(ite)?$/,
-        access: () => Settings.PartyCommandsInvite && Party.amILeader(),
-        fn: (_, cmd) => `p ${cmd.split(" ").slice(-1)[0]}`
-    },
-
-    "warp": {
-        matches: /^warp$/,
-        access: () => Settings.PartyCommandsWarp && Party.amILeader(),
-        fn: () => "p warp"
-    },
-
-    "transfer": {
-        matches: /^transfer|pt(?:me)?$/,
-        access: () => Settings.PartyCommandsTransfer && Party.amILeader(),
-        fn: (ign, cmd) => cmd.includes(" ") ? `p transfer ${ cmd.split(" ").slice(-1)[0] }` : `p transfer ${ ign }`
-    },
-
-    "f1-7 | .m1-7 | .t1-5": {
-        matches: /^([fmt]) ?([1-7])$/,
-        access: () => Settings.PartyCommandsInstance && Party.amILeader(),
-        fn: (_, cmd) => {
-            const [_, type, number] = cmd.match(/^([fmt]) ?([1-7])$/)
-
-            if (!_) return
-            switch (type) {
-                case "f":
-                    return `joininstance catacombs_floor_${ TextUtil.getFloorWord(number) }`;
-                case "m":
-                    return `joininstance master_catacombs_floor_${ TextUtil.getFloorWord(number) }`;
-                case "t":
-                    return `joininstance kuudra_${ TextUtil.getTierWord(number) }`;
-                default: 
-                    return "pc Invalid instance?"
-            }
-        }
+    run(sender, args) {
+        this.runnable(sender, args)
     }
 }
 
 new class PartyCommands extends Feature {
     constructor() {
         super({setting: this.constructor.name})
-            .addEvent("serverChat", (player, command, event) => {
-                const ign = TextUtil.getSenderName(player).toLowerCase()
-                const cmd = command.toLowerCase().trim()
 
-                if (isBlacklisted(ign)) return TextUtil.append(event./* getChatComponent */func_148915_c(), "&cBlacklisted")
-                
-                const response = Object.values(commands).find(obj => obj.matches.test(cmd) && obj.access())
-                if (response) scheduleTask(() => ChatLib.command(response.fn(ign, cmd)))
-            }, /^Party > (.+): [,.?!](.+)$/)
+        this.commandList = []
+        this.helpMessage = []
+
+        this.initCommands()
+
+        this.addEvent(
+            "serverChat", 
+            this.onPartyCommandSent.bind(this), 
+            /^Party > ([^:]+): [_,.?!]([^\s]+)(.+)?$/
+        )
 
         this.init()
+    }
+
+    onPartyCommandSent(player, command, arg, event) {
+        const sender = TextUtil.getSenderName(player).toLowerCase()
+        if (sender in Data.blacklist) return Nwjn.append(event./* getChatComponent */func_148915_c(), "§cBlacklisted")
+
+        const cmd = command.toLowerCase()
+        if (cmd === "help") return this.helpMessage()
+
+        for (let i = 0; i < this.commandList.length; i++) {
+            let pc = this.commandList[i]
+            
+            if (!pc.isAllowed(cmd)) continue
+
+            scheduleTask(() => pc.run(sender, arg, cmd))
+            break
+        }
+    }
+
+    addCommand({usage, pattern, access, runnable}) {
+        this.commandList.push(new PartyCommand(pattern, access, runnable))
+        this.helpMessage.push(usage)
+    }
+
+    initCommands() {
+        this.addCommand({
+            usage: ".time",
+            pattern: /^time$/,
+            access: () => Settings.PartyCommandsTime,
+            runnable() {
+                const formatter = new java.text.SimpleDateFormat("E hh:mm:ss a z", java.util.Locale.US)
+                const response = formatter.format(Date.now())
+
+                ChatLib.say(`/pc ${response}`)
+            }
+        })
+
+        this.addCommand({
+            usage: ".coords",
+            pattern: /^coords?|loc|xyz$/,
+            access: () => Settings.PartyCommandsCoords,
+            runnable() {
+                const response = `x: ${~~Player.getX()}, y: ${~~Player.getY()}, z: ${~~Player.getZ()} [${Location.world} - ${Location.zone}]`
+
+                ChatLib.say(`/pc ${response}`)
+            }
+        })
+
+        this.addCommand({
+            usage: ".power",
+            pattern: /^pow(er)?$/,
+            access: () => Settings.PartyCommandsPower,
+            runnable() {
+                const response = `Power: ${ Data.power } | Tuning: ${ Data.tuning } | Enrich: ${ Data.enrich } | MP: ${ Data.mp }`
+
+                ChatLib.say(`/pc ${response}`)
+            }
+        })
+
+        this.addCommand({
+            usage: ".stats",
+            pattern: /^stats?$/,
+            access: () => Settings.PartyCommandsStats,
+            runnable() {
+                const hypixelMoment = Location.inWorld("Catacombs") ? /Skills:/ : /Stats:/
+                const widget = TextUtil.getTabBlock(TabList.getNames(), hypixelMoment)
+                if (!widget) return Nwjn.chat("Cannot find stats widget in tab")
+
+                const stats = widget.map(it => it.removeFormatting().match(/: (.[\d]+)$/)?.[1])
+                const response = stats.join(" | ")
+
+                ChatLib.say(`/pc ${response}`)
+            }
+        })
+
+        this.addCommand({
+            usage: ".tps",
+            pattern: /^tps$/,
+            access: () => Settings.PartyCommandsTPS,
+            runnable() {
+                const tps = getTPS()
+                const response = `TPS: ${tps}`
+
+                ChatLib.say(`/pc ${response}`)
+            }
+        })
+
+        this.addCommand({
+            usage: ".allinv",
+            pattern: /^allinv(ite)?$/,
+            access: () => Settings.PartyCommandsAllInvite && Party.amILeader(),
+            runnable: () => ChatLib.say("/p settings allinvite")
+        })
+
+        this.addCommand({
+            usage: ".inv <ign>",
+            pattern: /^inv(ite)?$/,
+            access: () => Settings.PartyCommandsInvite && Party.amILeader(),
+            runnable: (_, invitee) => ChatLib.say(`/p ${invitee}`)
+        })
+
+        this.addCommand({
+            usage: ".warp",
+            pattern: /^warp$/,
+            access: () => Settings.PartyCommandsWarp && Party.amILeader(),
+            runnable: () => ChatLib.say("/p warp")
+        })
+
+        this.addCommand({
+            usage: ".pt <ign?>",
+            pattern: /^transfer|pt(me)?$/,
+            access: () => Settings.PartyCommandsTransfer && Party.amILeader(),
+            runnable(sender, ign) {
+                const target = ign ?? sender
+                ChatLib.say(`/p transfer ${target}`)
+            }
+        })
+        
+        this.addCommand({
+            usage: ".f1-7 | .m1-7 | .t1-5",
+            pattern: /^(f|m) ?[1-7]|t ?[1-5]$/,
+            access: () => Settings.PartyCommandsInstance && Party.amILeader(),
+            runnable(_, __, cmd) {
+                const [type, number] = TextUtil.getMatches(/^(f|m) ?[1-7]|t ?[1-5]$/, cmd)
+
+                switch (type) {
+                    case 'f': return ChatLib.say(`/joininstance catacombs_floor_${TextUtil.getFloorWord(number)}`)
+                    case 'm': return ChatLib.say(`/joininstance master_catacombs_floor_${TextUtil.getFloorWord(number)}`)
+                    case 't': return ChatLib.say(`/joininstance kuudra_${TextUtil.getTierWord(number)}`)
+                    default:  return ChatLib.say("/pc Invalid instance?")
+                }
+            }
+        })
+
+        this.helpMessage = () => Nwjn.say(this.helpMessage.join(" | "))
+        delete this.addCommand
+        delete this.initCommands
     }
 }

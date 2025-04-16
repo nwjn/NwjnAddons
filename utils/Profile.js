@@ -1,4 +1,4 @@
-import TextUtil from "../core/static/TextUtil"
+import TextUtil from "../libs/Helper/TextUtil"
 import Event from "../libs/Events/Event"
 import Data from "../data/Data"
 import { scheduleTask } from "../libs/Time/ServerTime"

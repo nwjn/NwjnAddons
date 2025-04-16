@@ -5,8 +5,8 @@
  * @credit https://github.com/DocilElm/Doc/blob/main/core/EventEnums.js
  */
 
-import TextUtil from "../../core/static/TextUtil"
-import RenderHelper from "../Render/RenderHelper"
+import TextUtil from "../Helper/TextUtil"
+import Seconds from "../Time/Units/Seconds"
 
 const S38PacketPlayerListItem = net.minecraft.network.play.server.S38PacketPlayerListItem
 
@@ -18,15 +18,11 @@ const createEvent = (triggerType, method) => map.put(triggerType.toUpperCase(), 
 createEvent("interval", (fn, interval) => {
     const reg = register("step", fn)
 
-    if (interval >= 1) return reg.setDelay(interval)
-    return reg.setFps(1 / interval)
-})
+    const normal = interval instanceof Seconds ? interval.getValue() : interval.toSeconds()
 
-createEvent("entityRendered", (fn) => 
-    register(net.minecraftforge.client.event.RenderLivingEvent.Pre, (event) => 
-        RenderHelper.isEntityInFrustum(event.entity) && fn(event)
-    )
-)
+    if (normal < 1) return reg.setFps(~~(1 / normal))
+    return reg.setDelay(normal)
+})
 
 createEvent("packetSent", (fn, clazz) => register("packetSent", fn).setFilteredClass(clazz))
 createEvent("packetReceived", (fn, clazz) => register("packetReceived", fn).setFilteredClass(clazz))

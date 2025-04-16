@@ -1,7 +1,6 @@
 import { DataStore } from "../../../tska/storage/DataStore"
 
-const METADATA = JSON.parse(FileLib.read("Nwjn", "metadata.json"))
-const { version, requires } = METADATA.requires
+const { version, requires } = JSON.parse(FileLib.read("Nwjn", "metadata.json"))
 const dependencies = {}
 requires.forEach(req => dependencies[req] = JSON.parse(FileLib.read(req, "metadata.json")).version)
 

@@ -8,7 +8,7 @@ export default class Waypoint {
         this.subText = subText.trim(), subText && `\n${subText}`
         this.blockPos = new BlockPos(~~x, ~~y, ~~z)
         this.removalRadius = removalRadius
-        this.distance = ~~Player.asPlayerMP().distanceTo(this.blockPos)
+        this.distance = ~~Player.asPlayerMP()?.distanceTo(this.blockPos)
 
         if (lifespan) scheduleTask(() => this.dirty = true, Seconds.of(lifespan))
 
@@ -23,6 +23,8 @@ export default class Waypoint {
     }
 
     render(color) {
+        if (this.dirty) return
+
         const {x, y, z} = this.blockPos
         RenderUtil.renderWaypoint(this.text, x, y, z, color, true, true)
     }

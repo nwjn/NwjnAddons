@@ -5,26 +5,6 @@ export class ColorContainer {
         return color
     }
 
-    static normal255(obj) {
-        if (Array.isArray(obj)) return obj.map(comp => comp)
-        else if (obj instanceof ColorContainer) return obj.rgba255
-    }
-
-    static normal1(obj) {
-        if (Array.isArray(obj)) return obj.map(comp => comp / 0xff)
-        else if (obj instanceof ColorContainer) return obj.rgba1
-    }
-
-    static color255(obj) {
-        if (Array.isArray(obj)) return GlStateManager./* color */func_179131_c(obj[0] / 255, obj[1] / 255, obj[2] / 255, obj[3] / 255)
-        else if (obj instanceof ColorContainer) return obj.glColor()
-    }
-
-    static color1(obj) {
-        if (Array.isArray(obj)) return GlStateManager./* color */func_179131_c(obj[0], obj[1], obj[2], obj[3])
-        else if (obj instanceof ColorContainer) return obj.glColor()
-    }
-
     static toHex(rgba255Array) {
         const [r, g, b, a] = rgba255Array
 
@@ -45,14 +25,6 @@ export class ColorContainer {
 
     constructor(rgba255Array) {
         this.set(rgba255Array)
-    }
-
-    getRGBA255() {
-        return this.rgba255.slice()
-    }
-
-    getRGBA1() {
-        return this.rgba1.slice()
     }
 
     getHex() {
@@ -78,7 +50,16 @@ export class ColorContainer {
         this.argbHex = ColorContainer.toHex([a, r, g, b])
     }
 
-    glColor(alpha = this.rgba1[3]) {
-        GlStateManager./* color */func_179131_c(this.rgba1[0], this.rgba1[1], this.rgba1[2], alpha)
+    glColor(newAlpha = this.rgba1[3]) {
+        GlStateManager./* color */func_179131_c(this.rgba1[0], this.rgba1[1], this.rgba1[2], newAlpha)
+    }
+
+    opaqueColor(alpha) {
+        const copy = this.rgba1.slice()
+        copy[3] = alpha > 1 
+            ? (alpha & 0xff) / 0xff
+            : alpha
+        
+        return copy
     }
 }

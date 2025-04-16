@@ -1,12 +1,22 @@
-import Feature from "../../libs/Features/Feature";
-import TextUtil from "../../core/static/TextUtil";
+import Feature from "../../libs/Features/Feature"
+import Nwjn from "../../libs/Helper/Nwjn"
 
-const SkyblockXP = new Feature({setting: "SkyblockXP"})
-    .addEvent("actionBarChange", (xp, category, progress) => {
+new class SkyblockXP extends Feature {
+    constructor() {
+        super({setting: this.constructor.name})
+
+        this.addEvent(
+            "actionBarChange",
+            this.onSkyblockXpGained.bind(this),
+            /\s{5}\+(\d{1,3}) SkyBlock XP (\(.+\)) \((\d{1,2})\/100\)\s{5}/
+        )
+
+        this.init()
+    }
+
+    onSkyblockXpGained(xp, category, progress) {
         const hashCode = 30000 + (~~xp + ~~progress)
         
-        ChatLib.deleteChat(hashCode)
-        new Message(`${TextUtil.NWJN} §7>§r §b+${xp} SkyBlock XP §7${category} §b(${progress}/100)`).setChatLineId(hashCode).chat()
-    }, /\s{5}\+(\d{1,3}) SkyBlock XP (\(.+\)) \((\d{1,2})\/100\)\s{5}/)
-
-SkyblockXP.init()
+        Nwjn.edit(`§b+${xp} SkyBlock XP §7${category} §b(${progress}/100)`, hashCode)
+    }
+}

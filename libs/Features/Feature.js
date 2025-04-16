@@ -5,10 +5,10 @@
  * @credit https://github.com/DocilElm/Doc/blob/main/core/Feature.js
  */
 
-import Settings from "../../data/Settings";
+import Settings from "../../data/Settings"
 import Location from "../../utils/Location"
-import Event from "../Events/Event";
-import RenderHelper from "../Render/RenderHelper";
+import Event from "../Events/Event"
+import { ColorContainer } from "../Render/ColorContainer"
 
 export default class Feature {
     /** @override Function called when this is registered */ onRegister() {}
@@ -24,12 +24,15 @@ export default class Feature {
      * @param {String|null} obj.setting The main config name: If null -> Feature is always active, If setting returns false -> all events of this feature will be unregistered
      * @param {String[]|String|null} obj.worlds The world(s) where this feature should activate: If null -> Feature is not world dependent
      * @param {String[]|String|null} obj.zones The zones(s) where this feature should activate: If null -> Feature is not zone dependent
+     * @param {String|null} obj.color color setting of the feature
      */
     constructor(obj = {}) {
         this.setting = obj.setting
         this.worlds = obj.worlds
         this.zones = obj.zones
         this.isRegistered = false
+
+        if (obj.color) this.Color = ColorContainer.registerListener(Settings, obj.color)
 
         // Main setting enables/disables entire [Feature]
         if (this.setting in Settings) {
@@ -43,26 +46,14 @@ export default class Feature {
         }
 
         // Will always update on world changes
-        Location.onWorldChange(() => this._updateRegister())
-        if (this.zones) Location.onZoneChange(() => this._updateRegister())
+        Location.onWorldChange(this._updateRegister.bind(this))
+        if (this.zones) Location.onAreaChange(this._updateRegister.bind(this))
     }
 
     /* Became a function because I could not find a way to make it consistently call these listeners correctly */
     init() {
         this.isSettingEnabled ? this.onEnabled(this.isSettingEnabled) : this.onDisabled()
         this._updateRegister()
-    }
-
-    /**
-     * - Attaches a listener that tracks this feature's color setting
-     * - The value can be accessed with [this.Color] and is packaged as a [long]
-     */
-    addColorListener(ColorSetting = this.setting + "Color") {
-        this.Color = RenderHelper.RGBAtoLong(Settings[ColorSetting])
-
-        Settings.getConfig().registerListener(ColorSetting, (_, val) => this.Color = RenderHelper.RGBAtoLong(val))
-
-        return this
     }
 
     /**
@@ -101,7 +92,7 @@ export default class Feature {
      */
     _updateRegister() {
         if (("isSettingEnabled" in this) && !this.isSettingEnabled) return this._unregister()
-        if (!(Location.inWorld(this.worlds) && Location.inZone(this.zones))) return this._unregister()
+        if (!(Location.nwjn$inWorld(this.worlds) && Location.nwjn$inZone(this.zones))) return this._unregister()
         
         return this._register()
     }

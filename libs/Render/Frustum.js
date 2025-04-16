@@ -1,12 +1,12 @@
 /** Optimized by PerseusPotter */
-import { getField } from "../Wrappers/Field"
+import { Field } from "../Helper/Reflect"
 const RenderManager = Renderer.getRenderManager()
 
 export default new class Frustum {
     constructor() {
-        this.renderPosX = getField(RenderManager, /* renderPosX */"field_78725_b")
-        this.renderPosY = getField(RenderManager, /* renderPosY */"field_78726_c")
-        this.renderPosZ = getField(RenderManager, /* renderPosZ */"field_78723_d")
+        this.renderPosX = new Field(RenderManager, /* renderPosX */"field_78725_b")
+        this.renderPosY = new Field(RenderManager, /* renderPosY */"field_78726_c")
+        this.renderPosZ = new Field(RenderManager, /* renderPosZ */"field_78723_d")
 
         // Needs to be called from within the Minecraft Thread to initialize the Frustum class
         // Otherwise you will get this error: Java.lang.RuntimeException: No OpenGL context found in the current thread.
@@ -24,17 +24,14 @@ export default new class Frustum {
         })
     }
 
-    /** @returns {Number} */
     getRenderX() {
         return this.renderPosX.get(RenderManager)
     }
 
-    /** @returns {Number} */
     getRenderY() {
         return this.renderPosY.get(RenderManager)
     }
 
-    /** @returns {Number} */
     getRenderZ() {
         return this.renderPosZ.get(RenderManager)
     }

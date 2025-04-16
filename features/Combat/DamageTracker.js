@@ -1,13 +1,34 @@
+import Nwjn from "../../libs/Helper/Nwjn"
 import Feature from "../../libs/Features/Feature"
 
-const DamageTracker = new Feature({setting: "DamageTracker"})
-    .addEvent("packetReceived", (packet) => {
+new class DamageTracker extends Feature {
+    constructor() {
+        super({setting: this.constructor.name})
+
+        this.addEvent(
+            "packetReceived",
+            this.onSkyblockDamageSplash.bind(this),
+            net.minecraft.network.play.server.S0FPacketSpawnMob
+        )
+
+        this.init()
+    }
+
+    /** @Packet {net.minecraft.network.play.server.S0FPacketSpawnMob} */
+    onSkyblockDamageSplash(packet) {
+        // ArmorStand EntityType is 30
         if (packet./* getEntityType */func_149025_e() !== 30) return
 
-        const WatcherList = packet./* getWatcherList */func_149027_c()
-        const Nametag = WatcherList.find(object => object./* getObjectType */func_75674_c() === 4)?./* getObject */func_75669_b()
+        const watchers = packet./* getWatcherList */func_149027_c()
+        for (let i = 0; i < watchers.length; i++) {
+            let watcher = watchers[i]
+            if (watcher./* getObjectType */func_75674_c() !== 4) continue
 
-        if (Nametag && !Nametag.includes(" ")) ChatLib.chat(Nametag)
-    }, net.minecraft.network.play.server.S0FPacketSpawnMob)
+            let nametag = watcher./* getObject */func_75669_b()
+            if (!nametag || /[\s\+]/.test(nametag)) continue
 
-DamageTracker.init()
+            Nwjn.chat(nametag)
+            break
+        }
+    }
+}

@@ -13,7 +13,7 @@ let relativeDest = "./features/"
 
 let modules = []
 void function requireFeatures(file) {
-    if (file.isDirectory()) return file.listFiles().forEach(file => requireFeatures(file))
+    if (file.isDirectory()) return file.listFiles().forEach(requireFeatures)
         
     let match = file.getPath().match(pathFinder)
     if (!match) return
