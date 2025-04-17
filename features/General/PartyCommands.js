@@ -132,28 +132,28 @@ new class PartyCommands extends Feature {
         this.addCommand({
             usage: ".allinv",
             pattern: /^allinv(ite)?$/,
-            access: () => Settings.PartyCommandsAllInvite && Party.amILeader(),
+            access: () => Settings.PartyCommandsAllInvite && Party.isLeader(),
             runnable: () => ChatLib.say("/p settings allinvite")
         })
 
         this.addCommand({
             usage: ".inv <ign>",
             pattern: /^inv(ite)?$/,
-            access: () => Settings.PartyCommandsInvite && Party.amILeader(),
+            access: () => Settings.PartyCommandsInvite && Party.isLeader(),
             runnable: (_, invitee) => ChatLib.say(`/p ${invitee}`)
         })
 
         this.addCommand({
             usage: ".warp",
             pattern: /^warp$/,
-            access: () => Settings.PartyCommandsWarp && Party.amILeader(),
+            access: () => Settings.PartyCommandsWarp && Party.isLeader(),
             runnable: () => ChatLib.say("/p warp")
         })
 
         this.addCommand({
             usage: ".pt <ign?>",
             pattern: /^transfer|pt(me)?$/,
-            access: () => Settings.PartyCommandsTransfer && Party.amILeader(),
+            access: () => Settings.PartyCommandsTransfer && Party.isLeader(),
             runnable(sender, ign) {
                 const target = ign ?? sender
                 ChatLib.say(`/p transfer ${target}`)
@@ -163,7 +163,7 @@ new class PartyCommands extends Feature {
         this.addCommand({
             usage: ".f1-7 | .m1-7 | .t1-5",
             pattern: /^(f|m) ?[1-7]|t ?[1-5]$/,
-            access: () => Settings.PartyCommandsInstance && Party.amILeader(),
+            access: () => Settings.PartyCommandsInstance && Party.isLeader(),
             runnable(_, __, cmd) {
                 const [type, number] = TextUtil.getMatches(/^(f|m) ?[1-7]|t ?[1-5]$/, cmd)
 
