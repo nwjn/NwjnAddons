@@ -25,7 +25,7 @@ new class DamageTracker extends Feature {
             if (watcher./* getObjectType */func_75674_c() !== 4) continue
 
             let nametag = watcher./* getObject */func_75669_b()
-            if (!nametag || /[\s\+]/.test(nametag)) continue
+            if (!nametag || /\s|^§\w\D$/.test(nametag)) continue
 
             Nwjn.chat(nametag)
             break
