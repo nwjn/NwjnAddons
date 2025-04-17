@@ -87,11 +87,15 @@ export default class TextUtil {
 
     /**
      * Strips rank and tags from player
-     * @param {String} string
-     * @returns {String} Player ign
+     * @param {string} string
+     * @returns {?string} Player ign
      */
     static getSenderName(string) {
-        if (typeof(string) !== "string") return null
-        return string.removeFormatting().split("] ").slice(-1).toString().replace(/\W/g, "")
+        const [name] = TextUtil.getMatches(/(?:\[\w+\+*\] )?(?:\s?.?\s?)(\w{1,16})(?:\s?.?\s?):/, string.removeFormatting())
+        return name
+    }
+
+    static stringify(object) {
+        return JSON.stringify(object, null, 4)
     }
 }
