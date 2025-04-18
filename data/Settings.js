@@ -2,7 +2,15 @@ import Nwjn from "../libs/Helper/Nwjn"
 import Settings from "../../Amaterasu/core/Settings"
 import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
 
+const colors = "abcde"
 const defCon1 = new DefaultConfig("Nwjn", "/data/.Config.json")
+.addTextParagraph({
+    category: "Home",
+    configName: "dependencies",
+    title: "§6§lPowered by:§r",
+    description: Nwjn.DEPENDENCIES.map(([lib, ver], idx) => `§r§${colors[idx]}${lib}-${ver}§r`).join("\n"),
+    centered: true,
+})
 .addSwitch({
     category: "General",
     configName: "LinkFix",

@@ -1,8 +1,7 @@
 import { DataStore } from "../../../tska/storage/DataStore"
 
 const { version, requires } = JSON.parse(FileLib.read("Nwjn", "metadata.json"))
-const dependencies = {}
-requires.forEach(req => dependencies[req] = JSON.parse(FileLib.read(req, "metadata.json")).version)
+const dependencies = requires.map(lib => [lib, JSON.parse(FileLib.read(lib, "metadata.json")).version])
 
 export default class Nwjn {
     static BANNER = "§r§0§m§l---------§r§0§l 【§r §c§lNwjn§0§l 】§r§0§m§l---------§r"
