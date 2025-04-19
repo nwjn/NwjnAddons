@@ -5,8 +5,8 @@ const dependencies = requires.map(lib => [lib, JSON.parse(FileLib.read(lib, "met
 
 export default class Nwjn {
     static BANNER = "§r§0§m§l---------§r§0§l 【§r §c§lNwjn§0§l 】§r§0§m§l---------§r"
-    static LOGO = "§r§0§l【§r§c§lNwjn§0§l】§r"
     static STAMP = "【Nwjn】"
+    static LOGO = "§r§0§l【§r§c§lNwjn§0§l】§r"
     static VERSION = version
     static DEPENDENCIES = dependencies
 
@@ -23,6 +23,7 @@ export default class Nwjn {
     }
 
     static edit(message, id) {
+        if (!World.isLoaded()) return
         ChatLib.deleteChat(id)
         new Message(`${Nwjn.LOGO}§7>§r ${message}`).setChatLineId(id).chat()
     }
@@ -37,5 +38,10 @@ export default class Nwjn {
 
     static parse(path) {
         return DataStore.fromFile("Nwjn", path, true)
+    }
+
+    static openLink(url) {
+        java.awt.Desktop.getDesktop().browse(java.net.URI.create(url))
+        Nwjn.chat(`Link opened: ${url}`)
     }
 }

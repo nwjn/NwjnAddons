@@ -1,19 +1,33 @@
 import NumUtil from "../../libs/Helper/NumUtil"
 import MobUtil from "../../libs/Helper/MobUtil"
 import Feature from "../../libs/Features/Feature"
-import Settings from "../../data/Settings"
 import { Field } from "../../libs/Helper/Reflect"
-import Settings from "../../data/Settings"
-import RenderHelper from "../../libs/Render/RenderHelper"
 import Nwjn from "../../libs/Helper/Nwjn"
+import ConfigProperty from "../../data/ConfigProperty"
+import { ColorContainer } from "../../libs/Render/ColorContainer"
 import { renderAABBOutline } from "../../../Apelles/index"
+import RenderHelper from "../../libs/Render/RenderHelper"
+
+const setting = new ConfigProperty("TextInput", {
+    category: "Bestiary",
+    configName: "MobHighlight",
+    title: "Mob Highlight",
+    description: "Boxes entities by input based on mob class and health\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
+})
+
+const color = new ConfigProperty("ColorPicker", {
+    category: "Bestiary",
+    configName: "MobHighlightColor",
+    title: "Mob Highlight Color",
+    description: "Sets the color for monster hitboxes",
+    value: [255, 190, 239, 255],
+    shouldShow: data => data.MobHighlight !== "",
+    registerListener: (_, v) => color.packed = ColorContainer.toHex(v)
+})
 
 new class MobHighlight extends Feature {
     constructor() {
-        super({
-            setting: this.constructor.name,
-            color: this.constructor.name + "Color"
-        })
+        super({setting})
 
         this.RenderList = new java.util.WeakHashMap()
         this.StringToClassMap = new HashMap()
@@ -26,10 +40,13 @@ new class MobHighlight extends Feature {
         this.addEvent(net.minecraftforge.event.entity.EntityJoinWorldEvent, this.onEntityJoin.bind(this))
         this.addEvent("renderWorld", this.onRender.bind(this))
         this.addEvent(net.minecraftforge.event.entity.living.LivingDeathEvent, this.onEntityDeath.bind(this))
+        this.addEvent("worldUnload", () => this.RenderList.clear())
+    }
 
-        Settings.getConfig().onCloseGui(this.onEnabled.bind(this))
+    postInit() {
+        ConfigProperty.getConfig().onCloseGui(this.onEnabled.bind(this))
 
-        this.init()
+        color.packed = ColorContainer.toHex(color.value)
     }
 
     /** @Event {net.minecraftforge.event.entity.EntityJoinWorldEvent} */
@@ -48,8 +65,9 @@ new class MobHighlight extends Feature {
     onRender() {
         this.RenderList.forEach(entity => {
             if (entity./* isInvisible */func_82150_aj()) return
+
             const [mX, mY, mZ, MX, MY, MZ] = RenderHelper.getAxisCoords(entity./* getEntityBoundingBox */func_174813_aQ())
-            renderAABBOutline(this.Color.rgba1, mX, mY, mZ, MX, MY, MZ, { lw: 1, smooth: true, cull: true })
+            renderAABBOutline(color.packed, mX, mY, mZ, MX, MY, MZ, { lw: 1, smooth: true, cull: true })
         })
     }
 
@@ -59,7 +77,7 @@ new class MobHighlight extends Feature {
     }
     
     /** @override */
-    onEnabled(value = Settings.MobHighlight) {
+    onEnabled(value = setting.value) {
         this.RenderList.clear()
     
         value.split(/, ?/g).forEach((entry, idx) => {
@@ -67,8 +85,8 @@ new class MobHighlight extends Feature {
     
             if (!name) return
             const clazz = this.StringToClassMap.get(name.toLowerCase())
-            if (!clazz) return Nwjn.edit(`§cEntity class called §b§l${name}§r§c is unknown. Read §a§lhttps://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`, 28500 + idx)
-            ChatLib.deleteChat(28500 + idx)
+            if (!clazz) return Nwjn.edit(`§cEntity class called §b§l${name}§r§c is unknown. Read https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`, 28500 + idx)
+            if (World.isLoaded()) ChatLib.deleteChat(28500 + idx)
     
             const hps = params?.split("|")?.map(NumUtil.parseCompact)
     
@@ -84,7 +102,7 @@ new class MobHighlight extends Feature {
 
     /** @override */
     onDisabled() {
-        this.Whitelist.clear()
         this.RenderList.clear()
+        this.Whitelist.clear()
     }
 }

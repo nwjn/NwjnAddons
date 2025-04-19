@@ -1,10 +1,4 @@
 export class ColorContainer {
-    static registerListener(settings, configName) {
-        const color = new ColorContainer(settings[configName])
-        settings.getConfig().registerListener(configName, (_, newValue) => color.set(newValue))
-        return color
-    }
-
     static toHex(rgba255Array) {
         const [r, g, b, a] = rgba255Array
 

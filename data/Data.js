@@ -13,4 +13,4 @@ export default new LocalStore("Nwjn", {
   "wisp": 0,
   "lastMini": {},
   "blacklist": {}
-}, "/data/.User.json")
+}, "data/.User.json")

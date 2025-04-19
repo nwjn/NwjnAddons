@@ -1,17 +1,35 @@
+import ConfigProperty from "../../data/ConfigProperty"
 import Feature from "../../libs/Features/Feature"
-import RenderUtil from "../../libs/Render/RenderUtil"
+import { ColorContainer } from "../../libs/Render/ColorContainer"
+import RenderHelper from "../../libs/Render/RenderHelper"
+import { renderAABBOutline, renderAABBFilled } from "../../../Apelles"
+
+const setting = new ConfigProperty("Switch", {
+    category: "General",
+    configName: "BlockHighlight",
+    title: "Toggle Block Highlight",
+    description: "Adds an overlay onto the hitbox of the block currently looked at"
+})
+
+const color = new ConfigProperty("ColorPicker", {
+    category: "General",
+    configName: "BlockHighlightColor",
+    title: "Highlight Color",
+    description: "Sets the color for block highlight",
+    value: [255, 190, 239, 255],
+    shouldShow: data => data.BlockHighlight,
+    registerListener: (_, v) => {
+        print(v.join())
+        color.packedInt = ColorContainer.toHex(v)
+        print(color.packedInt)
+    }
+})
 
 new class BlockHighlight extends Feature {
     constructor() {
-        super({
-            setting: this.constructor.name, 
-            color: this.constructor.name + "Color"
-        })
-
+        super({setting})
 
         this.addEvent(net.minecraftforge.client.event.DrawBlockHighlightEvent, this.onBlockHighlight.bind(this))
-
-        this.init()
     }
 
     /** @Event {net.minecraftforge.client.event.DrawBlockHighlightEvent} */
@@ -30,7 +48,15 @@ new class BlockHighlight extends Feature {
         Block./* setBlockBoundsBasedOnState */func_180654_a(world, BlockPos)
         const BlockBounds = Block./* getSelectedBoundingBox */func_180646_a(world, BlockPos)
         
-        RenderUtil.drawFilledOutline(BlockBounds, this.Color, false, 6, false)
+        // RenderUtil.drawFilledOutline(BlockBounds, this.Color, false, 6, false)
+        const [mX, mY, mZ, MX, MY, MZ] = RenderHelper.getAxisCoords(BlockBounds)
+        // renderAABBFilled(0xffbeef4d, mX, mY, mZ, MX, MY, MZ)
+        // renderAABBOutline(0xffbeefff, mX, mY, mZ, MX, MY, MZ)
         cancel(event)
+    }
+    postInit() {
+        print(color.value.join())
+        color.packedInt = ColorContainer.toHex(color.value)
+        print(color.packedInt)
     }
 }

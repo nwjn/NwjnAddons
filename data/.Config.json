@@ -1,0 +1,39 @@
+[
+    {
+        "category": "Home",
+        "settings": [
+            {
+                "type": 9,
+                "name": "dependencies"
+            },
+            {
+                "type": 2,
+                "name": "github"
+            },
+            {
+                "type": 2,
+                "name": "discord"
+            }
+        ]
+    },
+    {
+        "category": "Bestiary",
+        "settings": [
+            {
+                "type": 4,
+                "name": "MobHighlight",
+                "value": ""
+            },
+            {
+                "type": 5,
+                "name": "MobHighlightColor",
+                "value": [
+                    210,
+                    168,
+                    216,
+                    255
+                ]
+            }
+        ]
+    }
+]

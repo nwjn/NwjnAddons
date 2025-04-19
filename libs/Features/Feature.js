@@ -5,12 +5,25 @@
  * @credit https://github.com/DocilElm/Doc/blob/main/core/Feature.js
  */
 
-import Settings from "../../data/Settings"
+import { initSettings } from "../../data/Settings"
 import Location from "../../utils/Location"
 import Event from "../Events/Event"
-import { ColorContainer } from "../Render/ColorContainer"
+import ConfigProperty from "../../data/ConfigProperty"
+
 
 export default class Feature {
+    static settingsRequiredInitFunction = []
+
+    static finalize() {
+        let func = initSettings()
+
+        while (func = Feature.settingsRequiredInitFunction.pop()) func()
+
+        delete Feature.settingsRequiredInitFunction
+        delete Feature.finalize
+    }
+    
+    /** @override Function called once settings have been initialized*/ postInit() {}
     /** @override Function called when this is registered */ onRegister() {}
     /** @override Function called when this is unregistered */ onUnregister() {}
     /** @override Function called when this is enabled by setting */ onEnabled(previousValue) {}
@@ -21,39 +34,22 @@ export default class Feature {
      * - Class can be used with or without requiring the settings, worlds, or zones fields depending on the intended functionality
      * 
      * @param {Object} obj If passed in as a child of this, uses the name of this child and return it
-     * @param {String|null} obj.setting The main config name: If null -> Feature is always active, If setting returns false -> all events of this feature will be unregistered
+     * @param {ConfigProperty|null} obj.setting The main config setting: If null -> Feature is always active, If setting returns falsey -> all events of this feature will be unregistered
      * @param {String[]|String|null} obj.worlds The world(s) where this feature should activate: If null -> Feature is not world dependent
      * @param {String[]|String|null} obj.zones The zones(s) where this feature should activate: If null -> Feature is not zone dependent
-     * @param {String|null} obj.color color setting of the feature
      */
     constructor(obj = {}) {
-        this.setting = obj.setting
-        this.worlds = obj.worlds
-        this.zones = obj.zones
-        this.isRegistered = false
-
-        if (obj.color) this.Color = ColorContainer.registerListener(Settings, obj.color)
-
-        // Main setting enables/disables entire [Feature]
-        if (this.setting in Settings) {
-            this.isSettingEnabled = Settings[this.setting]
-    
-            Settings.getConfig().registerListener(this.setting, (_, val) => {
-                this.isSettingEnabled = val
-                this.isSettingEnabled ? this.onEnabled(val) : this.onDisabled()
-                this._updateRegister()
-            })
-        }
+        /** @private */ this._setting = obj.setting
+        /** @private */ this._worlds = obj.worlds
+        /** @private */ this._zones = obj.zones
+        /** @private */ this._isSettingEnabled = false
+        /** @private */ this._isRegistered = false
 
         // Will always update on world changes
         Location.onWorldChange(this._updateRegister.bind(this))
-        if (this.zones) Location.onAreaChange(this._updateRegister.bind(this))
-    }
+        if (this._zones) Location.onAreaChange(this._updateRegister.bind(this))
 
-    /* Became a function because I could not find a way to make it consistently call these listeners correctly */
-    init() {
-        this.isSettingEnabled ? this.onEnabled(this.isSettingEnabled) : this.onDisabled()
-        this._updateRegister()
+        Feature.settingsRequiredInitFunction.push(this._postInit.bind(this))
     }
 
     /**
@@ -87,33 +83,63 @@ export default class Feature {
     }
 
     /**
+     * @private
      * - Updates registers based on setting, world, and zone criteria of this [Feature]
      * - Location#inWorld and Location#inZone return true if param is nullish
      */
     _updateRegister() {
-        if (("isSettingEnabled" in this) && !this.isSettingEnabled) return this._unregister()
-        if (!(Location.nwjn$inWorld(this.worlds) && Location.nwjn$inZone(this.zones))) return this._unregister()
+        if (("_isSettingEnabled" in this) && !this._isSettingEnabled) return this._unregister()
+        if (!(Location.nwjn$inWorld(this._worlds) && Location.nwjn$inZone(this._zones))) return this._unregister()
         
         return this._register()
     }
 
-    /** UnRegisters all strung [Events] including [SubEvents] */
+    /** 
+     * @private
+     * UnRegisters all strung [Events] including [SubEvents] 
+     */
     _unregister() {
-        if (!this.isRegistered) return this.isRegistered = false
-        this.isRegistered = false
+        if (!this._isRegistered) return
+        this._isRegistered = false
         
         this.unregisterEvents?.()
         this.unregisterSubEvents?.()
         this.onUnregister()
     }
 
-    /** Registers all strung [Events] and updates [SubEvents] */
+    /** 
+     * @private
+     * Registers all strung [Events] and updates [SubEvents] 
+     */
     _register() {
-        if (this.isRegistered) return this.isRegistered = true
-        this.isRegistered = true
+        if (this._isRegistered) return
+        this._isRegistered = true
         
         this.registerEvents?.()
         this.updateSubEvents?.()
         this.onRegister()
+    }
+
+    /** @private */
+    _postInit() {
+        // Main setting enables/disables entire [Feature]
+        if (this._setting) {
+            this._isSettingEnabled = this._setting.value
+    
+            this._setting._registerListener((_, val) => {
+                this._isSettingEnabled = val
+                this._updateEnablers()
+            })
+        }
+
+        this.postInit()
+
+        this._updateEnablers()
+    }
+
+    /** @private */
+    _updateEnablers() {
+        this._isSettingEnabled ? this.onEnabled(this._isSettingEnabled) : this.onDisabled()
+        this._updateRegister()
     }
 }
