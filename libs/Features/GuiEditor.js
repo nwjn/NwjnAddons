@@ -1,17 +1,17 @@
 import { addCommand } from "../../utils/Command"
+import NumUtil from "../Helper/NumUtil"
 
 const FontRenderer = Renderer.getFontRenderer()
 const MCTessellator = net.minecraft.client.renderer.Tessellator./* getInstance */func_178181_a()
 const DefaultVertexFormats$POSITION = net.minecraft.client.renderer.vertex.DefaultVertexFormats./* POSITION */field_181705_e
 const WorldRenderer = MCTessellator./* getWorldRenderer */func_178180_c()
 
+const EditorGui = new Gui()
+const GuiFeatures = new Set()
+
+export const createOverlayFor = (GuiFeature) => GuiFeatures.add(GuiFeature)
 new class GuiEditor {
     constructor() {
-        const EditorGui = new Gui()
-        const GuiFeatures = new Set()
-
-        module.exports.createOverlayFor = (GuiFeature) => GuiFeatures.add(GuiFeature)
-
         addCommand("gui", "Opens the Editor Gui", () => EditorGui.open())
 
         // Editing Handlers
@@ -82,7 +82,7 @@ new class GuiEditor {
         GlStateManager./* enableTexture2D */func_179098_w()
         GlStateManager./* disableBlend */func_179084_k()
         
-        const argb = feat.Color.getFontHex()
+        const argb = NumUtil.rgbaToARGB(feat.color.packetInt) | 0
         for (let i = 0; i < lines.length; i++) 
             FontRenderer./* drawString */func_175065_a(lines[i], ox, oy + 1 + i * 9, argb, true)
         Renderer.retainTransforms(false)

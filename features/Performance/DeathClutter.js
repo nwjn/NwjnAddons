@@ -1,22 +1,31 @@
-import Feature from "../../libs/Features/Feature"
 import MobUtil from "../../libs/Helper/MobUtil"
+import Feature from "../../libs/Features/Feature"
+import ConfigProperty from "../../data/ConfigProperty"
 
-/**
- * Cleans up dead entities by: 
- * 1. Removing them on death and canceling their death animation
- * 2. Removing their armorstand nametag that stays for multiple ticks after death
- */
-new class DeathClutter extends Feature {
+
+const setting = new ConfigProperty("Switch", {
+    category: "Performance",
+    subcategory: "Death Clutter",
+    configName: "DeathClutter",
+    title: "§e✯§r §bRemove Dying Mobs and Names",
+    description: "Fully kills the entity before it can perform the animation & removes the entity's nametag",
+    value: true
+})
+
+new class extends Feature {
     constructor() {
-        super({setting: this.constructor.name})
+        super({setting})
         
         this.addEvent(net.minecraftforge.event.entity.living.LivingDeathEvent, this.onEntityDeath.bind(this))
-        this.addEvent("packetReceived", this.onSkyblockNameDeath.bind(this), net.minecraft.network.play.server.S1CPacketEntityMetadata)
-
-        this.init()
+        this.addEvent("packetReceived", this.onSkyblockNameDeath.bind(this), {
+            setFilteredClass: net.minecraft.network.play.server.S1CPacketEntityMetadata
+        })
     }
 
-    /** @Packet {net.minecraft.network.play.server.S1CPacketEntityMetadata} */
+    /**
+     * @Event PacketReceived
+     * @Modifier net.minecraft.network.play.server.S1CPacketEntityMetadata
+     */
     onSkyblockNameDeath(packet) {
         // Nametag changes always have only one watcher
         const WatchList = packet./* getWatcherList */func_149376_c()
@@ -26,7 +35,9 @@ new class DeathClutter extends Feature {
         if (object && / (§.)*0(§.)*[\/❤]/.test(object)) MobUtil.removeEntityByID(packet./* getEntityId */func_149375_d())
     }
 
-    /** @Event {net.minecraftforge.event.entity.living.LivingDeathEvent} */
+    /**
+     * @Event net.minecraftforge.event.entity.living.LivingDeathEvent
+     */
     onEntityDeath({entity}) {
         MobUtil.removeEntity(entity)
     }

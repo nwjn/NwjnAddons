@@ -30,28 +30,6 @@ new ConfigProperty("Button", {
 
 // .addSwitch({
 //     category: "General",
-//     configName: "LinkFix",
-//     title: "&e✯&r &bLink Fix",
-//     description: "Encodes and Decodes Links to allow sending and viewing for those with the mod",
-//     value: true
-// })
-// .addSwitch({
-//     category: "General",
-//     configName: "BlockHighlight",
-//     title: "Toggle Block Highlight",
-//     description: "Toggles block highlight",
-//     value: false
-// })
-// .addColorPicker({
-//     category: "General",
-//     configName: "BlockHighlightColor",
-//     title: "Highlight Color",
-//     description: "Sets the color for block highlight",
-//     value: [255, 190, 239, 255],
-//     shouldShow: data => data.BlockHighlight
-// })
-// .addSwitch({
-//     category: "General",
 //     configName: "ChatWaypoints",
 //     title: "Draw Chat Waypoints",
 //     description: "Creates waypoints taken from chat messages in patcher sendcoords format",
@@ -142,38 +120,6 @@ new ConfigProperty("Button", {
 //     shouldShow: data => data.PartyCommands
 // })
 // .addSwitch({
-//     category: "General",
-//     configName: "SkyblockXP",
-//     title: "Skyblock XP Gain Message",
-//     description: "Displays skyblock xp gains in chat",
-//     value: false
-// })
-// .addSwitch({
-//     category: "General",
-//     configName: "Clock",
-//     title: "Clock Display",
-//     description: "Stay productive by keeping track of time!",
-//     subcategory: "Clock",
-//     value: false
-// })
-// .addColorPicker({
-//     category: "General",
-//     configName: "ClockColor",
-//     title: "➤ Clock Color",
-//     description: "     Sets the color for the clock display",
-//     subcategory: "Clock",
-//     value: [255, 190, 239, 255],
-
-//     shouldShow: data => data.Clock
-// })
-// .addSwitch({
-//     category: "Combat",
-//     configName: "DamageTracker",
-//     title: "Damage Tracker",
-//     description: "Displays Damage Tag values in chat",
-//     value: false
-// })
-// .addSwitch({
 //     category: "Combat",
 //     configName: "ReaperTimer",
 //     title: "Reaper Buff Timer",
@@ -230,21 +176,6 @@ new ConfigProperty("Button", {
 // })
 // .addTextInput({
 //     category: "Bestiary",
-//     configName: "MobHighlight",
-//     title: "Mob Highlight",
-//     description: "Boxes entities by input based on mob class and health\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
-//     value: ""
-// })
-// .addColorPicker({
-//     category: "Bestiary",
-//     configName: "MobHighlightColor",
-//     title: "Mob Highlight Color",
-//     description: "Sets the color for monster hitboxes",
-//     value: [255, 190, 239, 255],
-//     shouldShow: data => data.MobHighlight !== ""
-// })
-// .addTextInput({
-//     category: "Bestiary",
 //     configName: "StandHighlight",
 //     title: "Armor Stand Names Highlight",
 //     description: "Draws hitboxes around armor stands that include the inputted name, seperate with '|' character",
@@ -293,43 +224,6 @@ new ConfigProperty("Button", {
 //     title: "Mineshaft Waypoints",
 //     description: "Shows guesses of corpses and exit in mineshaft, walk within 3 blocks of a guess waypoint to remove it",
 //     value: false
-// })
-// .addSwitch({
-//     category: "Performance",
-//     subcategory: "Death Clutter",
-//     configName: "DeathClutter",
-//     title: "&e✯&r &bRemove Dying Mobs and Names",
-//     description: "Fully kills the entity before it can perform the animation & removes the entity's nametag",
-//     value: true
-// })
-// .addSwitch({
-//     category: "Performance",
-//     subcategory: "Spawn Clutter",
-//     configName: "SpawnClutter",
-//     title: "&e✯&r &bAbort Junk-Spawns",
-//     description: `Completely cancels the construction of many unused + non-performative entities`,
-//     value: true
-// })
-// .addMultiCheckbox({
-//     category: "Performance",
-//     subcategory: "Spawn Clutter",
-//     configName: "SpawnClutterOptions",
-//     title: "➤ &e✯&r &bAbort Junk-Spawns Customization",
-//     description: "     Optional toggles for a few entities",
-//     placeHolder: "Edit",
-//     options: [
-//         {
-//             title: "Arrows",
-//             configName: "SpawnClutterArrows",
-//             value: false
-//         },
-//         {
-//             title: "&e✯&r Falling Blocks",
-//             configName: "SpawnClutterFallingBlocks",
-//             value: true
-//         }
-//     ],
-//     shouldShow: data => data.SpawnClutter
 // })
 
 // add lihua in top left

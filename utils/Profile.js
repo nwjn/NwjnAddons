@@ -3,7 +3,7 @@ import Event from "../libs/Events/Event"
 import Data from "../data/Data"
 import { scheduleTask } from "../libs/Time/ServerTime"
 import Ticks from "../libs/Time/Units/Ticks"
-import { addCommand } from "./Command"
+import { addCommand } from "../libs/Helper/Command"
 import Nwjn from "../libs/Helper/Nwjn"
 
 // [Power Stone]

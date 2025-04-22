@@ -1,8 +1,8 @@
-import "./data/Data"
-import "./utils/Broadcasting"
-import "./utils/Command"
-import "./utils/Location"
-import "./utils/Party"
+// import "./data/Data"
+// import "./utils/Broadcasting"
+// import "./libs/Helper/Command"
+// import "./utils/Location"
+// import "./utils/Party"
 import "./utils/Profile"
 import "./libs/Time/ServerTime"
 
@@ -16,14 +16,14 @@ let relativeDest = "./features/"
 let modules = []
 let module = void function requireFeatures(file) {
     if (file.isDirectory()) return file.listFiles().forEach(requireFeatures)
-        
+
     let match = file.getPath().match(pathFinder)
     if (!match) return
     
     modules.push(relativeDest + match[1].replace(fileSeparator, "/"))
 }(new java.io.File(`${Config.modulesFolder}/Nwjn/features`))
 
-// while (module = modules.pop()) require(module)
-import "./features/Bestiary/MobHighlight"
+while (module = modules.pop()) 
+    require(module)
 
-Feature.finalize()
+Feature.initFeatures()

@@ -1,20 +1,27 @@
 import Nwjn from "../../libs/Helper/Nwjn"
 import Feature from "../../libs/Features/Feature"
+import ConfigProperty from "../../data/ConfigProperty"
 
-new class DamageTracker extends Feature {
+const setting = new ConfigProperty("Switch", {
+    category: "Combat",
+    configName: "DamageTracker",
+    title: "Damage Tracker",
+    description: "Displays damage tags in chat"
+})
+
+new class extends Feature {
     constructor() {
-        super({setting: this.constructor.name})
+        super({setting})
 
-        this.addEvent(
-            "packetReceived",
-            this.onSkyblockDamageSplash.bind(this),
-            net.minecraft.network.play.server.S0FPacketSpawnMob
-        )
-
-        this.init()
+        this.addEvent("packetReceived", this.onSkyblockDamageSplash.bind(this), {
+            setFilteredClass: net.minecraft.network.play.server.S0FPacketSpawnMob
+        })
     }
 
-    /** @Packet {net.minecraft.network.play.server.S0FPacketSpawnMob} */
+    /**
+     * @Event PacketReceived
+     * @Modifier net.minecraft.network.play.server.S0FPacketSpawnMob
+     */
     onSkyblockDamageSplash(packet) {
         // ArmorStand EntityType is 30
         if (packet./* getEntityType */func_149025_e() !== 30) return

@@ -1,4 +1,5 @@
 import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
+import NumUtil from "../libs/Helper/NumUtil"
 
 const defCon1 = new DefaultConfig("Nwjn", "data/.Config.json")
 
@@ -21,11 +22,31 @@ export default class ConfigProperty {
      */
     constructor (type, obj) {
         this.configName = obj.configName
-        defCon1[`add${type}`](obj)
+        if (type) defCon1[`add${type}`](obj)
+
+        if (type === "MultiCheckbox") {
+            obj.options.forEach(opt => 
+                this[opt.configName] = new this(null, opt)
+            )
+        }
     }
 
     get value() {
         return ConfigProperty.getSettings()?.[this.configName]
+    }
+
+    /**
+     * Call in postInit to track and pack a ColorPicker's value as a packed int
+     * @param {?number} scale if specified, also packs a scaled copy of the int
+     */
+    trackColor(scale = null) {
+        this.packedInt = NumUtil.toRGBAHex(this.value)
+        if (scale) this.packedIntScaled = NumUtil.scaleAlpha(this.packedInt, scale)
+
+        this._registerListener((_, v) => {
+            this.packedInt = NumUtil.toRGBAHex(v)
+            if (scale) this.packedIntScaled = NumUtil.scaleAlpha(this.packedInt, scale)
+        })
     }
 
     /**

@@ -1,6 +1,6 @@
-import Nwjn from "../libs/Helper/Nwjn"
-import ConfigProperty from "../data/ConfigProperty"
-import { CommandHandler } from "../../tska/command/CommandHandler"
+import Nwjn from "./Nwjn"
+import ConfigProperty from "../../data/ConfigProperty"
+import { CommandHandler } from "../../../tska/command/CommandHandler"
 
 const myCommands = new CommandHandler("Nwjn")
 

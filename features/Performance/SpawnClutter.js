@@ -1,9 +1,41 @@
-import Feature from "../../libs/Features/Feature";
-import Settings from "../../data/Settings";
+import ConfigProperty from "../../data/ConfigProperty"
+import Feature from "../../libs/Features/Feature"
 
-new class SpawnClutter extends Feature {
+const category = "Performance"
+const subcategory = "Spawn Clutter"
+
+const setting = new ConfigProperty("Switch", {
+    category,
+    subcategory,
+    configName: "SpawnClutter",
+    title: "§e✯§r §bAbort Junk-Spawns",
+    description: `Completely cancels the construction of many unused + non-performative entities`,
+    value: true
+})
+const options = new ConfigProperty("MultiCheckbox", {
+    category,
+    subcategory,
+    configName: "SpawnClutterOptions",
+    title: "➤ §e✯§r §bAbort Junk-Spawns Customization",
+    description: "     Optional toggles for a few entities",
+    placeHolder: "Edit",
+    options: [
+        {
+            title: "Arrows",
+            configName: "SpawnClutterArrows"
+        },
+        {
+            title: "§e✯§r Falling Blocks",
+            configName: "SpawnClutterFallingBlocks",
+            value: true
+        }
+    ],
+    shouldShow: data => data.SpawnClutter
+})
+
+new class extends Feature {
     constructor() {
-        super({setting: this.constructor.name})
+        super({setting})
 
         /** 
          * Check link for type list, notify me on discord if any of these types not to be edited or changed to have a setting
@@ -25,46 +57,45 @@ new class SpawnClutter extends Feature {
             77 // Leash
         ])
 
-        this.initOptionals()
-
-        this.addEvent(
-            "spawnObject", 
-            this.onSpawnObject.bind(this)
-        )
-
-        this.addEvent(
-            "packetReceived", 
-            this.onStupidPacket.bind(this), 
-            net.minecraft.network.play.server.S10PacketSpawnPainting
-        )
-
-        this.addEvent(
-            "packetReceived", 
-            this.onStupidPacket.bind(this), 
-            net.minecraft.network.play.server.S11PacketSpawnExperienceOrb
-        )
-
-        this.init()
+        this.addEvent("packetReceived", this.onSpawnObject.bind(this), {
+            setFilteredClass: net.minecraft.network.play.server.S0EPacketSpawnObject
+        })
+        this.addEvent("packetReceived", this.onStupidPacket.bind(this), { 
+            setFilteredClasses: [
+                net.minecraft.network.play.server.S10PacketSpawnPainting, 
+                net.minecraft.network.play.server.S11PacketSpawnExperienceOrb
+            ]
+        })
     }
 
-    onSpawnObject(type, event) {
-        if (this.blacklist.has(type)) cancel(event)
+    /**
+     * @Event PacketReceived
+     * @Modifier net.minecraft.network.play.server.S0EPacketSpawnObject
+     */
+    onSpawnObject(packet, event) {
+        if (this.blacklist.has(packet./* getType */func_148993_l())) cancel(event)
     }
 
+    /**
+     * @Event PacketReceived
+     * @Modifier [net.minecraft.network.play.server.S10PacketSpawnPainting, net.minecraft.network.play.server.S11PacketSpawnExperienceOrb]
+     */
     onStupidPacket(_, event) {
         cancel(event)
-    }
-
-    initOptionals() {
-        if (Settings.SpawnClutterArrows) this.blacklist.add(60)
-        Settings.getConfig().registerListener("SpawnClutterArrows", (_, val) => this.updateOptionals(60, val))
-
-        if (Settings.SpawnClutterFallingBlocks) this.blacklist.add(70)
-        Settings.getConfig().registerListener("SpawnClutterFallingBlocks", (_, val) => this.updateOptionals(70, val))
     }
 
     updateOptionals(id, flag) {
         if (flag) this.blacklist.add(id)
         else this.blacklist.delete(id)
+    }
+
+    postInit() {
+        const { SpawnClutterArrows, SpawnClutterFallingBlocks } = options
+
+        if (SpawnClutterArrows.value) this.blacklist.add(60)
+        SpawnClutterArrows._registerListener((_, val) => this.updateOptionals(60, val))
+
+        if (SpawnClutterFallingBlocks) this.blacklist.add(70)
+        SpawnClutterFallingBlocks._registerListener((_, val) => this.updateOptionals(70, val))
     }
 }

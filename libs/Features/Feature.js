@@ -6,24 +6,21 @@
  */
 
 import { initSettings } from "../../data/Settings"
-import Location from "../../utils/Location"
+import Location from "../Hypixel/Location"
 import Event from "../Events/Event"
 import ConfigProperty from "../../data/ConfigProperty"
 
+const awaitingInit = []
 
 export default class Feature {
-    static settingsRequiredInitFunction = []
+    static initFeatures() {
+        let feet = initSettings()
 
-    static finalize() {
-        let func = initSettings()
-
-        while (func = Feature.settingsRequiredInitFunction.pop()) func()
-
-        delete Feature.settingsRequiredInitFunction
-        delete Feature.finalize
+        while (feet = awaitingInit.pop()) 
+            feet._postInit()
     }
-    
-    /** @override Function called once settings have been initialized*/ postInit() {}
+
+    /** @override Function called once settings have been initialized */ postInit() {}
     /** @override Function called when this is registered */ onRegister() {}
     /** @override Function called when this is unregistered */ onUnregister() {}
     /** @override Function called when this is enabled by setting */ onEnabled(previousValue) {}
@@ -32,54 +29,72 @@ export default class Feature {
     /**
      * - Utility that handles registering various events and listeners to make complex, functional, and performative features
      * - Class can be used with or without requiring the settings, worlds, or zones fields depending on the intended functionality
-     * 
-     * @param {Object} obj If passed in as a child of this, uses the name of this child and return it
-     * @param {ConfigProperty|null} obj.setting The main config setting: If null -> Feature is always active, If setting returns falsey -> all events of this feature will be unregistered
-     * @param {String[]|String|null} obj.worlds The world(s) where this feature should activate: If null -> Feature is not world dependent
-     * @param {String[]|String|null} obj.zones The zones(s) where this feature should activate: If null -> Feature is not zone dependent
+
+     * @param {?object} obj
+     * @param {?ConfigProperty} obj.setting If none: Feature is always active, otherwise will (un)register based on setting
+     * @param {?string[]} obj.worlds If none: Feature is not world dependent, otherwise will only register in worlds listed
+     * @param {?string[]} obj.zones If none: Feature is not zone dependent, otherwise will only register in zones listed
      */
     constructor(obj = {}) {
-        /** @private */ this._setting = obj.setting
-        /** @private */ this._worlds = obj.worlds
-        /** @private */ this._zones = obj.zones
-        /** @private */ this._isSettingEnabled = false
-        /** @private */ this._isRegistered = false
+        this.setting = obj.setting
+        this.worlds = obj.worlds?.map(w => w.toLowerCase())
+        this.zones = obj.zones?.map(z => z.toLowerCase())
+
+        this.hasSetting = this.setting instanceof ConfigProperty
+        this.isRegistered = false
 
         // Will always update on world changes
         Location.onWorldChange(this._updateRegister.bind(this))
-        if (this._zones) Location.onAreaChange(this._updateRegister.bind(this))
+        if (this.zones) Location.onAreaChange(this._updateRegister.bind(this))
 
-        Feature.settingsRequiredInitFunction.push(this._postInit.bind(this))
+        awaitingInit.push(this)
     }
 
-    /**
-     * - Runs the condition function when [Feature] is update and registers if condition passes
-     * - Inits subEvent dependencies if called for the first time
-     */
+    /** Add [Events] to run when this feature is registered */
     addEvent(triggerType, methodFn, args) {
-        if (!("events" in this)) {
-            this.events = []
-            this.registerEvents = () => this.events.forEach(event => event.register())
-            this.unregisterEvents = () => this.events.forEach(event => event.unregister())
-        }
-        this.events.push(new Event(triggerType, methodFn, args, false))
+        this.events ??= []
 
-        return this
+        this.events.push(new Event(triggerType, methodFn, args, false))
     }
 
-    /**
-     * - Runs the condition function when [Feature] is update and registers if condition passes
-     * - Inits subEvent dependencies if called for the first time
-     */
+    /** Add [SubEvents] to run when the feature is registered and follows a custom condition */
     addSubEvent(triggerType, methodFn, args, condition = () => true) {
-        if (!("subEvents" in this)) {
-            this.subEvents = []
-            this.updateSubEvents = () => this.subEvents.forEach(([subEvent, condition]) => condition() ? subEvent.register() : subEvent.unregister())
-            this.unregisterSubEvents = () => this.subEvents.forEach(([subEvent]) => subEvent.unregister())
-        }
-        this.subEvents.push([new Event(triggerType, methodFn, args, false), condition])
+        this.subEvents ??= []
 
-        return this
+        this.subEvents.push([new Event(triggerType, methodFn, args, false), condition])
+    }
+
+    /** Rechecks [SubEvents] and registers them if they follow their condition */
+    update() {
+        if (this.subEvents) for (let subEvent of this.subEvents) subEvent[1]() ? subEvent[0].register() : subEvent[0].unregister()
+    }
+
+    /** 
+     * @private
+     * Registers all attached [Events] and updates [SubEvents] 
+     */
+    _register() {
+        if (this.isRegistered) return
+
+        if (this.events) for (let event of this.events) event.register()
+        if (this.subEvents) for (let subEvent of this.subEvents) subEvent[1]() && subEvent[0].register()
+
+        this.onRegister()
+        this.isRegistered = true
+    }
+
+    /** 
+     * @private
+     * UnRegisters all attached [Events] and [SubEvents] 
+     */
+    _unregister() {
+        if (!this.isRegistered) return
+
+        if (this.events) for (let event of this.events) event.unregister()
+        if (this.subEvents) for (let subEvent of this.subEvents) subEvent[0].unregister()
+
+        this.onUnregister()
+        this.isRegistered = false
     }
 
     /**
@@ -88,46 +103,20 @@ export default class Feature {
      * - Location#inWorld and Location#inZone return true if param is nullish
      */
     _updateRegister() {
-        if (("_isSettingEnabled" in this) && !this._isSettingEnabled) return this._unregister()
-        if (!(Location.nwjn$inWorld(this._worlds) && Location.nwjn$inZone(this._zones))) return this._unregister()
+        if (this.hasSetting && !this.isSettingEnabled) return this._unregister()
+        if (!(Location.nwjn$inWorlds(this.worlds) && Location.nwjn$inZones(this.zones))) return this._unregister()
         
         return this._register()
-    }
-
-    /** 
-     * @private
-     * UnRegisters all strung [Events] including [SubEvents] 
-     */
-    _unregister() {
-        if (!this._isRegistered) return
-        this._isRegistered = false
-        
-        this.unregisterEvents?.()
-        this.unregisterSubEvents?.()
-        this.onUnregister()
-    }
-
-    /** 
-     * @private
-     * Registers all strung [Events] and updates [SubEvents] 
-     */
-    _register() {
-        if (this._isRegistered) return
-        this._isRegistered = true
-        
-        this.registerEvents?.()
-        this.updateSubEvents?.()
-        this.onRegister()
     }
 
     /** @private */
     _postInit() {
         // Main setting enables/disables entire [Feature]
-        if (this._setting) {
-            this._isSettingEnabled = this._setting.value
+        if (this.setting) {
+            this.isSettingEnabled = this.setting.value
     
-            this._setting._registerListener((_, val) => {
-                this._isSettingEnabled = val
+            this.setting._registerListener((_, val) => {
+                this.isSettingEnabled = val
                 this._updateEnablers()
             })
         }
@@ -139,7 +128,7 @@ export default class Feature {
 
     /** @private */
     _updateEnablers() {
-        this._isSettingEnabled ? this.onEnabled(this._isSettingEnabled) : this.onDisabled()
+        this.isSettingEnabled ? this.onEnabled(this.isSettingEnabled) : this.onDisabled()
         this._updateRegister()
     }
 }

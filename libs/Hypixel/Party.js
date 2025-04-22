@@ -1,7 +1,7 @@
-import Event from "../libs/Events/Event"
-import ModAPI from "../../tska/api/ModAPI"
-import { scheduleTask } from "../libs/Time/ServerTime"
-import Seconds from "../libs/Time/Units/Seconds"
+import Event from "../Events/Event"
+import ModAPI from "../../../tska/api/ModAPI"
+import { scheduleTask } from "../Time/ServerTime"
+import Seconds from "../Time/Units/Seconds"
 
 const SERVER_IP_REGEX = /^[^\.]+\.hypixel\.net$/
 const START_PARTY_REGEX = /^(?:\[\w+\+*\] )?\w{1,16} invited .+ to the party! They have 60 seconds to accept\.$/
@@ -17,19 +17,19 @@ const DISBAND_PARTY_REGEXES = [
 
 export default new class Party {
 	constructor() {
-        /** @private */ this._isLead = false
-        /** @private */ this._inParty = false
+        this.isLeader = false
+        this.inParty = false
 
         ModAPI.on("partyinfo", (inParty, members) => {
-            this._inParty = inParty
-            this._isLead = inParty && members[Player.getUUID()] === "LEADER"
+            this.inParty = inParty
+            this.isLeader = inParty && members[Player.getUUID()] === "LEADER"
         })
         
         new Event("serverConnect", this._request.bind(this))
 
-        new Event("serverChat", () => this._inParty = this._isLead = false, new RegExp(`^${DISBAND_PARTY_REGEXES.join("|")}$`))
-        new Event("serverChat", () => this._isLead = this._isLead || !this._inParty, START_PARTY_REGEX)
-        new Event("serverChat", (leader) => this._isLead = Player.getName() === leader.removeFormatting(), TRANSFER_PARTY_REGEX)
+        new Event("serverChat", () => this.inParty = this.isLeader = false, new RegExp(`^${DISBAND_PARTY_REGEXES.join("|")}$`))
+        new Event("serverChat", () => this.isLeader = this.isLeader || !this.inParty, START_PARTY_REGEX)
+        new Event("serverChat", (leader) => this.isLeader = Player.getName() === leader.removeFormatting(), TRANSFER_PARTY_REGEX)
         
         if (World.isLoaded()) this._request()
 	}
@@ -39,9 +39,5 @@ export default new class Party {
         if (!SERVER_IP_REGEX.test(Server.getIP())) return
 
         scheduleTask(ModAPI.requestPartyInfo.bind(ModAPI), Seconds.of(2))
-    }
-
-    isLeader() {
-        return this._isLead
     }
 }

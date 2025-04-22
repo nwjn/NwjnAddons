@@ -1,8 +1,7 @@
 import ConfigProperty from "../../data/ConfigProperty"
 import Feature from "../../libs/Features/Feature"
-import { ColorContainer } from "../../libs/Render/ColorContainer"
 import RenderHelper from "../../libs/Render/RenderHelper"
-import { renderAABBOutline, renderAABBFilled } from "../../../Apelles"
+import { renderAABBOutline, renderAABBFilled } from "../../../Apelles/index"
 
 const setting = new ConfigProperty("Switch", {
     category: "General",
@@ -17,24 +16,22 @@ const color = new ConfigProperty("ColorPicker", {
     title: "Highlight Color",
     description: "Sets the color for block highlight",
     value: [255, 190, 239, 255],
-    shouldShow: data => data.BlockHighlight,
-    registerListener: (_, v) => {
-        print(v.join())
-        color.packedInt = ColorContainer.toHex(v)
-        print(color.packedInt)
-    }
+    shouldShow: data => data.BlockHighlight
 })
 
-new class BlockHighlight extends Feature {
+new class extends Feature {
     constructor() {
         super({setting})
 
         this.addEvent(net.minecraftforge.client.event.DrawBlockHighlightEvent, this.onBlockHighlight.bind(this))
     }
 
-    /** @Event {net.minecraftforge.client.event.DrawBlockHighlightEvent} */
+    /**
+     * @Event net.minecraftforge.client.event.DrawBlockHighlightEvent
+     */
     onBlockHighlight(event) {
         const { target } = event
+        cancel(event)
         if (target?./* typeOfHit */field_72313_a?.toString() !== "BLOCK") return
         
         const BlockPos = target./* getBlockPos */func_178782_a()
@@ -50,13 +47,12 @@ new class BlockHighlight extends Feature {
         
         // RenderUtil.drawFilledOutline(BlockBounds, this.Color, false, 6, false)
         const [mX, mY, mZ, MX, MY, MZ] = RenderHelper.getAxisCoords(BlockBounds)
-        // renderAABBFilled(0xffbeef4d, mX, mY, mZ, MX, MY, MZ)
-        // renderAABBOutline(0xffbeefff, mX, mY, mZ, MX, MY, MZ)
-        cancel(event)
+
+        renderAABBOutline(color.packedInt, mX, mY, mZ, MX, MY, MZ, {lw: 6, smooth: true, cull: false})   
+        renderAABBFilled(color.packedIntScaled, mX, mY, mZ, MX, MY, MZ, {cull: false})
     }
+
     postInit() {
-        print(color.value.join())
-        color.packedInt = ColorContainer.toHex(color.value)
-        print(color.packedInt)
+        color.trackColor()
     }
 }

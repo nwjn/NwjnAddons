@@ -1,8 +1,8 @@
 /** 
- * Virtually entire class taken from:
+ * Modified from:
  * @author DocilElm
- * @license {GNU-GPL-3} https://github.com/DocilElm/Doc/blob/main/LICENSE
- * @credit https://github.com/DocilElm/Doc/blob/main/core/Event.js
+ * @credit https://github.com/DocilElm/tska/blob/main/event/Event.js
+ * @license {GNU-GPL-3} https://github.com/DocilElm/tska/blob/main/LICENSE
  */
 
 import { getEvent } from "./EventMap"
@@ -10,15 +10,15 @@ import { getEvent } from "./EventMap"
 export default class Event {
     /**
      * Register Handler for events
-     * @param {String|JavaTPath["net.minecraftforge.fml.common.eventhandler.Event"]} triggerType 
+     * @param {string|JavaTPath["net.minecraftforge.fml.common.eventhandler.Event"]} triggerType 
      * @param {(...args) => void} method 
-     * @param {any} arg
-     * @param {Boolean} orphan
+     * @param {?object} modifiers
+     * @param {?boolean} orphan
      */
-    constructor(triggerType, method, args = null, orphan = true) {
+    constructor(triggerType, method, modifiers = {}, orphan = true) {
         // Register event from correct source
-        this._event = getEvent(triggerType, method, args)
-        if (orphan) return this._event.register()
+        this.event = getEvent(triggerType, method, modifiers)
+        if (orphan) return this.event.register()
 
         this.isRegistered = false
     }
@@ -30,7 +30,7 @@ export default class Event {
     register() {
         if (this.isRegistered) return this
 
-        this._event.register()
+        this.event.register()
         this.isRegistered = true
 
         return this
@@ -43,7 +43,7 @@ export default class Event {
     unregister() {
         if (!this.isRegistered) return this
 
-        this._event.unregister()
+        this.event.unregister()
         this.isRegistered = false
 
         return this

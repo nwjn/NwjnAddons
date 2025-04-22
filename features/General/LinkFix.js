@@ -6,11 +6,24 @@
 
 import Feature from "../../libs/Features/Feature"
 import TextUtil from "../../libs/Helper/TextUtil"
-import { Field } from "../../libs/Helper/Reflect"
+import { Field } from "../../../tska/reflection/Field"
+import ConfigProperty from "../../data/ConfigProperty"
 
+const setting = new ConfigProperty("Switch", {
+    category: "General",
+    configName: "LinkFix",
+    title: "§e✯§r §bLink Fix",
+    description: "Encodes and Decodes Links to allow sending and viewing for those with the mod",
+    value: true
+})
+
+const SENT_URL_REGEX = /([a-z\d]{2,}:\/\/[-\w.]+\.[a-z]{2,}\/(?:$|\S+\.\w+|\S+))/
+const RECEIVE_URL_REGEX =  / (l\$(?:h|H)?\d+\|\S+)/
+const ENCODED_PARTS_REGEX = /^(l\$(\S)?(\S)?(\d+)\|(\S+))$/
+const DECODED_PARTS_REGEX = /^(([a-z\d]{2,}:\/\/)([-\w.]+\.[a-z]{2,})(\/\S*))$/
 new class LinkFix extends Feature {
     constructor() {
-        super({setting: this.constructor.name})
+        super({setting})
 
         this.textField = new Field(net.minecraft.util.ChatComponentText, /* text */"field_150267_b")
 
@@ -34,36 +47,35 @@ new class LinkFix extends Feature {
 
         this.charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-        this.addEvent(
-            "messageSent", 
-            this.onSendLink.bind(this)
-        )
-        
-        this.addEvent(
-            "serverChat", 
-            this.onEncodedSent.bind(this),
-            / (l\$(?:h|H)?\d+\|\S+)/
-        )
-
-        this.init()
+        this.addEvent("messageSent", this.onSendLink.bind(this), {
+            setCriteria: SENT_URL_REGEX
+        })
+        this.addEvent("serverChat", this.onEncodedReceive.bind(this), {
+            setCriteria: RECEIVE_URL_REGEX
+        })
     }
 
-    onSendLink(msg, event) {
-        const [link] = TextUtil.getMatches(/([a-z\d]{2,}:\/\/[-\w.]+\.[a-z]{2,}\/(?:$|\S+\.\w+|\S+))/, msg)
-        if (!link) return
-
+    /**
+     * @Event MessageSent
+     * @Modifier /([a-z\d]{2,}:\/\/[-\w.]+\.[a-z]{2,}\/(?:$|\S+\.\w+|\S+))/
+     */
+    onSendLink(link, { message, event }) {
         const encoded = this.encode(link)
         if (!encoded) return
 
         cancel(event)
-        ChatLib.say(msg.replace(link, encoded))
+        ChatLib.say(message.replace(link, encoded))
     }
 
-    onEncodedSent(url, _, __, component) {
+    /**
+     * @Event ServerChat
+     * @Modifier / (l\$(?:h|H)?\d+\|\S+)/
+     */
+    onEncodedReceive(url, { chatComponent }) {
         const decoded = this.decode(url)
         if (!decoded) return
 
-        component./* getSiblings */func_150253_a().some(comp => {
+        chatComponent./* getSiblings */func_150253_a().some(comp => {
             const text = this.textField.get(comp)
             if (!text?.includes(url)) return
 
@@ -79,7 +91,7 @@ new class LinkFix extends Feature {
     }
 
     decode(encoded) {
-        const [matched, scheme, extension, dots, body] = TextUtil.getMatches(/^(l\$(\S)?(\S)?(\d+)\|(\S+))$/, encoded)
+        const [matched, scheme, extension, dots, body] = TextUtil.getMatches(ENCODED_PARTS_REGEX, encoded)
         if (!matched) return
 
         const dotsLen = 9 - dots.length
@@ -103,7 +115,7 @@ new class LinkFix extends Feature {
     encode(url) {
         let encoded = "l$"
     
-        const [matched, scheme, host, dir] = TextUtil.getMatches(/^(([a-z\d]{2,}:\/\/)([-\w.]+\.[a-z]{2,})(\/\S*))$/, url)
+        const [matched, scheme, host, dir] = TextUtil.getMatches(DECODED_PARTS_REGEX, url)
         if (!matched) return
 
         const prefix = (encoded == (encoded += this.schemes[scheme] ?? "")) ? scheme : ""
