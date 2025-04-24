@@ -21,13 +21,22 @@ export default class ConfigProperty {
      * @param {*} obj 
      */
     constructor (type, obj) {
+        this.type = type
         this.configName = obj.configName
         if (type) defCon1[`add${type}`](obj)
 
+        // Custom functionality
         if (type === "MultiCheckbox") {
             obj.options.forEach(opt => 
-                this[opt.configName] = new this(null, opt)
+                this[opt.configName] = new ConfigProperty(null, opt)
             )
+        }
+        else if (type == "ColorPicker") {
+            this.packed = 0xffffffff
+            this.dulled = 0xffffff33
+            this.shifted = 0xffffffff
+
+            obj.registerListener = ((_, v) => this.update(v))
         }
     }
 
@@ -35,18 +44,14 @@ export default class ConfigProperty {
         return ConfigProperty.getSettings()?.[this.configName]
     }
 
-    /**
-     * Call in postInit to track and pack a ColorPicker's value as a packed int
-     * @param {?number} scale if specified, also packs a scaled copy of the int
-     */
-    trackColor(scale = null) {
-        this.packedInt = NumUtil.toRGBAHex(this.value)
-        if (scale) this.packedIntScaled = NumUtil.scaleAlpha(this.packedInt, scale)
+    update(anyArg) {
+        if (this.type == "ColorPicker") {
+            const hex = NumUtil.toRGBAHex(anyArg ?? this.value)
 
-        this._registerListener((_, v) => {
-            this.packedInt = NumUtil.toRGBAHex(v)
-            if (scale) this.packedIntScaled = NumUtil.scaleAlpha(this.packedInt, scale)
-        })
+            this.packed = hex
+            this.dulled = NumUtil.scaleAlphaOffset(hex, 0.2)
+            this.shifted = NumUtil.rgbaToARGB(hex)
+        }
     }
 
     /**
