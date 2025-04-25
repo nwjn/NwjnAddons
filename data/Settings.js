@@ -27,31 +27,6 @@ new ConfigProperty("Button", {
     description: "Send feedback including suggestions and bug-reports!",
     onClick: () => Nwjn.openLink("https://discord.com/invite/3S3wXpC4gE")
 })
-
-// .addSwitch({
-//     category: "General",
-//     configName: "ChatWaypoints",
-//     title: "Draw Chat Waypoints",
-//     description: "Creates waypoints taken from chat messages in patcher sendcoords format",
-//     value: false
-// })
-// .addColorPicker({
-//     category: "General",
-//     configName: "ChatWaypointsColor",
-//     title: "➤ Waypoint Color",
-//     description: "     Sets the color for waypoints",
-//     value: [255, 190, 239, 200],
-//     shouldShow: data => data.ChatWaypoints
-// })
-// .addSlider({
-//     category: "General",
-//     configName: "ChatWaypointsTime",
-//     title: "➤ Waypoint Time",
-//     description: "     The amount of seconds waypoints should stay",
-//     options: [30, 90],
-//     value: 120,
-//     shouldShow: data => data.ChatWaypoints
-// })
 // .addSwitch({
 //     category: "General",
 //     configName: "PartyCommands",
@@ -228,8 +203,11 @@ new ConfigProperty("Button", {
 
 // add lihua in top left
 export const initSettings = () => {
+    const categories = ["Home", "General", "Bestiary", "Combat", "Kuudra", "Mining", "Performance"]
+
     const meinConf = new Settings("Nwjn", ConfigProperty.getDefaultConfig(), "data/Scheme.json", `              ${Nwjn.BANNER}`)
         .setClickSound(() => World.playSound("gui.button.press", 0.25, 1))
+        .setCategorySort((a, b) => categories.indexOf(a) - categories.indexOf(b))
 
     const { background, descriptionElement, searchBar, apply } = meinConf.AmaterasuGui
 
