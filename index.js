@@ -23,7 +23,6 @@ let module = void function requireFeatures(file) {
     modules.push(relativeDest + match[1].replace(fileSeparator, "/"))
 }(new java.io.File(`${Config.modulesFolder}/Nwjn/features`))
 
-while (module = modules.pop()) 
-    require(module)
+for (module of modules) require(module)
 
 Feature.initFeatures()
