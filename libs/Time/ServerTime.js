@@ -73,9 +73,9 @@ let tick = 0, lastSec = 0
 export const getTPS = () => MathLib.clampFloat(history.reduce((a,b) => a+b) / 5, 0, 20).toFixed(2)
 
 new Event("serverTick", () => {
-    scheduledTasks.forEach(tick => tick.setValue(tick.getValue() - 1))
-    countdowns.forEach(tick => tick.setValue(tick.getValue() - 1))
-    timers.forEach(tick => tick.setValue(tick.getValue() + 1))
+    scheduledTasks.forEach(tick => tick.value--)
+    countdowns.forEach(tick => tick.value--)
+    timers.forEach(tick => tick.value++)
 
     if (tick++ % 20) return
     history.push(20000 / (-lastSec + (lastSec = Date.now())))

@@ -1,4 +1,4 @@
-import { addCommand } from "../../utils/Command"
+import { addCommand } from "../../libs/Helper/Command"
 import NumUtil from "../Helper/NumUtil"
 
 const FontRenderer = Renderer.getFontRenderer()
@@ -82,7 +82,7 @@ new class GuiEditor {
         GlStateManager./* enableTexture2D */func_179098_w()
         GlStateManager./* disableBlend */func_179084_k()
         
-        const argb = NumUtil.rgbaToARGB(feat.color.packetInt) | 0
+        const argb = feat.color.shifted | 0
         for (let i = 0; i < lines.length; i++) 
             FontRenderer./* drawString */func_175065_a(lines[i], ox, oy + 1 + i * 9, argb, true)
         Renderer.retainTransforms(false)

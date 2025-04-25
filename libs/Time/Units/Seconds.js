@@ -2,21 +2,29 @@ export default class Seconds {
     /** @override */ onChange(value) {}
 
     static of(value) {
-        if (typeof(value) === "number") return new this(value)
-        return new this(value?.toSeconds())
+        if (typeof(value) === "number") return new Seconds(value)
+        return new Seconds(value?.toSeconds())
     }
 
     constructor(seconds) {
-        this.value = ~~seconds
+        this.val = seconds | 0
     }
 
-    toTicks = () => this.value * 20
+    toTicks() {
+        return this.val * 20
+    }
 
-    getValue = () => this.value
+    get value() {
+        return this.val
+    }
 
-    setValue(seconds) {
-        this.value = seconds
+    set value(seconds) {
+        this.val = seconds
 
-        this.onChange(this.value)
+        this.onChange(seconds)
+    }
+
+    valueOf() {
+        return this.val
     }
 }

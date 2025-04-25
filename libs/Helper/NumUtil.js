@@ -61,8 +61,8 @@ export default class NumUtil {
              + array[3] * 0x1
     }
 
-    static scaleAlpha(hex, scale) {
-        return hex - ~~((hex & 0xff) * (1 - scale))
+    static scaleAlphaOffset(hex, scaleFactor) {
+        return hex - (hex & 0xff) * (1 - scaleFactor)
     }
 
     static rgbaToARGB(hex) {

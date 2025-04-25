@@ -2,21 +2,29 @@ export default class Ticks {
     /** @override */ onChange(value) {}
 
     static of(value) {
-        if (typeof(seconds) === "number") return new this(value)
-        return new this(value?.toTicks())
+        if (typeof(value) === "number") return new Ticks(value)
+        return new Ticks(value?.toTicks())
     }
 
     constructor(ticks) {
-        this.value = ~~ticks
+        this.val = ticks | 0
     }
 
-    toSeconds = () => this.value * 0.05
+    toSeconds() {
+        return this.val * 0.05
+    }
 
-    getValue = () => this.value
+    get value() {
+        return this.val
+    }
 
-    setValue(value) {
-        this.value = value
+    set value(ticks) {
+        this.val = ticks
 
-        this.onChange(this.value)
+        this.onChange(ticks)
+    }
+
+    valueOf() {
+        return this.val
     }
 }
