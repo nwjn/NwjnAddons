@@ -3,8 +3,8 @@
 // import "./libs/Helper/Command"
 // import "./utils/Location"
 // import "./utils/Party"
-import "./utils/Profile"
-import "./libs/Time/ServerTime"
+// import "./utils/Profile"
+// import "./libs/Time/ServerTime"
 
 // Handles loading all Feature files because I was too lazy to type them all out
 import Feature from "./libs/Features/Feature"
