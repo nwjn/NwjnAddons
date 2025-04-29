@@ -47,12 +47,8 @@ new class LinkFix extends Feature {
 
         this.charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-        this.addEvent("messageSent", this.onSendLink.bind(this), {
-            setCriteria: SENT_URL_REGEX
-        })
-        this.addEvent("serverChat", this.onEncodedReceive.bind(this), {
-            setCriteria: RECEIVE_URL_REGEX
-        })
+        this.addEvent("MessageSent", this.onSendLink.bind(this), { setCriteria: SENT_URL_REGEX })
+        this.addEvent("ServerChat", this.onEncodedReceive.bind(this), { setCriteria: RECEIVE_URL_REGEX })
     }
 
     /**

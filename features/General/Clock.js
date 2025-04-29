@@ -1,5 +1,4 @@
 import GuiFeature from "../../libs/Features/GuiFeature"
-import Seconds from "../../libs/Time/Units/Seconds"
 import ConfigProperty from "../../data/ConfigProperty"
 
 const category = "General"
@@ -24,18 +23,16 @@ const color = new ConfigProperty("ColorPicker", {
 
 new class extends GuiFeature {
     constructor() {
-        super({setting, color}, ["1:23 AM"])
+        super({setting, color}, ["1:23:34 AM"])
 
-        this.formatter = new java.text.SimpleDateFormat("hh:mm a", java.util.Locale.US)
+        this.formatter = new java.text.SimpleDateFormat("hh:mm:ss a", java.util.Locale.US)
 
-        this.addEvent("step", this.onInterval.bind(this), {
-            setDelay: Seconds.of(1).getValue()
-        })
+        this.addEvent("Step", this.onInterval.bind(this), { setFps: 1 })
     }
 
     /**
      * @Event Step
-     * @Modifier Seconds.of(1)
+     * @Modifier 1 FPS
      */
     onInterval() {
         const formattedNow = this.formatter.format(Date.now())
@@ -44,5 +41,9 @@ new class extends GuiFeature {
 
     onEnabled() {
         this.onInterval()
+    }
+
+    postInit() {
+        color.update()
     }
 }

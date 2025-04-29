@@ -2,7 +2,6 @@ import MobUtil from "../../libs/Helper/MobUtil"
 import Feature from "../../libs/Features/Feature"
 import ConfigProperty from "../../data/ConfigProperty"
 
-
 const setting = new ConfigProperty("Switch", {
     category: "Performance",
     subcategory: "Death Clutter",
@@ -16,15 +15,13 @@ new class extends Feature {
     constructor() {
         super({setting})
         
-        this.addEvent(net.minecraftforge.event.entity.living.LivingDeathEvent, this.onEntityDeath.bind(this))
-        this.addEvent("packetReceived", this.onSkyblockNameDeath.bind(this), {
-            setFilteredClass: net.minecraft.network.play.server.S1CPacketEntityMetadata
-        })
+        this.addEvent("LivingDeath", this.onEntityDeath.bind(this))
+        this.addEvent("PacketReceived", this.onSkyblockNameDeath.bind(this), { setFilteredClass: "EntityMetadata" })
     }
 
     /**
      * @Event PacketReceived
-     * @Modifier net.minecraft.network.play.server.S1CPacketEntityMetadata
+     * @Modifier EntityMetadata
      */
     onSkyblockNameDeath(packet) {
         // Nametag changes always have only one watcher
@@ -36,7 +33,7 @@ new class extends Feature {
     }
 
     /**
-     * @Event net.minecraftforge.event.entity.living.LivingDeathEvent
+     * @Event LivingDeath
      */
     onEntityDeath({entity}) {
         MobUtil.removeEntity(entity)

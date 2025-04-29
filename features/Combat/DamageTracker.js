@@ -13,14 +13,12 @@ new class extends Feature {
     constructor() {
         super({setting})
 
-        this.addEvent("packetReceived", this.onSkyblockDamageSplash.bind(this), {
-            setFilteredClass: net.minecraft.network.play.server.S0FPacketSpawnMob
-        })
+        this.addEvent("PacketReceived", this.onSkyblockDamageSplash.bind(this), { setFilteredClass: "SpawnMob" })
     }
 
     /**
      * @Event PacketReceived
-     * @Modifier net.minecraft.network.play.server.S0FPacketSpawnMob
+     * @Modifier SpawnMob
      */
     onSkyblockDamageSplash(packet) {
         // ArmorStand EntityType is 30

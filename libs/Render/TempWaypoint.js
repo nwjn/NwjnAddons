@@ -1,7 +1,7 @@
 import Seconds from "../Time/Units/Seconds"
 import {scheduleTask} from "../Time/ServerTime"
-import { renderBeacon, renderBoxFilled, renderBoxOutline } from "../../../Apelles"
 import RenderUtil from "./RenderUtil"
+import { renderBeacon, renderBoxFilled, renderBoxOutline } from "../../../Apelles"
 
 export default class Waypoint {
     static renderWaypoint(text, x, y, z, color) {

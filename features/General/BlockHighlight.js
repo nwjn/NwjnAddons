@@ -1,7 +1,6 @@
+import { renderMCAABBFilled, renderMCAABBOutline } from "../../../Apelles"
 import ConfigProperty from "../../data/ConfigProperty"
 import Feature from "../../libs/Features/Feature"
-import RenderHelper from "../../libs/Render/RenderHelper"
-import { renderAABBOutline, renderAABBFilled } from "../../../Apelles/index"
 
 const setting = new ConfigProperty("Switch", {
     category: "General",
@@ -23,11 +22,11 @@ new class extends Feature {
     constructor() {
         super({setting})
 
-        this.addEvent(net.minecraftforge.client.event.DrawBlockHighlightEvent, this.onBlockHighlight.bind(this))
+        this.addEvent("DrawBlockHighlight", this.onBlockHighlight.bind(this))
     }
 
     /**
-     * @Event net.minecraftforge.client.event.DrawBlockHighlightEvent
+     * @Event DrawBlockHighlight
      */
     onBlockHighlight(event) {
         const { target } = event
@@ -44,15 +43,12 @@ new class extends Feature {
         const Block = BlockState./* getBlock */func_177230_c()
         Block./* setBlockBoundsBasedOnState */func_180654_a(world, BlockPos)
         const BlockBounds = Block./* getSelectedBoundingBox */func_180646_a(world, BlockPos)
-        
-        // RenderUtil.drawFilledOutline(BlockBounds, this.Color, false, 6, false)
-        const [mX, mY, mZ, MX, MY, MZ] = RenderHelper.getAxisCoords(BlockBounds)
 
-        renderAABBOutline(color.packedInt, mX, mY, mZ, MX, MY, MZ, {lw: 6, smooth: true, cull: false})   
-        renderAABBFilled(color.packedIntScaled, mX, mY, mZ, MX, MY, MZ, {cull: false})
+        renderMCAABBOutline(color.packed, BlockBounds, {lw: 4, smooth: true, cull: false})   
+        renderMCAABBFilled(color.dulled, BlockBounds, {cull: false})
     }
 
     postInit() {
-        color.trackColor()
+        color.update()
     }
 }

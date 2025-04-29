@@ -9,10 +9,8 @@
  * @credit https://github.com/PerseusPotter/chicktils/blob/master/util/draw.js
  */
 
-import { getRenderX, getRenderY, getRenderZ } from "../../../Apelles"
+import { getRenderX, getRenderY, getRenderZ } from "../../../Apelles/index"
 const MCTessellator = net.minecraft.client.renderer.Tessellator./* getInstance */func_178181_a()
-const DefaultVertexFormats = net.minecraft.client.renderer.vertex.DefaultVertexFormats
-const DefaultVertexFormats$POSITION = DefaultVertexFormats./* POSITION */field_181705_e
 const WorldRenderer = MCTessellator./* getWorldRenderer */func_178180_c()
 
 export default class RenderUtil {
@@ -66,7 +64,7 @@ export default class RenderUtil {
 
         if (renderBlackBox) {
             Tessellator.colorize(0, 0, 0, 0.25)
-            WorldRenderer./* begin */func_181668_a(5, DefaultVertexFormats$POSITION)
+            WorldRenderer./* begin */func_181668_a(5, net.minecraft.client.renderer.vertex.DefaultVertexFormats./* POSITION */field_181705_e)
             WorldRenderer./* pos */func_181662_b(-maxWidth, -1, -1)./* endVertex */func_181675_d()
             WorldRenderer./* pos */func_181662_b(-maxWidth, height, -1)./* endVertex */func_181675_d()
             WorldRenderer./* pos */func_181662_b(maxWidth, -1, -1)./* endVertex */func_181675_d()

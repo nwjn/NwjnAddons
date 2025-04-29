@@ -14,9 +14,7 @@ new class extends Feature {
     constructor() {
         super({setting})
 
-        this.addEvent("actionBarChange", this.onSkyblockXpGained.bind(this), {
-            setCriteria: XP_GAIN_REGEX
-        })
+        this.addEvent("ActionBarChange", this.onSkyblockXpGained.bind(this), { setCriteria: XP_GAIN_REGEX })
     }
 
     /**

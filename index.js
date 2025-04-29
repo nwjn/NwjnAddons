@@ -9,7 +9,7 @@
 // Handles loading all Feature files because I was too lazy to type them all out
 import Feature from "./libs/Features/Feature"
 
-let pathFinder = /Nwjn[\/\\]features[\/\\](.+[\/\\]\.?\w+)\.js$/
+let pathFinder = /Nwjn[\/\\]features[\/\\](.+[\/\\]\w+)\.js$/
 let fileSeparator = /\\/g
 let relativeDest = "./features/"
 

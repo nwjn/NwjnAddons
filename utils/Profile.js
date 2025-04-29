@@ -1,4 +1,3 @@
-import TextUtil from "../libs/Helper/TextUtil"
 import Event from "../libs/Events/Event"
 import Data from "../data/Data"
 import { scheduleTask } from "../libs/Time/ServerTime"
@@ -7,25 +6,17 @@ import { addCommand } from "../libs/Helper/Command"
 import Nwjn from "../libs/Helper/Nwjn"
 
 // [Power Stone]
-new Event(
-    "serverChat", 
-    (stone) => Data.power = stone, 
-    /^You selected the (.+) power for your Accessory Bag!$/,
-    true
-)
+new Event("serverChat", (stone) => Data.power = stone, {
+    setCriteria: /^You selected the (.+) power for your Accessory Bag!$/
+})
 
 // [Enrichments]
-new Event(
-    "serverChat", 
-    (volume, stat) => Data.enrich = `${volume} ${stat}`, 
-    /^Swapped (\d{1,3}) enrichments to (.+)!$/,
-    true
-)
+new Event("serverChat", (volume, stat) => Data.enrich = `${volume} ${stat}`, {
+    setCriteria: /^Swapped (\d{1,3}) enrichments to (.+)!$/
+})
 
 // [Tunings + Magical Power]
-new Event("containerClick", (window) => {
-    if (window !== "Stats Tuning") return
-
+new Event("containerClick", () => {
     scheduleTask(() => {
         const lore = Player.getContainer()?.getStackInSlot(4)?.getLore()?.join("\n")?.removeFormatting()
         if (!lore) return
@@ -33,10 +24,12 @@ new Event("containerClick", (window) => {
         const tuning = lore.match(/\+(\d+.) /g)
         Data.tuning = tuning?.join(" ") ?? "Unknown"
 
-        const [magPow] = TextUtil.getMatches(/Magical Power: (.+)/, lore)
+        const magPow = lore.match(/Magical Power: ([\d,]+)/g)
         Data.mp = magPow ?? "Unknown"
     }, Ticks.of(2))
-}, null, true)
+}, {
+    setCriteria: /^Stats Tuning$/
+})
 
 // Credit: DocilElm for blacklist
 const INVALID = () => Nwjn.chat("&cInvalid. &a[Add] and [remove] need a name entry. [List] and [clear] do not.")

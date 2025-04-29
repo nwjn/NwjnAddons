@@ -57,20 +57,13 @@ new class extends Feature {
             77 // Leash
         ])
 
-        this.addEvent("packetReceived", this.onSpawnObject.bind(this), {
-            setFilteredClass: net.minecraft.network.play.server.S0EPacketSpawnObject
-        })
-        this.addEvent("packetReceived", this.onStupidPacket.bind(this), { 
-            setFilteredClasses: [
-                net.minecraft.network.play.server.S10PacketSpawnPainting, 
-                net.minecraft.network.play.server.S11PacketSpawnExperienceOrb
-            ]
-        })
+        this.addEvent("PacketReceived", this.onSpawnObject.bind(this), { setFilteredClass: "SpawnObject" })
+        this.addEvent("PacketReceived", this.onStupidPacket.bind(this), { setFilteredClasses: ["SpawnPainting", "SpawnExperienceOrb"] })
     }
 
     /**
      * @Event PacketReceived
-     * @Modifier net.minecraft.network.play.server.S0EPacketSpawnObject
+     * @Modifier SpawnObject
      */
     onSpawnObject(packet, event) {
         if (this.blacklist.has(packet./* getType */func_148993_l())) cancel(event)
@@ -78,7 +71,7 @@ new class extends Feature {
 
     /**
      * @Event PacketReceived
-     * @Modifier [net.minecraft.network.play.server.S10PacketSpawnPainting, net.minecraft.network.play.server.S11PacketSpawnExperienceOrb]
+     * @Modifier [SpawnPainting, pawnExperienceOrb]
      */
     onStupidPacket(_, event) {
         cancel(event)

@@ -2,11 +2,9 @@ import Nwjn from "../../libs/Helper/Nwjn"
 import NumUtil from "../../libs/Helper/NumUtil"
 import MobUtil from "../../libs/Helper/MobUtil"
 import Feature from "../../libs/Features/Feature"
-import RenderHelper from "../../libs/Render/RenderHelper"
+import RenderUtil from "../../libs/Render/RenderUtil"
 import ConfigProperty from "../../data/ConfigProperty"
-
-import { Field } from "../../../tska/reflection/Field"
-import { renderAABBOutline } from "../../../Apelles/index"
+import { getEntity } from "../../libs/Helper/ClassReference"
 
 const setting = new ConfigProperty("TextInput", {
     category: "Bestiary",
@@ -29,51 +27,57 @@ new class extends Feature {
         super({setting})
 
         this.RenderList = new java.util.WeakHashMap()
-        this.StringToClassMap = new HashMap()
         this.Whitelist = new HashMap()
+        this.lastUpdate = Date.now()
 
-        // Make a copy of mappings with modified keys
-        Field.getFieldValue(net.minecraft.entity.EntityList, /* stringToClassMapping */"field_75625_b")
-            .forEach((str, cls) => this.StringToClassMap.put(str.toLowerCase(), cls))
+        this.addEvent("EntityJoin", this.recordEntities.bind(this))
+        this.addEvent("EntityDeath", this.onEntityDeath.bind(this))
 
-        this.addEvent("entityJoin", this.onEntityJoin.bind(this))
-        this.addEvent(net.minecraftforge.event.entity.living.LivingDeathEvent, this.onEntityDeath.bind(this))
-        this.addEvent("worldUnload", () => this.RenderList.clear())
-
-        this.addSubEvent("renderWorld", this.onRender.bind(this), () => !this.RenderList.isEmpty())
+        this.addSubEvent("RenderLiving.Pre", this.onRender.bind(this), () => !this.RenderList.isEmpty())
     }
 
-    /**
-     * @Event net.minecraftforge.event.entity.EntityJoinWorldEvent 
-     */
-    onEntityJoin({entity}) {
-        if (this.RenderList.containsKey(entity)) return
+    recordEntities() {
+        if (Date.now() - this.lastUpdate < 500) return
 
-        const entClass = entity.class
-        const isWhitelisted = this.Whitelist.containsKey(entClass)
-        if (!isWhitelisted) return
+        this.lastUpdate = Date.now()
+        this.RenderList.clear()
 
-        const healthList = this.Whitelist.get(entClass)
-        if (typeof(healthList) === "boolean" || healthList?.includes(MobUtil.getMaxHP(entity))) {
-            this.RenderList.put(entity, true)
-            this.update()
-        }
-    }
+        World.getWorld()./* loadedEntityList */field_72996_f.forEach(entity => {
+            if (this.RenderList.containsKey(entity)) return
 
-    /**
-     * @Event RenderWorld
-     */
-    onRender() {
-        this.RenderList.forEach(entity => {
-            if (entity./* isInvisible */func_82150_aj()) return
-
-            const [mX, mY, mZ, MX, MY, MZ] = RenderHelper.getAxisCoords(entity./* getEntityBoundingBox */func_174813_aQ())
-            renderAABBOutline(color.packedInt, mX, mY, mZ, MX, MY, MZ, { lw: 1, smooth: true, cull: true })
+            const entClass = entity.class
+            const isWhitelisted = this.Whitelist.containsKey(entClass)
+            if (!isWhitelisted) return
+    
+            const healthList = this.Whitelist.get(entClass)
+            if (typeof(healthList) === "boolean" || healthList?.includes(MobUtil.getMaxHP(entity))) {
+                this.RenderList.put(
+                    entity, 
+                    [
+                        Math.max(entity./* width */field_70130_N, 0.3), 
+                        Math.max(entity./* height */field_70131_O, 0.3)
+                    ]
+                )
+            }
         })
+        
+        this.update()
     }
 
     /**
-     * @Event net.minecraftforge.event.entity.living.LivingDeathEvent
+     * @Event RenderLivingEvent.Pre
+     */
+    onRender({entity, x, y, z}) {
+        if (entity./* isInvisible */func_82150_aj()) return
+
+        const [ width, height] = this.RenderList.get(entity)
+        if (!width || !height) return
+
+        RenderUtil.renderBoxOutline(color.packed, x, y, z, width, height, { centered: true, lw: 2, smooth: true })
+    }
+
+    /**
+     * @Event EntityDeath
      */
     onEntityDeath({entity}) {
         this.RenderList.remove(entity)
@@ -87,7 +91,7 @@ new class extends Feature {
             const [name, params] = entry.split("-")
     
             if (!name) return
-            const clazz = this.StringToClassMap.get(name.toLowerCase())
+            const clazz = getEntity(name.toUpperCase())
             if (!clazz) return Nwjn.edit(`§cEntity class called §b§l${name}§r§c is unknown. Read https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`, 28500 + idx)
             if (World.isLoaded()) ChatLib.deleteChat(28500 + idx)
     
@@ -98,21 +102,20 @@ new class extends Feature {
                 hps ?? true
             )
         })
-    
-        // Loads pre-existing entities
-        World.getAllEntities()?.forEach(this.onEntityJoin.bind(this))
-
-        this.update()
     }
 
-    onDisabled() {
+    onUnregister() {
         this.RenderList.clear()
+        this.update()
+    }
+    
+    onDisabled() {
         this.Whitelist.clear()
     }
 
     postInit() {
         ConfigProperty.getConfig().onCloseGui(this.onEnabled.bind(this))
 
-        color.trackColor()
+        color.update()
     }
 }
