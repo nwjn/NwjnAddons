@@ -10,8 +10,8 @@ import { getEvent } from "./EventMap"
 export default class Event {
     /**
      * Register Handler for events
-     * @param {string|JavaTPath["net.minecraftforge.fml.common.eventhandler.Event"]} triggerType 
-     * @param {(...args) => void} method 
+     * @param {string} triggerType 
+     * @param {Function} method 
      * @param {?object} modifiers
      * @param {?boolean} orphan
      */

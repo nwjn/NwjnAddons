@@ -10,14 +10,28 @@ import Location from "../Hypixel/Location"
 import Event from "../Events/Event"
 import ConfigProperty from "../../data/ConfigProperty"
 
-const awaitingInit = []
+const feets = []
 
 export default class Feature {
     static initFeatures() {
-        let feet = initSettings()
+        new Thread(() => {
+            initSettings()
+    
+            for (let initFeat of feets) initFeat._postInit()
 
-        while (feet = awaitingInit.pop()) 
-            feet._postInit()
+            new Event("WorldLoad", () => {
+                for (let updateFeat of feets) updateFeat._updateRegister()
+            })
+            Location.onWorldChange((any) => {
+                if (any) 
+                    for (let worldChange of feets) worldChange._updateRegister()
+                else 
+                    for (let unloadFeat of feets) unloadFeat._unregister()
+            })
+            Location.onAreaChange(() => {
+                for (let zoneChange of feets) zoneChange.zones && zoneChange._updateRegister()
+            })
+        }).start()
     }
 
     /** @override Function called once settings have been initialized */ postInit() {}
@@ -43,11 +57,7 @@ export default class Feature {
         this.hasSetting = this.setting instanceof ConfigProperty
         this.isRegistered = false
 
-        // Will always update on world changes
-        Location.onWorldChange(this._updateRegister.bind(this))
-        if (this.zones) Location.onAreaChange(this._updateRegister.bind(this))
-
-        awaitingInit.push(this)
+        feets.push(this)
     }
 
     /** Add [Events] to run when this feature is registered */
