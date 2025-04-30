@@ -5,18 +5,31 @@ import ConfigProperty from "../../data/ConfigProperty"
 const setting = new ConfigProperty("Switch", {
     category: "Performance",
     subcategory: "Death Clutter",
-    configName: "DeathClutter",
+    configName: "enableDeathClutter",
     title: "§e✯§r §bRemove Dying Mobs and Names",
     description: "Fully kills the entity before it can perform the animation & removes the entity's nametag",
     value: true
+})
+const options = new ConfigProperty("MultiCheckbox", {
+    category: "Performance",
+    subcategory: "Death Clutter",
+    configName: "deathClutterOptions",
+    title: "➤ §e✯§r §bRemoval Customization",
+    description: "     Options to only delete entity, nametag, or both",
+    placeHolder: "Edit",
+    options: [
+        { title: "§e✯§r Dead Entities", configName: "deathClutterEntities", value: true },
+        { title: "§e✯§r Entity Nametag", configName: "deathClutterNametag", value: true }
+    ],
+    shouldShow: data => data.enableDeathClutter
 })
 
 new class extends Feature {
     constructor() {
         super({setting})
         
-        this.addEvent("LivingDeath", this.onEntityDeath.bind(this))
-        this.addEvent("PacketReceived", this.onSkyblockNameDeath.bind(this), { setFilteredClass: "EntityMetadata" })
+        this.addSubEvent("LivingDeath", this.onEntityDeath.bind(this), () => options.deathClutterEntities.value)
+        this.addSubEvent("PacketReceived", this.onSkyblockNameDeath.bind(this), { setFilteredClass: "EntityMetadata" }, () => options.deathClutterNametag.value)
     }
 
     /**
@@ -37,5 +50,10 @@ new class extends Feature {
      */
     onEntityDeath({entity}) {
         MobUtil.removeEntity(entity)
+    }
+
+    postInit() {
+        options.deathClutterEntities._registerListener(this.update.bind(this))
+        options.deathClutterNametag._registerListener(this.update.bind(this))
     }
 }
