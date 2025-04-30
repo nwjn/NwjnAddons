@@ -159,7 +159,7 @@ export const getEvent = (triggerType, method, modifiers) => {
     }
     else if (`register${triggerType}` in TriggerRegister) {
         trigger = register(type, method)
-        Object.entries(modifiers).forEach(([mod, val]) => mod in trigger && trigger[mod](val))
+        modifiers && Object.entries(modifiers).forEach(([mod, val]) => mod in trigger && trigger[mod](val))
     }
     else {
         trigger = register(type, method)
