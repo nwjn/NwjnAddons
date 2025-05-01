@@ -23,8 +23,7 @@ export default class ConfigProperty {
     constructor (type, obj) {
         this.type = type
         this.configName = obj.configName
-        if (type) defCon1[`add${type}`](obj)
-
+        
         // Custom functionality
         if (type === "MultiCheckbox") {
             obj.options.forEach(opt => 
@@ -35,9 +34,11 @@ export default class ConfigProperty {
             this.packed = 0xffffffff
             this.dulled = 0xffffff33
             this.shifted = 0xffffffff
-
+            
             obj.registerListener = ((_, v) => this.update(v))
         }
+        
+        if (type) defCon1[`add${type}`](obj)
     }
 
     get value() {
@@ -50,7 +51,7 @@ export default class ConfigProperty {
 
             this.packed = hex
             this.dulled = NumUtil.scaleAlphaOffset(hex, 0.2)
-            this.shifted = NumUtil.rgbaToARGB(hex)
+            this.shifted = NumUtil.rgbaToARGB(hex) | 0
         }
     }
 
