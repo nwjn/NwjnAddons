@@ -25,8 +25,7 @@ new class extends Feature {
         if (packet./* getEntityType */func_149025_e() !== 30) return
 
         const watchers = packet./* getWatcherList */func_149027_c()
-        for (let i = 0; i < watchers.length; i++) {
-            let watcher = watchers[i]
+        for (let watcher of watchers) {
             if (watcher./* getObjectType */func_75674_c() !== 4) continue
 
             let nametag = watcher./* getObject */func_75669_b()

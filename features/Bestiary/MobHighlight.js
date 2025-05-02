@@ -2,9 +2,9 @@ import Nwjn from "../../libs/Helper/Nwjn"
 import NumUtil from "../../libs/Helper/NumUtil"
 import MobUtil from "../../libs/Helper/MobUtil"
 import Feature from "../../libs/Features/Feature"
-import RenderUtil from "../../libs/Render/RenderUtil"
 import ConfigProperty from "../../data/ConfigProperty"
 import { getEntity } from "../../libs/Helper/ClassReference"
+import { renderBoxOutline } from "../../../Apelles"
 
 const setting = new ConfigProperty("TextInput", {
     category: "Bestiary",
@@ -67,13 +67,15 @@ new class extends Feature {
     /**
      * @Event RenderLivingEvent.Pre
      */
-    onRender({entity, x, y, z}) {
+    onRender({entity}) {
         if (entity./* isInvisible */func_82150_aj()) return
 
-        const [ width, height] = this.RenderList.get(entity)
-        if (!width || !height) return
+        const lookup = this.RenderList.get(entity)
+        if (!lookup) return
 
-        RenderUtil.renderBoxOutline(color.packed, x, y, z, width, height, { centered: true, lw: 2, smooth: true })
+        const [ width, height ] = lookup
+
+        renderBoxOutline(color.packed, entity.field_70165_t, entity.field_70163_u, entity.field_70161_v, width, height, { centered: true, lw: 2, smooth: true, cull: true })
     }
 
     /**
@@ -85,6 +87,7 @@ new class extends Feature {
     }
     
     onEnabled(value = setting.value) {
+        this.Whitelist.clear()
         this.RenderList.clear()
     
         value.split(/, ?/g).forEach((entry, idx) => {
@@ -95,18 +98,19 @@ new class extends Feature {
             if (!clazz) return Nwjn.edit(`§cEntity class called §b§l${name}§r§c is unknown. Read https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`, 28500 + idx)
             if (World.isLoaded()) ChatLib.deleteChat(28500 + idx)
     
-            const hps = params?.split("|")?.map(NumUtil.parseCompact)
+            const hps = params ? params.split("|").map(NumUtil.parseCompact) : true
     
             this.Whitelist.put(
                 clazz,
-                hps ?? true
+                hps
             )
         })
+
+        this.recordEntities()
     }
 
     onUnregister() {
         this.RenderList.clear()
-        this.update()
     }
     
     onDisabled() {

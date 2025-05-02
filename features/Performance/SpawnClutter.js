@@ -4,7 +4,7 @@ import Feature from "../../libs/Features/Feature"
 const setting = new ConfigProperty("Switch", {
     category: "Performance",
     subcategory: "Spawn Clutter",
-    configName: "enableSpawnClutter",
+    configName: "SpawnClutter",
     title: "§e✯§r §bAbort Junk-Spawns",
     description: `Completely cancels the construction of many unused + non-performative entities`,
     value: true
@@ -12,30 +12,31 @@ const setting = new ConfigProperty("Switch", {
 const options = new ConfigProperty("MultiCheckbox", {
     category: "Performance",
     subcategory: "Spawn Clutter",
-    configName: "spawnClutterOptions",
+    configName: "SpawnClutterOptions",
     title: "➤ §e✯§r §bRemoval Customization",
     description: "     Optional toggles for a few entities",
     placeHolder: "Edit",
     options: [
-        { title: "§e✯§r Falling Blocks", configName: "spawnClutterFalling", value: true },
-        { title: "§e✯§r Arrows", configName: "spawnClutterArrow", value: true },
-        { title: "Damage Stands", configName: "spawnClutterStand", value: false },
-        { title: "Fishing Hooks", configName: "spawnClutterHook", value: false },
-        { title: "Dropped Items", configName: "spawnClutterItem", value: false },
-        { title: "Fireballs", configName: "spawnClutterFireball", value: true },
-        { title: "Primed TNT", configName: "spawnClutterTNT", value: true },
-        { title: "Eggs", configName: "spawnClutterEgg", value: true },
-        { title: "Snowballs", configName: "spawnClutterSnowball", value: true },
-        { title: "Boats", configName: "spawnClutterBoat", value: true },
-        { title: "Minecarts", configName: "spawnClutterMinecart", value: true },
-        { title: "Potions", configName: "spawnClutterPotion", value: true },
-        { title: "XP Bottles", configName: "spawnClutterXP", value: true },
-        { title: "XP Orbs", configName: "spawnClutterOrb", value: true },
-        { title: "Paintings", configName: "spawnClutterArt", value: true },
-        { title: "Rockets", configName: "spawnClutterRocket", value: true },
-        { title: "Leashes", configName: "spawnClutterLeash", value: true }
+        { title: "§e✯§r Falling Blocks", configName: "SpawnClutterFalling", value: true },
+        { title: "§e✯§r Arrows", configName: "SpawnClutterArrow", value: true },
+        { title: "Damage Stands", configName: "SpawnClutterStand", value: false },
+        { title: "Fishing Hooks", configName: "SpawnClutterHook", value: false },
+        { title: "Dropped Items", configName: "SpawnClutterItem", value: false },
+        { title: "Fireballs", configName: "SpawnClutterFireball", value: true },
+        { title: "Primed TNT", configName: "SpawnClutterTNT", value: true },
+        { title: "Eggs", configName: "SpawnClutterEgg", value: true },
+        { title: "Snowballs", configName: "SpawnClutterSnowball", value: true },
+        { title: "Boats", configName: "SpawnClutterBoat", value: true },
+        { title: "Minecarts", configName: "SpawnClutterMinecart", value: true },
+        { title: "Potions", configName: "SpawnClutterPotion", value: true },
+        { title: "XP Bottles", configName: "SpawnClutterXP", value: true },
+        { title: "XP Orbs", configName: "SpawnClutterOrb", value: true },
+        { title: "Paintings", configName: "SpawnClutterArt", value: true },
+        { title: "Rockets", configName: "SpawnClutterRocket", value: true },
+        { title: "Leashes", configName: "SpawnClutterLeash", value: true }
     ],
-    shouldShow: data => data.enableSpawnClutter
+    shouldShow: data => data.SpawnClutter,
+    registerListener: (o, c, n) => print(`${n} change: ${o} -> ${c}`)
 })
 
 /** 
@@ -43,30 +44,30 @@ const options = new ConfigProperty("MultiCheckbox", {
  * @see {https://github.com/Marcelektro/MCP-919/blob/1717f75902c6184a1ed1bfcd7880404aab4da503/src/minecraft/net/minecraft/entity/EntityTrackerEntry.java} ctrl-f S0EPacketSpawnObject
  */
 const TYPE_SETTING_MAP = {
-     1: "Boat",
-     2: "Item",
-    10: "Minecart",
-    50: "TNT",
-    60: "Arrow",
-    61: "Snowball",
-    62: "Egg",
-    63: "Fireball",
-    64: "Fireball",
-    70: "Falling",
-    73: "Potion",
-    75: "XP",
-    76: "Rocket",
-    77: "Leash",
-    78: "Stand",
-    90: "Hook"
+     1: () => options.SpawnClutterBoat.value,
+     2: () => options.SpawnClutterItem.value,
+    10: () => options.SpawnClutterMinecart.value,
+    50: () => options.SpawnClutterTNT.value,
+    60: () => options.SpawnClutterArrow.value,
+    61: () => options.SpawnClutterSnowball.value,
+    62: () => options.SpawnClutterEgg.value,
+    63: () => options.SpawnClutterFireball.value,
+    64: () => options.SpawnClutterFireball.value,
+    70: () => options.SpawnClutterFalling.value,
+    73: () => options.SpawnClutterPotion.value,
+    75: () => options.SpawnClutterXP.value,
+    76: () => options.SpawnClutterRocket.value,
+    77: () => options.SpawnClutterLeash.value,
+    78: () => options.SpawnClutterStand.value,
+    90: () => options.SpawnClutterHook.value
 }
 new class extends Feature {
     constructor() {
         super({setting})
 
         this.addEvent("PacketReceived", this.onSpawnObject.bind(this), { setFilteredClass: "SpawnObject" })
-        this.addSubEvent("PacketReceived", this.onStupidPacket.bind(this), { setFilteredClass: "SpawnPainting" }, () => options.spawnClutterArt.value,)
-        this.addSubEvent("PacketReceived", this.onStupidPacket.bind(this), { setFilteredClass: "SpawnExperienceOrb" }, () => options.spawnClutterOrb.value)
+        this.addSubEvent("PacketReceived", this.onStupidPacket.bind(this), { setFilteredClass: "SpawnPainting" }, () => options.SpawnClutterArt.value)
+        this.addSubEvent("PacketReceived", this.onStupidPacket.bind(this), { setFilteredClass: "SpawnExperienceOrb" }, () => options.SpawnClutterOrb.value)
     }
 
     /**
@@ -74,26 +75,20 @@ new class extends Feature {
      * @Modifier SpawnObject
      */
     onSpawnObject(packet, event) {
-        if (TYPE_SETTING_MAP[packet./* getType */func_148993_l()]) cancel(event)
+        const type = packet./* getType */func_148993_l()
+        if (type in TYPE_SETTING_MAP && TYPE_SETTING_MAP[type]()) cancel(event)
     }
 
     /**
      * @Event PacketReceived
-     * @Modifier [SpawnPainting, SpawnExperienceOrb]
+     * @Modifier [ SpawnPainting, SpawnExperienceOrb ]
      */
     onStupidPacket(_, event) {
         cancel(event)
     }
 
     postInit() {
-        Object.entries(TYPE_SETTING_MAP).forEach(([id, name]) => {
-            const option = options[`spawnClutter${name}`]
-            TYPE_SETTING_MAP[id] = option.value
-
-            option._registerListener((_, val) => TYPE_SETTING_MAP[id] = val)
-        })
-
-        options.spawnClutterArt._registerListener(this.update.bind(this))
-        options.spawnClutterOrb._registerListener(this.update.bind(this))
+        options.SpawnClutterArt._registerListener(this.update.bind(this))
+        options.SpawnClutterOrb._registerListener(this.update.bind(this))
     }
 }
