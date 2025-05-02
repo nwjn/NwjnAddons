@@ -1,8 +1,8 @@
 /** 
- * Adaptation based upon:
+ * Heavily modified implementation of:
  * @author DocilElm
- * @license {GNU-GPL-3} https://github.com/DocilElm/Doc/blob/main/LICENSE
- * @credit https://github.com/DocilElm/Doc/blob/main/core/Feature.js
+ * @license {GNU-GPL-3} https://github.com/DocilElm/tska/blob/main/LICENSE
+ * @credit https://github.com/DocilElm/tska/blob/main/event/Feature.js
  */
 
 import { initSettings } from "../../data/Settings"
@@ -10,35 +10,30 @@ import Location from "../Hypixel/Location"
 import Event from "../Events/Event"
 import ConfigProperty from "../../data/ConfigProperty"
 
-const feets = []
+const feets = new Set()
 
-export default class Feature {
+export default class {
+    /**
+     * After loading all feature files this will be called from index.js
+     * Initializes the settings object,
+     * Creates listeners and events for updating features
+     */
     static initFeatures() {
         new Thread(() => {
             initSettings()
     
-            for (let initFeat of feets) initFeat._postInit()
+            feets.forEach(f => f._postInit())
 
-            new Event("WorldLoad", () => {
-                for (let updateFeat of feets) updateFeat._updateRegister()
-            })
-            Location.onWorldChange((any) => {
-                if (any) 
-                    for (let worldChange of feets) worldChange._updateRegister()
-                else 
-                    for (let unloadFeat of feets) unloadFeat._unregister()
-            })
-            Location.onAreaChange(() => {
-                for (let zoneChange of feets) zoneChange.zones && zoneChange._updateRegister()
-            })
+            new Event("WorldLoad", () => feets.forEach(feet => feet._updateRegister()))
+            new Event("WorldUnload", () => feets.forEach(feet => feet._unregister()))
+
+            Location.onWorldChange(world => world && feets.forEach(feet => feet._updateRegister()))
+            Location.onAreaChange(zone => zone && feets.forEach(feet => feet.zones && feet._updateRegister()))
+
+            ConfigProperty.getConfig().onCloseGui(() => feets.forEach(feet => feet._updateRegister()))
+            ConfigProperty.postInit()
         }).start()
     }
-
-    /** @override Function called once settings have been initialized */ postInit() {}
-    /** @override Function called when this is registered */ onRegister() {}
-    /** @override Function called when this is unregistered */ onUnregister() {}
-    /** @override Function called when this is enabled by setting */ onEnabled(previousValue) {}
-    /** @override Function called when this is disabled by setting */ onDisabled(previousValue) {}
 
     /**
      * - Utility that handles registering various events and listeners to make complex, functional, and performative features
@@ -57,7 +52,7 @@ export default class Feature {
         this.hasSetting = this.setting instanceof ConfigProperty
         this.isRegistered = false
 
-        feets.push(this)
+        feets.add(this)
     }
 
     /** Add [Events] to run when this feature is registered */
@@ -68,7 +63,10 @@ export default class Feature {
     }
 
     /** Add [SubEvents] to run when the feature is registered and follows a custom condition */
-    addSubEvent(triggerType, methodFn, args, condition = () => true) {
+    addSubEvent(triggerType, methodFn, args = null, condition = () => true) {
+        if (typeof(args) === "function") {
+            [ args, condition ] = [ condition, args ]
+        }
         this.subEvents ??= []
 
         this.subEvents.push([new Event(triggerType, methodFn, args, false), condition])
@@ -76,6 +74,7 @@ export default class Feature {
 
     /** Rechecks [SubEvents] and registers them if they follow their condition */
     update() {
+        if (!this.isRegistered) return
         if (this.subEvents) for (let subEvent of this.subEvents) subEvent[1]() ? subEvent[0].register() : subEvent[0].unregister()
     }
 
@@ -84,10 +83,10 @@ export default class Feature {
      * Registers all attached [Events] and updates [SubEvents] 
      */
     _register() {
+        this.update()
         if (this.isRegistered) return
-
+        
         if (this.events) for (let event of this.events) event.register()
-        if (this.subEvents) for (let subEvent of this.subEvents) subEvent[1]() && subEvent[0].register()
 
         this.onRegister()
         this.isRegistered = true
@@ -141,4 +140,10 @@ export default class Feature {
         this.isSettingEnabled ? this.onEnabled(this.isSettingEnabled) : this.onDisabled()
         this._updateRegister()
     }
+
+    /** @override */ postInit() {}
+    /** @override */ onRegister() {}
+    /** @override */ onUnregister() {}
+    /** @override */ onEnabled(lastState) {}
+    /** @override */ onDisabled(lastState) {}
 }

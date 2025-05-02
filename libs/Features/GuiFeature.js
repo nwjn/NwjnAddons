@@ -1,13 +1,9 @@
-/** 
- * Adaptation based upon:
- * @author DocilElm
- * @license {GNU-GPL-3} https://github.com/DocilElm/Doc/blob/main/LICENSE
- * @credit https://github.com/DocilElm/Doc/blob/main/shared/DraggableGui.js
- */
-
 import Feature from "./Feature"
-import Data from "../../data/Data"
-import { createOverlayFor } from "./GuiEditor"
+import GuiEditor from "./GuiEditor"
+import { TextHud } from "../../../tska/gui/TextHud"
+import ConfigProperty from "../../data/ConfigProperty"
+
+const FontRenderer = Renderer.getFontRenderer()
 
 export default class GuiFeature extends Feature {
     /**
@@ -22,49 +18,77 @@ export default class GuiFeature extends Feature {
     */
     constructor(obj = {}, defaultText) {
         super(obj)
+        
+        this.color = obj.color
+        this.defaultText = defaultText
+        this.lines = []
 
-        // Get gui pos from data or create new one, then return that reference to the original data and the reference within this class
-        this.data = Data[this.setting] ??= {
+        this.addHud()
+    }
+
+    addHud() {
+        this.hud = new TextHud(this.setting.configName, GuiEditor.obj[this.setting.configName] ?? {
             x: Renderer.screen.getWidth() * Math.random() * 0.5 | 0, 
             y: Renderer.screen.getHeight() * Math.random() * 0.5 | 0, 
-            scale: 1.5
-        }
-        
-        this.Color ??= Renderer.WHITE
-        this.defaultText = defaultText
-        this.lines = Array(0)
-        this.maxWidth = 0
-        this.totHeight = 0
+            scale: 1.5,
+            width: 0,
+            height: 0
+        }, "")
+            .setShouldDrawOutline(true)
+            .setScaleStep(0.025)
+            .onDraw(this.onDraw.bind(this))
 
-        createOverlayFor(this)
+        ConfigProperty.awaitSettings(() => {
+            this.setting.value ? GuiEditor.enabled.add(this.hud) : GuiEditor.enabled.delete(this.hud)
+            this.setting._registerListener((_, val) => val ? GuiEditor.enabled.add(this.hud) : GuiEditor.enabled.delete(this.hud))
+        })
+
+        GuiEditor.huds.push(this.hud)
+    }
+
+    onDraw(x, y, text) {
+        const lines = text.length ? text : this.defaultText
+        
+        Renderer.retainTransforms(true)
+        Renderer.translate(x, y)
+        Renderer.scale(this.hud.scale)
+
+        const argb = this.color?.shifted ?? Renderer.WHITE
+        for (let i = 0; i < lines.length; i++) 
+            FontRenderer./* drawString */func_175065_a(lines[i], 0, 1 + i * 9, argb | 0, true)
+
+        Renderer.retainTransforms(false)
+        Renderer.finishDraw()
     }
 
     addLine(text) {
         text = text.addColor()
         this.lines.push(text)
 
-        const width = Renderer.getStringWidth(text)
-        if (this.maxWidth < width) this.maxWidth = width
-        this.totHeight = this.lines.length * 9
+        this.hud.width = Math.max(Renderer.getStringWidth(text) * 1.05, this.hud.width)
+        this.hud.height = 9 * this.lines.length * 1.05
+        this.hud.text = this.lines
     }
 
     setLine(text, index = 0) {
         text = text.addColor()
         this.lines[index] = text
 
-        const width = Renderer.getStringWidth(text)
-        if (this.maxWidth < width) this.maxWidth = width
-        this.totHeight = this.lines.length * 9
+        this.hud.width = Math.max(Renderer.getStringWidth(text) * 1.05, this.hud.width)
+        this.hud.height = 9 * this.lines.length * 1.05
+        this.hud.text = this.lines
     }
 
     setLines(textArray) {
         this.lines.length = 0
         textArray.forEach(line => this.addLine(line))
+        this.hud.text = this.lines
     }
 
     removeText() {
         this.lines.length = 0
-        this.maxWidth = 0
-        this.totHeight = 0
+        this.hud.text = ""
+        this.hud.width = 0
+        this.hud.height = 0
     }
 }
