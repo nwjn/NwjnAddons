@@ -51,7 +51,7 @@ export default class NumUtil {
         const number = parseFloat(match[1] ?? 0)
         const magnitude = suffixes.indexOf(match[2]) + 1
 
-        return number * magnitude
+        return number * Math.pow(10, 3 * magnitude)
     }
 
     static toRGBAHex(array) {

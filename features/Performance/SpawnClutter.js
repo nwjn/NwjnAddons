@@ -19,8 +19,6 @@ const options = new ConfigProperty("MultiCheckbox", {
     options: [
         { title: "§e✯§r Falling Blocks", configName: "SpawnClutterFalling", value: true },
         { title: "§e✯§r Arrows", configName: "SpawnClutterArrow", value: true },
-        { title: "Damage Stands", configName: "SpawnClutterStand", value: false },
-        { title: "Fishing Hooks", configName: "SpawnClutterHook", value: false },
         { title: "Dropped Items", configName: "SpawnClutterItem", value: false },
         { title: "Fireballs", configName: "SpawnClutterFireball", value: true },
         { title: "Primed TNT", configName: "SpawnClutterTNT", value: true },
@@ -57,9 +55,7 @@ const TYPE_SETTING_MAP = {
     73: () => options.SpawnClutterPotion.value,
     75: () => options.SpawnClutterXP.value,
     76: () => options.SpawnClutterRocket.value,
-    77: () => options.SpawnClutterLeash.value,
-    78: () => options.SpawnClutterStand.value,
-    90: () => options.SpawnClutterHook.value
+    77: () => options.SpawnClutterLeash.value
 }
 new class extends Feature {
     constructor() {

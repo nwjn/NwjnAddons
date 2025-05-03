@@ -19,10 +19,12 @@ export default new class Party {
 	constructor() {
         this.isLeader = false
         this.inParty = false
+        this.members = {}
 
         ModAPI.on("partyinfo", (inParty, members) => {
             this.inParty = inParty
             this.isLeader = inParty && members[Player.getUUID()] === "LEADER"
+            this.members = members
         })
         
         new Event("serverConnect", this._request.bind(this))
