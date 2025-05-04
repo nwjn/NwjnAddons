@@ -24,14 +24,8 @@ const options = new ConfigProperty("MultiCheckbox", {
         { title: "Primed TNT", configName: "SpawnClutterTNT", value: true },
         { title: "Eggs", configName: "SpawnClutterEgg", value: true },
         { title: "Snowballs", configName: "SpawnClutterSnowball", value: true },
-        { title: "Boats", configName: "SpawnClutterBoat", value: true },
-        { title: "Minecarts", configName: "SpawnClutterMinecart", value: true },
-        { title: "Potions", configName: "SpawnClutterPotion", value: true },
-        { title: "XP Bottles", configName: "SpawnClutterXP", value: true },
         { title: "XP Orbs", configName: "SpawnClutterOrb", value: true },
-        { title: "Paintings", configName: "SpawnClutterArt", value: true },
-        { title: "Rockets", configName: "SpawnClutterRocket", value: true },
-        { title: "Leashes", configName: "SpawnClutterLeash", value: true }
+        { title: "Paintings", configName: "SpawnClutterArt", value: true }
     ],
     shouldShow: data => data.SpawnClutter,
     registerListener: (o, c, n) => print(`${n} change: ${o} -> ${c}`)
@@ -42,9 +36,7 @@ const options = new ConfigProperty("MultiCheckbox", {
  * @see {https://github.com/Marcelektro/MCP-919/blob/1717f75902c6184a1ed1bfcd7880404aab4da503/src/minecraft/net/minecraft/entity/EntityTrackerEntry.java} ctrl-f S0EPacketSpawnObject
  */
 const TYPE_SETTING_MAP = {
-     1: () => options.SpawnClutterBoat.value,
      2: () => options.SpawnClutterItem.value,
-    10: () => options.SpawnClutterMinecart.value,
     50: () => options.SpawnClutterTNT.value,
     60: () => options.SpawnClutterArrow.value,
     61: () => options.SpawnClutterSnowball.value,
@@ -52,10 +44,6 @@ const TYPE_SETTING_MAP = {
     63: () => options.SpawnClutterFireball.value,
     64: () => options.SpawnClutterFireball.value,
     70: () => options.SpawnClutterFalling.value,
-    73: () => options.SpawnClutterPotion.value,
-    75: () => options.SpawnClutterXP.value,
-    76: () => options.SpawnClutterRocket.value,
-    77: () => options.SpawnClutterLeash.value
 }
 new class extends Feature {
     constructor() {
