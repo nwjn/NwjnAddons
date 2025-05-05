@@ -2,92 +2,100 @@ import { addCommand } from "../../libs/Helper/Command"
 import NumUtil from "../../libs/Helper/NumUtil"
 import Nwjn from "../../libs/Helper/Nwjn"
 
-new class {
+void new class {
+    exponential = /\^|\*\*/
+    multiplicative = /\*|\/|\%/
+    additive = /\+|\-/
+
+    OPERATIONS = {
+        "^" : (a, b) => a ** b,
+        "**": (a, b) => a ** b,
+        "*" : (a, b) => a *  b,
+        "/" : (a, b) => a /  b,
+        "%" : (a, b) => a %  b,
+        "+" : (a, b) => a +  b,
+        "-" : (a, b) => a -  b
+    }
+
     constructor() {
         addCommand("calc", "Calculate the given equation", this.onCommand.bind(this))
     }
 
+    /** @Event Command */
     onCommand(...args) {
-        try {
-            const raw = args.join("")
-            const equat = raw.replace(/[^\d+\-*/^().]/g, "")
+        if (!args?.[0]) return Nwjn.chat("§cNo equation given.")
 
-            const solved = NumUtil.formatGrouped(this.solve(equat))
-            Nwjn.chat(`${raw} = ${solved}`)
-        } catch (err) {
-            Nwjn.chat(`Error whilst solving: ${err}`)
-        }
+        const raw = args.join("")
+        const equat = raw.replace(/[^\d\+\-\*\%\/\^\(\)\.]/g, "")
+
+        if (!equat) return Nwjn.chat("§cNo numbers given.")
+
+        const solved = NumUtil.formatGrouped(this.solve(equat))
+        Nwjn.chat(`§b${raw}§r = §l§a${solved}`)
     }
 
-    mergeSolve(op, array) {
-        let i1 = op - 1
-        let i2 = op + 1
-    
-        let t1 = +array[i1]
-        let t2 = +array[i2]
-    
-        switch (array[op]) {
-            case "^":
-                array[i1] = Math.pow(t1, t2)
-                break
-            case '*':
-                array[i1] = t1 * t2
-                break
-            case '/':
-                array[i1] = t1 / t2
-                break
-            case '+':
-                array[i1] = t1 + t2
-                break
-            case '-':
-                array[i1] = t1 - t2
-                break
-            default:
-                return
-        }
-    
-        array[op] = array[i2] = false
-    
-        return array.filter(it => it !== false)
+    /**
+     * Solves operations and modifies array in place
+     * @param {number} opIdx index of the array
+     * @param {Array} array array of operations and numbers
+     */
+    mergeSolve(opIdx, array) {
+        const operation = this.OPERATIONS[array[opIdx]]
+        if (!operation) return
+
+        array.splice(
+            opIdx - 1, // Start at first number
+            3, // Remove number, operator, number
+            operation(+array[opIdx - 1], +array[opIdx + 1]) // Replace first number with solved
+        )
     }
 
-    partition(string) {
-        let arr = string.match(/(-*[0-9]+|\+|\-|\*|\/|\^)/g)
-        if (!arr) return string
+    /**
+     * Split equation into parts and solve by order of operations
+     * @param {string} equat equation
+     */
+    partition(equat) {
+        const arr = equat.match(/(-*\d+|\*\*|\^|\*|\/|\%|\+|\-)/g)
+        if (!arr) return equat
     
-        let i = -1
-        while (i++ < arr.length - 1) 
-            if (arr[i] == '*') 
-                arr = this.mergeSolve(i--, arr)
+        // solve exponential
+        for (let i in arr) {
+            if (this.exponential.test(arr[i]))
+                this.mergeSolve(i--, arr)
+        }
         
-        i = -1
-        while (i++ < arr.length - 1) 
-            if (arr[i] == '/') 
-                arr = this.mergeSolve(i--, arr)
+        // solve multiplicative
+        for (let i in arr) {
+            if (this.multiplicative.test(arr[i]))
+                this.mergeSolve(i--, arr)
+        }
         
-        i = -1
-        while (i++ < arr.length - 1) 
-            if (arr[i] == '+' || arr[i] == '-')
-                arr = this.mergeSolve(i--, arr)
+        // solve additive
+        for (let i in arr) {
+            if (this.additive.test(arr[i]))
+                this.mergeSolve(i--, arr)
+        }
         
         return arr[0]
     }
 
-    solve(str) {
-        let result = str
-        let subCalculations = str.match(/\(([^()]+)\)/g)
-        let subCalc
+    /**
+     * Solve parenthesis then hand equation to partitions
+     * @param {string} equat 
+     * @returns {string} solved
+     */
+    solve(equat) {
+        const subCalculations = equat.match(/\(([^()]+)\)/g)
+        let result = equat
     
-        if (!subCalculations)
-            return this.partition(str)
+        if (!subCalculations) return this.partition(equat)
     
-        for (let k = 0; k < subCalculations.length; k++) {
-            subCalc = subCalculations[k].replace(/\(|\)/g, "")
+        for (let subCalc of subCalculations) {
+            subCalc = subCalc.replace(/\(|\)/g, "")
             result = result.replace(`(${subCalc})`, this.partition(subCalc))
         }
     
-        if (result.includes("("))
-            return this.solve(result)
+        if (result.includes("(")) return this.solve(result)
     
         return this.partition(result)
     }
