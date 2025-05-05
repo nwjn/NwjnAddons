@@ -23,6 +23,8 @@ export default class NumUtil {
     }
 
     static formatGrouped(number, locale = 0) {
+        number = Number(number)
+
         return !locale ? GroupingsUS.format(number) : GroupingsDE.format(number)
     }
 
@@ -31,6 +33,8 @@ export default class NumUtil {
     }
 
     static formatCompact(number, locale = 0) {
+        number = Number(number)
+        
         if (number < 1E3) return !locale ? CompactUS.format(number) : CompactDE.format(number)
 
         let index = 0
