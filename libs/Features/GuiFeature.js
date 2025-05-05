@@ -27,7 +27,9 @@ export default class GuiFeature extends Feature {
     }
 
     addHud() {
-        this.hud = new TextHud(this.setting.configName, GuiEditor.obj[this.setting.configName] ?? {
+        const configName = this.setting.configName
+        
+        this.hud = new TextHud(configName, GuiEditor.obj[configName] ?? {
             x: Renderer.screen.getWidth() * Math.random() * 0.5 | 0, 
             y: Renderer.screen.getHeight() * Math.random() * 0.5 | 0, 
             scale: 1.5,
