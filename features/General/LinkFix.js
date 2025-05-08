@@ -6,49 +6,51 @@
 
 import Feature from "../../libs/Features/Feature"
 import TextUtil from "../../libs/Helper/TextUtil"
-import { Field } from "../../../tska/reflection/Field"
 import ConfigProperty from "../../data/ConfigProperty"
+import { Field } from "../../../tska/reflection/Field"
 
-const setting = new ConfigProperty("Switch", {
-    category: "General",
-    configName: "LinkFix",
-    title: "§e✯§r §bLink Fix",
-    description: "Encodes and Decodes Links to allow sending and viewing for those with the mod",
-    value: true
-})
+void new class extends Feature {
+    setting = new ConfigProperty("Switch", {
+        category: "General",
+        configName: "LinkFix",
+        title: "§e✯§r §bLink Fix",
+        description: "Encodes and Decodes Links to allow sending and viewing for those with the mod",
+        value: true
+    })
 
-const SENT_URL_REGEX = /([a-z\d]{2,}:\/\/[-\w.]+\.[a-z]{2,}\/(?:$|\S+\.\w+|\S+))/
-const RECEIVE_URL_REGEX =  / (l\$(?:h|H)?\d+\|\S+)/
-const ENCODED_PARTS_REGEX = /^(l\$(\S)?(\S)?(\d+)\|(\S+))$/
-const DECODED_PARTS_REGEX = /^(([a-z\d]{2,}:\/\/)([-\w.]+\.[a-z]{2,})(\/\S*))$/
-new class LinkFix extends Feature {
+    SENT_URL_REGEX = /([a-z\d]{2,}:\/\/[-\w.]+\.[a-z]{2,}\/(?:$|\S+\.\w+|\S+))/
+    RECEIVE_URL_REGEX =  / (l\$(?:h|H)?\d+\|\S+)/
+    ENCODED_PARTS_REGEX = /^(l\$(\S)?(\S)?(\d+)\|(\S+))$/
+    DECODED_PARTS_REGEX = /^(([a-z\d]{2,}:\/\/)([-\w.]+\.[a-z]{2,})(\/\S*))$/
+
+    textField = new Field(net.minecraft.util.ChatComponentText, /* text */"field_150267_b")
+
+    schemes = {
+        "h": "http://",
+        "H": "https://",
+        "http://": "h",
+        "https://": "H"
+    }
+
+    extensions = {
+        1: ".png",
+        2: ".jpg",
+        3: ".jpeg",
+        4: ".gif",
+        ".png": 1,
+        ".jpg": 2,
+        ".jpeg": 3,
+        ".gif": 4
+    }
+
+    charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
     constructor() {
-        super({setting})
+        const { setting } = this
+        super({ setting })
 
-        this.textField = new Field(net.minecraft.util.ChatComponentText, /* text */"field_150267_b")
-
-        this.schemes = {
-            "h": "http://",
-            "H": "https://",
-            "http://": "h",
-            "https://": "H"
-        }
-
-        this.extensions = {
-            1: ".png",
-            2: ".jpg",
-            3: ".jpeg",
-            4: ".gif",
-            ".png": 1,
-            ".jpg": 2,
-            ".jpeg": 3,
-            ".gif": 4
-        }
-
-        this.charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
-        this.addEvent("MessageSent", this.onSendLink.bind(this), { setCriteria: SENT_URL_REGEX })
-        this.addEvent("ServerChat", this.onEncodedReceive.bind(this), { setCriteria: RECEIVE_URL_REGEX })
+        this.addEvent("MessageSent", this.onSendLink.bind(this), { setCriteria: this.SENT_URL_REGEX })
+        this.addEvent("ServerChat", this.onEncodedReceive.bind(this), { setCriteria: this.RECEIVE_URL_REGEX })
     }
 
     /**
@@ -87,7 +89,7 @@ new class LinkFix extends Feature {
     }
 
     decode(encoded) {
-        const [matched, scheme, extension, dots, body] = TextUtil.getMatches(ENCODED_PARTS_REGEX, encoded)
+        const [matched, scheme, extension, dots, body] = TextUtil.getMatches(this.ENCODED_PARTS_REGEX, encoded)
         if (!matched) return
 
         const dotsLen = 9 - dots.length
@@ -111,7 +113,7 @@ new class LinkFix extends Feature {
     encode(url) {
         let encoded = "l$"
     
-        const [matched, scheme, host, dir] = TextUtil.getMatches(DECODED_PARTS_REGEX, url)
+        const [matched, scheme, host, dir] = TextUtil.getMatches(this.DECODED_PARTS_REGEX, url)
         if (!matched) return
 
         const prefix = (encoded == (encoded += this.schemes[scheme] ?? "")) ? scheme : ""
