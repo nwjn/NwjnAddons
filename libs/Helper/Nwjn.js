@@ -23,11 +23,15 @@ export default new class Nwjn {
     }
 
     say(message) {
-        ChatLib.say(`/pc ${this.STAMP}${message}`)
+        ChatLib.command(`pc ${this.STAMP}${message}`, false)
     }
 
     sendCoords(message) {
-        ChatLib.say(`/pc x: ${~~Player.getX()}, y: ${~~Player.getY()}, z: ${~~Player.getZ()}${this.STAMP}${message}`)
+        ChatLib.command(`pc x: ${~~Player.getX()}, y: ${~~Player.getY()}, z: ${~~Player.getZ()}${this.STAMP}${message}`, false)
+    }
+
+    partyCommand(message) {
+        ChatLib.command(`p ${message}`)
     }
 
     edit(message, id) {
