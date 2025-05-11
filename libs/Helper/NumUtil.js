@@ -2,14 +2,14 @@ const { US, GERMANY } = java.util.Locale
 const NumberFormat = java.text.NumberFormat
 
 const GroupingsUS = NumberFormat.getNumberInstance(US)
-const GroupingsDE = NumberFormat.getNumberInstance(GERMANY)
 GroupingsUS.setGroupingUsed(true)
+const GroupingsDE = NumberFormat.getNumberInstance(GERMANY)
 GroupingsDE.setGroupingUsed(true)
 
 const CompactUS = NumberFormat.getNumberInstance(US)
-const CompactDE = NumberFormat.getNumberInstance(GERMANY)
 CompactUS.setGroupingUsed(true)
 CompactUS.setMaximumFractionDigits(3)
+const CompactDE = NumberFormat.getNumberInstance(GERMANY)
 CompactDE.setGroupingUsed(true)
 CompactDE.setMaximumFractionDigits(3)
 
@@ -23,9 +23,7 @@ export default class NumUtil {
     }
 
     static formatGrouped(number, locale = 0) {
-        number = Number(number)
-
-        return !locale ? GroupingsUS.format(number) : GroupingsDE.format(number)
+        return !locale ? GroupingsUS.format(+number) : GroupingsDE.format(+number)
     }
 
     static parseGrouped(string, locale = 0) {
@@ -45,7 +43,7 @@ export default class NumUtil {
 
         const formatted = !locale ? CompactUS.format(number) : CompactDE.format(number)
         const suffix = suffixes[index] ?? ""
-        return `${formatted}${suffix}`
+        return formatted + suffix
     }
 
     static parseCompact(string) {
