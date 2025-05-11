@@ -1,40 +1,49 @@
-// import Data from "../../data/Data"
-// import GuiFeature from "../../libs/Features/GuiFeature"
+import ConfigProperty from "../../data/ConfigProperty"
+import Data from "../../data/Data"
+import GuiFeature from "../../libs/Features/GuiFeature"
 
-// new class LastMinibosses extends GuiFeature {
-//     constructor() {
-//         super({
-//             setting: this.constructor.name,
-//             worlds: "Crimson Isle"
-//         })
+void new class extends GuiFeature {
+    constructor() {
+        super({
+            setting: new ConfigProperty("Switch", {
+                category: "Crimson Isle",
+                configName: "MinibossHistory",
+                title: "Miniboss History",
+                description: "History log of recent miniboss kills"
+            }),
 
-//         this.minibosses = {
-//             "BLADESOUL": "§8Bladesoul",
-//             "BARBARIAN DUKE X": "§eBarbarian Duke X",
-//             "ASHFANG": "§cAshfang",
-//             "MAGMA BOSS": "§4Magma Boss",
-//             "MAGE OUTLAW": "§5Mage Outlaw"
-//         }
+            worlds: [ "Crimson Isle" ],
 
-//         this.setLine("§6Miniboss History§f:")
 
-//         this.addEvent(
-//             "serverChat",
-//             this.onMinibossKilled.bind(this),
-//             /^\S*([A-Z\s]+) DOWN!$/
-//         )
-//     }
+            MINIBOSSES: {
+                "BLADESOUL": "§8Bladesoul",
+                "BARBARIAN DUKE X": "§eBarbarian Duke X",
+                "ASHFANG": "§cAshfang",
+                "MAGMA BOSS": "§4Magma Boss",
+                "MAGE OUTLAW": "§5Mage Outlaw"
+            },
 
-//     onMinibossKilled(miniboss) {
-//         miniboss = this.minibosses[miniboss]
-//         if (!miniboss) return
+            title: "§6Miniboss History§f:",
 
-//         if (Data.LastMinibosses.push(miniboss) > 4) Data.LastMinibosses.shift()
+            MINIBOSS_KILLED_REGEX: /^\S*([A-Z\s]+) DOWN!$/
+        })
+
+
+        this.setLine(this.title)
+
+        this.addEvent("ServerChat", this.onMinibossKilled.bind(this), { setCriteria: /^\s*([A-Z\s]+) DOWN!$/ })
+    }
+
+    onMinibossKilled(miniboss) {
+        miniboss = this.MINIBOSSES[miniboss]
+        if (!miniboss) return
+
+        if (Data.LastMinibosses.push(miniboss) > 4) Data.LastMinibosses.shift()
             
-//         Data.LastMinibosses.forEach((value, index) => {
-//             index++
+        Data.LastMinibosses.forEach((value, index) => {
+            index++
 
-//             this.setLine(`${index}. ${value}`, index)
-//         })
-//     }
-// }
+            this.setLine(`${index}. ${value}`, index)
+        })
+    }
+}

@@ -1,5 +1,5 @@
-import Seconds from "../Time/Units/Seconds"
-import {scheduleTask} from "../Time/ServerTime"
+import Seconds from "../Time/Seconds"
+import { scheduleTask } from "../Time/Scheduler"
 import RenderUtil from "./RenderUtil"
 import { renderBeacon, renderBoxFilled, renderBoxOutline } from "../../../Apelles"
 

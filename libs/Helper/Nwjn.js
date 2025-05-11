@@ -1,8 +1,8 @@
 import { DataStore } from "../../../tska/storage/DataStore"
 
-export default new class Nwjn {
+export default new class {
     constructor() {
-        const { version, requires } = this.parse("metadata.json")
+        let { version, requires } = this.parse("metadata.json")
         
         this.VERSION = version
         this.DEPENDENCIES = requires.map(lib => [lib, DataStore.fromFile(lib, "metadata.json").version])
@@ -14,6 +14,10 @@ export default new class Nwjn {
         this.LOGO = "§r§0§l【§r§c§lNwjn§0§l】§r"
     }
 
+    chatComponent(message) {
+        return new TextComponent(`${this.LOGO}§7>§r ${message}`)
+    }
+
     chat(message) {
         ChatLib.chat(`${this.LOGO}§7>§r ${message}`)
     }
@@ -23,15 +27,23 @@ export default new class Nwjn {
     }
 
     say(message) {
-        ChatLib.command(`pc ${this.STAMP}${message}`, false)
+        this.partyChat(this.STAMP + message)
     }
 
     sendCoords(message) {
-        ChatLib.command(`pc x: ${~~Player.getX()}, y: ${~~Player.getY()}, z: ${~~Player.getZ()}${this.STAMP}${message}`, false)
+        this.partyChat(`x: ${~~Player.getX()}, y: ${~~Player.getY()}, z: ${~~Player.getZ()}${this.STAMP}${message}`)
     }
 
     partyCommand(message) {
-        ChatLib.command(`p ${message}`)
+        ChatLib.command(`p ${message}`, false)
+    }
+
+    partyChat(message) {
+        ChatLib.command(`pc ${message}`, false)
+    }
+
+    addToSendHistory(message) {
+        ChatLib.addToSentMessageHistory(-1, message)
     }
 
     edit(message, id) {

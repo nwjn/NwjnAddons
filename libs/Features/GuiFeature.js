@@ -9,18 +9,18 @@ export default class GuiFeature extends Feature {
     /**
      * - Extension of [Feature] for features that include gui elements
      * 
-     * @param {Object|Feature} obj If passed in as a child of this, uses the name of this child and return it
-     * @param {String|null} obj.setting The main config name: If null -> Feature is always active, If setting returns false -> all events of this feature will be unregistered
-     * @param {String[]|String|null} obj.worlds The world(s) where this feature should activate: If null -> Feature is not world dependent
-     * @param {String[]|String|null} obj.zones The zones(s) where this feature should activate: If null -> Feature is not zone dependent
-
-     * @param {String[]} defaultText The text to shown in the editor if the feature's text is blank
+     * @param {object} obj If passed in as a child of this, uses the name of this child and return it
+     * @param {ConfigProperty} obj.setting The main config name: If null -> Feature is always active, If setting returns false -> all events of this feature will be unregistered
+     * @param {string[]?} obj.worlds The world(s) where this feature should activate: If null -> Feature is not world dependent
+     * @param {string[]?} obj.zones The zones(s) where this feature should activate: If null -> Feature is not zone dependent
+     * @param {ConfigProperty?} obj.color Color to draw text or defaults to white
+     * @param {string[]?} obj.defaultText The text to shown in the editor if the feature's text is blank
     */
-    constructor(obj = {}, defaultText) {
+    constructor(obj = {}) {
         super(obj)
         
         this.color = obj.color
-        this.defaultText = defaultText
+        this.defaultText = obj.defaultText ?? ""
         this.lines = []
 
         this.addHud()

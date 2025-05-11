@@ -5,44 +5,44 @@ import TextUtil from "../../libs/Helper/TextUtil"
 import Waypoint from "../../libs/Render/TempWaypoint"
 import ConfigProperty from "../../data/ConfigProperty"
 
-const category = "General"
-const subcategory = "Waypoints"
-
-const setting = new ConfigProperty("Switch", {
-    category,
-    subcategory,
-    configName: "ChatWaypoints",
-    title: "Draw Chat Waypoints",
-    description: "Creates waypoints taken from chat messages in patcher coords format"
-})
-const color = new ConfigProperty("Switch", {
-    category,
-    subcategory,
-    configName: "ChatWaypointsColor",
-    title: "➤ Waypoint Color",
-    description: "     Sets the color for waypoints",
-    value: [255, 190, 239, 200],
-    shouldShow: data => data.ChatWaypoints
-})
-const time = new ConfigProperty("Slider", {
-    category,
-    subcategory,
-    configName: "ChatWaypointsTime",
-    title: "➤ Waypoint Time",
-    description: "     The amount of seconds waypoints should stay",
-    options: [30, 90],
-    value: 120,
-    shouldShow: data => data.ChatWaypoints
-})
-
-const WAYPOINT_REGEX = /^(?:[\w\-]{5} > )?(?:\[\d{1,3}\] .? ?)?(?:\[\w+\+*\] )?(\w{1,16})(?: .? ?)?: x: (-?[\d\.]+), y: (-?[\d\.]+), z: (-?[\d\.]+) ?(.+)?$/
-new class extends Feature {
+void new class extends Feature {
     constructor() {
-        super({setting})
+        super({
+            setting: new ConfigProperty("Switch", {
+                category: "General",
+                subcategory: "Waypoints",
+                configName: "ChatWaypoints",
+                title: "Draw Chat Waypoints",
+                description: "Creates waypoints taken from chat messages in patcher coords format"
+            }),
 
-        this.waypoints = new Map()
+            color: new ConfigProperty("Switch", {
+                category: "General",
+                subcategory: "Waypoints",
+                configName: "ChatWaypointsColor",
+                title: "➤ Waypoint Color",
+                description: "     Sets the color for waypoints",
+                value: [255, 190, 239, 200],
+                shouldShow: data => data.ChatWaypoints
+            }),
 
-        this.addEvent("ServerChat", this.onWaypointSent.bind(this), { setCriteria: WAYPOINT_REGEX })
+            time: new ConfigProperty("Slider", {
+                category: "General",
+                subcategory: "Waypoints",
+                configName: "ChatWaypointsTime",
+                title: "➤ Waypoint Time",
+                description: "     The amount of seconds waypoints should stay",
+                options: [30, 90],
+                value: 120,
+                shouldShow: data => data.ChatWaypoints
+            }),
+
+            WAYPOINT_REGEX: /^(?:[\w\-]{5} > )?(?:\[\d{1,3}\] .? ?)?(?:\[\w+\+*\] )?(\w{1,16})(?: .? ?)?: x: (-?[\d\.]+), y: (-?[\d\.]+), z: (-?[\d\.]+) ?(.+)?$/,
+
+            waypoints: new Map()
+        })
+
+        this.addEvent("ServerChat", this.onWaypointSent.bind(this), { setCriteria: this.WAYPOINT_REGEX })
 
         this.addSubEvent("Step", this.onIntervalPassed.bind(this), () => this.waypoints.size, { setFps: 3 })
         this.addSubEvent("RenderWorld", this.onRenderWorld.bind(this), () => this.waypoints.size)
@@ -60,7 +60,7 @@ new class extends Feature {
         const [mainText] = TextUtil.getMatches(/^(.+)§.:/, formatted)
         if (!mainText) return
 
-        this.waypoints.set(ign, new Waypoint(mainText, text, x, y, z, color, 5, time.value))
+        this.waypoints.set(ign, new Waypoint(mainText, text, x, y, z, color, 5, this.time.value))
         this.update()
     }
 
@@ -93,6 +93,6 @@ new class extends Feature {
     }
 
     postInit() {
-        color.update()
+        this.color.update()
     }
 }

@@ -10,44 +10,43 @@ import ConfigProperty from "../../data/ConfigProperty"
 import { Field } from "../../../tska/reflection/Field"
 
 void new class extends Feature {
-    setting = new ConfigProperty("Switch", {
-        category: "General",
-        configName: "LinkFix",
-        title: "§e✯§r §bLink Fix",
-        description: "Encodes and Decodes Links to allow sending and viewing for those with the mod",
-        value: true
-    })
-
-    SENT_URL_REGEX = /([a-z\d]{2,}:\/\/[-\w.]+\.[a-z]{2,}\/(?:$|\S+\.\w+|\S+))/
-    RECEIVE_URL_REGEX =  / (l\$(?:h|H)?\d+\|\S+)/
-    ENCODED_PARTS_REGEX = /^(l\$(\S)?(\S)?(\d+)\|(\S+))$/
-    DECODED_PARTS_REGEX = /^(([a-z\d]{2,}:\/\/)([-\w.]+\.[a-z]{2,})(\/\S*))$/
-
-    textField = new Field(net.minecraft.util.ChatComponentText, /* text */"field_150267_b")
-
-    schemes = {
-        "h": "http://",
-        "H": "https://",
-        "http://": "h",
-        "https://": "H"
-    }
-
-    extensions = {
-        1: ".png",
-        2: ".jpg",
-        3: ".jpeg",
-        4: ".gif",
-        ".png": 1,
-        ".jpg": 2,
-        ".jpeg": 3,
-        ".gif": 4
-    }
-
-    charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
     constructor() {
-        const { setting } = this
-        super({ setting })
+        super({
+            setting: new ConfigProperty("Switch", {
+                category: "General",
+                configName: "LinkFix",
+                title: "§e✯§r §bLink Fix",
+                description: "Encodes and Decodes Links to allow sending and viewing for those with the mod",
+                value: true
+            }),
+        
+            SENT_URL_REGEX: /([a-z\d]{2,}:\/\/[-\w.]+\.[a-z]{2,}\/(?:$|\S+\.\w+|\S+))/,
+            RECEIVE_URL_REGEX:  / (l\$(?:h|H)?\d+\|\S+)/,
+            ENCODED_PARTS_REGEX: /^(l\$(\S)?(\S)?(\d+)\|(\S+))$/,
+            DECODED_PARTS_REGEX: /^(([a-z\d]{2,}:\/\/)([-\w.]+\.[a-z]{2,})(\/\S*))$/,
+        
+            textField: new Field(net.minecraft.util.ChatComponentText, /* text */"field_150267_b"),
+        
+            schemes: {
+                "h": "http://",
+                "H": "https://",
+                "http://": "h",
+                "https://": "H"
+            },
+        
+            extensions: {
+                1: ".png",
+                2: ".jpg",
+                3: ".jpeg",
+                4: ".gif",
+                ".png": 1,
+                ".jpg": 2,
+                ".jpeg": 3,
+                ".gif": 4
+            },
+        
+            charSet: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        })
 
         this.addEvent("MessageSent", this.onSendLink.bind(this), { setCriteria: this.SENT_URL_REGEX })
         this.addEvent("ServerChat", this.onEncodedReceive.bind(this), { setCriteria: this.RECEIVE_URL_REGEX })

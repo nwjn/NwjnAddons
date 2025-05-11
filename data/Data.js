@@ -1,8 +1,8 @@
 import Nwjn from "../libs/Helper/Nwjn"
 import Event from "../libs/Events/Event"
-import Ticks from "../libs/Time/Units/Ticks"
+import Ticks from "../libs/Time/Ticks"
 import { addCommand } from "../libs/Helper/Command"
-import { scheduleTask } from "../libs/Time/ServerTime"
+import { scheduleTask } from "../libs/Time/Scheduler"
 import { LocalStore } from "../../tska/storage/LocalStore"
 
 new class Data {

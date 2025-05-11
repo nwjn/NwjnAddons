@@ -20,6 +20,7 @@ const ENTITY_LIST = new HashMap()
 const CLIENT_PACKET_LIST = new HashMap()
 const SERVER_PACKET_LIST = new HashMap()
 
+/** Remap with uppercase keys and class names */
 Field.getFieldValue(net.minecraft.entity.EntityList, /* stringToClassMapping */"field_75625_b")
     .forEach((simpleName, clazz) => {
         ENTITY_LIST.put(simpleName.toUpperCase(), clazz.getName())
@@ -32,7 +33,8 @@ Field.getFieldValue(net.minecraft.network.EnumConnectionState, /* STATES_BY_CLAS
         const [ dir, simpleName ] = clazz.getSimpleName().split(/\d[0-9A-F]Packet/)
         const mapFromDir = dir === "C" ? CLIENT_PACKET_LIST : SERVER_PACKET_LIST
         
-        mapFromDir.put(simpleName.toUpperCase(), clazz.getName())
+        // No case protection for you loser
+        mapFromDir.put(simpleName, clazz.getName())
     })
 
 export function getForgeEvent(simpleName) {
@@ -50,13 +52,13 @@ export function getForgeEvent(simpleName) {
 
 export function getPacket(simpleName, isClientBound = false) {
     let mapFromDir = isClientBound ? CLIENT_PACKET_LIST : SERVER_PACKET_LIST
-    let lookup = mapFromDir.get(simpleName.toUpperCase())
+    let lookup = mapFromDir.get(simpleName)
 
     if (lookup) return JavaTypeOrNull(lookup).class
 }
 
 export function getEntity(simpleName) {
-    let lookup = ENTITY_LIST.get(simpleName.toUpperCase())
+    let lookup = ENTITY_LIST.get(simpleName?.toUpperCase())
     
     if (lookup) return JavaTypeOrNull(lookup).class
 }

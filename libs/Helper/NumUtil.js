@@ -3,8 +3,10 @@ const NumberFormat = java.text.NumberFormat
 
 const GroupingsUS = NumberFormat.getNumberInstance(US)
 GroupingsUS.setGroupingUsed(true)
+GroupingsUS.setMaximumFractionDigits(15)
 const GroupingsDE = NumberFormat.getNumberInstance(GERMANY)
 GroupingsDE.setGroupingUsed(true)
+GroupingsUS.setMaximumFractionDigits(15)
 
 const CompactUS = NumberFormat.getNumberInstance(US)
 CompactUS.setGroupingUsed(true)

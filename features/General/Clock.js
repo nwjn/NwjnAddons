@@ -1,29 +1,29 @@
 import GuiFeature from "../../libs/Features/GuiFeature"
 import ConfigProperty from "../../data/ConfigProperty"
 
-const category = "General"
-const subcategory = "Clock"
-
-const setting = new ConfigProperty("Switch", {
-    category,
-    subcategory,
-    configName: "Clock",
-    title: "Clock Display",
-    description: "Stay productive by keeping track of time!"
-})
-const color = new ConfigProperty("ColorPicker", {
-    category,
-    subcategory,
-    configName: "ClockColor",
-    title: "➤ Clock Color",
-    description: "     Sets the color for the clock display",
-    value: [255, 190, 239, 255],
-    shouldShow: data => data.Clock
-})
-
-new class extends GuiFeature {
+void new class extends GuiFeature {
     constructor() {
-        super({setting, color}, ["1:23:34 AM"])
+        super({
+            setting: new ConfigProperty("Switch", {
+                category: "General",
+                subcategory: "Clock",
+                configName: "Clock",
+                title: "Clock Display",
+                description: "Stay productive by keeping track of time!"
+            }),
+        
+            color: new ConfigProperty("ColorPicker", {
+                category: "General",
+                subcategory: "Clock",
+                configName: "ClockColor",
+                title: "➤ Clock Color",
+                description: "     Sets the color for the clock display",
+                value: [255, 190, 239, 255],
+                shouldShow: data => data.Clock
+            }),
+        
+            defaultText: [ "1:23:34 AM" ]
+        })
 
         this.formatter = new java.text.SimpleDateFormat("hh:mm:ss a", java.util.Locale.US)
 
@@ -44,6 +44,6 @@ new class extends GuiFeature {
     }
 
     postInit() {
-        color.update()
+        this.color.update()
     }
 }

@@ -39,15 +39,17 @@ export default class {
      * - Utility that handles registering various events and listeners to make complex, functional, and performative features
      * - Class can be used with or without requiring the settings, worlds, or zones fields depending on the intended functionality
 
-     * @param {?object} obj
-     * @param {?ConfigProperty} obj.setting If none: Feature is always active, otherwise will (un)register based on setting
-     * @param {?string[]} obj.worlds If none: Feature is not world dependent, otherwise will only register in worlds listed
-     * @param {?string[]} obj.zones If none: Feature is not zone dependent, otherwise will only register in zones listed
+     * @param {object?} obj
+     * @param {ConfigProperty?} obj.setting If none: Feature is always active, otherwise will (un)register based on setting
+     * @param {string[]?} obj.worlds If none: Feature is not world dependent, otherwise will only register in worlds listed
+     * @param {string[]?} obj.zones If none: Feature is not zone dependent, otherwise will only register in zones listed
      */
     constructor(obj = {}) {
-        this.setting = obj.setting
-        this.worlds = obj.worlds?.map(w => w.toLowerCase())
-        this.zones = obj.zones?.map(z => z.toLowerCase())
+        // Since rhino handles instance properties weirdly we are going to pass them through the super constructor
+        for (let key in obj) this[key] = obj[key]
+        
+        this.worlds = this.worlds?.map(w => w.toLowerCase())
+        this.zones = this.zones?.map(z => z.toLowerCase())
 
         this.hasSetting = this.setting instanceof ConfigProperty
         this.isRegistered = false

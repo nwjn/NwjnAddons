@@ -44,4 +44,26 @@
 //   })
 // KuudraUtil.addFeat(feat)
 
-// net.minecraft.network.play.server.S0CPacketSpawnPlayer
+// // net.minecraft.network.play.server.S0CPacketSpawnPlayer
+
+// new class extends Feature {
+//     constructor() {
+//         super({setting, worlds: ["Kuudra"], zones: "Kuudra's Hollow (T5)"})
+
+
+//         this.addEvent("RenderEntity", this.onRender.bind(this), { setFilteredClass: "OtherPlayerMP" })
+//     }
+
+//     onRender(entity) {
+//         const name = entity.getName()
+
+//         switch (name) {
+//             case "Magma Bacteria": return
+//             case "Elle": color = ellecolor
+//             default: {
+//                 render
+//                 return
+//             }
+//         }
+//     }
+// }

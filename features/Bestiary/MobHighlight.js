@@ -6,120 +6,111 @@ import ConfigProperty from "../../data/ConfigProperty"
 import { getEntity } from "../../libs/Helper/ClassReference"
 import { renderBoxOutline } from "../../../Apelles"
 
-const setting = new ConfigProperty("TextInput", {
-    category: "Bestiary",
-    configName: "MobHighlight",
-    title: "Mob Highlight",
-    description: "Boxes entities by input based on mob class and health\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
-})
+void new class extends Feature {    
+    constructor() {        
+        super({
+            setting: new ConfigProperty("TextInput", {
+                category: "Bestiary",
+                subcategory: "Highlight",
+                configName: "MobHighlight",
+                title: "Mob Highlight",
+                description: "Boxes entities by input based on mob class and health\n&bExamples: `Zombie` or `Zombie-100|120|2k|45k` or `Zombie, Skeleton` or `Zombie-100, Cow`",
+            }),
 
-const color = new ConfigProperty("ColorPicker", {
-    category: "Bestiary",
-    configName: "MobHighlightColor",
-    title: "Mob Highlight Color",
-    description: "Sets the color for monster hitboxes",
-    value: [255, 190, 239, 255],
-    shouldShow: data => data.MobHighlight !== ""
-})
+            color: new ConfigProperty("ColorPicker", {
+                category: "Bestiary",
+                subcategory: "Highlight",
+                configName: "MobHighlightColor",
+                title: "➤ Mob Highlight Color",
+                description: "     Sets the color for monster hitboxes",
+                value: [ 255, 190, 239, 255 ],
+                shouldShow: data => data.MobHighlight !== ""
+            }),
 
-new class extends Feature {
-    constructor() {
-        super({setting})
+            renderList: new HashMap(),
+            whiteList: new HashMap(),
 
-        this.RenderList = new java.util.WeakHashMap()
-        this.Whitelist = new HashMap()
-        this.lastUpdate = Date.now()
+            system: java.lang.System
+        })
 
-        this.addEvent("EntityJoin", this.recordEntities.bind(this))
+        this.addEvent("EntityJoin", this.onEntityJoin.bind(this))
         this.addEvent("EntityDeath", this.onEntityDeath.bind(this))
 
-        this.addSubEvent("RenderLiving.Pre", this.onRender.bind(this), () => !this.RenderList.isEmpty())
+        this.addSubEvent("RenderLiving.Pre", this.onRender.bind(this), () => !this.renderList.isEmpty())
     }
 
-    recordEntities() {
-        if (Date.now() - this.lastUpdate < 500) return
+    /** @Event EntityJoin */
+    onEntityJoin({ entity }) {
+        const entClass = entity.class
+        const isWhitelisted = this.whiteList.containsKey(entClass)
+        if (!isWhitelisted) return
 
-        this.lastUpdate = Date.now()
-        this.RenderList.clear()
+        const healthList = this.whiteList.get(entClass)
+        if (typeof(healthList) !== "boolean" && !healthList?.includes(MobUtil.getMaxHP(entity))) return
 
-        World.getWorld()./* loadedEntityList */field_72996_f.forEach(entity => {
-            if (this.RenderList.containsKey(entity)) return
-
-            const entClass = entity.class
-            const isWhitelisted = this.Whitelist.containsKey(entClass)
-            if (!isWhitelisted) return
-    
-            const healthList = this.Whitelist.get(entClass)
-            if (typeof(healthList) === "boolean" || healthList?.includes(MobUtil.getMaxHP(entity))) {
-                this.RenderList.put(
-                    entity, 
-                    [
-                        Math.max(entity./* width */field_70130_N, 0.3), 
-                        Math.max(entity./* height */field_70131_O, 0.3)
-                    ]
-                )
-            }
-        })
+        const width = Math.max(entity./*  width  */field_70130_N, 0.3)
+        const height = Math.max(entity./* height */field_70131_O, 0.3)
         
+        this.renderList.put(this.system.identityHashCode(entity), [ width, height ])
+
+        this.update()
+    }
+    
+    /** @Event EntityDeath */
+    onEntityDeath({ entity }) {
+        this.renderList.remove(this.system.identityHashCode(entity))
         this.update()
     }
 
-    /**
-     * @Event RenderLivingEvent.Pre
-     */
-    onRender({entity}) {
-        if (entity./* isInvisible */func_82150_aj()) return
-
-        const lookup = this.RenderList.get(entity)
+    /** @Event RenderLivingEvent.Pre */
+    onRender({ entity }) {
+        const lookup = this.renderList.get(this.system.identityHashCode(entity))
         if (!lookup) return
 
         const [ width, height ] = lookup
 
-        renderBoxOutline(color.packed, entity.field_70165_t, entity.field_70163_u, entity.field_70161_v, width, height, { centered: true, lw: 2, smooth: true, cull: true })
+        renderBoxOutline(this.color.packed, entity./* posX */field_70165_t, entity./* posY */field_70163_u, entity./* posZ */field_70161_v, width, height, { centered: true, lw: 2, smooth: true, cull: true })
     }
 
-    /**
-     * @Event EntityDeath
-     */
-    onEntityDeath({entity}) {
-        this.RenderList.remove(entity)
-        this.update()
+    recordEntities() {
+        this.renderList.clear()
+
+        World.getWorld()./* loadedEntityList */field_72996_f.forEach(entity => this.onEntityJoin({ entity }))
     }
     
-    onEnabled(value = setting.value) {
-        this.Whitelist.clear()
-        this.RenderList.clear()
+    onEnabled(value = this.setting.value) {
+        this.whiteList.clear()
     
         value.split(/, ?/g).forEach((entry, idx) => {
-            const [name, params] = entry.split("-")
+            let [ name, params, clazz ] = entry.split("-")
     
-            if (!name) return
-            const clazz = getEntity(name.toUpperCase())
-            if (!clazz) return Nwjn.edit(`§cEntity class called §b§l${name}§r§c is unknown. Read https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`, 28500 + idx)
+            clazz = getEntity(name.toUpperCase())
+            if (name && !clazz) return Nwjn.edit(`§cEntity class called §b§l${name}§r§c is unknown. Read https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`, 28500 + idx)
             if (World.isLoaded()) ChatLib.deleteChat(28500 + idx)
     
-            const hps = params ? params.split("|").map(NumUtil.parseCompact) : true
+            params = params?.split("|")?.map(NumUtil.parseCompact) ?? true
     
-            this.Whitelist.put(
-                clazz,
-                hps
-            )
+            this.whiteList.put(clazz, params)
         })
 
         this.recordEntities()
     }
 
-    onUnregister() {
-        this.RenderList.clear()
+    onRegister() {
+        this.recordEntities()
     }
-    
+
+    onUnregister() {
+        this.renderList.clear()
+    }
+
     onDisabled() {
-        this.Whitelist.clear()
+        this.whiteList.clear()
     }
 
     postInit() {
         ConfigProperty.getConfig().onCloseGui(this.onEnabled.bind(this))
 
-        color.update()
+        this.color.update()
     }
 }

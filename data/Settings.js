@@ -2,10 +2,8 @@ import ConfigProperty from "./ConfigProperty"
 import Nwjn from "../libs/Helper/Nwjn"
 import Settings from "../../Amaterasu/core/Settings"
 
-const category = "Home"
-
 new ConfigProperty("TextParagraph", {
-    category,
+    category: "Home",
     configName: "dependencies",
     title: "§6§lPowered by:§r",
     description: "\n" + Nwjn.DEPENDENCIES.map(([lib, ver], idx) => `§r§${(idx + 10).toString(16)}${lib}-${ver}§r`).join("\n"),
@@ -13,7 +11,7 @@ new ConfigProperty("TextParagraph", {
 })
 
 new ConfigProperty("Button", {
-    category,
+    category: "Home",
     configName: "github",
     title: "Github",
     description: "Contribute to, or track this project's progress and pre-releases!",
@@ -27,73 +25,6 @@ new ConfigProperty("Button", {
     description: "Send feedback including suggestions and bug-reports!",
     onClick: () => Nwjn.openLink("https://discord.com/invite/3S3wXpC4gE")
 })
-// .addSwitch({
-//     category: "General",
-//     configName: "PartyCommands",
-//     title: "Party Commands",
-//     description: "Enables party commands, universally triggers on [.,!?] commands",
-//     value: false
-// })
-// .addMultiCheckbox({
-//     category: "General",
-//     configName: "PartyCommandToggles",
-//     title: "Party Command Toggles",
-//     description: "Toggles for various party commands",
-//     placeHolder: "Click",
-//     options: [
-//         {
-//             title: "Join Instance",
-//             configName: "PartyCommandsInstance",
-//             value: true
-//         },
-//         {
-//             title: "Party Transfer <?ign>",
-//             configName: "PartyCommandsTransfer",
-//             value: true
-//         },
-//         {
-//             title: "Warp",
-//             configName: "PartyCommandsWarp",
-//             value: true
-//         },
-//         {
-//             title: "Invite <ign>",
-//             configName: "PartyCommandsInvite",
-//             value: true
-//         },
-//         {
-//             title: "All Invite",
-//             configName: "PartyCommandsAllInvite",
-//             value: true
-//         },
-//         {
-//             title: "Server TPS",
-//             configName: "PartyCommandsTPS",
-//             value: "true"
-//         },
-//         {
-//             title: "Tab Stats",
-//             configName: "PartyCommandsStats",
-//             value: true
-//         },
-//         {
-//             title: "Power, Tuning, Enrich, MP Data",
-//             configName: "PartyCommandsPower",
-//             value: true
-//         },
-//         {
-//             title: "Send Coords",
-//             configName: "PartyCommandsCoords",
-//             value: true
-//         },
-//         {
-//             title: "Your Current Time",
-//             configName: "PartyCommandsTime",
-//             value: true
-//         }
-//     ],
-//     shouldShow: data => data.PartyCommands
-// })
 // .addSwitch({
 //     category: "Combat",
 //     configName: "ReaperTimer",
@@ -209,7 +140,7 @@ export const initSettings = () => {
         .setClickSound(() => World.playSound("gui.button.press", 0.25, 1))
         .setCategorySort((a, b) => categories.indexOf(a) - categories.indexOf(b))
 
-    const { background, descriptionElement, searchBar, apply } = meinConf.AmaterasuGui
+    let { background, descriptionElement, searchBar, apply } = meinConf.AmaterasuGui
 
     background.x = 15
     background.y = 15
