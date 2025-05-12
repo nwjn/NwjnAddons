@@ -33,7 +33,12 @@ export default new class extends HudManager {
      * Create a parent RenderOverlay that renders all enabled huds
      */
     init() {
-        addCommand("gui", "Opens the Editor Gui", () => this.open())
+        addCommand({
+            name: "gui", 
+            description: "Opens the Editor Gui", 
+            run: this.open.bind(this),
+            clickAction: "run"
+        })
 
         new Event("RenderOverlay", this.drawActive.bind(this))
     }

@@ -5,25 +5,32 @@ import { addCommand } from "../libs/Helper/Command"
 import { scheduleTask } from "../libs/Time/Scheduler"
 import { LocalStore } from "../../tska/storage/LocalStore"
 
-new class Data {
-    static data = new LocalStore("Nwjn", {
-        "newUser": true,
-        "newMsg": "",
-        "power": "Unknown",
-        "tuning": "Unknown",
-        "enrich": "Unknown",
-        "mp": "Unknown",
-        "gummy": 0,
-        "lastMini": {},
-        "blacklist": {}
-    }, "data/.User.json")
+const Data = new LocalStore("Nwjn", {
+    "newUser": true,
+    "newMsg": "",
+    "power": "Unknown",
+    "tuning": "Unknown",
+    "enrich": "Unknown",
+    "mp": "Unknown",
+    "gummy": 0,
+    "lastMini": {},
+    "blacklist": {}
+}, "data/.User.json")
 
+new class {
     constructor() {
         new Event("ServerChat", this.onPowerChange.bind(this), { setCriteria: /^You selected the (.+) power for your Accessory Bag!$/ })
         new Event("ServerChat", this.onSwapEnrich.bind(this), { setCriteria: /^Swapped (\d+) enrichments to (.+)!$/ })
         new Event("ContainerClick", this.onStatTuning.bind(this), { setCriteria: /$Stats Tuning^/ })
 
-        addCommand("bl", "Blacklist <add, remove, list, clear> <name?> <reason?>", this.blacklist.bind(this))
+        addCommand({
+            name: "blacklist",
+            aliases: ["bl"], 
+            description: "Blacklist from party commands and waypoints", 
+            run: this.blacklist.bind(this),
+            clickAction: "suggest",
+            tabCompletions: (arg) => !arg && ["add", "remove", "list", "clear"]
+        })
 
         this.checkNewUser()
         this.checkMessenger()
@@ -31,11 +38,11 @@ new class Data {
     }
 
     onPowerChange(powerStone) {
-        Data.data.power = powerStone
+        Data.power = powerStone
     }
 
     onSwapEnrich(volume, stat) {
-        Data.data.enrich = `${volume} ${stat}`
+        Data.enrich = `${volume} ${stat}`
     }
 
     onStatTuning() {
@@ -44,10 +51,10 @@ new class Data {
             if (!lore) return
     
             const tuning = lore.match(/\+(\d+.) /g)
-            Data.data.tuning = tuning?.join(" ") ?? "Unknown"
+            Data.tuning = tuning?.join(" ") ?? "Unknown"
     
             const magPow = lore.match(/Magical Power: ([\d,]+)/g)
-            Data.data.mp = magPow ?? "Unknown"
+            Data.mp = magPow ?? "Unknown"
         }, Ticks.of(2))
     }
 
@@ -55,44 +62,40 @@ new class Data {
         name = name?.toLowerCase()
         type = type?.toLowerCase()
 
-        switch (type) {
-            case "add" && name: {
-                Data.data.blacklist[name] = reason
-                return Nwjn.chat(`§aAdded §c${name} §ato your blacklist.`)
-            }
-
-            case "remove" && name: {
-                delete Data.data.blacklist[name]
-                return Nwjn.chat(`§aRemoved §c${name} §afrom your blacklist.`)
-            }
-            
-            case "list": {
-                Nwjn.chat("§cBlacklist:")
-                return Object.entries(Data.data.blacklist).forEach(([ign, reason]) => 
-                    new TextComponent(`  - &a${ign}&f: &c${reason}`)
-                        .setHover("show_text", `Click to run "/nwjn bl remove ${ign}" to remove ${ign} from the blacklist.`)
-                        .setClick("run_command", `/nwjn bl remove ${ign}`)
-                        .chat()
-                )
-            }
-        
-            case "clear": {
-                Data.data.blacklist = {}
-                return Nwjn.chat("§cCleared your blacklist.")
-            }
-            
-            default: {
-                return Nwjn.chat("§cInvalid. §a[Add] and [remove] need a name entry. [List] and [clear] do not.")
-            }
+        if (type === "add" && name) {
+            Data.blacklist[name] = reason
+            return Nwjn.chat(`§aAdded §c${name} §ato your blacklist.`)
         }
+
+        else if (type === "remove" && name) {
+            Data.blacklist[name] = reason
+            return Nwjn.chat(`§aAdded §c${name} §ato your blacklist.`)
+        }
+
+        else if (type === "list") {
+            Nwjn.chat("§cBlacklist:")
+            return Object.entries(Data.blacklist).forEach(([ign, reason]) => 
+                new TextComponent(`  - &a${ign}&f: &c${reason}`)
+                    .setHover("show_text", `Click to run "/nwjn bl remove ${ign}" to remove ${ign} from the blacklist.`)
+                    .setClick("run_command", `/nwjn bl remove ${ign}`)
+                    .chat()
+            )
+        }
+        
+        else if (type === "clear") {
+            Data.blacklist = {}
+            return Nwjn.chat("§cCleared your blacklist.")
+        }
+
+        return Nwjn.chat("§cInvalid Usage. §aUse /nwjn bl <add, remove, list, clear> <name?> <reason?>")
     }
 
     checkNewUser() {
-        if (!Data.data.newUser) return
+        if (!Data.newUser) return
 
         const welcome = register("worldLoad", () => {
             welcome.unregister()
-            Data.data.newUser = false
+            Data.newUser = false
 
             Nwjn.from("Welcome! Open settings with '/nwjn'. Official Discord: https://discord.gg/3S3wXpC4gE")
         })
@@ -106,9 +109,9 @@ new class Data {
             const message = match?.[1]
             if (!message) return
 
-            if (message !== "Nothing" && message !== Data.data.newMsg) {
+            if (message !== "Nothing" && message !== Data.newMsg) {
                 Nwjn.from(message)
-                Data.data.newMsg = message
+                Data.newMsg = message
             }
         });
     }
@@ -146,4 +149,4 @@ new class Data {
     }
 }
 
-export default Data.data
+export default Data
