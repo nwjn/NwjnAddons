@@ -23,7 +23,7 @@ const SERVER_PACKET_LIST = new HashMap()
 /** Remap with uppercase keys and class names */
 Field.getFieldValue(net.minecraft.entity.EntityList, /* stringToClassMapping */"field_75625_b")
     .forEach((simpleName, clazz) => {
-        ENTITY_LIST.put(simpleName.toUpperCase(), clazz.getName())
+        ENTITY_LIST.put(simpleName.toLowerCase(), clazz.getName())
     })
 
 Field.getFieldValue(net.minecraft.network.EnumConnectionState, /* STATES_BY_CLASS */"field_150761_f")
@@ -58,7 +58,7 @@ export function getPacket(simpleName, isClientBound = false) {
 }
 
 export function getEntity(simpleName) {
-    let lookup = ENTITY_LIST.get(simpleName?.toUpperCase())
+    let lookup = ENTITY_LIST.get(simpleName?.toLowerCase())
     
     if (lookup) return JavaTypeOrNull(lookup).class
 }

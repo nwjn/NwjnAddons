@@ -84,7 +84,7 @@ void new class extends Feature {
         value.split(/, ?/g).forEach((entry, idx) => {
             let [ name, params, clazz ] = entry.split("-")
     
-            clazz = getEntity(name.toUpperCase())
+            clazz = getEntity(name.toLowerCase())
             if (name && !clazz) return Nwjn.edit(`§cEntity class called §b§l${name}§r§c is unknown. Read https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`, 28500 + idx)
             if (World.isLoaded()) ChatLib.deleteChat(28500 + idx)
     
