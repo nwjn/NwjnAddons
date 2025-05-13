@@ -1,5 +1,6 @@
 import Feature from "../../libs/Features/Feature"
 import ConfigProperty from "../../data/ConfigProperty"
+import { AxisAlignedBBUtils } from "../../../tska/utils/AxisAlignedBBUtils"
 import { renderMCAABBFilled, renderMCAABBOutline } from "../../../Apelles"
 
 void new class extends Feature {
@@ -41,7 +42,8 @@ void new class extends Feature {
 
         const Block = BlockState./* getBlock */func_177230_c()
         Block./* setBlockBoundsBasedOnState */func_180654_a(world, BlockPos)
-        const BlockBounds = Block./* getSelectedBoundingBox */func_180646_a(world, BlockPos)
+
+        const BlockBounds = Block./* getSelectedBoundingBox */func_180646_a(world, BlockPos)./* expand */func_72314_b(0.02, 0.02, 0.02)
 
         renderMCAABBOutline(this.color.packed, BlockBounds, { lw: 4, smooth: true, cull: false })   
         renderMCAABBFilled(this.color.dulled, BlockBounds, { cull: false })
