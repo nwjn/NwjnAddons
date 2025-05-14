@@ -62,3 +62,12 @@ export function getEntity(simpleName) {
     
     if (lookup) return JavaTypeOrNull(lookup).class
 }
+
+// import { createCustomOutlineTester, createPerEntityOutliner } from "../../../Apelles"
+// import MobUtil from "./MobUtil"
+// const tester = createCustomOutlineTester((entity) => {
+//     ChatLib.chat(MobUtil.getMaxHP(entity))
+//     return MobUtil.getMaxHP(entity) == 10
+// })
+// const outliner = createPerEntityOutliner(tester, 0xffbeefff, 2)
+// outliner.register()

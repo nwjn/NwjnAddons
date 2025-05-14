@@ -3,9 +3,16 @@ import NumUtil from "../../libs/Helper/NumUtil"
 import Nwjn from "../../libs/Helper/Nwjn"
 
 void new class {
-    exponential = /\^|\*\*/
-    multiplicative = /\*|\/|\%/
-    additive = /\+|\-/
+    REGEX = {
+        tokens: /\-?\d*\.?\d+|\*\*|\^|\*|\/|\%|\+|\-/g,
+        remove: /[^\d\+\-\*\%\/\^\(\)\.]/g,
+        subs: /\(([^()]+)\)/g,
+        parenthesis: /\(|\)/g,
+        
+        exponential: /\^|\*\*/,
+        multiplicative: /\*|\/|\%/,
+        additive: /\+|\-/
+    }
 
     OPERATIONS = {
         "^" : (a, b) => a ** b,
@@ -16,6 +23,8 @@ void new class {
         "+" : (a, b) => a +  b,
         "-" : (a, b) => a -  b
     }
+
+    steps = []
 
     constructor() {
         addCommand({
@@ -31,12 +40,22 @@ void new class {
         if (!args?.[0]) return Client.scheduleTask(() => Client.setCurrentChatMessage("/nwjn calc "))
 
         const raw = args.join("")
-        const equat = raw.replace(/[^\d\+\-\*\%\/\^\(\)\.]/g, "")
+        const equat = raw.replace(this.REGEX.remove, "")
 
         if (!equat) return Nwjn.chat("§cNo numbers given.")
 
+        this.steps.push(`§b${equat}`)
+
         const solved = NumUtil.formatGrouped(this.solve(equat))
-        Nwjn.chat(`§b${raw}§r = §l§a${solved}`)
+        Nwjn.chatComponent(`§b${raw}§r = §l§a${solved}`)
+            .setHover("show_text", this.steps.join("§r\n"))
+            .chat()
+
+        this.steps.length = 0
+    }
+
+    step(action, data) {
+        this.steps.push(`[${action}] ${Array.isArray(data) ? data.join(" ") : data}`)
     }
 
     /**
@@ -45,14 +64,22 @@ void new class {
      * @param {Array} array array of operations and numbers
      */
     mergeSolve(opIdx, array) {
+        // grr unary negative
+        if (array[opIdx] === "-" && (!opIdx || isNaN(array[opIdx - 1]))) return array.splice(opIdx, 2, -array[opIdx + 1])
+
         const operation = this.OPERATIONS[array[opIdx]]
         if (!operation) return
+
+        const parts = array.slice(opIdx - 1, opIdx + 2)
+        this.step("Solving", parts)
 
         array.splice(
             opIdx - 1, // Start at first number
             3, // Remove number, operator, number
-            operation(+array[opIdx - 1], +array[opIdx + 1]) // Replace first number with solved
+            operation(+parts[0], +parts[2]) // Replace first number with solved
         )
+
+        this.step("Merge", array)
     }
 
     /**
@@ -60,27 +87,33 @@ void new class {
      * @param {string} equat equation
      */
     partition(equat) {
-        const arr = equat.match(/((?:^-*)?[\d\.]+|\*\*|\^|\*|\/|\%|\+|\-)/g)
+        const arr = equat.match(this.REGEX.tokens)
         if (!arr) return equat
+
+        this.step("Start Partition", arr)
     
         // solve exponential
-        for (let i in arr) {
-            if (this.exponential.test(arr[i]))
-                this.mergeSolve(i--, arr)
+        for (let i = arr.length - 1; i >= 0; i--) {
+            if (this.REGEX.exponential.test(arr[i])) {
+                this.mergeSolve(i, arr)
+                i = arr.length
+            }
         }
         
         // solve multiplicative
         for (let i in arr) {
-            if (this.multiplicative.test(arr[i]))
+            if (this.REGEX.multiplicative.test(arr[i]))
                 this.mergeSolve(i--, arr)
         }
         
         // solve additive
         for (let i in arr) {
-            if (this.additive.test(arr[i]))
+            if (this.REGEX.additive.test(arr[i]))
                 this.mergeSolve(i--, arr)
         }
         
+        this.step("Partition Result", arr[0])
+
         return arr[0]
     }
 
@@ -90,18 +123,24 @@ void new class {
      * @returns {string} solved
      */
     solve(equat) {
-        const subCalculations = equat.match(/\(([^()]+)\)/g)
+        const subCalculations = equat.match(this.REGEX.subs)
         let result = equat
     
         if (!subCalculations) return this.partition(equat)
 
         for (let subCalc of subCalculations) {
-            subCalc = subCalc.replace(/\(|\)/g, "")
-            result = result.replace(`(${subCalc})`, this.partition(subCalc))
+            let solve = this.partition(subCalc.replace(this.REGEX.parenthesis, ""))
+
+            this.step("Solve Sub", `(${subCalc}) = ${solve}`)
+
+            result = result.replace(subCalc, solve)
+
+            this.step("Merge Sub", result)
         }
 
         if (result.includes("(")) return this.solve(result)
     
+        this.step("Rewrite", result)
         return this.partition(result)
     }
 }
