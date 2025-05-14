@@ -1,7 +1,7 @@
 import { HudManager } from "../../../tska/gui/HudManager"
 import Data from "../../data/Data"
 import Event from "../Events/Event"
-import { addCommand } from "../Helper/Command"
+import Command from "../Helper/Command"
 
 export default new class extends HudManager {
     constructor() {
@@ -33,11 +33,11 @@ export default new class extends HudManager {
      * Create a parent RenderOverlay that renders all enabled huds
      */
     init() {
-        addCommand({
+        Command.addCommand({
             name: "gui", 
             description: "Opens the Editor Gui", 
             run: this.open.bind(this),
-            clickAction: "run"
+            clickAction: Command.ACTION.RUN
         })
 
         new Event("RenderOverlay", this.drawActive.bind(this))

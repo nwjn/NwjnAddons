@@ -1,14 +1,14 @@
-import { addCommand } from "../../libs/Helper/Command"
+import Command from "../../libs/Helper/Command"
 import NumUtil from "../../libs/Helper/NumUtil"
 import Nwjn from "../../libs/Helper/Nwjn"
 
 void new class {
     REGEX = {
-        tokens: /\-?\d*\.?\d+|\*\*|\^|\*|\/|\%|\+|\-/g,
         remove: /[^\d\+\-\*\%\/\^\(\)\.]/g,
         subs: /\(([^()]+)\)/g,
         parenthesis: /\(|\)/g,
         
+        operator: /[\+\-\*\/\%\^\(\)]/,
         exponential: /\^|\*\*/,
         multiplicative: /\*|\/|\%/,
         additive: /\+|\-/
@@ -27,18 +27,16 @@ void new class {
     steps = []
 
     constructor() {
-        addCommand({
+        Command.addCommand({
             name: "calc", 
             description: "Calculate the given equation", 
             run: this.onCommand.bind(this),
-            clickAction: "suggest"
+            clickAction: Command.ACTION.SUGGEST
         })
     }
 
     /** @Event Command */
     onCommand(...args) {
-        if (!args?.[0]) return Client.scheduleTask(() => Client.setCurrentChatMessage("/nwjn calc "))
-
         const raw = args.join("")
         const equat = raw.replace(this.REGEX.remove, "")
 
@@ -54,8 +52,36 @@ void new class {
         this.steps.length = 0
     }
 
-    step(action, data) {
-        this.steps.push(`[${action}] ${Array.isArray(data) ? data.join(" ") : data}`)
+        tokenizer(equat) {
+        const tokens = []
+        let current = "", prev = ""
+
+        for (let char of equat) {
+            if (this.REGEX.operator.test(char)) {
+                if (char === '-' && (!prev || this.REGEX.operator.test(prev))) {
+                    if (current) tokens.push(current)
+                    current = char
+                }
+                else {
+                    if (current) tokens.push(current)
+                    current = ""
+                    tokens.push(char)
+                }
+            }
+            else if (/[\d\.]/.test(char)) {
+                current += char
+            }
+
+            prev = char
+        }
+
+        if (current) tokens.push(current)
+        return tokens
+    }
+
+    step(action, data, _sub = false) {
+        _sub = _sub ? "  " : ""
+        this.steps.push(`${_sub}${action} | ${Array.isArray(data) ? data.join(" ") : data}`)
     }
 
     /**
@@ -63,15 +89,15 @@ void new class {
      * @param {number} opIdx index of the array
      * @param {Array} array array of operations and numbers
      */
-    mergeSolve(opIdx, array) {
+    mergeSolve(opIdx, array, _sub) {
         // grr unary negative
-        if (array[opIdx] === "-" && (!opIdx || isNaN(array[opIdx - 1]))) return array.splice(opIdx, 2, -array[opIdx + 1])
+        if (array[opIdx] === '-' && (!opIdx || this.REGEX.operator.test(array[opIdx - 1]))) return void array.splice(opIdx, 2, -array[opIdx + 1])
 
         const operation = this.OPERATIONS[array[opIdx]]
         if (!operation) return
 
         const parts = array.slice(opIdx - 1, opIdx + 2)
-        this.step("Solving", parts)
+        this.step("§6Solve", parts, _sub)
 
         array.splice(
             opIdx - 1, // Start at first number
@@ -79,23 +105,21 @@ void new class {
             operation(+parts[0], +parts[2]) // Replace first number with solved
         )
 
-        this.step("Merge", array)
+        this.step("§3Result", array, _sub)
     }
 
     /**
      * Split equation into parts and solve by order of operations
      * @param {string} equat equation
      */
-    partition(equat) {
-        const arr = equat.match(this.REGEX.tokens)
+    partition(equat, _sub) {
+        const arr = this.tokenizer(equat)
         if (!arr) return equat
-
-        this.step("Start Partition", arr)
     
         // solve exponential
         for (let i = arr.length - 1; i >= 0; i--) {
             if (this.REGEX.exponential.test(arr[i])) {
-                this.mergeSolve(i, arr)
+                this.mergeSolve(i, arr, _sub)
                 i = arr.length
             }
         }
@@ -103,17 +127,15 @@ void new class {
         // solve multiplicative
         for (let i in arr) {
             if (this.REGEX.multiplicative.test(arr[i]))
-                this.mergeSolve(i--, arr)
+                this.mergeSolve(i--, arr, _sub)
         }
         
         // solve additive
         for (let i in arr) {
             if (this.REGEX.additive.test(arr[i]))
-                this.mergeSolve(i--, arr)
+                this.mergeSolve(i--, arr, _sub)
         }
         
-        this.step("Partition Result", arr[0])
-
         return arr[0]
     }
 
@@ -129,18 +151,16 @@ void new class {
         if (!subCalculations) return this.partition(equat)
 
         for (let subCalc of subCalculations) {
-            let solve = this.partition(subCalc.replace(this.REGEX.parenthesis, ""))
-
-            this.step("Solve Sub", `(${subCalc}) = ${solve}`)
+            this.step("§eSolve", subCalc)
+            let solve = this.partition(subCalc.replace(this.REGEX.parenthesis, ""), true)
 
             result = result.replace(subCalc, solve)
 
-            this.step("Merge Sub", result)
+            this.step("§9Rewrite", result)
         }
 
         if (result.includes("(")) return this.solve(result)
-    
-        this.step("Rewrite", result)
+
         return this.partition(result)
     }
 }

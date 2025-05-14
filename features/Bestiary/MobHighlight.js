@@ -47,7 +47,7 @@ void new class extends Feature {
 
     onEnabled(value = this.setting.value) {
         // this.outliner.clear()
-        World.getWorld()./* loadedEntityList */field_72996_f.forEach(e => this.outliner.remove(e))
+        World.getWorld()?./* loadedEntityList */field_72996_f?.forEach(e => this.outliner.remove(e))
         this.whiteList.clear()
     
         if (!value) return
@@ -64,7 +64,7 @@ void new class extends Feature {
             this.whiteList.put(clazz, healthList)
         })
 
-        World.getWorld()./* loadedEntityList */field_72996_f.forEach(this.test.bind(this))
+        World.getWorld()?./* loadedEntityList */field_72996_f?.forEach(this.test.bind(this))
     }
 
     onDisabled() {

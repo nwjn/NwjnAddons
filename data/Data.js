@@ -1,7 +1,7 @@
 import Nwjn from "../libs/Helper/Nwjn"
 import Event from "../libs/Events/Event"
 import Ticks from "../libs/Time/Ticks"
-import { addCommand } from "../libs/Helper/Command"
+import Command from "../libs/Helper/Command"
 import { scheduleTask } from "../libs/Time/Scheduler"
 import { LocalStore } from "../../tska/storage/LocalStore"
 
@@ -23,12 +23,12 @@ new class {
         new Event("ServerChat", this.onSwapEnrich.bind(this), { setCriteria: /^Swapped (\d+) enrichments to (.+)!$/ })
         new Event("ContainerClick", this.onStatTuning.bind(this), { setCriteria: /$Stats Tuning^/ })
 
-        addCommand({
+        Command.addCommand({
             name: "blacklist",
             aliases: ["bl"], 
             description: "Blacklist from party commands and waypoints", 
             run: this.blacklist.bind(this),
-            clickAction: "suggest",
+            clickAction: Command.ACTION.SUGGEST,
             tabCompletions: (arg) => !arg && ["add", "remove", "list", "clear"]
         })
 
