@@ -1,6 +1,7 @@
 import Nwjn from "../../libs/Helper/Nwjn"
 import Feature from "../../libs/Features/Feature"
 import ConfigProperty from "../../data/ConfigProperty"
+import NumUtil from "../../libs/Helper/NumUtil"
 
 void new class extends Feature {
     constructor() {
@@ -33,7 +34,7 @@ void new class extends Feature {
             let nametag = watcher./* getObject */func_75669_b()
             if (!nametag || /\s|^§\w\D$/.test(nametag)) continue
 
-            return Nwjn.chat(nametag)
+            return Nwjn.chat(NumUtil.isFormatUS() ? nametag : nametag.replace(/,/g, "."))
         }
     }
 }

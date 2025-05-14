@@ -1,8 +1,8 @@
 import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
-import NumUtil from "../libs/Helper/NumUtil"
+import Color from "../libs/Helper/Color"
 
 const defCon1 = new DefaultConfig("Nwjn", "data/.Config.json")
-const queueFn = []
+let queueFn = []
 let isInit = false
 
 export default class ConfigProperty {
@@ -62,11 +62,11 @@ export default class ConfigProperty {
 
     update(anyArg) {
         if (this.type == "ColorPicker") {
-            const hex = NumUtil.toRGBAHex(anyArg ?? this.value)
+            const hex = Color.toRGBAHex(anyArg ?? this.value)
 
             this.packed = hex
-            this.dulled = NumUtil.scaleAlphaOffset(hex, 0.2)
-            this.shifted = NumUtil.rgbaToARGB(hex)
+            this.dulled = Color.scaleAlphaOffset(hex, 0.2)
+            this.shifted = Color.rgbaToARGB(hex)
         }
     }
 
