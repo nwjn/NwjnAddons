@@ -7,7 +7,6 @@ const EVENT_PATH_LIST = [
     "event.entity.living",
     "event.world",
     "event.entity",
-    "fml.common.gameevent",
     "event",
     "event.entity.item",
     "event.brewing",
