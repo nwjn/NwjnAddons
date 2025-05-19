@@ -1,6 +1,5 @@
 import Feature from "../../libs/Features/Feature"
 import ConfigProperty from "../../data/ConfigProperty"
-import { AxisAlignedBBUtils } from "../../../tska/utils/AxisAlignedBBUtils"
 import { renderMCAABBFilled, renderMCAABBOutline } from "../../../Apelles"
 
 void new class extends Feature {
