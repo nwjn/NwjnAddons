@@ -120,7 +120,7 @@ void new class extends Feature {
         this.color.update()
 
         this.tester = createCustomOutlineTester(this.test.bind(this)),
-        this.outliner = createSemiAutomaticOutliner(this.tester, this.color.packed, 2)
+        this.outliner = createSemiAutomaticOutliner(this.tester, this.color.packed, 2, { renderInvis: false })
 
         this.color._registerListener(() => this.outliner.setColor(this.color.packed))
         
