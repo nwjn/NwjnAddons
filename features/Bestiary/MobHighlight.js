@@ -5,7 +5,6 @@ import Feature from "../../libs/Features/Feature"
 import ConfigProperty from "../../data/ConfigProperty"
 import { getEntity } from "../../libs/Helper/ClassReference"
 import { createSemiAutomaticOutliner, createCustomOutlineTester } from "../../../Apelles"
-import Ticks from "../../libs/Time/Ticks"
 
 void new class extends Feature {    
     constructor() {        
@@ -33,21 +32,46 @@ void new class extends Feature {
             outliner: null
         })
 
-        this.addEvent("EntityJoin", this.onEntityJoin.bind(this))
-        this.addEvent("PacketReceived", this.onStatus.bind(this), { setFilteredClass: "EntityEffect" })
+        this.addSubEvent("PacketReceived", this.onEffect.bind(this), { setFilteredClass: "EntityEffect" }, () => !this.whiteList.isEmpty())
+        this.addSubEvent("PacketReceived", this.onEntityFirstUpdate.bind(this), { setFilteredClass: "EntityMetadata" }, () => !this.whiteList.isEmpty())
     }
 
-    onEntityJoin({ entity }) {
-        const lookup = this.whiteList.get(entity.class)
+    /**
+     * @SubEvent PacketReceived
+     * @Packet EntityEffect
+     */
+    onEffect(packet) {
+        if (packet.func_149427_e() !== 14) return
+
+        const entity = MobUtil.getEntityByID(packet.func_149426_d())
+        if (!entity) return
+
+        const lookup = this.whiteList.containsKey(entity.class)
         if (!lookup) return
 
-        scheduleTask(() => this.outliner.retest(entity), Ticks.of(5))
+        Client.scheduleTask(() => this.outliner.remove(entity))
     }
 
-    onEffect(packet) {
-        if (packet./* getEffectId */func_149427_e() !== 14) return
-        
-        scheduleTask(() => this.outliner.remove(MobUtil.getEntityByID(packet./* getEntityId */func_149426_d())))
+    /**
+     * @SubEvent PacketReceived
+     * @Packet EntityMetadata
+     */
+    onEntityFirstUpdate(packet) {
+        const entity = MobUtil.getEntityByID(packet./* getEntityId */func_149375_d())
+        if (!entity) return
+
+        const WatchList = packet./* getWatcherList */func_149376_c()
+        if (!WatchList) return
+
+        const healthList = this.whiteList.get(entity.class)
+        if (!healthList) return
+        if (healthList === true) return this.outliner.add(entity)
+
+        for (let watcher of WatchList) {
+            let obj = watcher.func_75669_b()
+            if (Number.isInteger(obj) && healthList.includes(obj))
+                return Client.scheduleTask(() => this.outliner.retest(entity))
+        }
     }
 
     test(entity) {
@@ -58,30 +82,31 @@ void new class extends Feature {
         const healthList = this.whiteList.get(entClass)
         if (!healthList) return false
 
-        return healthList?.includes(MobUtil.getMaxHP(entity))
+        return healthList === true || healthList?.includes(MobUtil.getMaxHP(entity))
     }
 
     onEnabled(value = this.setting.value) {
         this.onDisabled()
 
-        value.split(/, ?/g).forEach((entry, idx) => {
+        value?.split(/, ?|\n/g)?.forEach((entry, idx) => {
             const [ name, params ] = entry.split("-")
     
             const clazz = getEntity(name.toLowerCase())
             if (name && !clazz) return Nwjn.edit(`§cEntity class called §b§l${name}§r§c is unknown. Read https://github.com/nwjn/NwjnAddons/wiki/Bestiary-Entries`, 28500 + idx)
             if (World.isLoaded()) ChatLib.deleteChat(28500 + idx)
+            if (!clazz) return
     
-            const healthList = params?.split("|")?.map(NumUtil.parseCompact) ?? false
+            const healthList = params?.split("|")?.map(NumUtil.parseCompact) ?? true
     
-            if (!healthList) this.tester.addWhitelist(clazz)
             this.whiteList.put(clazz, healthList)
-
-            this.outliner.register()
         })
+
+        if (this.whiteList.isEmpty()) return
+        this.outliner.register()
+        this.update()
     }
 
     onDisabled() {
-        this.whiteList.forEach((k, v) => !v && this.tester.removeWhitelist(k))
         this.outliner.clear()
         this.whiteList.clear()
         this.outliner.unregister()
