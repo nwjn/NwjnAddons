@@ -52,7 +52,7 @@ void new class {
         this.steps.length = 0
     }
 
-        tokenizer(equat) {
+    tokenizer(equat) {
         const tokens = []
         let current = "", prev = ""
 
@@ -125,17 +125,17 @@ void new class {
         }
         
         // solve multiplicative
-        for (let i in arr) {
+        for (let i = 0; i < arr.length - 1; i++) {
             if (this.REGEX.multiplicative.test(arr[i]))
                 this.mergeSolve(i--, arr, _sub)
         }
         
         // solve additive
-        for (let i in arr) {
+        for (let i = 0; i < arr.length - 1; i++) {
             if (this.REGEX.additive.test(arr[i]))
                 this.mergeSolve(i--, arr, _sub)
         }
-        
+
         return arr[0]
     }
 
