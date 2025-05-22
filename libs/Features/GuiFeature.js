@@ -1,7 +1,7 @@
 import Feature from "./Feature"
 import GuiEditor from "./GuiEditor"
 import { TextHud } from "../../../tska/gui/TextHud"
-import ConfigProperty from "../../data/ConfigProperty"
+import Config from "../../data/Config"
 
 const FontRenderer = Renderer.getFontRenderer()
 
@@ -40,9 +40,9 @@ export default class GuiFeature extends Feature {
             .setScaleStep(0.025)
             .onDraw(this.onDraw.bind(this))
 
-        ConfigProperty.awaitSettings(() => {
+        Config.postInit(() => {
             this.setting.value ? GuiEditor.enabled.add(this.hud) : GuiEditor.enabled.delete(this.hud)
-            this.setting._registerListener((_, val) => val ? GuiEditor.enabled.add(this.hud) : GuiEditor.enabled.delete(this.hud))
+            this.setting.addListener((_, val) => val ? GuiEditor.enabled.add(this.hud) : GuiEditor.enabled.delete(this.hud))
         })
 
         GuiEditor.huds.push(this.hud)

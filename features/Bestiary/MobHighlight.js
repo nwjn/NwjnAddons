@@ -2,6 +2,7 @@ import Nwjn from "../../libs/Helper/Nwjn"
 import NumUtil from "../../libs/Helper/NumUtil"
 import MobUtil from "../../libs/Helper/MobUtil"
 import Feature from "../../libs/Features/Feature"
+import Config from "../../data/Config"
 import ConfigProperty from "../../data/ConfigProperty"
 import { getEntity } from "../../libs/Helper/ClassReference"
 import { createSemiAutomaticOutliner, createCustomOutlineTester } from "../../../Apelles"
@@ -24,7 +25,8 @@ void new class extends Feature {
                 title: "➤ Mob Highlight Color",
                 description: "     Sets the color for monster hitboxes",
                 value: [ 255, 190, 239, 255 ],
-                shouldShow: data => data.MobHighlight !== ""
+                shouldShow: data => data.MobHighlight !== "",
+                registerListener: () => this.outliner.setColor(this.color.packed)
             }),
 
             whiteList: new HashMap(),
@@ -32,24 +34,7 @@ void new class extends Feature {
             outliner: null
         })
 
-        this.addSubEvent("PacketReceived", this.onEffect.bind(this), { setFilteredClass: "EntityEffect" }, () => !this.whiteList.isEmpty())
         this.addSubEvent("PacketReceived", this.onEntityFirstUpdate.bind(this), { setFilteredClass: "EntityMetadata" }, () => !this.whiteList.isEmpty())
-    }
-
-    /**
-     * @SubEvent PacketReceived
-     * @Packet EntityEffect
-     */
-    onEffect(packet) {
-        if (packet.func_149427_e() !== 14) return
-
-        const entity = MobUtil.getEntityByID(packet.func_149426_d())
-        if (!entity) return
-
-        const lookup = this.whiteList.containsKey(entity.class)
-        if (!lookup) return
-
-        Client.scheduleTask(() => this.outliner.remove(entity))
     }
 
     /**
@@ -70,7 +55,7 @@ void new class extends Feature {
         for (let watcher of WatchList) {
             let obj = watcher.func_75669_b()
             if (Number.isInteger(obj) && healthList.includes(obj))
-                return Client.scheduleTask(() => this.outliner.retest(entity))
+                return Client.scheduleTask(() => this.outliner.add(entity))
         }
     }
 
@@ -117,15 +102,9 @@ void new class extends Feature {
     }
 
     postInit() {
-        this.color.update()
-
         this.tester = createCustomOutlineTester(this.test.bind(this)),
-        this.outliner = createSemiAutomaticOutliner(this.tester, this.color.packed, 2, { renderInvis: false })
+        this.outliner = createSemiAutomaticOutliner(this.tester, this.color.packed, 2)
 
-        this.color._registerListener(() => this.outliner.setColor(this.color.packed))
-        
-        this.outliner.register()
-
-        ConfigProperty.getConfig().onCloseGui(this.onEnabled.bind(this))
+        Config.getConfig().onCloseGui(this.onEnabled.bind(this))
     }
 }

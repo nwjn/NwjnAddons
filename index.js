@@ -1,5 +1,5 @@
 // Handles loading all Feature files because I was too lazy to type them all out
-import Feature from "./libs/Features/Feature"
+import Loader from "./data/Config"
 
 let pathFinder = /Nwjn[\/\\]features[\/\\](.+[\/\\]\w+)\.js$/
 let fileSeparator = /\\/g
@@ -10,11 +10,9 @@ let module = void function requireFeatures(file) {
     if (file.isDirectory()) return file.listFiles().forEach(requireFeatures)
 
     let match = file.getPath().match(pathFinder)
-    if (!match) return
     
-    modules.push(relativeDest + match[1].replace(fileSeparator, "/"))
+    if (match) modules.push(match[1].replace(fileSeparator, "/"))
 }(new java.io.File(`${Config.modulesFolder}/Nwjn/features`))
 
-for (module of modules) require(module)
-
-Feature.initFeatures()
+try { for (module of modules) require(relativeDest + module) }
+finally { Loader.load() }

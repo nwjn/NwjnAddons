@@ -42,8 +42,4 @@ void new class extends GuiFeature {
     onEnabled() {
         this.onInterval()
     }
-
-    postInit() {
-        this.color.update()
-    }
 }

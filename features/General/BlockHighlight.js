@@ -58,8 +58,4 @@ void new class extends Feature {
         unbind outline shader
          */
     }
-
-    postInit() {
-        this.color.update()
-    }
 }

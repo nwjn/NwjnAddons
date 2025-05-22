@@ -5,36 +5,12 @@
  * @credit https://github.com/DocilElm/tska/blob/main/event/Feature.js
  */
 
-import { initSettings } from "../../data/Settings"
 import Location from "../Hypixel/Location"
 import Event from "../Events/Event"
+import Config from "../../data/Config"
 import ConfigProperty from "../../data/ConfigProperty"
 
-const feets = new Set()
-
 export default class {
-    /**
-     * After loading all feature files this will be called from index.js
-     * Initializes the settings object,
-     * Creates listeners and events for updating features
-     */
-    static initFeatures() {
-        new Thread(() => {
-            initSettings()
-    
-            feets.forEach(f => f._postInit())
-
-            new Event("WorldLoad", () => feets.forEach(feet => feet._updateRegister()))
-            new Event("WorldUnload", () => feets.forEach(feet => feet._unregister()))
-
-            Location.onWorldChange(world => world && feets.forEach(feet => feet._updateRegister()))
-            Location.onAreaChange(zone => zone && feets.forEach(feet => feet.zones && feet._updateRegister()))
-
-            ConfigProperty.getConfig().onCloseGui(() => feets.forEach(feet => feet._updateRegister()))
-            ConfigProperty.postInit()
-        }).start()
-    }
-
     /**
      * - Utility that handles registering various events and listeners to make complex, functional, and performative features
      * - Class can be used with or without requiring the settings, worlds, or zones fields depending on the intended functionality
@@ -54,7 +30,7 @@ export default class {
         this.hasSetting = this.setting instanceof ConfigProperty
         this.isRegistered = false
 
-        feets.add(this)
+        Config.require(this)
     }
 
     /** Add [Events] to run when this feature is registered */
@@ -76,8 +52,9 @@ export default class {
 
     /** Rechecks [SubEvents] and registers them if they follow their condition */
     update() {
-        if (!this.isRegistered) return
-        if (this.subEvents) for (let subEvent of this.subEvents) subEvent[1]() ? subEvent[0].register() : subEvent[0].unregister()
+        if (!this.isRegistered || !this.subEvents) return
+        for (let subEvent of this.subEvents) 
+            subEvent[1]() ? subEvent[0].register() : subEvent[0].unregister()
     }
 
     /** 
@@ -126,7 +103,7 @@ export default class {
         if (this.setting) {
             this.isSettingEnabled = this.setting.value
     
-            this.setting._registerListener((_, val) => {
+            this.setting.addListener((_, val) => {
                 this.isSettingEnabled = val
                 this._updateEnablers()
             })

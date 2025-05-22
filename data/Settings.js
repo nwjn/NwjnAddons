@@ -1,30 +1,3 @@
-import ConfigProperty from "./ConfigProperty"
-import Nwjn from "../libs/Helper/Nwjn"
-import Settings from "../../Amaterasu/core/Settings"
-
-new ConfigProperty("TextParagraph", {
-    category: "Home",
-    configName: "dependencies",
-    title: "§6§lPowered by:§r",
-    description: "\n" + Nwjn.DEPENDENCIES.map(([lib, ver], idx) => `§r§${(idx + 10).toString(16)}${lib}-${ver}§r`).join("\n"),
-    centered: true
-})
-
-new ConfigProperty("Button", {
-    category: "Home",
-    configName: "github",
-    title: "Github",
-    description: "Contribute to, or track this project's progress and pre-releases!",
-    onClick: () => Nwjn.openLink("https://github.com/nwjn")
-})
-
-new ConfigProperty("Button", {
-    category: "Home",
-    configName: "discord",
-    title: "Discord",
-    description: "Send feedback including suggestions and bug-reports!",
-    onClick: () => Nwjn.openLink("https://discord.com/invite/3S3wXpC4gE")
-})
 // .addSwitch({
 //     category: "Combat",
 //     configName: "ReaperTimer",
@@ -131,25 +104,3 @@ new ConfigProperty("Button", {
 //     description: "Shows guesses of corpses and exit in mineshaft, walk within 3 blocks of a guess waypoint to remove it",
 //     value: false
 // })
-
-// add lihua in top left
-export const initSettings = () => {
-    const categories = ["Home", "General", "Bestiary", "Combat", "Kuudra", "Mining", "Performance"]
-
-    const meinConf = new Settings("Nwjn", ConfigProperty.getDefaultConfig(), "data/Scheme.json", `              ${Nwjn.BANNER}`)
-        .setClickSound(() => World.playSound("gui.button.press", 0.25, 1))
-        .setCategorySort((a, b) => categories.indexOf(a) - categories.indexOf(b))
-
-    let { background, descriptionElement, searchBar, apply } = meinConf.AmaterasuGui
-
-    background.x = 15
-    background.y = 15
-    background.width = 70
-    background.height = 70
-
-    descriptionElement.textWrap.enabled = false
-    
-    searchBar.x = 84
-
-    apply()
-}

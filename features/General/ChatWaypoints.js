@@ -91,8 +91,4 @@ void new class extends Feature {
     onDisabled() {
         this.waypoints.clear()
     }
-
-    postInit() {
-        this.color.update()
-    }
 }

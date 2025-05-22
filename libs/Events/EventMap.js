@@ -138,7 +138,7 @@ createEvent("ContainerClick", (fn, { setCriteria }) =>
 export const getEvent = (triggerType, method, modifiers) => {
     if (triggerType instanceof com.chattriggers.ctjs.triggers.Trigger) return triggerType.unregister()
 
-    const type = triggerType.toUpperCase()
+    const type = typeof(triggerType) === "string" ? triggerType.toUpperCase() : triggerType
     let trigger
     
     if (type === "PACKETRECEIVED") {

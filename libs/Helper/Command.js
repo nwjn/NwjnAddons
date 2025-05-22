@@ -1,5 +1,5 @@
 import Nwjn from "./Nwjn"
-import ConfigProperty from "../../data/ConfigProperty"
+import Config from "../../data/Config"
 import { CommandHandler } from "../../../tska/command/CommandHandler"
 
 export default new class extends CommandHandler {
@@ -7,7 +7,7 @@ export default new class extends CommandHandler {
         super("Nwjn")
 
         // Default setup to open module gui
-        this.setName("Nwjn", (arg) => !arg && !!ConfigProperty.getConfig()?.openGui())
+        this.setName("Nwjn", (arg) => !arg && !!Config.getConfig()?.openGui())
 
         // Add custom formatting
         this.setCommandFormat("  • §n§b${name}§r§f: §7${description}")

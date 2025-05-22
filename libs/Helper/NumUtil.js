@@ -3,7 +3,7 @@ import ConfigProperty from "../../data/ConfigProperty"
 const GroupingFormat = new ConfigProperty("DropDown", {
     category: "Home",
     configName: "groupingFormat",
-    title: "Number Format",
+    title: "§e✯§r Number Format",
     description: "Choose how you want to format numbers",
     options: [ "US: 123,456.789", "DE: 123.456,789" ],
     value: 0
@@ -36,10 +36,6 @@ export default class NumUtil {
     }
 
     static RADIAN = Math.PI / 180
-
-    static getDistance(arr1, arr2) {
-        return Math.abs(Math.hypot(arr1[0] - arr2[0], arr1[1] - arr2[1], arr1[2] - arr2[2]))
-    }
 
     static formatGrouped(number, locale = GroupingFormat.value) {
         return !locale ? GroupingsUS.format(+number) : GroupingsDE.format(+number)
