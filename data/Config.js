@@ -12,15 +12,24 @@ export default class Config {
 
     /**
      * After loading all feature files this will be called from index.js
-     * Initializes the settings object,
+     * Initializes the settings object
+     * By the time default config reaches this point all properties should already be applied
+     * @returns {Settings} the settings instance
      */
     static initSettings() {
-        const categories = [ "Home", "General", "Bestiary", "Combat", "Performance" ]
+        // Sort initially instead of on apply call
+        const mainCategories = [ "Home", "General", "Bestiary", "Combat", "Performance" ]
         
         const meinConf = new Settings("Nwjn", Config.defCon1, "data/Scheme.json", `              §r§0§m§l---------§r§0§l 【§r §c§lNwjn§0§l 】§r§0§m§l---------§r`)
             .setClickSound(() => World.playSound("gui.button.press", 0.25, 1))
-            .setCategorySort((a, b) => categories.indexOf(a) - categories.indexOf(b))
-    
+
+            // If someone decides to fork the module and add their own features, those categories will be pushed to the bottom
+            .setCategorySort((a, b) => {
+                const idx1 = mainCategories.indexOf(a.category)
+                const idx2 = mainCategories.indexOf(b.category)
+                return (~idx1 ? idx1 : Infinity) - (~idx2 ? idx2 : Infinity)    
+            })
+
         const { background, descriptionElement, searchBar, apply } = meinConf.AmaterasuGui
     
         background.x = 15

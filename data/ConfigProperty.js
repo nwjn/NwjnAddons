@@ -4,7 +4,7 @@ import Color from "../libs/Helper/Color"
 export default class ConfigProperty {
     /**
      * @param {"Button"|"ColorPicker"|"DropDown"|"Keybind"|"MultiCheckbox"|"Selection"|"Slider"|"Switch"|"TextInput"|"TextParagraph"|"Toggle"} type 
-     * @param {*} obj 
+     * @param {{ category, subcategory, title, configName, description, value, shouldShow, registerListener, options }} obj 
      */
     constructor(type, obj) {
         this.type = type
