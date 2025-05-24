@@ -4,6 +4,7 @@ import Nwjn from "../../libs/Helper/Nwjn"
 
 void new class {
     REGEX = {
+        shorthand: /[\d\.\,]+[kmbtq]/g,
         remove: /[^\d\+\-\*\%\/\^\(\)\.]/g,
         subs: /\(([^()]+)\)/g,
         parenthesis: /\(|\)/g,
@@ -38,15 +39,17 @@ void new class {
     /** @Event Command */
     onCommand(...args) {
         const raw = args.join("")
-        const equat = raw.replace(this.REGEX.remove, "")
+        
+        const equat = (raw.match(this.REGEX.shorthand) ?? [])
+            .reduce((prev, curr) => prev.replace(curr, NumUtil.parseCompact(curr)), raw)
+            .replace(this.REGEX.remove, "")
 
         if (!equat) return Nwjn.chat("§cNo numbers given.")
 
-        this.steps.push(`§b${equat}`)
+        this.steps.push(`§b${ equat }`)
 
-        const solved = NumUtil.formatGrouped(this.solve(equat))
-        Nwjn.chatComponent(`§b${raw}§r = §l§a${solved}`)
-            .setHover("show_text", this.steps.join("§r\n"))
+        Nwjn.chatComponent(`§b${ raw }§r = §l§a${ NumUtil.formatGrouped(this.solve(equat)) }`)
+            .setHover("show_text", this.steps.join("\n"))
             .chat()
 
         this.steps.length = 0
@@ -81,7 +84,7 @@ void new class {
 
     step(action, data, _sub = false) {
         _sub = _sub ? "  " : ""
-        this.steps.push(`${_sub}${action} | ${Array.isArray(data) ? data.join(" ") : data}`)
+        this.steps.push(`${ _sub }${ action } | ${ Array.isArray(data) ? data.join(" ") : data }§r`)
     }
 
     /**
