@@ -26,11 +26,27 @@ void new class extends Feature {
                     { title: "§e✯§r Entity Nametag", configName: "DeathClutterNametag", value: true, registerListener: this.update.bind(this) }
                 ],
                 shouldShow: data => data.DeathClutter
-            })
+            }),
+
+            MOB_NAME_REGEX: / (§.)*0(§.)*[\/❤]/
         })
         
         this.addSubEvent("LivingDeath", this.onEntityDeath.bind(this), () => this.options.DeathClutterEntities.value)
+        this.addSubEvent("PacketReceived", this.onSkyblockNameSpawnedDead.bind(this), { setFilteredClass: "SpawnMob" }, () => this.options.DeathClutterNametag.value)
         this.addSubEvent("PacketReceived", this.onSkyblockNameDeath.bind(this), { setFilteredClass: "EntityMetadata" }, () => this.options.DeathClutterNametag.value)
+    }
+
+    onSkyblockNameSpawnedDead(packet, event) {
+        if (packet./* getEntityType */func_149025_e() !== 30) return
+        
+        const WatchList = packet./* getWatcherList */func_149027_c()
+        for (let watcher of WatchList) {
+            if (watcher./* getObjectType */func_75674_c() !== 4) continue
+
+            let object = watcher./* getObject */func_75669_b()
+            if (object && this.MOB_NAME_REGEX.test(object)) 
+                return cancel(event)
+        }
     }
 
     /**
@@ -43,7 +59,8 @@ void new class extends Feature {
         if (WatchList?.length !== 1) return
         
         const object = WatchList[0]./* getObject */func_75669_b()
-        if (object && / (§.)*0(§.)*[\/❤]/.test(object)) MobUtil.removeEntityByID(packet./* getEntityId */func_149375_d())
+        if (object && this.MOB_NAME_REGEX.test(object)) 
+            return MobUtil.removeEntityByID(packet./* getEntityId */func_149375_d())
     }
 
     /**
