@@ -33,6 +33,7 @@ export default class MobUtil {
     }
 
     /**
+     * todo add derpy check
      * @param {MCTEntity} entity 
      * @returns {number} floored value or 0
      */

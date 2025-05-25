@@ -41,7 +41,7 @@ export default class {
     }
 
     /** Add [SubEvents] to run when the feature is registered and follows a custom condition */
-    addSubEvent(triggerType, methodFn, args = null, condition = () => true) {
+    addSubEvent(triggerType, methodFn, args, condition) {
         if (typeof(args) === "function") {
             [ args, condition ] = [ condition, args ]
         }
@@ -53,7 +53,7 @@ export default class {
     /** Rechecks [SubEvents] and registers them if they follow their condition */
     update() {
         if (!this.isRegistered || !this.subEvents) return
-        for (let subEvent of this.subEvents) 
+        for (let subEvent of this.subEvents)
             subEvent[1]() ? subEvent[0].register() : subEvent[0].unregister()
     }
 

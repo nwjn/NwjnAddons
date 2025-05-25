@@ -5,6 +5,7 @@
  * @license {GNU-GPL-3} https://github.com/DocilElm/tska/blob/main/LICENSE
  */
 
+import { isInView } from "../../../Apelles"
 import { getEntity, getPacket, getForgeEvent } from "../Helper/ClassReference"
 
 /** @type {HashMap<string, () => Trigger>} */
@@ -48,6 +49,12 @@ createEvent("ServerChat", (fn, { setCriteria }) =>
         
         matchCriteria(fn, unformatted, setCriteria, {packet, event, chatComponent, formatted, unformatted})
     }).setFilteredClass(setFilter("Chat", true, false))
+)
+
+createEvent("EntityUpdate", fn => 
+    register(getForgeEvent("Living.LivingUpdateEvent"), ({ entity }) => 
+        isInView(entity.field_70165_t, entity.field_70163_u, entity.field_70161_v) && fn(entity)
+    )
 )
 
 createEvent("EntityJoin", (fn, { setFilteredClass, setFilteredClasses }) => 
@@ -155,7 +162,10 @@ export const getEvent = (triggerType, method, modifiers) => {
         trigger = map.get(type)(method, modifiers)
     }
     else if (eventOrNull) {
-        trigger = register(eventOrNull, method)
+        if (eventOrNull.name === "net.minecraftforge.client.event.RenderWorldEvent") {
+            trigger = register(type, method)
+        }
+        else trigger = register(eventOrNull, method)
     }
     else if (`register${triggerType}` in TriggerRegister) {
         trigger = register(type, method)
