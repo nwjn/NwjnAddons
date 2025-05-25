@@ -1,10 +1,13 @@
+import Config from "../../data/Config"
+import ConfigProperty from "../../data/ConfigProperty"
+
+import Feature from "../../libs/Features/Feature"
+
 import Nwjn from "../../libs/Helper/Nwjn"
 import NumUtil from "../../libs/Helper/NumUtil"
 import MobUtil from "../../libs/Helper/MobUtil"
-import Feature from "../../libs/Features/Feature"
-import Config from "../../data/Config"
-import ConfigProperty from "../../data/ConfigProperty"
 import { getEntity } from "../../libs/Helper/ClassReference"
+
 import { createSemiAutomaticOutliner, createCustomOutlineTester } from "../../../Apelles"
 
 void new class extends Feature {    
@@ -25,55 +28,75 @@ void new class extends Feature {
                 title: "➤ Mob Highlight Color",
                 description: "     Sets the color for monster hitboxes",
                 value: [ 255, 190, 239, 255 ],
-                shouldShow: data => data.MobHighlight !== "",
-                registerListener: () => this.outliner.setColor(this.color.packed)
+                shouldShow: data => data.MobHighlight !== ""
             }),
 
             whiteList: new HashMap(),
+            insurance: new java.util.WeakHashMap(),
+
             tester: null,
             outliner: null
         })
 
-        this.addSubEvent("PacketReceived", this.onEntityFirstUpdate.bind(this), { setFilteredClass: "EntityMetadata" }, () => !this.whiteList.isEmpty())
+        this.addSubEvent("EntityUpdate", this.ensure.bind(this), () => !this.whiteList.isEmpty())
     }
 
-    /**
-     * @SubEvent PacketReceived
-     * @Packet EntityMetadata
-     */
-    onEntityFirstUpdate(packet) {
-        const entity = MobUtil.getEntityByID(packet./* getEntityId */func_149375_d())
-        if (!entity) return
+    /** @SubEvent EntityUpdate */
+    ensure(entity) {
+        const policy = this.insurance.get(entity)
+        if (policy === null) return
 
-        const WatchList = packet./* getWatcherList */func_149376_c()
-        if (!WatchList) return
+        const newPolicy = this.updatePolicy(policy, entity.field_70173_aa)
+        if (!newPolicy) return this.insurance.remove(entity)
+        if (newPolicy === policy) return
 
-        const healthList = this.whiteList.get(entity.class)
-        if (!healthList) return
-        if (healthList === true) return this.outliner.add(entity)
+        this.insurance.replace(entity, newPolicy)
+        this.outliner.retest(entity)
+    }
 
-        for (let watcher of WatchList) {
-            let obj = watcher.func_75669_b()
-            if (Number.isInteger(obj) && healthList.includes(obj))
-                return Client.scheduleTask(() => this.outliner.add(entity))
-        }
+    signPolicy(cycles, stamp) {
+        return (0x1000000 * cycles) + stamp
+    }
+
+    updatePolicy(policy, newStamp) {
+        const cycle = policy >> 24
+        if (!cycle) return 0
+
+        const delta = policy - (cycle << 24)
+
+        const covered = newStamp - delta
+        if (covered < 20) return policy
+
+        return this.signPolicy(cycle - 1, newStamp)
     }
 
     test(entity) {
         if (entity./* isInvisible */func_82150_aj()) return false
 
-        entity = entity?.entity ?? entity
         const entClass = entity.class
         const healthList = this.whiteList.get(entClass)
         if (!healthList) return false
 
-        return healthList === true || healthList?.includes(MobUtil.getMaxHP(entity))
+        const validate = healthList === true || healthList?.includes(MobUtil.getMaxHP(entity))
+
+        if (!validate) {
+            const findOrSign = this.insurance.getOrDefault(entity, 
+                this.signPolicy(
+                    5, // warranty
+                    entity.field_70173_aa // stamp
+                )
+            )
+
+            this.insurance.put(entity, findOrSign)
+        }
+
+        return validate
     }
 
     onEnabled(value = this.setting.value) {
         this.onDisabled()
 
-        value?.split(/, ?|\n/g)?.forEach((entry, idx) => {
+        value.split(/, ?|\n/g)?.forEach((entry, idx) => {
             const [ name, params ] = entry.split("-")
     
             const clazz = getEntity(name.toLowerCase())
@@ -92,18 +115,21 @@ void new class extends Feature {
     }
 
     onDisabled() {
-        this.outliner.clear()
+        this.onUnregister()
+
         this.whiteList.clear()
         this.outliner.unregister()
     }
 
     onUnregister() {
+        this.insurance.clear()
         this.outliner.clear()
     }
 
     postInit() {
         this.tester = createCustomOutlineTester(this.test.bind(this)),
         this.outliner = createSemiAutomaticOutliner(this.tester, this.color.packed, 2)
+        this.color.addListener(() => this.outliner.setColor(this.color.packed))
 
         Config.getConfig().onCloseGui(this.onEnabled.bind(this))
     }
