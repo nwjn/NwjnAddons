@@ -32,62 +32,56 @@ void new class extends Feature {
             }),
 
             whiteList: new HashMap(),
-            insurance: new java.util.WeakHashMap(),
+            attempts: new java.util.WeakHashMap(),
 
             tester: null,
             outliner: null
         })
 
-        this.addSubEvent("EntityUpdate", this.ensure.bind(this), () => !this.whiteList.isEmpty())
+        this.addSubEvent("EntityUpdate", this.tryUpdateEntity.bind(this), () => !this.whiteList.isEmpty())
     }
 
     /** @SubEvent EntityUpdate */
-    ensure(entity) {
-        const policy = this.insurance.get(entity)
-        if (policy === null) return
+    tryUpdateEntity(entity) {
+        const packed = this.attempts.get(entity)
+        if (packed === null) return
 
-        const newPolicy = this.updatePolicy(policy, entity.field_70173_aa)
-        if (!newPolicy) return this.insurance.remove(entity)
-        if (newPolicy === policy) return
+        const repacked = this.getUpdateTime(packed, entity./* ticksExisted */field_70173_aa)
+        if (!repacked) return void this.attempts.remove(entity)
+        if (repacked === packed) return
 
-        this.insurance.replace(entity, newPolicy)
+        this.attempts.replace(entity, repacked)
         this.outliner.retest(entity)
     }
 
-    signPolicy(cycles, stamp) {
-        return (0x1000000 * cycles) + stamp
+    packAttemptData(attempts, ticksExisted) {
+        return (attempts << 24) | (ticksExisted & 0xFFFFFF)
     }
 
-    updatePolicy(policy, newStamp) {
-        const cycle = policy >> 24
-        if (!cycle) return 0
+    getUpdateTime(packedData, ticksExisted) {
+        const attempts = packedData >>> 24
+        if (!attempts) return 0
 
-        const delta = policy - (cycle << 24)
+        const lastUpdateTick = packedData & 0xFFFFFF
 
-        const covered = newStamp - delta
-        if (covered < 20) return policy
+        const deltaTick = ticksExisted - lastUpdateTick
+        if (deltaTick < 20) return packedData
 
-        return this.signPolicy(cycle - 1, newStamp)
+        return this.packAttemptData(packedData - 1, ticksExisted)
     }
 
     test(entity) {
-        if (entity./* isInvisible */func_82150_aj()) return false
-
-        const entClass = entity.class
-        const healthList = this.whiteList.get(entClass)
+        const healthList = this.whiteList.get(entity.class)
         if (!healthList) return false
 
         const validate = healthList === true || healthList?.includes(MobUtil.getMaxHP(entity))
 
         if (!validate) {
-            const findOrSign = this.insurance.getOrDefault(entity, 
-                this.signPolicy(
-                    5, // warranty
-                    entity.field_70173_aa // stamp
-                )
+            const getOrPack = this.attempts.getOrDefault(entity, 
+                this.packAttemptData(5, entity./* ticksExisted */field_70173_aa)
             )
 
-            this.insurance.put(entity, findOrSign)
+            this.attempts.put(entity, getOrPack)
         }
 
         return validate
@@ -122,7 +116,7 @@ void new class extends Feature {
     }
 
     onUnregister() {
-        this.insurance.clear()
+        this.attempts.clear()
         this.outliner.clear()
     }
 
