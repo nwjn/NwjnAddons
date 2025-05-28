@@ -28,7 +28,7 @@ void new class extends Feature {
     /**
      * @Event DrawBlockHighlight
      */
-    onBlockHighlight(event) {
+    onBlockHighlight(_, event) {
         const { target } = event
         cancel(event)
         if (target?./* typeOfHit */field_72313_a?.toString() !== "BLOCK") return
@@ -44,18 +44,7 @@ void new class extends Feature {
 
         const BlockBounds = Block./* getSelectedBoundingBox */func_180646_a(world, BlockPos)./* expand */func_72314_b(0.02, 0.02, 0.02)
 
-        renderMCAABBOutline(this.color.packed, BlockBounds, { lw: 4, smooth: true, cull: false })   
+        renderMCAABBOutline(this.color.packed, BlockBounds, { lw: 2, smooth: true, cull: false })   
         renderMCAABBFilled(this.color.dulled, BlockBounds, { cull: false })
-
-        /*
-        bind outline shader
-
-        const WorldRenderer = MCTessellator.func_178180_c()
-        const BlockRendererDispatcher = Minecraft.getBlockRendererDispatcher()
-        const model = BlockRendererDispatcher.getModelFromBlockState(BlockState, world, BlockPos)
-        BlockRendererDispatcher.renderModelStandard(world, model, Block, BlockPos, WorldRenderer, true)
-
-        unbind outline shader
-         */
     }
 }

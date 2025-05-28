@@ -11,8 +11,8 @@ import { getEntity, getPacket, getForgeEvent } from "../Helper/ClassReference"
 /** @type {HashMap<string, () => Trigger>} */
 const map = new HashMap()
 
-function createEvent(triggerType, method) { 
-    map.put(triggerType.toUpperCase(), method)
+function createEvent(triggerType, method) {
+    map.put(triggerType, method)
 }
 
 function matchCriteria(fn, string, criteria, properties) {
@@ -52,32 +52,22 @@ createEvent("ServerChat", (fn, { setCriteria }) =>
 )
 
 createEvent("EntityUpdate", fn => 
-    register(getForgeEvent("Living.LivingUpdateEvent"), ({ entity }) => 
+    register(getForgeEvent("LivingEvent$LivingUpdateEvent"), ({ entity }) => 
         isInView(entity.field_70165_t, entity.field_70163_u, entity.field_70161_v) && fn(entity)
     )
 )
 
-createEvent("EntityJoin", (fn, { setFilteredClass, setFilteredClasses }) => 
-    register(getForgeEvent("EntityJoinWorld"), (event) => {
+createEvent("EntityJoin", (fn) => 
+    register(getForgeEvent("EntityJoinWorldEvent"), (event) => {        
         const entity = event.entity
-        
-        if (
-            (!setFilteredClass && !setFilteredClasses)
-            || (setFilteredClass && entity instanceof setFilteredClass)
-            || (setFilteredClasses.some(e => entity instanceof e))
-        ) fn({event, entity})
+        fn({ event, entity })
     })
 )
 
-createEvent("EntityDeath", (fn, { setFilteredClass, setFilteredClasses }) =>
-    register(getForgeEvent("LivingDeath"), (event) => {
+createEvent("EntityDeath", (fn) =>
+    register(getForgeEvent("LivingDeathEvent"), (event) => {
         const entity = event.entity
-
-        if (
-            (!setFilteredClass && !setFilteredClasses)
-            || (setFilteredClass && entity instanceof setFilteredClass)
-            || (setFilteredClasses.some(e => entity instanceof e))
-        ) fn({event, entity})
+        fn({ event, entity })
     })
 )
 
@@ -144,36 +134,32 @@ createEvent("ContainerClick", (fn, { setCriteria }) =>
 
 export const getEvent = (triggerType, method, modifiers) => {
     if (triggerType instanceof com.chattriggers.ctjs.triggers.Trigger) return triggerType.unregister()
-
-    const type = typeof(triggerType) === "string" ? triggerType.toUpperCase() : triggerType
-    let trigger
     
-    if (type === "PACKETRECEIVED") {
-        if ("setFilteredClass" in modifiers) modifiers.setFilteredClass = setFilter(modifiers.setFilteredClass, true, false)
-        else if ("setFilteredClasses" in modifiers) modifiers.setFilteredClasses = modifiers.setFilteredClasses.map(c => setFilter(c, true, false))
-    }
-    else if (type === "PACKETSENT") {
-        if ("setFilteredClass" in modifiers) modifiers.setFilteredClass = setFilter(modifiers.setFilteredClass, true, true)
-        else if ("setFilteredClasses" in modifiers) modifiers.setFilteredClasses = modifiers.setFilteredClasses.map(c => setFilter(c, true, true))
+    // Custom Events
+    if (map.containsKey(triggerType))
+        return map.get(triggerType)(method, modifiers).unregister()
+
+    triggerType = `register${triggerType}` in TriggerRegister 
+        ? triggerType 
+        : getForgeEvent(triggerType)
+        ?? triggerType
+        
+    const trigger = register(triggerType, method)
+    
+    // Modify modifiers for class filter events
+    if ("setFilteredClass" in trigger) {
+        const isPacket = /^Packet/.test(triggerType)
+        const isClient = triggerType === "PacketSent"
+
+        if ("setFilteredClass" in modifiers) modifiers.setFilteredClass = setFilter(modifiers.setFilteredClass, isPacket, isClient)
+        else if ("setFilteredClasses" in modifiers) modifiers.setFilteredClasses = modifiers.setFilteredClasses.map(c => setFilter(c, isPacket, isClient))
     }
 
-    const eventOrNull = getForgeEvent(triggerType)
-    if (map.containsKey(type)) {
-        trigger = map.get(type)(method, modifiers)
-    }
-    else if (eventOrNull) {
-        if (eventOrNull.name === "net.minecraftforge.client.event.RenderWorldEvent") {
-            trigger = register(type, method)
-        }
-        else trigger = register(eventOrNull, method)
-    }
-    else if (`register${triggerType}` in TriggerRegister) {
-        trigger = register(type, method)
-        modifiers && Object.entries(modifiers).forEach(([mod, val]) => mod in trigger && trigger[mod](val))
-    }
-    else {
-        trigger = register(type, method)
-    }
-    
+    // Apply Modifiers
+    if (modifiers) 
+        Object.entries(modifiers)
+            .forEach(([mod, val]) => trigger[mod](val))
+
+    // Returns UNREGISTERED trigger
     return trigger.unregister()
 }

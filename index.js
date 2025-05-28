@@ -6,6 +6,8 @@ let fileSeparator = /\\/g
 let relativeDest = "./features/"
 
 let modules = []
+
+// Recursive discovery
 let module = void function requireFeatures(file) {
     if (file.isDirectory()) return file.listFiles().forEach(requireFeatures)
 
@@ -15,4 +17,6 @@ let module = void function requireFeatures(file) {
 }(new java.io.File(`${Config.modulesFolder}/Nwjn/features`))
 
 try { for (module of modules) require(relativeDest + module) }
+
+// Loads config and feature listeners after all feature modules are required
 finally { Loader.load() }

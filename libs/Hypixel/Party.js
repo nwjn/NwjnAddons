@@ -27,11 +27,11 @@ export default new class {
             this.members = members
         })
         
-        new Event("serverConnect", this._request.bind(this))
+        new Event("ServerConnect", this._request.bind(this))
 
-        new Event("serverChat", () => this.inParty = this.isLeader = false, { setCriteria: new RegExp(`^${this.DISBAND_PARTY_REGEXES.join("|")}$`) })
-        new Event("serverChat", () => this.isLeader = this.isLeader || !this.inParty, { setCriteria: this.START_PARTY_REGEX })
-        new Event("serverChat", (leader) => this.isLeader = Player.getName() === leader.removeFormatting(), { setCriteria: this.TRANSFER_PARTY_REGEX })
+        new Event("ServerChat", () => this.inParty = this.isLeader = false, { setCriteria: new RegExp(`^${this.DISBAND_PARTY_REGEXES.join("|")}$`) })
+        new Event("ServerChat", () => this.isLeader = this.isLeader || !this.inParty, { setCriteria: this.START_PARTY_REGEX })
+        new Event("ServerChat", (leader) => this.isLeader = Player.getName() === leader.removeFormatting(), { setCriteria: this.TRANSFER_PARTY_REGEX })
         
         if (World.isLoaded()) this._request()
 	}

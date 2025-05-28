@@ -2,16 +2,11 @@ import { JavaTypeOrNull } from "../../../Apelles/util"
 import { Field } from "../../../tska/reflection/Field"
 
 const EVENT_PATH_LIST = [
-    "client.event",
-    "event.entity.player",
-    "event.entity.living",
-    "event.world",
-    "event.entity",
-    "event",
-    "event.entity.item",
-    "event.brewing",
-    "event.terraingen",
-    "fml.common.event"
+    "entity.player",
+    "entity.living",
+    "world",
+    "entity",
+    "entity.item",
 ]
 
 const ENTITY_LIST = new HashMap()
@@ -38,13 +33,9 @@ Field.getFieldValue(net.minecraft.network.EnumConnectionState, /* STATES_BY_CLAS
 
 export function getForgeEvent(simpleName) {
     if (typeof(simpleName) !== "string") return simpleName
-    let match = simpleName.match(/^([^\.]+)(\..+)?/)
-    if (!match) return
-
-    simpleName = match[1] + "Event" + (match[2]?.replace(/\./g, "$") ?? "")
 
     for (let path of EVENT_PATH_LIST) {
-        let clazz = JavaTypeOrNull(`net.minecraftforge.${path}.${simpleName}`)
+        let clazz = JavaTypeOrNull(`net.minecraftforge.event.${path}.${simpleName}`)
 
         if (clazz) return clazz.class
     }

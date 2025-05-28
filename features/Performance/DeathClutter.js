@@ -31,7 +31,7 @@ void new class extends Feature {
             MOB_NAME_REGEX: / (§.)*0(§.)*[\/❤]/
         })
         
-        this.addSubEvent("LivingDeath", this.onEntityDeath.bind(this), () => this.options.DeathClutterEntities.value)
+        this.addSubEvent("LivingDeathEvent", this.onEntityDeath.bind(this), () => this.options.DeathClutterEntities.value)
         this.addSubEvent("PacketReceived", this.onSkyblockNameSpawnedDead.bind(this), { setFilteredClass: "SpawnMob" }, () => this.options.DeathClutterNametag.value)
         this.addSubEvent("PacketReceived", this.onSkyblockNameDeath.bind(this), { setFilteredClass: "EntityMetadata" }, () => this.options.DeathClutterNametag.value)
     }
