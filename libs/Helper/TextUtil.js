@@ -91,8 +91,7 @@ export default class TextUtil {
      * @returns {?string} Player ign
      */
     static getSenderName(string) {
-        const [name] = TextUtil.getMatches(/(?:\[\w+\+*\] )?(?:\s?.?\s?)(\w{1,16})(?:\s?.?\s?):/, string.removeFormatting())
-        return name
+        return string.removeFormatting().split("] ").slice(-1).toString().replace(/\W/g, "")
     }
 
     static stringify(object) {
