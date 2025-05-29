@@ -8,7 +8,7 @@ import NumUtil from "../../libs/Helper/NumUtil"
 import MobUtil from "../../libs/Helper/MobUtil"
 import { getEntity } from "../../libs/Helper/ClassReference"
 
-import { createSemiAutomaticOutliner, createCustomOutlineTester } from "../../../Apelles"
+import Apelles from "../../libs/Helper/RenderUtil"
 
 void new class extends Feature {    
     constructor() {        
@@ -121,8 +121,8 @@ void new class extends Feature {
     }
 
     postInit() {
-        this.tester = createCustomOutlineTester(this.test.bind(this)),
-        this.outliner = createSemiAutomaticOutliner(this.tester, this.color.packed, 2)
+        this.tester = Apelles.createCustomOutlineTester(this.test.bind(this)),
+        this.outliner = Apelles.createSemiAutomaticOutliner(this.tester, this.color.packed, 2)
         this.color.addListener(() => this.outliner.setColor(this.color.packed))
 
         Config.getConfig().onCloseGui(this.onEnabled.bind(this))

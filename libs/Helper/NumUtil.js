@@ -2,6 +2,7 @@ import ConfigProperty from "../../data/ConfigProperty"
 
 const GroupingFormat = new ConfigProperty("DropDown", {
     category: "Home",
+    subcategory: "Preferences",
     configName: "groupingFormat",
     title: "§e✯§r Number Format",
     description: "Choose how you want to format numbers",
