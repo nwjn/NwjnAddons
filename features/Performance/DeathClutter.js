@@ -38,8 +38,10 @@ void new class extends Feature {
 
     onSkyblockNameSpawnedDead(packet, event) {
         if (packet./* getEntityType */func_149025_e() !== 30) return
-        
-        const WatchList = packet./* getWatcherList */func_149027_c()
+
+        const WatchList = packet?./* getWatcherList */func_149027_c()
+        if (!WatchList) return
+
         for (let watcher of WatchList) {
             if (watcher./* getObjectType */func_75674_c() !== 4) continue
 
