@@ -1,6 +1,6 @@
 import Feature from "../../libs/Features/Feature"
 import ConfigProperty from "../../data/ConfigProperty"
-import { renderMCAABBFilled, renderMCAABBOutline } from "../../../Apelles"
+import Apelles from "../../libs/Helper/RenderUtil"
 
 void new class extends Feature {
     constructor() {
@@ -19,18 +19,18 @@ void new class extends Feature {
                 description: "     Sets the color for block highlight",
                 value: [255, 190, 239, 255],
                 shouldShow: data => data.BlockHighlight
-            })
+            }),
+
+            MC: Client.getMinecraft()
         })
 
+        this.addEvent("RenderWorld", this.onRenderWorld.bind(this))
         this.addEvent("DrawBlockHighlight", this.onBlockHighlight.bind(this))
     }
 
-    /**
-     * @Event DrawBlockHighlight
-     */
-    onBlockHighlight(_, event) {
-        const { target } = event
-        cancel(event)
+    /** @Event RenderWorld */
+    onRenderWorld() {
+        const target = this.MC./* objectMouseOver */field_71476_x
         if (target?./* typeOfHit */field_72313_a?.toString() !== "BLOCK") return
         
         const BlockPos = target./* getBlockPos */func_178782_a()
@@ -44,7 +44,15 @@ void new class extends Feature {
 
         const BlockBounds = Block./* getSelectedBoundingBox */func_180646_a(world, BlockPos)./* expand */func_72314_b(0.02, 0.02, 0.02)
 
-        renderMCAABBOutline(this.color.packed, BlockBounds, { lw: 2, smooth: true, cull: false })   
-        renderMCAABBFilled(this.color.dulled, BlockBounds, { cull: false })
+        Apelles.renderMCAABBOutline(this.color.packed, BlockBounds, { lw: 2, smooth: true, cull: false })   
+        Apelles.renderMCAABBFilled(this.color.dulled, BlockBounds, { cull: false })
+    }
+
+    /** 
+     * @Event DrawBlockHighlight
+     * Not rendering here because it does not trigger underwater
+     */
+    onBlockHighlight(_, event) {
+        cancel(event)
     }
 }
