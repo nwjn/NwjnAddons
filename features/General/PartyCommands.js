@@ -71,8 +71,8 @@ void new class extends Feature {
         this.addCommand({
             usage: ".time",
             pattern: /^time$/,
-            runnable() {
-                if (!options.PartyCommandsTime.value) return
+            runnable: () => {
+                if (!this.options.PartyCommandsTime.value) return
 
                 const formatter = new java.text.SimpleDateFormat("E hh:mm:ss a z", java.util.Locale.US)
                 
@@ -83,8 +83,8 @@ void new class extends Feature {
         this.addCommand({
             usage: ".coords",
             pattern: /^coords?|loc|xyz$/,
-            runnable() {
-                if (!options.PartyCommandsCoords.value) return
+            runnable: () => {
+                if (!this.options.PartyCommandsCoords.value) return
 
                 Nwjn.sendCoords(`[${Location.area} - ${Location.subarea}]`)
             }
@@ -93,8 +93,8 @@ void new class extends Feature {
         this.addCommand({
             usage: ".power",
             pattern: /^pow(er)?$/,
-            runnable() {
-                if (!options.PartyCommandsPower.value) return
+            runnable: () => {
+                if (!this.options.PartyCommandsPower.value) return
 
                 Nwjn.say(`Power: ${ Data.power } | Tuning: ${ Data.tuning } | Enrich: ${ Data.enrich } | MP: ${ Data.mp }`)
             }
@@ -103,8 +103,8 @@ void new class extends Feature {
         this.addCommand({
             usage: ".stats",
             pattern: /^stats?$/,
-            runnable() {
-                if (!options.PartyCommandsStats.value) return
+            runnable: () => {
+                if (!this.options.PartyCommandsStats.value) return
 
                 const hypixelMoment = Location.inWorld("Catacombs") ? /Skills:/ : /Stats:/
                 const widget = TextUtil.getTabBlock(TabList.getNames(), hypixelMoment)
@@ -120,8 +120,8 @@ void new class extends Feature {
         this.addCommand({
             usage: ".tps",
             pattern: /^tps$/,
-            runnable() {
-                if (!options.PartyCommandsTPS.value) return
+            runnable: () => {
+                if (!this.options.PartyCommandsTPS.value) return
 
                 Nwjn.say(`TPS: ${getServerTPS().toFixed(3)}`)
             }
@@ -130,8 +130,8 @@ void new class extends Feature {
         this.addCommand({
             usage: ".allinv",
             pattern: /^allinv(ite)?$/,
-            runnable() {
-                if (!options.PartyCommandsAllInvite.value || !Party.isLeader) return
+            runnable: () => {
+                if (!this.options.PartyCommandsAllInvite.value || !Party.isLeader) return
 
                 Nwjn.partyCommand("settings allinvite")
             }
@@ -140,8 +140,8 @@ void new class extends Feature {
         this.addCommand({
             usage: ".inv <ign>",
             pattern: /^inv(ite)?$/,
-            runnable(_, invitee) {
-                if (!options.PartyCommandsInvite.value || !Party.isLeader) return
+            runnable: (_, invitee) => {
+                if (!this.options.PartyCommandsInvite.value || !Party.isLeader) return
 
                 Nwjn.partyCommand(invitee)
             }
@@ -150,8 +150,8 @@ void new class extends Feature {
         this.addCommand({
             usage: ".warp",
             pattern: /^warp$/,
-            runnable() {
-                if (!options.PartyCommandsWarp.value || !Party.isLeader) return
+            runnable: () => {
+                if (!this.options.PartyCommandsWarp.value || !Party.isLeader) return
 
                 Nwjn.partyCommand("warp")
             }
@@ -160,8 +160,8 @@ void new class extends Feature {
         this.addCommand({
             usage: ".pt <ign?>",
             pattern: /^transfer|pt(me)?$/,
-            runnable(sender, ign) {
-                if (!options.PartyCommandsTransfer.value || !Party.isLeader) return
+            runnable: (sender, ign) => {
+                if (!this.options.PartyCommandsTransfer.value || !Party.isLeader) return
 
                 Nwjn.partyCommand(`transfer ${ign ?? sender}`)
             }
@@ -170,8 +170,8 @@ void new class extends Feature {
         this.addCommand({
             usage: ".f1-7 | .m1-7 | .t1-5",
             pattern: /^(f|m) ?[1-7]|t ?[1-5]$/,
-            runnable(_, __, cmd) {
-                if (!options.PartyCommandsInstance.value || !Party.isLeader) return
+            runnable: (_, __, cmd) => {
+                if (!this.options.PartyCommandsInstance.value || !Party.isLeader) return
                 
                 const match = cmd.match(/^(f|m) ?[1-7]|t ?[1-5]$/)
                 if (!match) return
