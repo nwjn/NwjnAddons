@@ -10,6 +10,7 @@ const EVENT_PATH_LIST = [
 ]
 
 const ENTITY_LIST = new HashMap()
+export const ENTITY_TYPES = []
 
 const CLIENT_PACKET_LIST = new HashMap()
 const SERVER_PACKET_LIST = new HashMap()
@@ -17,6 +18,7 @@ const SERVER_PACKET_LIST = new HashMap()
 /** Remap with uppercase keys and class names */
 Field.getFieldValue(net.minecraft.entity.EntityList, /* stringToClassMapping */"field_75625_b")
     .forEach((simpleName, clazz) => {
+        ENTITY_TYPES.push(simpleName)
         ENTITY_LIST.put(simpleName.toLowerCase(), clazz.getName())
     })
 

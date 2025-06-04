@@ -36,8 +36,7 @@ export default new class extends HudManager {
         Command.addCommand({
             name: "gui", 
             description: "Opens the Editor Gui", 
-            run: this.open.bind(this),
-            clickAction: Command.ACTION.RUN
+            run: this.open.bind(this)
         })
 
         new Event("RenderOverlay", this.drawActive.bind(this))

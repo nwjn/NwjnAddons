@@ -32,7 +32,8 @@ void new class {
             name: "calc", 
             description: "Calculate the given equation", 
             run: this.onCommand.bind(this),
-            clickAction: Command.ACTION.SUGGEST
+            clickAction: "suggest_command",
+            asOwnCommand: true
         })
     }
 
