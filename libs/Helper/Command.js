@@ -13,22 +13,31 @@ export default new class extends CommandHandler {
         this.setCommandFormat("  • §n§b${name}§r§f: §7${description}")
         this.setErrorFormat(`${Nwjn.LOGO}§cCommand §b§l/\$\{arg\}§r§c is unknown. Run §a§l/nwjn help§r§c.`)
         Object.defineProperty(this, "titleFormat", { get: () => ChatLib.getCenteredText(Nwjn.BANNER) })
-
-        this.ACTION = { SUGGEST: 0, RUN: 1 }
     }
 
-    addCommand({ name, aliases, description, run, tabCompletions = null, clickAction = this.ACTION.SUGGEST }) {
-        if (clickAction === this.ACTION.SUGGEST) {
-            let cb = run
-
-            run = (...args) => {
-                if (!args?.[0]) return Client.scheduleTask(() => Client.setCurrentChatMessage(`/nwjn ${name} `))
-                cb(...args)
-            }
+    addCommand({ name, aliases, description, run, tabCompletions = null, clickAction = "run_command", asOwnCommand = false }) {
+        if (asOwnCommand) {
+            register("command", (...args) => 
+                this.commands[name].cb.call(null, args)
+            ).setName(name).setAliases(aliases)
         }
 
-        this.pushWithAlias(name, aliases, description, run)
+        this.pushWithAlias(name, aliases, description, run, clickAction)
 
         if (tabCompletions) this.setTabCompletion(name, tabCompletions)
+    }
+
+    addEntryListCommand({ name, aliases, description, entryFuncs }) {
+        const tabCompletions = Object.keys(entryFuncs)
+
+        const run = (...args) => {
+            const action = args?.shift()?.toLowerCase()
+            const fn = entryFuncs[action]
+            if (!fn) return
+
+            fn(args)
+        }
+
+        this.addCommand({ name, aliases, description, run, tabCompletions: () => tabCompletions, clickAction: "suggest_command", asOwnCommand: false})
     }
 }

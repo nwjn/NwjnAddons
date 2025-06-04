@@ -23,14 +23,7 @@ new class {
         new Event("ServerChat", this.onSwapEnrich.bind(this), { setCriteria: /^Swapped (\d+) enrichments to (.+)!$/ })
         new Event("ContainerClick", this.onStatTuning.bind(this), { setCriteria: /$Stats Tuning^/ })
 
-        Command.addCommand({
-            name: "blacklist",
-            aliases: ["bl"], 
-            description: "Blacklist from party commands and waypoints", 
-            run: this.blacklist.bind(this),
-            clickAction: Command.ACTION.SUGGEST,
-            tabCompletions: (arg) => !arg && ["add", "remove", "list", "clear"]
-        })
+        this.setupBlacklist()
 
         this.checkNewUser()
         this.checkMessenger()
@@ -58,36 +51,41 @@ new class {
         }, Ticks.of(2))
     }
 
-    blacklist(type, name, reason = "No reason given.") {
-        name = name?.toLowerCase()
-        type = type?.toLowerCase()
+    setupBlacklist() {
+        Command.addEntryListCommand({
+            name: "blacklist",
+            aliases: ["bl"], 
+            description: "Blacklist from party commands and waypoints",
+            clickAction: "suggest_command",
+            entryFuncs: {
+                "add": (name, reason = "No reason given.") => {
+                    if (!name?.trim()) return Nwjn.chat("§cInvalid Usage. §aUse /nwjn bl add <name> <reason?>")
+                    Data.blacklist[name] = reason
+                    return Nwjn.chat(`§aAdded §c${name} §ato your blacklist.`)
+                },
 
-        if (type === "add" && name) {
-            Data.blacklist[name] = reason
-            return Nwjn.chat(`§aAdded §c${name} §ato your blacklist.`)
-        }
+                "remove": (name) => {
+                    if (!name?.trim()) return Nwjn.chat("§cInvalid Usage. §aUse /nwjn bl remove <name> <reason?>")
+                    delete Data.blacklist[name]
+                    return Nwjn.chat(`§aRemoved §c${name} §afrom your blacklist.`)
+                },
 
-        else if (type === "remove" && name) {
-            Data.blacklist[name] = reason
-            return Nwjn.chat(`§aAdded §c${name} §ato your blacklist.`)
-        }
+                "list": () => {
+                    Nwjn.chat("§cBlacklist:")
+                    return Object.entries(Data.blacklist).forEach(([ign, reason]) => 
+                        new TextComponent(`  - &a${ign}&f: &c${reason}`)
+                            .setHover("show_text", `Click to run "/nwjn bl remove ${ign}" to remove ${ign} from the blacklist.`)
+                            .setClick("run_command", `/nwjn bl remove ${ign}`)
+                            .chat()
+                    )
+                },
 
-        else if (type === "list") {
-            Nwjn.chat("§cBlacklist:")
-            return Object.entries(Data.blacklist).forEach(([ign, reason]) => 
-                new TextComponent(`  - &a${ign}&f: &c${reason}`)
-                    .setHover("show_text", `Click to run "/nwjn bl remove ${ign}" to remove ${ign} from the blacklist.`)
-                    .setClick("run_command", `/nwjn bl remove ${ign}`)
-                    .chat()
-            )
-        }
-        
-        else if (type === "clear") {
-            Data.blacklist = {}
-            return Nwjn.chat("§cCleared your blacklist.")
-        }
-
-        return Nwjn.chat("§cInvalid Usage. §aUse /nwjn bl <add, remove, list, clear> <name?> <reason?>")
+                "clear": () => {
+                    Data.blacklist = {}
+                    return Nwjn.chat("§cCleared your blacklist.")
+                }
+            }
+        })
     }
 
     checkNewUser() {
