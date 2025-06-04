@@ -21,11 +21,20 @@ void new class extends GuiFeature {
                 value: [255, 190, 239, 255],
                 shouldShow: data => data.Clock
             }),
+
+            format: new ConfigProperty("DropDown", {
+                category: "General",
+                subcategory: "Clock",
+                configName: "ClockFormat",
+                title: "➤ Clock Format",
+                description: "     Sets the format for the clock display",
+                options: [ "hh:mm:ss a", "HH:mm:ss", "hh:mm a", "HH:mm" ],
+                value: 0,
+                shouldShow: data => data.Clock
+            }),
         
             defaultText: [ "1:23:34 AM" ]
         })
-
-        this.formatter = new java.text.SimpleDateFormat("hh:mm:ss a", java.util.Locale.US)
 
         this.addEvent("Step", this.onInterval.bind(this), { setFps: 1 })
     }
@@ -41,5 +50,16 @@ void new class extends GuiFeature {
 
     onEnabled() {
         this.onInterval()
+    }
+
+    setFormat() {
+        const format = this.format.enum[this.format.value]
+        this.formatter = org.apache.commons.lang3.time.FastDateFormat.getInstance(format, java.util.Locale.US)
+    }
+
+    postInit() {
+        this.setFormat()
+        // Remove scheduleTask after amat update
+        this.format.addListener(() => Client.scheduleTask(() => this.setFormat()))
     }
 }

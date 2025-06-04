@@ -67,6 +67,9 @@ export default class ConfigProperty {
                 this[opt.configName] = new ConfigProperty(null, opt)
             )
         }
+        else if (type === "DropDown") {
+            this.enum = ConfigProperty.TRANSFORMATIONS.ENUM.toEnumOptions(obj.options)
+        }
 
         if (type) Config.defCon1[`add${type}`](obj)
     }
