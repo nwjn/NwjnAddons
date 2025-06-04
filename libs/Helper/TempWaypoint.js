@@ -5,12 +5,12 @@ import { Render3D } from "../../../tska/rendering/Render3D"
 
 export default class Waypoint {
     static renderWaypoint(text, x, y, z, color, pTicks) {
-        Apelles.renderBeacon(color.packed, x, y, z, { centered: false, h: 100, phase: true, cull: true })
+        Apelles.renderBeacon(color.damped, x, y, z, { centered: false, h: 100, phase: true, cull: true })
 
         Render3D.renderString(text, x + 0.5, y + 3, z + 0.5, [0, 0, 0, 64], true, 1, true, true, pTicks, true)
 
         Apelles.renderAABBOutline(color.packed, x, y, z, x + 1, y + 1, z + 1, { centered: false, lw: 2, phase: true, smooth: true, cull: true })
-        Apelles.renderAABBFilled(color.packed, x, y, z, x + 1, y + 1, z + 1, { centered: false, phase: true, cull: true })
+        Apelles.renderAABBFilled(color.damped, x, y, z, x + 1, y + 1, z + 1, { centered: false, phase: true, cull: true })
     }
 
     constructor(id, mainText, subText, x, y, z, color, removalRadius, lifespan = null) {
