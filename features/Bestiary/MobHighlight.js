@@ -6,7 +6,8 @@ import Feature from "../../libs/Features/Feature"
 import Nwjn from "../../libs/Helper/Nwjn"
 import NumUtil from "../../libs/Helper/NumUtil"
 import MobUtil from "../../libs/Helper/MobUtil"
-import { getEntity } from "../../libs/Helper/ClassReference"
+import Command from "../../libs/Helper/Command"
+import { ENTITY_TYPES, getEntity } from "../../libs/Helper/ClassReference"
 
 import Apelles from "../../libs/Helper/RenderUtil"
 
@@ -39,6 +40,21 @@ void new class extends Feature {
         })
 
         this.addSubEvent("EntityUpdate", this.tryUpdateEntity.bind(this), () => !this.whiteList.isEmpty())
+
+        Command.addCommand({
+            name: "highlight",
+            aliases: [ "mob" ],
+            description: "Modify the highlighting from the chat",
+            run: this.onCommand.bind(this),
+            clickAction: "run_command",
+            tabCompletions: (...entries) => {
+                const lastEntry = entries?.slice(-1)?.[0]
+                if (!lastEntry) return ENTITY_TYPES
+
+                const test = new RegExp(lastEntry, "i")
+                return ENTITY_TYPES.filter(type => test.test(type))
+            }
+        })
     }
 
     /** @SubEvent EntityUpdate */
@@ -85,6 +101,13 @@ void new class extends Feature {
         }
 
         return validate
+    }
+
+    onCommand(...args) {
+        if (args?.[0] === "") return this.setting.value = ""
+        if (!args?.[0]) return Client.scheduleTask(() => Client.setCurrentChatMessage(`/nwjn mob ${this.setting.value}`))
+
+        this.setting.value = args.join(" ")
     }
 
     onEnabled(value = this.setting.value) {
