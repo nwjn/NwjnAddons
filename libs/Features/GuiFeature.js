@@ -57,7 +57,7 @@ export default class GuiFeature extends Feature {
 
         const argb = this.color?.shifted ?? Renderer.WHITE
         for (let i = 0; i < lines.length; i++) 
-            FontRenderer./* drawString */func_175065_a(lines[i], 0, 1 + i * 9, argb | 0, true)
+            FontRenderer./* drawString */func_175065_a(lines[i], 1, 1 + i * 9, argb | 0, true)
 
         Renderer.retainTransforms(false)
         Renderer.finishDraw()
@@ -67,7 +67,7 @@ export default class GuiFeature extends Feature {
         text = text.addColor()
         this.lines.push(text)
 
-        this.hud.width = Math.max(Renderer.getStringWidth(text) * 1.05, this.hud.width)
+        this.hud.width = Math.max(Renderer.getStringWidth(text) * 1.05, this.lines.length === 1 ? 0 : this.hud.width)
         this.hud.height = 9 * this.lines.length * 1.05
         this.hud.text = this.lines
     }
@@ -76,7 +76,7 @@ export default class GuiFeature extends Feature {
         text = text.addColor()
         this.lines[index] = text
 
-        this.hud.width = Math.max(Renderer.getStringWidth(text) * 1.05, this.hud.width)
+        this.hud.width = Math.max(Renderer.getStringWidth(text) * 1.05, this.lines.length === 1 ? 0 : this.hud.width)
         this.hud.height = 9 * this.lines.length * 1.05
         this.hud.text = this.lines
     }
