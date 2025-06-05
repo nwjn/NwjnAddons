@@ -28,13 +28,14 @@ void new class extends Feature {
                 options: [
                     { title: "§e✯§r Falling Blocks", configName: "SpawnClutterFalling", value: true },
                     { title: "§e✯§r Arrows", configName: "SpawnClutterArrow", value: true },
-                    { title: "Dropped Items", configName: "SpawnClutterItem", value: false },
-                    { title: "Fireballs", configName: "SpawnClutterFireball", value: true },
-                    { title: "Primed TNT", configName: "SpawnClutterTNT", value: true },
-                    { title: "Eggs", configName: "SpawnClutterEgg", value: true },
-                    { title: "Snowballs", configName: "SpawnClutterSnowball", value: true },
                     { title: "XP Orbs", configName: "SpawnClutterOrb", value: true, registerListener: this.update.bind(this) },
-                    { title: "Paintings", configName: "SpawnClutterArt", value: true, registerListener: this.update.bind(this) }
+                    { title: "Paintings", configName: "SpawnClutterArt", value: true, registerListener: this.update.bind(this) },
+                    { title: "Potions", configName: "SpawnClutterPotion", value: true },
+                    { title: "Fireballs", configName: "SpawnClutterFireball", value: true },
+                    { title: "Snowballs", configName: "SpawnClutterSnowball", value: true },
+                    { title: "Eggs", configName: "SpawnClutterEgg", value: true },
+                    { title: "Primed TNT", configName: "SpawnClutterTNT", value: true },
+                    { title: "Dropped Items", configName: "SpawnClutterItem", value: false }
                 ],
                 shouldShow: data => data.SpawnClutter
             })
@@ -51,7 +52,11 @@ void new class extends Feature {
      */
     onSpawnObject(packet, event) {
         const type = packet./* getType */func_148993_l()
-        if (type in this.TYPE_SETTING_MAP && this.TYPE_SETTING_MAP[type]()) cancel(event)
+        const optFromType = this.TYPE_SETTING_MAP[type]
+        if (!optFromType) return
+
+        const isEnabled = this.options[`SpawnClutter${optFromType}`].value
+        if (isEnabled) cancel(event)
     }
 
     /**
@@ -64,14 +69,15 @@ void new class extends Feature {
 
     postInit() {
         this.TYPE_SETTING_MAP = {
-             2: () => this.options.SpawnClutterItem.value,
-            50: () => this.options.SpawnClutterTNT.value,
-            60: () => this.options.SpawnClutterArrow.value,
-            61: () => this.options.SpawnClutterSnowball.value,
-            62: () => this.options.SpawnClutterEgg.value,
-            63: () => this.options.SpawnClutterFireball.value,
-            64: () => this.options.SpawnClutterFireball.value,
-            70: () => this.options.SpawnClutterFalling.value,
+             2: "Item",
+            50: "TNT",
+            60: "Arrow",
+            61: "Snowball",
+            62: "Egg",
+            63: "Fireball",
+            64: "Fireball",
+            70: "Falling",
+            73: "Potion"
         }
     }
 }
