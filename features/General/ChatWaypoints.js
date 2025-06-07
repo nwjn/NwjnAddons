@@ -64,7 +64,7 @@ void new class extends Feature {
                 this.subEvents[0][0].unregister()
                 Client.scheduleTask(() => {
                     this.waypoints.remove(ign)
-                    this.update()
+                    Client.scheduleTask(() => this.update())
                 })
             })
 
