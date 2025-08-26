@@ -39,7 +39,7 @@ void new class {
 
     /** @Event Command */
     onCommand(...args) {
-        const raw = args.join("")
+        const raw = args.reduce((ret, curr) => curr ? ret + curr : ret, "")
         
         const equat = (raw.match(this.REGEX.shorthand) ?? [])
             .reduce((prev, curr) => prev.replace(curr, NumUtil.parseCompact(curr)), raw)
@@ -49,7 +49,8 @@ void new class {
 
         this.steps.push(`§b${ equat }`)
 
-        Nwjn.chatComponent(`§b${ raw }§r = §l§a${ NumUtil.formatGrouped(this.solve(equat)) }`)
+        const solve = this.solve(NumUtil.isFormatUS() ? equat : NumUtil.swapFormat(equat))
+        Nwjn.chatComponent(`§b${ raw }§r = §l§a${ NumUtil.formatGrouped(solve) }`)
             .setHover("show_text", this.steps.join("\n"))
             .chat()
 
@@ -84,6 +85,8 @@ void new class {
     }
 
     step(action, data, _sub = false) {
+        if (!NumUtil.isFormatUS()) data = Array.isArray(data) ? data.map(it => NumUtil.swapFormat(it)) : NumUtil.swapFormat(data)
+            
         _sub = _sub ? "  " : ""
         this.steps.push(`${ _sub }${ action } | ${ Array.isArray(data) ? data.join(" ") : data }§r`)
     }
