@@ -1,5 +1,7 @@
 import Event from "../libs/Events/Event"
-import Location from "../libs/Hypixel/Location"
+
+import Location from "../../tska/skyblock/Location"
+
 import Settings from "../../Amaterasu/core/Settings"
 import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
 

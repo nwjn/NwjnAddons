@@ -28,6 +28,22 @@ export default class ConfigProperty {
                     obj[val] = idx,
                     obj
                 ), Object(options))
+            },
+
+            getEnumValue(optenum, value) {
+                return optenum[value]
+            }
+        },
+
+        SCALE: {
+            additive(value, inc) {
+                return value + inc
+            },
+            multiplicative(value, factor) {
+                return value * factor
+            },
+            exponential(value, power) {
+                return value ** power
             }
         }
     }
@@ -69,6 +85,7 @@ export default class ConfigProperty {
         }
         else if (type === "DropDown") {
             this.enum = ConfigProperty.TRANSFORMATIONS.ENUM.toEnumOptions(obj.options)
+            Object.defineProperty(this, "enumvalue", { get: () => ConfigProperty.TRANSFORMATIONS.ENUM.getEnumValue(this.enum, this.value)})
         }
 
         if (type) Config.defCon1[`add${type}`](obj)
