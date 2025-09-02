@@ -9,7 +9,7 @@ export default class Waypoint {
         Apelles.renderBillboardString(0xFFFFFFFF, text, x, y, z, { scale: 2, increase: true, phase: true })
 
         Apelles.renderAABBOutline(color.packed, x, y, z, x + 1, y + 1, z + 1, { lw: 2, phase: true, smooth: true })
-        Apelles.renderAABBFilled(color.dulled, x, y, z, x + 1, y + 1, z + 1, { phase: true })
+        Apelles.renderAABBFilled(color.damped, x, y, z, x + 1, y + 1, z + 1, { phase: true })
     }
 
     constructor(id, mainText, subText, x, y, z, color, removalRadius, lifespan = null) {
@@ -30,15 +30,8 @@ export default class Waypoint {
         this.tick = addCountdown(() => this.update(), Seconds.of(lifespan))
     }
 
-    delete() {
-        this.tick.value = 0
-        this.deleteListener?.()
-
-        delete this
-    }
-
     update() {
-        if (!this.keepAlive && this.distanceSq <= this.removalRadiusSq) return this.delete()
+        if (!this.keepAlive && this.distanceSq <= this.removalRadiusSq) return this.deleteListener?.()
 
         this.distanceSq = Player.asPlayerMP().getPos().distanceSq(this.blockPos)
 
