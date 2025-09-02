@@ -11,11 +11,11 @@ import { getEntity, getPacket, getForgeEvent } from "../Helper/ClassReference"
 /** @type {HashMap<string, () => Trigger>} */
 const map = new HashMap()
 
-function createEvent(triggerType, method) {
+export function createEvent(triggerType, method) {
     map.put(triggerType, method)
 }
 
-function matchCriteria(fn, string, criteria, properties) {
+export function matchCriteria(fn, string, criteria, properties) {
     const match = string?.match(criteria)
     if (!match) return
 
@@ -23,8 +23,8 @@ function matchCriteria(fn, string, criteria, properties) {
     fn(...match, properties)
 }
 
-function setFilter(clazz, isPacket, isClientBound) {
-    return isPacket ? getPacket(clazz, isClientBound) : getEntity(clazz)
+export function setFilter(clazz, isPacket, clientPacket) {
+    return isPacket ? getPacket(clazz, clientPacket) : getEntity(clazz)
 }
 
 createEvent("MessageSent", (fn, { setCriteria }) =>
@@ -35,7 +35,7 @@ createEvent("MessageSent", (fn, { setCriteria }) =>
 
 createEvent("ServerTick", (fn) => 
     register("PacketReceived", (packet, event) => {
-        if (packet./* getActionNumber */func_148890_d() === 0) fn({packet, event})
+        if (packet./* getActionNumber */func_148890_d() <= 0) fn({packet, event})
     }).setFilteredClass(setFilter("ConfirmTransaction", true, false))
 )
 
