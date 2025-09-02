@@ -1,11 +1,13 @@
 import Data from "../../data/Data"
-import Party from "../../libs/Hypixel/Party"
-import Location from "../../libs/Hypixel/Location"
-import Feature from "../../libs/Features/Feature"
-import Nwjn from "../../libs/Helper/Nwjn"
-import TextUtil from "../../libs/Helper/TextUtil"
-import { getServerTPS, scheduleTask } from "../../../tska/shared/ServerTick"
 import ConfigProperty from "../../data/ConfigProperty"
+
+import Nwjn from "../../libs/Helper/Nwjn"
+import Party from "../../libs/Hypixel/Party"
+import Feature from "../../libs/Features/Feature"
+import TextUtil from "../../libs/Helper/TextUtil"
+
+import Location from "../../../tska/skyblock/Location"
+import { getServerTPS } from "../../../tska/shared/ServerTick"
 
 void new class extends Feature {
     constructor() {
@@ -58,7 +60,7 @@ void new class extends Feature {
 
         for (let partyCommand of this.commandList) {
             if (partyCommand.pattern.test(cmd)) 
-                return scheduleTask(() => partyCommand.runnable(sender, arg, cmd))
+                return Client.scheduleTask(5, () => partyCommand.runnable(sender, arg, cmd))
         }
     }
 
