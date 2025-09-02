@@ -9,7 +9,7 @@ import MobUtil from "../../libs/Helper/MobUtil"
 import Command from "../../libs/Helper/Command"
 import { ENTITY_TYPES, getEntity } from "../../libs/Helper/ClassReference"
 
-import Apelles from "../../libs/Helper/RenderUtil"
+import Apelles from "../../libs/Helper/Apelley"
 
 void new class extends Feature {    
     constructor() {        
@@ -33,10 +33,7 @@ void new class extends Feature {
             }),
 
             whiteList: new HashMap(),
-            attempts: new java.util.WeakHashMap(),
-
-            tester: null,
-            outliner: null
+            attempts: new java.util.WeakHashMap()
         })
 
         this.addSubEvent("EntityUpdate", this.tryUpdateEntity.bind(this), () => !this.whiteList.isEmpty())
@@ -44,7 +41,7 @@ void new class extends Feature {
         Command.addCommand({
             name: "highlight",
             aliases: [ "mob" ],
-            description: "Modify the highlighting from the chat",
+            description: "Modify the highlighting from the chat. To clear entries you need to do it in settings.",
             run: this.onCommand.bind(this),
             clickAction: "run_command",
             tabCompletions: (...entries) => {
@@ -81,7 +78,7 @@ void new class extends Feature {
         const lastUpdateTick = packedData & 0xFFFFFF
 
         const deltaTick = ticksExisted - lastUpdateTick
-        if (deltaTick < 20) return packedData
+        if (deltaTick < 10) return packedData
 
         return this.packAttemptData(packedData - 1, ticksExisted)
     }
@@ -94,7 +91,7 @@ void new class extends Feature {
 
         if (!validate) {
             const getOrPack = this.attempts.getOrDefault(entity, 
-                this.packAttemptData(5, entity./* ticksExisted */field_70173_aa)
+                this.packAttemptData(10, entity./* ticksExisted */field_70173_aa)
             )
 
             this.attempts.put(entity, getOrPack)
@@ -104,10 +101,10 @@ void new class extends Feature {
     }
 
     onCommand(...args) {
-        if (args?.[0] === "") return this.setting.value = ""
-        if (!args?.[0]) return Client.scheduleTask(() => Client.setCurrentChatMessage(`/nwjn mob ${this.setting.value}`))
+        if (args?.[0]) return this.setting.value = args.join(" ")
 
-        this.setting.value = args.join(" ")
+        // Modified "suggest_command" if entry is not blank
+        if (this.setting.value) return Client.scheduleTask(() => Client.setCurrentChatMessage(`/nwjn mob ${this.setting.value}`))
     }
 
     onEnabled(value = this.setting.value) {
@@ -145,7 +142,7 @@ void new class extends Feature {
 
     postInit() {
         this.tester = Apelles.createCustomOutlineTester(this.test.bind(this)),
-        this.outliner = Apelles.createSemiAutomaticOutliner(this.tester, this.color.packed, 2)
+        this.outliner = Apelles.createSemiAutomaticOutliner(this.tester, this.color.packed, 1)
         this.color.addListener(() => this.outliner.setColor(this.color.packed))
 
         Config.getConfig().onCloseGui(this.onEnabled.bind(this))
