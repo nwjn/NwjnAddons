@@ -11,7 +11,18 @@ void new class extends Feature {
                 configName: "DamageTracker",
                 title: "Damage Tracker",
                 description: "Displays damage tags in chat"
-            })
+            }),
+            threshold: new ConfigProperty("Slider", {
+                category: "Combat",
+                configName: "DamageTrackerThreshold",
+                title: "Damage Tracker Threshold",
+                description: "Only chats damage over the threshold, counted by millions",
+                options: [0, 50],
+                shouldShow: data => data.DamageTracker
+            }),
+            
+            BLACKLIST_REGEX: /\s|^§\w\D$/,
+            THRESHOLD: 0
         })
 
         this.addEvent("PacketReceived", this.onSkyblockDamageSplash.bind(this), { setFilteredClass: "SpawnMob" })
@@ -29,9 +40,16 @@ void new class extends Feature {
             if (watcher./* getObjectType */func_75674_c() !== 4) continue
 
             let nametag = watcher./* getObject */func_75669_b()
-            if (!nametag || /\s|^§\w\D$/.test(nametag)) continue
+            if (!nametag || this.BLACKLIST_REGEX.test(nametag)) continue
 
-            return Nwjn.chat(NumUtil.isFormatUS() ? nametag : nametag.replace(/,/g, "."))
+            if (this.THRESHOLD && ~~nametag.removeFormatting().replace(/\D/g, "") < this.THRESHOLD) continue
+
+            return Nwjn.chat(NumUtil.isFormatUS() ? nametag : nametag.replace(",", "."))
         }
+    }
+
+    postInit() {
+        this.THRESHOLD = this.threshold.value * 1E6
+        this.threshold.addListener((_, val) => this.THRESHOLD = val * 1E6)
     }
 }
