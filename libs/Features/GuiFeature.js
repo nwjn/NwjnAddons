@@ -15,12 +15,14 @@ export default class GuiFeature extends Feature {
      * @param {string[]?} obj.zones The zones(s) where this feature should activate: If null -> Feature is not zone dependent
      * @param {ConfigProperty?} obj.color Color to draw text or defaults to white
      * @param {string[]?} obj.defaultText The text to shown in the editor if the feature's text is blank
+     * @param {boolean?} obj.asGuiRender If the text should appear in the foreground of guis
     */
     constructor(obj = {}) {
         super(obj)
         
         this.color = obj.color
         this.defaultText = obj.defaultText ?? ""
+        this.asGuiRender = obj.asGuiRender
         this.lines = []
 
         this.addHud()
@@ -52,7 +54,7 @@ export default class GuiFeature extends Feature {
         const lines = text.length ? text : this.defaultText
         
         Renderer.retainTransforms(true)
-        Renderer.translate(x, y)
+        Renderer.translate(x, y, this.asGuiRender ? 350 : 0)
         Renderer.scale(this.hud.scale)
 
         const argb = this.color?.shifted ?? Renderer.WHITE
@@ -64,7 +66,6 @@ export default class GuiFeature extends Feature {
     }
 
     addLine(text) {
-        text = text.addColor()
         this.lines.push(text)
 
         this.hud.width = Math.max(Renderer.getStringWidth(text) * 1.05, this.lines.length === 1 ? 0 : this.hud.width)
@@ -73,7 +74,6 @@ export default class GuiFeature extends Feature {
     }
 
     setLine(text, index = 0) {
-        text = text.addColor()
         this.lines[index] = text
 
         this.hud.width = Math.max(Renderer.getStringWidth(text) * 1.05, this.lines.length === 1 ? 0 : this.hud.width)
