@@ -6,7 +6,7 @@ import Settings from "../../Amaterasu/core/Settings"
 import DefaultConfig from "../../Amaterasu/core/DefaultConfig"
 
 export default class Config {
-    static defCon1 = new DefaultConfig("Nwjn", "data/.Config.json")
+    static defCon1 = new DefaultConfig("Nwjn", "data/.Config.json", false)
 
     static hasInitialized = false
     static functionQueue = []
