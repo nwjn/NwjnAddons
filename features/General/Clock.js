@@ -59,7 +59,6 @@ void new class extends GuiFeature {
 
     postInit() {
         this.setFormat()
-        // Remove scheduleTask after amat update
-        this.format.addListener(() => Client.scheduleTask(() => this.setFormat()))
+        this.format.addListener(this.setFormat.bind(this))
     }
 }
