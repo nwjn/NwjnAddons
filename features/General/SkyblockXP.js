@@ -23,8 +23,10 @@ void new class extends Feature {
      * @Modifier /\s{5}\+(\d{1,3}) SkyBlock XP (\(.+\)) \((\d{1,2})\/100\)\s{5}/
      */
     onSkyblockXpGained(xp, category, progress) {
-        const hashCode = 30000 + (~~xp + ~~progress)
-        
-        Nwjn.edit(`§b+${xp} SkyBlock XP §7${category} §b(${progress}/100)`, hashCode)
+        const message = `§b+${xp} SkyBlock XP §7${category} §b(${progress}/100)`
+        if (message === this.last) return
+
+        Nwjn.chat(message)
+        this.last = message
     }
 }
