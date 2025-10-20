@@ -2,6 +2,7 @@ export default class Seconds {
     /** @override */ onChange(value) {}
 
     static of(value) {
+        if (value instanceof Seconds) return value
         if (typeof(value) === "number") return new Seconds(value)
         return new Seconds(value?.toSeconds())
     }

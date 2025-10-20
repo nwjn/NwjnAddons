@@ -1,53 +1,66 @@
 import Ticks from "./Ticks"
-import { onTick } from "../../../tska/shared/ServerTick"
+import Event from "../Events/Event"
 
-/** @returns {Ticks} */
-const normalize = (val) => {
-    if (val instanceof Ticks) return val
-    return Ticks.of(val)
+const tasks = new Map()
+
+function task(method, time, onChange) {
+    const tick = Ticks.of(time)
+
+    tick.bumpVal = tick.initialValue === 0 ? +1 : -1
+    tick.onChange = onChange
+
+    tasks.set(method.toString(), tick)
+    return tick
 }
 
-const scheduledTasks = new Map()
-const countdowns = new Map()
-const timers = new Map()
-
-export function scheduleTask(onEnd, delay = Ticks.of(1)) {
-    const id = onEnd.toString()
-    const tick = normalize(delay)
-
-    tick.onChange = (value) => {
+export function scheduleTask(onEnd, delay) {
+    return task(onEnd, delay ?? 1, (value) => {
         if (value !== 0) return
-        scheduledTasks.delete(id)
+        tasks.delete(onEnd.toString())
         onEnd(value)
-    }
-    
-    scheduledTasks.set(id, tick)
+    })
 }
 
 export function addCountdown(onTick, lifespan) {
-    const id = onTick.toString()
-    const tick = normalize(lifespan)
-
-    tick.onChange = (value) => {
+    return task(onTick, lifespan ?? 1, (value) => {
         onTick(value)
 
-        if (value === 0) countdowns.delete(id)
-    }
-    
-    countdowns.set(id, tick)
+        if (value === 0) tasks.delete(onTick.toString())
+    })
 }
 
-export function addTimer(onTick, start = Ticks.of(0)) {
-    const id = onTick.toString()
-    const tick = normalize(start)
+export function addTimer(onTick, start) {
+    const timer = task(onTick, start ?? 0, onTick)
+    timer.kill = () => tasks.delete(onTick.toString())
 
-    tick.onChange = onTick
-
-    timers.set(id, tick)
+    return timer
 }
 
-onTick(() => {
-    scheduledTasks.forEach(tick => tick.value--)
-    countdowns.forEach(tick => tick.value--)
-    timers.forEach(tick => tick.value++)
+/**
+ * When world loads, updates will run on client ticks
+ * until the server starts sending ConfirmTransaction packets.
+ * Then updates will run on server ticks
+ * until world is unloaded
+ */
+let triggerOffset = 0
+const clientTick = new Event("Tick", () => {
+    triggerOffset = Date.now()
+    tasks.forEach(tick => tick.value += tick.bumpVal)
+}, null, false)
+
+// Using event wrapper for tick should prevent worldLoad from double registering by BungeeCord
+register("worldLoad", clientTick.register.bind(clientTick))
+
+new Event("ServerTick", () => {
+    // This should run on main thread to hopefully prevent conc err
+    Client.scheduleTask(() => {
+        // Align triggers
+        if (clientTick.isRegistered) {
+            clientTick.unregister()
+
+            if (Date.now() - d > 50) return
+        }
+
+        clientTick.trigger()
+    })
 })

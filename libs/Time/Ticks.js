@@ -2,6 +2,7 @@ export default class Ticks {
     /** @override */ onChange(value) {}
 
     static of(value) {
+        if (value instanceof Ticks) return value
         if (typeof(value) === "number") return new Ticks(value)
         return new Ticks(value?.toTicks())
     }
