@@ -10,22 +10,24 @@ const GroupingFormat = new ConfigProperty("DropDown", {
     value: 0
 })
 
-const { US, GERMANY } = java.util.Locale
-const NumberFormat = java.text.NumberFormat
+const [ GroupingsUS, GroupingsDE, CompactUS, CompactDE ] = function() {
+    const { US, GERMANY } = java.util.Locale
+    const NumberFormat = java.text.NumberFormat
 
-const GroupingsUS = NumberFormat.getNumberInstance(US)
-GroupingsUS.setGroupingUsed(true)
-GroupingsUS.setMaximumFractionDigits(15)
-const GroupingsDE = NumberFormat.getNumberInstance(GERMANY)
-GroupingsDE.setGroupingUsed(true)
-GroupingsDE.setMaximumFractionDigits(15)
+    const GroupingsUS = NumberFormat.getNumberInstance(US)
+    GroupingsUS.setGroupingUsed(true)
+    GroupingsUS.setMaximumFractionDigits(15)
+    const GroupingsDE = NumberFormat.getNumberInstance(GERMANY)
+    GroupingsDE.setGroupingUsed(true)
+    GroupingsDE.setMaximumFractionDigits(15)
 
-const CompactUS = NumberFormat.getNumberInstance(US)
-CompactUS.setGroupingUsed(true)
-CompactUS.setMaximumFractionDigits(3)
-const CompactDE = NumberFormat.getNumberInstance(GERMANY)
-CompactDE.setGroupingUsed(true)
-CompactDE.setMaximumFractionDigits(3)
+    const CompactUS = NumberFormat.getNumberInstance(US)
+    CompactUS.setGroupingUsed(true)
+    CompactUS.setMaximumFractionDigits(3)
+    const CompactDE = NumberFormat.getNumberInstance(GERMANY)
+    CompactDE.setGroupingUsed(true)
+    CompactDE.setMaximumFractionDigits(3)
+}()
 
 const suffixes = "kmbtq"
 
@@ -46,7 +48,7 @@ export default class NumUtil {
     }
 
     static swapFormat(string) {
-        for (let idx in string) {
+        for (let idx = 0; idx < string.length; idx++) {
             let char = string[idx]
 
             if (char === ".") string[idx] = ","
@@ -91,39 +93,30 @@ export default class NumUtil {
     }
 
     static scaleColorCode(num, min, max) {
-        const percent = ~~((num - min) / (max - min)) * 100
-        const low = ~~(percent / 17)
-
-        if (low >= colors.length) return colors[colors.length - 1][0]
-
-        return colors[low][0]
+        const idx = Math.min(((num - min) / (max - min) * 6) | 0, 5)
+        return colors[idx < 0 ? 0 : idx][0]
     }
 
     static scaleHexCode(num, min, max) {
-        const percent = ~~((num - min) / (max - min)) * 100
-        const low = ~~(percent / 17)
-        const high = low + 1
-
-        if (high >= colors.length) return colors[colors.length - 1][1]
-
-        const factor = percent / 17 - low
-        return this.lerpColor(colors[low][1], colors[high][1], factor)
+        const multi = Math.max(0, Math.min(1, (num - min) / (max - min)))
+        
+        const colorPos = multi * 5
+        const lowerIdx = colorPos | 0
+        const higherIdx = lowerIdx + 1
+        
+        return lowerIdx === 5 ? colors[5][1] : 
+            this.lerpColor(colors[lowerIdx][1], colors[higherIdx][1], colorPos - lowerIdx)
     }
 
-    static lerpColor(color1, color2, multi) {
-        const r1 = (color1 >> 24) & 0xff
-        const g1 = (color1 >> 16) & 0xff
-        const b1 = (color1 >> 8) & 0xff
+    /** Keeps full alpha */
+    static lerpColor(start, end, multi) {
+        if (start === end || multi === 0) return start
 
-        const r2 = (color2 >> 24) & 0xff
-        const g2 = (color2 >> 16) & 0xff
-        const b2 = (color2 >> 8) & 0xff
-
-        const r = (r1 + (r2 - r1) * multi) << 24
-        const g = (g1 + (g2 - g1) * multi) << 16
-        const b = (b1 + (b2 - b1) * multi) << 8
-        const a = 0xff
-
-        return r + g + b + a
+        return (
+            (((start & 0xFF000000) + ((end & 0xFF000000) - (start & 0xFF000000)) * multi) & 0xFF000000) |
+            (((start & 0x00FF0000) + ((end & 0x00FF0000) - (start & 0x00FF0000)) * multi) & 0x00FF0000) |
+            (((start & 0x0000FF00) + ((end & 0x0000FF00) - (start & 0x0000FF00)) * multi) & 0x0000FF00) |
+            0xff
+        )
     }
 }
