@@ -8,7 +8,7 @@ export default class Ticks {
     }
 
     constructor(ticks) {
-        this.val = ticks | 0
+        this.val = Math.floor(ticks)
     }
 
     toSeconds() {
@@ -22,7 +22,7 @@ export default class Ticks {
     set value(ticks) {
         this.val = ticks
 
-        this.onChange(ticks)
+        this.onChange(this.val)
     }
 
     valueOf() {

@@ -8,7 +8,7 @@ export default class Seconds {
     }
 
     constructor(seconds) {
-        this.val = seconds | 0
+        this.val = Math.floor(seconds)
     }
 
     toTicks() {
