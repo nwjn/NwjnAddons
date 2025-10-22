@@ -1,5 +1,5 @@
 import Seconds from "../Time/Seconds"
-import { scheduleTask, addCountdown } from "../Time/Scheduler"
+import { scheduleTask, addCountdown, addTimer } from "../Time/Scheduler"
 import Apelles from "./Apelley"
 
 export default class Waypoint {
@@ -12,40 +12,54 @@ export default class Waypoint {
         Apelles.renderAABBFilled(color.damped, x, y, z, x + 1, y + 1, z + 1, { phase: true })
     }
 
-    constructor(id, mainText, subText, x, y, z, color, removalRadius, lifespan = null) {
+    constructor(id, mainText, subText, x, y, z, removalRadius = 0, lifespan = Infinity) {
         this.id = id
         this.mainText = mainText
         this.subText = subText?.replace(/\|\s|@\w{0,12}/g, "")?.trim()
         this.subText = this.subText ? `\n${this.subText}` : ""
-        this.blockPos = new Vec3i(~~x, ~~y, ~~z)
-        this.color = color ?? Renderer.WHITE
-        this.removalRadiusSq = removalRadius ** 2 | 0
-        this.distanceSq = Player.asPlayerMP().getPos().distanceSq(this.blockPos)
-        this.keepAlive = true
+        this.removalRadius = 0
 
-        scheduleTask(() => this.keepAlive = false, Seconds.of(4))
-        if (lifespan) scheduleTask(() => this.deleteListener?.(), Seconds.of(lifespan))
+        if (removalRadius) this.removal = scheduleTask(() => this.removalRadius = removalRadius, Seconds.of(4))
+        if (lifespan != Infinity) this.lifespan = scheduleTask(() => this._delete(), Seconds.of(lifespan))
+        this.ticking = addCountdown(() => this.update(), Seconds.of(lifespan))
+        
+        this.setPos(x, y, z)
+    }
 
+    setPos(x, y, z) {
+        this.x = x | 0
+        this.y = y | 0
+        this.z = z | 0
+
+        this.blockPos = new BlockPos(this.x, this.y, this.z)
         this.update()
-        this.tick = addCountdown(() => this.update(), Seconds.of(lifespan))
     }
 
     update() {
-        if (!this.keepAlive && this.distanceSq <= this.removalRadiusSq) return this.deleteListener?.()
+        if (this.dist < this.removalRadius) return this._delete()
 
-        this.distanceSq = Player.asPlayerMP().getPos().distanceSq(this.blockPos)
+        this.dist = Player.asPlayerMP().distanceTo(this.blockPos)
 
-        this.text = `${this.mainText} §b[${ ~~Math.sqrt(this.distanceSq) }m]${this.subText}`
-    }
-
-    render() {
-        const { x, y, z } = this.blockPos
-        Waypoint.renderWaypoint(this.text, x, y, z, this.color)
+        this.text = `${this.mainText} §b[${ ~~this.dist }m]${this.subText}`
     }
 
     onDelete(fn) {
         this.deleteListener = fn
 
         return this
+    }
+
+    render(colorObj) {
+        Waypoint.renderWaypoint(this.text, this.blockPos.x, this.blockPos.y, this.blockPos.z, colorObj)
+    }
+
+    _delete() {
+        Client.scheduleTask(() => {
+            this.removal?.kill()
+            this.lifespan?.kill()
+            this.ticking?.kill()
+
+            this.deleteListener?.()
+        })
     }
 }

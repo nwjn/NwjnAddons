@@ -39,12 +39,12 @@ void new class extends Feature {
 
             WAYPOINT_REGEX: /^(?:[\w\-]{5} > )?(?:\[\d{1,3}\] .? ?)?(?:\[\w+\+*\] )?(\w{1,16})(?: .? ?)?: x: (-?[\d\.]+), y: (-?[\d\.]+), z: (-?[\d\.]+) ?(.+)?$/,
 
-            waypoints: new HashMap()
+            waypoints: new Map()
         })
 
         this.addEvent("ServerChat", this.onWaypointSent.bind(this), { setCriteria: this.WAYPOINT_REGEX })
 
-        this.addSubEvent("RenderWorld", this.onRenderWorld.bind(this), () => !this.waypoints.isEmpty())
+        this.addSubEvent("RenderWorld", this.onRenderWorld.bind(this), () => this.waypoints.size)
     }
 
     /**
@@ -59,24 +59,21 @@ void new class extends Feature {
         const [mainText] = TextUtil.getMatches(/^(.+)§.:/, formatted)
         if (!mainText) return
 
-        const waypoint = new Waypoint(ign, mainText, text, x, y, z, this.color, 5, this.time.value)
-            .onDelete(() => {
-                this.subEvents[0][0].unregister()
-                Client.scheduleTask(() => {
-                    this.waypoints.remove(ign)
-                    Client.scheduleTask(() => this.update())
-                })
-            })
+        const waypoint = new Waypoint(ign, mainText, text, x, y, z, 5, this.time.value)
+            .onDelete(this.removeWaypoint.bind(this))
 
-        this.waypoints.put(ign, waypoint)
+        this.waypoints.set(ign, waypoint)
         this.update()
     }
 
-    /**
-     * @Event RenderWorld
-     */
-    onRenderWorld(pTicks) {
-        this.waypoints.forEach((_, waypoint) => waypoint.render(pTicks))
+    removeWaypoint(key) {
+        this.waypoints.delete(key)
+        this.forceUpdate()
+    }
+
+    /** @Event RenderWorld */
+    onRenderWorld() {
+        this.waypoints.forEach(wp => wp.render(this.color))
     }
 
     onDisabled() {
