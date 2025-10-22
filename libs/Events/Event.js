@@ -21,6 +21,7 @@ export default class Event {
         if (orphan) return this.event.register()
 
         this.isRegistered = false
+        this.trigger = method
     }
 
     /**

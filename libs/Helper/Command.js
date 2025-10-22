@@ -18,7 +18,7 @@ export default new class extends CommandHandler {
     addCommand({ name, aliases, description, run, tabCompletions = null, clickAction = "run_command", asOwnCommand = false }) {
         if (asOwnCommand) {
             register("command", (...args) => 
-                this.commands[name].cb.call(null, args)
+                this.commands[name].cb(...args)
             ).setName(name).setAliases(aliases)
         }
 
